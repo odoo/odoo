@@ -2972,20 +2972,89 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
     }
 
+    /**
+     * Update the last_order_preparation_change.lines of merged or seperated lines
+     * ! The source line quantity is not updated yet but the destination line is
+     * @param {*} srcPrep source last_order_preparation_change.lines
+     * @param {*} destPrep destination last_order_preparation_change.lines
+     * @param {*} srcLine source orderline
+     * @param {*} destLine destination orderline
+     * @param {*} qty quantity moved from source line to destination line
+     */
     handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
         const srcKey = srcLine.preparationKey;
         const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
 
-        if (srcQty) {
-            if (srcQty <= qty) {
-                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
-                destPrep[destKey] = newPrep;
-                delete srcPrep[srcKey];
-            } else {
-                srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
-            }
+        // This means that the src line hasn't been sent to the kitchen yet
+        // We don't need to anything
+        if (!srcPrep[srcKey]) {
+            return;
+        }
+
+        const srcPrepQty = srcPrep[srcKey].quantity || 0;
+        const destPrepQty = destPrep[destKey]?.quantity || 0;
+
+        // Want to move all the quantity of the source line to the destination line
+        // --> Merge the source preparation line with the destination preparation line
+        // --> Delete the source preparation line
+        if (srcLine.qty === qty) {
+            destPrep[destKey] = {
+                ...(destPrep[destKey] || srcPrep[srcKey]),
+                uuid: destLine.uuid,
+                quantity: destPrepQty + srcPrepQty,
+                history: [
+                    srcLine.uuid,
+                    ...(destPrep[destKey]?.history || []),
+                    ...srcPrep[srcKey].history,
+                ],
+            };
+            const temp = {
+                ...srcPrep[srcKey],
+                quantity: 0,
+                history: [...srcPrep[srcKey].history, srcLine.uuid],
+            };
+
+            // Do it in this order in case srcPrep and destPrep are the same object (apply combo)
+            delete srcPrep[srcKey];
+            destPrep[srcKey] = temp;
+        }
+
+        // Want to move only a part of the quantity from the source line to the destination line
+        // And the source preparation line has enough quantity to cover the moved quantity
+        // --> Decrease the quantity of the source preparation line by the moved quantity
+        // --> Merge the moved quantity with the destination preparation line
+        else if (srcPrepQty >= qty) {
+            srcPrep[srcKey].quantity -= qty;
+            destPrep[destKey] = {
+                ...(destPrep[destKey] || srcPrep[srcKey]),
+                uuid: destLine.uuid,
+                quantity: destPrepQty + qty,
+                history: [
+                    srcLine.uuid,
+                    ...(destPrep[destKey]?.history || []),
+                    ...srcPrep[srcKey].history,
+                ],
+            };
+        }
+
+        // Want to move only a part of the quantity from the source line to the destination line
+        // But the source preparation line does not have enough quantity to cover the moved quantity
+        // --> Take the new source line quantity as the source preparation line quantity
+        // --> Merge the source preparation line with the destination preparation line
+        // --> Increase the quantity of the destination preparation line by the leftover quantity that is not covered by the source preparation line
+        else {
+            const movingQty = Math.max(srcPrepQty - (srcLine.qty - qty), 0);
+            srcPrep[srcKey].quantity -= movingQty;
+            destPrep[destKey] = {
+                ...(destPrep[destKey] || srcPrep[srcKey]),
+                uuid: destLine.uuid,
+                quantity: destPrepQty + movingQty,
+                history: [
+                    srcLine.uuid,
+                    ...(destPrep[destKey]?.history || []),
+                    ...srcPrep[srcKey].history,
+                ],
+            };
         }
     }
 
@@ -3176,6 +3245,7 @@ export class PosStore extends WithLazyGetterTrap {
                 }
             }
         });
+        let needsSync = false;
         let comboLine = null;
         for (const [index, items] of combinations.entries()) {
             const props = {
@@ -3231,6 +3301,10 @@ export class PosStore extends WithLazyGetterTrap {
                         );
                         linkOldNewLines[link.uuid] += concernedLinesQty[oldLine.uuid];
                         concernedLinesQty[oldLine.uuid] = 0;
+                        this.selectedOrder.removeOrderline(oldLine);
+                        if (Number.isInteger(oldLine.id)) {
+                            needsSync = true;
+                        }
                         break;
                     } else {
                         this.handlePreparationHistory(
@@ -3242,31 +3316,12 @@ export class PosStore extends WithLazyGetterTrap {
                         );
                         linkOldNewLines[link.uuid] += link.qty;
                         concernedLinesQty[oldLine.uuid] -= link.qty;
+                        oldLine.setQuantity(oldLine.qty - link.qty);
+                    }
+                    if (Number.isInteger(oldLine.id)) {
+                        needsSync = true;
                     }
                 }
-            }
-
-            // make orderline ignored by preparation printers if at least one child orderline has already been sent to the kitchen
-            if (
-                comboLine.combo_line_ids.some(
-                    (cl) => order.last_order_preparation_change.lines[cl.preparationKey]
-                )
-            ) {
-                order.last_order_preparation_change[comboLine.preparationKey] = {
-                    ignoreQty: comboLine.qty,
-                };
-            }
-        }
-        let needsSync = false;
-        for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
-            const line = this.models["pos.order.line"].getBy("uuid", lineUuid);
-            if (Number.isInteger(line.id)) {
-                needsSync = true;
-            }
-            if (newQty > 0) {
-                line.setQuantity(newQty);
-            } else {
-                line.order_id.removeOrderline(line);
             }
         }
         if (needsSync) {

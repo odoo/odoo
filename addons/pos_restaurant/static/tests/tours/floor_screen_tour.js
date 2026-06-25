@@ -103,24 +103,19 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
-            // Unlink tables and verify restoration of original orders
+            // Unlink tables keeps the orderlines to the root table
             FloorScreen.unlinkTables("5", "4"),
             Utils.negateStep(FloorScreen.isChildTable("5")),
 
-            // Check original orders for table 4
-            FloorScreen.clickTable("4"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
-            ProductScreen.orderlinesHaveNoChange(),
+            // Empty table 5
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderIsEmpty(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
-            // Check original orders for table 5
-            FloorScreen.clickTable("5"),
+            // Table 4 should still have its orderlines
+            FloorScreen.clickTable("4"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
             inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             ProductScreen.clickOrderButton(),
             {
@@ -147,19 +142,20 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             },
             ProductScreen.orderlinesHaveNoChange(),
 
-            // Unlink tables again and verify restoration
+            // Unlink tables again and check that the new product is on the root table
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.unlinkTables("5", "4"),
             Utils.negateStep(FloorScreen.isChildTable("5")),
 
             // Verify orders after unlinking
-            FloorScreen.clickTable("5"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
             FloorScreen.clickTable("4"),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "2")),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderIsEmpty(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
         ].flat(),

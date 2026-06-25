@@ -155,14 +155,15 @@ patch(PosStore.prototype, {
         // Sum the guest counts from both orders
         const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
         destOrder.setCustomerCount(totalGuests);
+        const orderlineUuids = new Set();
 
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
-            let uuid = "";
+            orderlineUuids.add(orphanLine.uuid);
+
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
-                uuid = destinationLine.uuid;
                 this.handlePreparationHistory(
                     sourceOrder.last_order_preparation_change.lines,
                     destOrder.last_order_preparation_change.lines,
@@ -177,13 +178,12 @@ patch(PosStore.prototype, {
                 delete serializedLine.id;
                 const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
                 newLine.course_id = orphanLine.course_id?.id;
-                uuid = newLine.uuid;
                 if (orphanLine.course_id && mergedCourses) {
                     // Replace new line uuid in the merged courses
                     const course = mergedCourses[orphanLine.course_id.uuid];
                     if (course?.lines) {
                         course.lines = course.lines.map((lineUuid) =>
-                            lineUuid === orphanLine.uuid ? uuid : lineUuid
+                            lineUuid === orphanLine.uuid ? newLine.uuid : lineUuid
                         );
                     }
                 }
@@ -196,25 +196,26 @@ patch(PosStore.prototype, {
                 );
             }
 
-            if (sourceOrder.table_id) {
-                destOrder.uiState.unmerge[uuid] = {
-                    table_id: sourceOrder.table_id.id,
-                    quantity: orphanLine.qty,
-                };
-            }
-
             orphanLine.delete();
             whileGuard++;
             if (whileGuard > 1000) {
                 break;
             }
         }
-        if (mergedCourses) {
-            destOrder.uiState.unmergeCourses = {
-                ...destOrder.uiState.unmergeCourses,
-                ...mergedCourses,
+
+        // Move deleted lines that were send to the kitchen
+        const lopcLines = sourceOrder.last_order_preparation_change.lines;
+        for (const [uuid, lopcLine] of Object.entries(lopcLines)) {
+            if (orderlineUuids.has(uuid) || lopcLine.quantity === 0) {
+                orderlineUuids.delete(uuid);
+                continue;
+            }
+            destOrder.last_order_preparation_change.lines[uuid] = {
+                ...lopcLine,
+                history: [...lopcLine.history, uuid],
             };
         }
+
         if (destOrder.courses) {
             // Ensure unassigned lines in destOrder are linked to the last course
             const lastCourse = destOrder.courses?.at(-1);
@@ -300,97 +301,6 @@ patch(PosStore.prototype, {
         mergedCourses.forEach((course) => (course.order_id = destOrder.id));
         destOrder.course_ids = mergedCourses;
         return result;
-    },
-    async restoreOrdersToOriginalTable(order, unmergeTable) {
-        if (!order?.uiState?.unmerge) {
-            return false;
-        }
-
-        const beforeMergeDetails = Object.entries(order.uiState.unmerge).reduce(
-            (acc, [uuid, details]) => {
-                if (details.table_id === unmergeTable.id) {
-                    acc.push({
-                        quantity: details.quantity,
-                        uuid: uuid,
-                    });
-                }
-                return acc;
-            },
-            []
-        );
-        let beforeMergeCourseDetails;
-        if (order?.uiState?.unmergeCourses) {
-            beforeMergeCourseDetails = Object.entries(order.uiState.unmergeCourses).reduce(
-                (acc, [uuid, details]) => {
-                    if (details.table_id === unmergeTable.id) {
-                        acc.push({
-                            ...details,
-                            uuid: uuid,
-                        });
-                    }
-                    return acc;
-                },
-                []
-            );
-        }
-
-        if (beforeMergeDetails.length) {
-            const newOrder = this.addNewOrder({ table_id: unmergeTable });
-
-            const courseByLines = {};
-            if (beforeMergeCourseDetails?.length) {
-                // Restore courses
-                for (const courseDetails of beforeMergeCourseDetails) {
-                    const course = this.data.models["restaurant.order.course"].create({
-                        order_id: newOrder,
-                        index: courseDetails.index,
-                        fired: courseDetails.fired,
-                        fired_date: courseDetails.fired_date,
-                        name: _t("Course ") + courseDetails.index,
-                    });
-                    courseDetails.lines?.forEach((lineUuid) => {
-                        courseByLines[lineUuid] = course;
-                    });
-                    delete order.uiState.unmergeCourses[courseDetails.uuid];
-                }
-            }
-
-            for (const detail of beforeMergeDetails) {
-                const line = order.lines.find((l) => l.uuid === detail.uuid);
-                const serializedLine = { ...line.raw };
-                delete serializedLine.uuid;
-                delete serializedLine.id;
-                const course = courseByLines[detail.uuid];
-                Object.assign(serializedLine, {
-                    order_id: newOrder.id,
-                    qty: detail.quantity,
-                });
-
-                const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
-                if (course) {
-                    newLine.course_id = course;
-                }
-                if (parseFloat(line.qty - detail.quantity) === 0) {
-                    line.delete();
-                } else {
-                    line.setQuantity(line.qty - newLine.qty);
-                }
-                this.handlePreparationHistory(
-                    order.last_order_preparation_change.lines,
-                    newOrder.last_order_preparation_change.lines,
-                    line,
-                    newLine,
-                    detail.quantity
-                );
-
-                delete order.uiState.unmerge[line.uuid];
-            }
-
-            await this.syncAllOrders({ orders: [order, newOrder] });
-            return newOrder;
-        }
-
-        return false;
     },
     removeOrder(order) {
         const orderRemoved = super.removeOrder(...arguments);
@@ -884,6 +794,9 @@ patch(PosStore.prototype, {
         }
     },
     async mergeTableOrders(orderUuid, destinationTable) {
+        if (!destinationTable) {
+            return;
+        }
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
