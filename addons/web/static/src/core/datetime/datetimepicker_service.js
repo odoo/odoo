@@ -8,7 +8,7 @@ import {
     proxy,
 } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
@@ -572,7 +572,7 @@ export const datetimePickerService = {
 
                     onMounted(setup);
                     onWillDestroy(destroy);
-                    useLayoutEffect(initInputs, getInputs);
+                    // useLayoutEffect(initInputs, getInputs);
 
                     // Note: this `onPatched` callback must be called after the `useLayoutEffect` since
                     // the effect may change input values that will be selected by the patch callback.
