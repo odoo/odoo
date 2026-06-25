@@ -469,7 +469,7 @@ QUnit.module("Views", (hooks) => {
             arch: `<form><div name="button_box" invisible="1"><button id="btn1">MyButton</button></div></form>`,
             resId: 2,
         });
-        const panelActions = target.querySelector(".o_control_panel .o_control_panel_actions")
+        const panelActions = target.querySelector(".o_control_panel .o_control_panel_actions");
         assert.strictEqual(panelActions.childElementCount, 0);
         assert.strictEqual(panelActions.textContent, "");
     });
@@ -4507,6 +4507,37 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "New",
+            "should have the display name of the record as title"
+        );
+    });
+
+    QUnit.test("form view properly format the title", async function (assert) {
+        serverData.views = {
+            "partner,false,form": '<form><field name="foo"/></form>',
+            "partner,false,search": "<search/>",
+        };
+
+        serverData.models.partner.records[0].display_name =
+            "first record\naddress of the first record\ncountry of the first record";
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                res_id: 1,
+            },
+        };
+
+        const target = getFixture();
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        assert.strictEqual(
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
+            "first record",
             "should have the display name of the record as title"
         );
     });
