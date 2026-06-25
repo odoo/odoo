@@ -532,3 +532,33 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
             10,
             "Kiosk should show remaining deductible overtime after leave deduction",
         )
+
+    def test_absence_management_with_timeoff(self):
+        self.company.write({
+            'absence_management': True,
+        })
+        self.employee.contract_date_start = datetime(2026, 1, 1)
+        self.employee.tz = 'UTC'
+        self.employee.ruleset_id = self.ref('hr_attendance.hr_attendance_default_ruleset')
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Vacation Yippie',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.regular_leave_type.id,
+            'request_date_from': datetime(2026, 1, 13),
+            'request_date_to': datetime(2026, 1, 13),
+        })
+        leave.action_approve()
+        with freeze_time('2026-01-14'):
+            self.env['hr.attendance']._cron_absence_detection()
+        self.assertEqual(self.env['hr.attendance'].search_count([
+            ('employee_id', '=', self.employee.id),
+            ('check_in', '=', '2026-01-13'),
+        ]), 0)
+
+        with freeze_time('2026-01-15'):
+            self.env['hr.attendance']._cron_absence_detection()
+        self.assertEqual(self.env['hr.attendance'].search_count([
+            ('employee_id', '=', self.employee.id),
+            ('check_in', '=', '2026-01-14'),
+        ]), 1)
