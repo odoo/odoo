@@ -7,6 +7,10 @@ from odoo import fields, models
 class PurchaseRequisition(models.Model):
     _inherit = 'purchase.requisition'
 
+    def _get_cancellable_purchase_orders(self):
+        cancellable = super()._get_cancellable_purchase_orders()
+        return cancellable.filtered(lambda po: not po.picking_ids.filtered(lambda p: p.state != 'cancel'))
+
     def _default_picking_type_id(self):
         picking_type = self.env['stock.picking.type'].search([('warehouse_id.company_id', '=', self.env.company.id), ('code', '=', 'incoming')], limit=1)
         if not picking_type:
