@@ -1,9 +1,11 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 import serial
 
-from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import SerialDriver, SerialProtocol, serial_connection
+from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import (
+    SerialDriver,
+    SerialProtocol,
+    serial_connection,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -105,7 +107,7 @@ class SwedishBlackBoxDriver(SerialDriver):
                         _logger.warning(
                             ("Received error: %s - Severity: %s"),
                             MainStatus.get(response[4]),
-                            SeverityError.get(response[5][1:2])
+                            SeverityError.get(response[5][1:2]),
                         )
                         _logger.warning("Sent request: %s", packet)
                     return True
@@ -189,7 +191,7 @@ class SwedishBlackBoxDriver(SerialDriver):
 
     def _register_receipt_v1(self, data):
         """CCSP v1 requires three commands to register a receipt:
-           ST (start receipt), RH (receipt header), SQ (signature request)"""
+        ST (start receipt), RH (receipt header), SQ (signature request)"""
 
         response = self._request_action("ST", self._connection)
         error = self._check_error("ST", response)
@@ -217,37 +219,33 @@ class SwedishBlackBoxDriver(SerialDriver):
         return cls._send_to_blackbox(packet, connection)
 
     @classmethod
-    def _send_to_blackbox(cls, packet, connection, retry=1):
+    def _send_to_blackbox(
+        cls, packet: bytearray, connection: serial.Serial, retry: int = 1
+    ) -> list[str]:
         """Sends a message to and wait for a response from the blackbox.
+
         :param packet: the message to be sent to the blackbox
-        :type packet: bytearray
-        :param response_size: number of bytes of the expected response
-        :type response_size: int
         :param connection: serial connection to the blackbox
-        :type connection: serial.Serial
-        :return: the response to the sent message
-        :rtype: bytearray
+        :return: response from the FDM
         """
         connection.reset_input_buffer()
         connection.reset_output_buffer()
 
-        ACK = ""
+        ack = ""
         retries = 0
-        while ACK != "ACK" and retries < retry:
+        response = []
+        while ack != "ACK" and retries < retry:
             connection.write(packet)
             response = connection.readline().decode(errors="ignore").split("#")
 
             try:
                 if response[3] != "NAK":
-                    ACK = "ACK"
+                    ack = "ACK"
                 else:
                     _logger.error("Received error: %s", ErrorCode.get(response[4]))
                     _logger.error("Sent request: %s received NACK.", packet)
-            except Exception:  # noqa: BLE001
-                _logger.warning(
-                    "sent request: %s without receiving response.",
-                    packet, exc_info=True, stack_info=True,
-                )
+            except IndexError:
+                _logger.warning("sent request: %s without receiving response.", packet)
 
             retries += 1
 
