@@ -20,7 +20,11 @@ const useDialogDraggable = makeDraggableHook({
             right: `${70 - width}px`,
         });
         ctx.current.element.after(ctx.current.container);
-        addCleanup(() => ctx.current.container.remove());
+        document.body.classList.add("o_modal_dragged");
+        addCleanup(() => {
+            document.body.classList.remove("o_modal_dragged");
+            ctx.current.container.remove();
+        });
     },
     onDrop({ ctx, getRect }) {
         const { top, left } = getRect(ctx.current.element);
