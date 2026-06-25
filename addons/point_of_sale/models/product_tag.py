@@ -23,7 +23,7 @@ class ProductTag(models.Model):
     def write(self, vals):
         if vals.get('pos_description'):
             vals['pos_description'] = adapt_translated_field_value(
-                self.env, vals['pos_description'],
-                lambda lang, v: '' if is_html_empty(v) else v
+                self.env, self._fields["pos_description"], vals['pos_description'],
+                lambda lang, v: '' if is_html_empty(v) else v,
             )
         return super().write(vals)

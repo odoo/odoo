@@ -25,7 +25,7 @@ from odoo.tools import _, config, frozendict, partition, unique, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
-from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS, StoredTranslations
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 
 _logger = logging.getLogger(__name__)
@@ -240,8 +240,8 @@ actual arch.
                 # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
                 if arch_fs:
                     arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
-                    translation_dictionary = field_arch_db.get_translation_dictionary(
-                        view.with_env(env_en).arch_db, {lang: view.with_env(env_lang).arch_db}
+                    translation_dictionary = StoredTranslations._get_translation_dictionary(
+                        field_arch_db, view.with_env(env_en).arch_db, {lang: view.with_env(env_lang).arch_db}
                     )
                     arch_fs = field_arch_db.translate(
                         lambda term: translation_dictionary[term][lang],

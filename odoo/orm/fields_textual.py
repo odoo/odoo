@@ -3,7 +3,6 @@ from __future__ import annotations
 import collections.abc
 import itertools
 import typing
-from collections import defaultdict
 from difflib import unified_diff
 from hashlib import sha256
 from operator import attrgetter
@@ -70,16 +69,6 @@ class BaseString(Field[str | typing.Literal[False]]):
             sql.convert_column_translatable(model.env.cr, model._table, self.name, self.stored_sql_column_type)
         else:
             sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
-
-    def get_trans_terms(self, value) -> list[str]:
-        """ Return the sequence of terms to translate found in `value`"""
-        if not isinstance(value, str):
-            return []
-        if not callable(self.translate):
-            # Ensure translation terms are stringified.
-            # Double quotes inside Markup are not escaped when the value is used as a polib.POEntry msgid.
-            return [str(value)]
-        return ParsedTranslation(value, self).terms if value else []
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # domain condition `(name, '=', {'en_US': 'English, 'fr_FR': 'French'})` is not supported
@@ -172,7 +161,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         if (
             callable(self.translate)
             and record.env.context.get('edit_translations')
-            and (translated_terms := self.get_trans_terms(value))
+            and (translated_terms := ParsedTranslation(self, value).terms)
         ):
             field_ = self
             record_ = record
@@ -188,7 +177,7 @@ class BaseString(Field[str | typing.Literal[False]]):
 
             if lang != base_lang:
                 base_value = record.with_context(edit_translations=None, check_translations=True, lang=base_lang)[self.name]
-                base_terms = self.get_trans_terms(base_value)
+                base_terms = ParsedTranslation(self, base_value).terms
                 if len(base_terms) != len(translated_terms):
                     # term number mismatch, ignore all translations
                     value = base_value
@@ -228,31 +217,6 @@ class BaseString(Field[str | typing.Literal[False]]):
 
     def convert_to_write(self, value, record):
         return value
-
-    def get_translation_dictionary(self, from_lang_value, to_lang_values):
-        """ Build a dictionary from terms in from_lang_value to terms in to_lang_values
-
-        :param str from_lang_value: from xml/html
-        :param dict to_lang_values: {lang: lang_value}
-
-        :return: {from_lang_term: {lang: lang_term}}
-        :rtype: dict
-        """
-        from_lang_terms = self.get_trans_terms(from_lang_value)
-        dictionary = defaultdict(lambda: defaultdict(dict))
-        if not from_lang_terms:
-            return dictionary
-        dictionary.update({from_lang_term: defaultdict(dict) for from_lang_term in from_lang_terms})
-
-        for lang, to_lang_value in to_lang_values.items():
-            to_lang_terms = self.get_trans_terms(to_lang_value)
-            if len(from_lang_terms) != len(to_lang_terms):
-                for from_lang_term in from_lang_terms:
-                    dictionary[from_lang_term][lang] = from_lang_term
-            else:
-                for from_lang_term, to_lang_term in zip(from_lang_terms, to_lang_terms):
-                    dictionary[from_lang_term][lang] = to_lang_term
-        return dictionary
 
     def _get_stored_translations(self, record):
         """
@@ -423,7 +387,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         # give the current language value a priority to be the base language during ``StoredTranslations.written``
         parsed_translation_dict = {lang: None} if lang in cache_value_dict else {}
         parsed_translation_dict.update(
-            {k: ParsedTranslation(v, self)
+            {k: ParsedTranslation(self, v)
             for k, v in cache_value_dict.items()
         })
         if len({v.structure for v in parsed_translation_dict.values()}) > 1:

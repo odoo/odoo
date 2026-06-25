@@ -24,8 +24,9 @@ def handle_history_divergence(record, html_field_name, vals):
 
     if record._fields[html_field_name].translate:
         vals[html_field_name] = adapt_translated_field_value(
-            record.env, vals[html_field_name],
-            lambda lang, v: _handle_history_divergence(record.with_context(lang=lang), html_field_name, v))
+            record.env, record._fields[html_field_name], vals[html_field_name],
+            lambda lang, v: _handle_history_divergence(record.with_context(lang=lang), html_field_name, v),
+        )
     else:
         vals[html_field_name] = _handle_history_divergence(record, html_field_name, vals[html_field_name])
 

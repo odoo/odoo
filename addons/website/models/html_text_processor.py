@@ -6,6 +6,7 @@ from lxml import etree, html
 
 from odoo import api, models
 from odoo.tools import xml_translate
+from odoo.tools.translate import StoredTranslations
 
 _logger = logging.getLogger(__name__)
 
@@ -129,23 +130,21 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
             placeholders.append(placeholder)
         if text_must_be_translated_for_openai:
             # Check if terms are translated.
-            translation_dictionary = self.env['website.page']._fields['arch_db'].get_translation_dictionary(
-                snippet_en,
-                {text_generation_target_lang: snippet},
-            )
-            # Remove all numeric keys.
-            translation_dictionary = {
+            field = self.env['website.page']._fields['arch_db']
+            translations = StoredTranslations({'en_US': snippet_en, text_generation_target_lang: snippet})
+            terms_mapping = translations.extract_term_translations(
+                self.env, field, 'en_US',
+                target_langs={text_generation_target_lang},
+                include_identical=True,  # keep identical terms for the translation coverage calculation
+            )[text_generation_target_lang]
+            # Remove all numeric keys and update translated content in context.
+            terms_mapping = {
                 k: v
-                for k, v in translation_dictionary.items()
+                for k, v in terms_mapping.items()
                 if not xml_translate.get_text_content(k).strip().isnumeric()
             }
-            # Update translated content in context
-            translated_updates = {}
-            for from_lang_term, to_lang_terms in translation_dictionary.items():
-                translated_updates[from_lang_term] = to_lang_terms[text_generation_target_lang]
-
-            if translated_updates:
-                updated_processor = updated_processor._update_processing_cache('html_translated_content', translated_updates)
+            if terms_mapping:
+                updated_processor = updated_processor._update_processing_cache('html_translated_content', terms_mapping)
         return updated_processor, placeholders
 
     def _render_snippet(self, snippet_key):

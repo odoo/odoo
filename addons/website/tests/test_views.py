@@ -1276,7 +1276,9 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE', 'es_ES'], overwrite=True)
 
         specific_view.invalidate_model(['arch_db', 'arch'])
-        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
+        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
+                         "loading module translation copy translation from base to specific view")
+        self.assertEqual(specific_view.with_context(lang='fr_BE', check_translations=True).arch, '<div>salut</div>',
                          "loading module translation copy translation from base to specific view")
 
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
@@ -1288,7 +1290,9 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.env['ir.module.module']._load_module_terms(['website'], ['nl_NL'], overwrite=True)
 
         specific_view.invalidate_model(['arch_db', 'arch'])
-        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
+        self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
+                         "loading module translation for a specific language should not remove existing translations for other languages")
+        self.assertEqual(specific_view.with_context(lang='fr_BE', check_translations=True).arch, '<div>salut</div>',
                          "loading module translation for a specific language should not remove existing translations for other languages")
 
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',

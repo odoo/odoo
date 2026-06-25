@@ -635,8 +635,9 @@ class AccountTax(models.Model):
         if sanitized.get('description'):
             sanitized['description'] = adapt_translated_field_value(
                 self.env,
+                self._fields["description"],
                 sanitized.get('description'),
-                lambda lang, v: f"<div>{v}</div>" if not re.search(r'<[^>]+>', v) else v
+                lambda lang, v: f"<div>{v}</div>" if not re.search(r'<[^>]+>', v) else v,
             )
 
         # Allow to provide invoice_repartition_line_ids and refund_repartition_line_ids by dispatching them
