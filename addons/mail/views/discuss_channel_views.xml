@@ -7,7 +7,7 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object">
+                <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object" default_group_by="discuss_category_id" js_class="discuss_category_kanban">
                     <templates>
                         <t t-name="menu">
                             <a type="open" class="dropdown-item" role="menuitem">Advanced Settings</a>
@@ -41,7 +41,7 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <list default_order="name" action="open_chat_window_action" type="object">
+                <list default_order="name" action="open_chat_window_action" type="object" default_group_by="discuss_category_id">
                     <field name="avatar_128" invisible="parent_channel_id" widget="image" options="{'size': [24, 24]}" width="30" string=""/>
                     <field name="display_name" string="Name"/>
                     <field name="description"/>
@@ -152,9 +152,6 @@
                     <filter string="Not Joined" name="filter_not_joined" domain="[('is_member', '=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
-                    <group>
-                        <filter string="Category" name="group_by_category" context="{'group_by': 'discuss_category_id'}"/>
-                    </group>
                 </search>
             </field>
         </record>

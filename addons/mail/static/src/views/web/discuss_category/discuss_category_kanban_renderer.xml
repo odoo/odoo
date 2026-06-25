@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="mail.DiscussCategoryKanbanRenderer">
+        <div class="o_kanban_renderer o_renderer o-discuss-CategoryKanban p-2">
+            <t t-if="this.props.list.isGrouped" t-foreach="this.props.list.groups" t-as="group" t-key="group_index">
+                <t t-if="group.count > 0 or group.value === false">
+                    <span class="fw-bold fs-5">
+                        <t t-if="group.value === false">None (<t t-out="group.count"/>)</t>
+                        <t t-else=""><t t-out="group.displayName"/></t>
+                    </span>
+                    <div class="d-flex flex-wrap align-content-start justify-content-start mb-2">
+                        <KanbanRecord
+                            t-foreach="group.list.records" t-as="record" t-key="record.id"
+                            archInfo="this.props.archInfo"
+                            Compiler="this.props.Compiler"
+                            canResequence="false"
+                            forceGlobalClick="this.props.forceGlobalClick"
+                            group="group"
+                            groupByField="this.props.list.groupByField"
+                            getSelection.bind="this.getSelection"
+                            toggleSelection.bind="this.toggleSelection"
+                            deleteRecord="this.props.deleteRecord"
+                            archiveRecord.bind="this.archiveRecord"
+                            openRecord="this.props.openRecord"
+                            openAction="this.props.archInfo.openAction"
+                            readonly="this.props.readonly"
+                            record="record"
+                            selectionAvailable="this.state.selectionAvailable"
+                        />
+                        <!-- kanban ghost cards are used to properly space last elements. -->
+                        <t t-foreach="[,,,,,,]" t-as="i" t-key="i_index">
+                            <div class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0"/>
+                        </t>
+                    </div>
+                    <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(group)"/>
+                    <div t-if="unloadedCount > 0" class="o_kanban_load_more d-flex justify-content-end">
+                        <button class="btn btn-outline-primary mt-4 me-1" t-on-click="() => this.loadMore(group)">
+                            Load more... (<t t-out="unloadedCount"/> remaining)
+                        </button>
+                    </div>
+                </t>
+            </t>
+            <ActionHelper t-if="this.showNoContentHelper" noContentHelp="this.props.noContentHelp"/>
+        </div>
+    </t>
+</templates>
