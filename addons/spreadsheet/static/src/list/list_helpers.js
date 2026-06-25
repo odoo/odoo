@@ -30,3 +30,7 @@ export function hasListFormula(compiledFormula) {
 export function getFirstListFunction(compiledFormula, getters) {
     return compiledFormula.getFunctionsFromTokens(ALL_LIST_FUNCTIONS, getters)[0];
 }
+
+export function getListFunctions(compiledFormula, getters) {
+    return compiledFormula.getFunctionsFromTokens(ALL_LIST_FUNCTIONS, getters);
+}
