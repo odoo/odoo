@@ -1,25 +1,12 @@
-import { EvaluationError, helpers, registries } from "@odoo/o-spreadsheet";
+import { EvaluationError, registries } from "@odoo/o-spreadsheet";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
+import { computeFormatFromCurrency } from "../helpers";
 const { featurePluginRegistry } = registries;
-const { createCurrencyFormat } = helpers;
-
-/**
- * @typedef Currency
- * @property {string} name
- * @property {string} code
- * @property {string} symbol
- * @property {number} decimalPlaces
- * @property {"before" | "after"} position
- */
 
 export class CurrencyPlugin extends OdooUIPlugin {
-    static getters = /** @type {const} */ ([
-        "getCurrencyRate",
-        "computeFormatFromCurrency",
-        "getCompanyCurrencyFormat",
-    ]);
+    static getters = /** @type {const} */ (["getCurrencyRate", "getCompanyCurrencyFormat"]);
 
     constructor(config) {
         super(config);
@@ -65,28 +52,13 @@ export class CurrencyPlugin extends OdooUIPlugin {
     }
 
     /**
-     * @param {Currency | undefined} currency
-     * @returns {string | undefined}
-     */
-    computeFormatFromCurrency(currency) {
-        if (!currency) {
-            return undefined;
-        }
-        return createCurrencyFormat({
-            symbol: currency.symbol,
-            position: currency.position,
-            decimalPlaces: currency.decimalPlaces,
-        });
-    }
-
-    /**
      * Returns the default display format of a the company currency
      * @param {number} [companyId]
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
         if (!companyId && this.currentCompanyCurrency) {
-            return this.computeFormatFromCurrency(this.currentCompanyCurrency);
+            return computeFormatFromCurrency(this.currentCompanyCurrency);
         }
         const currency = this.serverData.get(
             "res.currency",
@@ -96,7 +68,7 @@ export class CurrencyPlugin extends OdooUIPlugin {
         if (currency === false) {
             throw new EvaluationError(_t("Currency not available for this company."));
         }
-        return this.computeFormatFromCurrency(currency);
+        return computeFormatFromCurrency(currency);
     }
 }
 

@@ -3,6 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { GraphModel as ChartModel } from "@web/views/graph/graph_model";
 import { Domain } from "@web/core/domain";
 import { range } from "@web/core/utils/numbers";
+import { getCurrency } from "@web/core/currency";
+import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
 
 export class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -40,6 +42,7 @@ export class ChartDataSource extends OdooViewsDataSource {
             }
         );
         await this._model.load(this._searchParams);
+        this._chartData = undefined;
         this._hierarchicalData = undefined;
         this.labelToDomainMapping = undefined;
     }
@@ -52,7 +55,7 @@ export class ChartDataSource extends OdooViewsDataSource {
         if (!this._isValid) {
             return { datasets: [], labels: [] };
         }
-        return this._model.data;
+        return this._getChartData();
     }
 
     getHierarchicalData() {
@@ -83,6 +86,29 @@ export class ChartDataSource extends OdooViewsDataSource {
         this._model?.updateMetaData({ mode: newMode });
     }
 
+    _getCurrencyFormatForId(currencyId) {
+        const currency = getCurrency(currencyId);
+        return computeFormatFromCurrency(currency);
+    }
+
+    _getChartData() {
+        if (this._chartData) {
+            return this._chartData;
+        }
+        const { datasets, labels } = this._model.data;
+        this._chartData = {
+            datasets: datasets.map((ds) => ({
+                ...ds,
+                data: ds.data.map((d, index) => ({
+                    value: d,
+                    format: this._getCurrencyFormatForId(ds.currencyIds[index]),
+                })),
+            })),
+            labels,
+        };
+        return this._chartData;
+    }
+
     _getHierarchicalData() {
         if (this._hierarchicalData && this.labelToDomainMapping) {
             return this._hierarchicalData;
@@ -101,7 +127,10 @@ export class ChartDataSource extends OdooViewsDataSource {
         }
 
         for (const point of dataPoints) {
-            labels.push(point.value);
+            labels.push({
+                value: point.value,
+                format: this._getCurrencyFormatForId(point.currencyId),
+            });
             for (let i = 0; i < groupBy.length; i++) {
                 datasets[i].data.push(point.labels[i]);
                 datasets[i].identifiers.push(point.identifier);
