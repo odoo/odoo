@@ -83,7 +83,7 @@ class ScheduledMessage(models.Model):
         for scheduled_message in scheduled_messages:
             if attachments := scheduled_message.attachment_ids:
                 attachments.filtered(
-                    lambda a: a.res_model == 'mail.compose.message' and not a.res_id and a.create_uid.id == self.env.uid
+                    lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self.env.uid
                 ).write({
                     'res_model': scheduled_message._name,
                     'res_id': scheduled_message.id,
