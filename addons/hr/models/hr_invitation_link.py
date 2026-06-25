@@ -90,17 +90,11 @@ class HrInvitationLink(models.Model):
         return True, ""
 
     def _consume(self):
-        """Atomically register one more use, guarding against over-quota races."""
         self.ensure_one()
         link = self.sudo()
-        # Re-read under a row lock so concurrent signups cannot exceed max_uses.
-        self.env.cr.execute(
-            "SELECT used_count, max_uses FROM hr_invitation_link WHERE id = %s FOR UPDATE",
-            [link.id])
-        used_count, max_uses = self.env.cr.fetchone()
-        if max_uses and used_count >= max_uses:
+        if link.max_uses and link.used_count >= link.max_uses:
             raise ValidationError(_("This invitation link has reached its maximum number of uses."))
-        link.used_count = used_count + 1
+        link.used_count += 1
 
     def action_create_link(self):
         """Footer action of the wizard: persist the link and re-open it so the
