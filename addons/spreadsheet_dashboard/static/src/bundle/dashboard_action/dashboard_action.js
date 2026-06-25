@@ -1,4 +1,4 @@
-import { render, useLayoutEffect } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -51,24 +51,24 @@ export class SpreadsheetDashboardAction extends Component {
                 this.openDashboard(activeDashboardId);
             }
         });
-        useLayoutEffect(
-            () => router.pushState({ dashboard_id: this.activeDashboardId }),
-            () => [this.activeDashboardId]
-        );
-        useLayoutEffect(
-            () => {
-                const dashboard = this.loader.getActiveDashboard();
-                if (dashboard && dashboard.status === Status.Loaded) {
-                    const onUpdate = () => render(this, true);
-                    dashboard.model.on("update", this, onUpdate);
-                    return () => dashboard.model.off("update", this, onUpdate);
-                }
-            },
-            () => {
-                const dashboard = this.loader.getActiveDashboard();
-                return [dashboard?.model, dashboard?.status];
-            }
-        );
+        // useLayoutEffect(
+        //     () => router.pushState({ dashboard_id: this.activeDashboardId }),
+        //     () => [this.activeDashboardId]
+        // );
+        // useLayoutEffect(
+        //     () => {
+        //         const dashboard = this.loader.getActiveDashboard();
+        //         if (dashboard && dashboard.status === Status.Loaded) {
+        //             const onUpdate = () => render(this, true);
+        //             dashboard.model.on("update", this, onUpdate);
+        //             return () => dashboard.model.off("update", this, onUpdate);
+        //         }
+        //     },
+        //     () => {
+        //         const dashboard = this.loader.getActiveDashboard();
+        //         return [dashboard?.model, dashboard?.status];
+        //     }
+        // );
         useListener(window, "afterprint", this.logExport.bind(this));
 
         useSetupAction({
