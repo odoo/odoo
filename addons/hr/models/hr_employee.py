@@ -1236,11 +1236,11 @@ class HrEmployee(models.Model):
         return self.user_id.action_reset_password()
 
     def action_copy_invitation_link(self):
-        """Return the signup/invitation URL of the linked user, for the UI to copy."""
         self.ensure_one()
-        partner = self.user_id.partner_id
-        if not partner:
+        if not self.user_id:
             raise UserError(self.env._("This employee has no user."))
+        self.user_id.check_access('write')
+        partner = self.user_id.partner_id
         partner.sudo().signup_prepare()
         return partner.sudo()._get_signup_url_for_action().get(partner.id)
 
