@@ -6,7 +6,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc, ConnectionLostError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { formatFloatTime } from "@web/views/fields/formatters";
+import { formatFloatTime, formatDateTime } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
@@ -57,15 +57,15 @@ export class ActivityMenu extends Component {
         this.hoursToday = formatFloatTime(this.employee.hours_today, { numeric: true });
 
         this.attendancesToday = (this.employee.today_attendance_ids || []).map((att) => {
-            const checkIn = deserializeDateTime(att.check_in).toLocaleString({
-                hour: "2-digit",
-                minute: "2-digit",
-            });
+            const checkIn = formatDateTime(
+                deserializeDateTime(att.check_in),
+                { showDate: false }
+            );
             const checkOut = att.check_out
-                ? deserializeDateTime(att.check_out).toLocaleString({
-                      hour: "2-digit",
-                      minute: "2-digit",
-                  })
+                ? formatDateTime(
+                    deserializeDateTime(att.check_out),
+                    { showDate: false }
+                )
                 : null;
             const duration = att.check_out
                 ? att.worked_hours
