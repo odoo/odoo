@@ -375,9 +375,8 @@ class ResourceCalendarAttendance(models.Model):
     def _to_dict(self):
         return self.read(self._to_dict_fields(), load=None)
 
-    def _is_work_period(self):
-        self.ensure_one()
-        return True
+    def _filter_by_working(self):
+        return self  # To be overridden
 
     def _filter_by_date(self, date: date, additional_filter=None):
         """

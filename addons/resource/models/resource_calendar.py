@@ -163,7 +163,8 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             if calendar.calendar_type == 'variable':
                 continue
-            calendar.days_per_week = len(set(calendar._get_working_attendances().mapped('dayofweek')))
+            attendances = calendar.attendance_ids._filter_by_working()
+            calendar.days_per_week = len(set(attendances.mapped('dayofweek')))
 
     @api.depends('days_per_week', 'hours_per_week')
     def _compute_hours_per_day(self):
@@ -176,7 +177,7 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             if calendar.calendar_type == 'variable':
                 continue
-            attendances = calendar._get_working_attendances()
+            attendances = calendar.attendance_ids._filter_by_working()
             calendar.hours_per_week = sum(attendances.mapped('duration_hours'))
 
     def _compute_work_resources_count(self):
@@ -598,16 +599,6 @@ class ResourceCalendar(models.Model):
         )
         return interval_dt(work_intervals[0]) if work_intervals else None
 
-    def _get_working_attendances(self):
-        # If the calendar is variable, we want all attendances that have a date.
-        # If the calendar is fixed, we want all attendances that don't have a date.
-        return self.attendance_ids.filtered(lambda attendance:
-            attendance._is_work_period() and (
-                (attendance.calendar_id.calendar_type == 'fixed' and not attendance.date) or
-                (attendance.calendar_id.calendar_type == 'variable' and attendance.date)
-            ),
-        )
-
     def _get_unusual_days(self, start_dt, end_dt, company_id=False, resource=None):
         if self:
             self.ensure_one()
@@ -797,7 +788,7 @@ class ResourceCalendar(models.Model):
         return revert(day_dt)
 
     def _works_on_date(self, date):
-        return bool(self._get_working_attendances()._filter_by_date(date))
+        return bool(self.attendance_ids._filter_by_date(date)._filter_by_working())
 
     def _get_attendances_by_date(self, date_from, date_to, domain=None):
         """

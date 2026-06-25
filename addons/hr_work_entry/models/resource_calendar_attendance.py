@@ -49,7 +49,8 @@ class ResourceCalendarAttendance(models.Model):
     def _to_dict_fields(cls):
         return super()._to_dict_fields() + ['work_entry_type_id']
 
-    def _is_work_period(self):
-        self.ensure_one()
-        work_entry_type_sudo = self.sudo().work_entry_type_id
-        return ((not work_entry_type_sudo) or work_entry_type_sudo.count_as == 'working_time') and super()._is_work_period()
+    def _filter_by_working(self):
+        def _is_work_period(att):
+            work_entry_type_sudo = att.sudo().work_entry_type_id
+            return ((not work_entry_type_sudo) or work_entry_type_sudo.count_as == 'working_time')
+        return self.filtered(_is_work_period) & super()._filter_by_working()
