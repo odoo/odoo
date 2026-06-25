@@ -267,8 +267,8 @@ class ResUsers(models.Model):
         return write_res
 
     def action_archive(self):
-        activities_to_delete = self.env['mail.activity'].sudo().search([('user_id', 'in', self.ids)])
-        activities_to_delete.unlink()
+        activities_to_archive = self.env['mail.activity'].sudo().search([('user_id', 'in', self.ids)])
+        activities_to_archive.action_archive()
         return super().action_archive()
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):

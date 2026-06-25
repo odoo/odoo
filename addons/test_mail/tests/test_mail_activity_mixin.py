@@ -198,7 +198,7 @@ class TestActivityMixin(TestActivityCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive_user(self):
         """
-        Test when archiving an user, we unlink all his related activities
+        Test when archiving an user, we archive all his related activities
         """
         test_users = self.env['res.users']
         for i in range(5):
@@ -233,9 +233,13 @@ class TestActivityMixin(TestActivityCommon):
         self.assertEqual(activities.mapped('user_id'), active_users,
                          "We should have 3 different users linked to the activities of the active users")
 
-        # ensure the user's activities are removed
+        # archived users should not have active activities anymore
         activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
-        self.assertFalse(activities, "Activities of archived users should be deleted.")
+        self.assertFalse(activities, "Activities of archived users should be archived.")
+
+        # ensure activities still exist and are archived
+        activities = self.env['mail.activity'].search(['&', ('user_id', 'in', archived_users.ids), ("active", "=", False)])
+        self.assertEqual(len(activities), len(archived_users), "Activities of archived users should be archived.")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
