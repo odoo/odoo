@@ -25,6 +25,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
      */
     handleMutations(mutations) {
         mutations
+            .filter((m) => !m.isAutomatic)
             .filter(
                 (m) =>
                     !(

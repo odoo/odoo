@@ -145,6 +145,9 @@ export class SavePlugin extends Plugin {
             return;
         }
         for (const mutation of mutations) {
+            if (mutation.isAutomatic) {
+                continue;
+            }
             if (
                 mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
                 mutation.attributeName === "contenteditable"
