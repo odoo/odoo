@@ -8,3 +8,4 @@ from . import test_update_events
 from . import test_delete_events
 from . import test_sync_odoo2microsoft_mail
 from . import test_answer_events
+from . import test_unsynced_attendees
