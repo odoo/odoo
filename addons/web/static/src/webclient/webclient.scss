@@ -145,12 +145,14 @@ kbd {
       &, .btn-sm {
         &:where(:not(.dropdown-item)) {
           font-size: $font-size-base;
-          padding: $o-touch-btn-padding;
+          --btn-padding-x: 14px;
+          --btn-padding-y: 7px;
         }
       }
 
       &:has(.fa-fw:only-child, .oi-fw:only-child) {
-          padding: $o-touch-btn-with-icon-padding;
+        --btn-padding-x: 10px;
+        --btn-padding-y: 7px;
       }
   }
 }
