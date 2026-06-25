@@ -287,7 +287,13 @@ h1, h2, h3, h4, h5, h6,
 // gradients.
 @for $index from 1 through 5 {
     .o_cc#{$index} {
-        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+        @include o-add-gradient('o-cc#{$index}-bg-gradient');
+        .btn-primary {
+            @include o-add-gradient('o-cc#{$index}-btn-primary-gradient');
+        }
+        .btn-secondary {
+             @include o-add-gradient('o-cc#{$index}-btn-secondary-gradient');
+        }
     }
 }
 
