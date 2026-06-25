@@ -779,6 +779,18 @@ var owl = (() => {
     const scope = getScope();
     let runId = 0;
     let runController = null;
+    let inFlight = false;
+    let pending = null;
+    function beginRun() {
+      loading.set(true);
+      inFlight = true;
+    }
+    function endRun() {
+      loading.set(false);
+      inFlight = false;
+      pending?.resolve();
+      pending = null;
+    }
     const stopEffect = effect(() => {
       refreshTick();
       const myRunId = ++runId;
@@ -791,7 +803,7 @@ var owl = (() => {
       if (scope?.abortSignal) {
         abortSignals.push(scope.abortSignal);
       }
-      loading.set(true);
+      beginRun();
       error.set(null);
       let promise;
       try {
@@ -799,27 +811,27 @@ var owl = (() => {
       } catch (e) {
         if (myRunId !== runId) return;
         if (isAbortError(e)) {
-          loading.set(false);
+          endRun();
           return;
         }
         error.set(e);
-        loading.set(false);
+        endRun();
         return;
       }
       promise.then(
         (result) => {
           if (myRunId !== runId) return;
           value.set(result);
-          loading.set(false);
+          endRun();
         },
         (e) => {
           if (myRunId !== runId) return;
           if (isAbortError(e)) {
-            loading.set(false);
+            endRun();
             return;
           }
           error.set(e);
-          loading.set(false);
+          endRun();
         }
       );
     });
@@ -827,6 +839,9 @@ var owl = (() => {
       stopEffect();
       runController?.abort();
       runController = null;
+      inFlight = false;
+      pending?.resolve();
+      pending = null;
     }
     scope?.onDestroy(dispose);
     const read = (() => value());
@@ -834,6 +849,16 @@ var owl = (() => {
     read.error = () => error();
     read.refresh = () => refreshTick.set(refreshTick() + 1);
     read.dispose = dispose;
+    read.currentPromise = () => {
+      if (!inFlight) {
+        return Promise.resolve();
+      }
+      if (!pending) {
+        let resolve;
+        pending = { promise: new Promise((res) => resolve = res), resolve };
+      }
+      return pending.promise;
+    };
     return read;
   }
   function safeReplacer(knownObjects, _key, value) {
@@ -903,6 +928,7 @@ ${issueStrings}`);
   var shapeSymbol = /* @__PURE__ */ Symbol("shape");
   var elementTypeSymbol = /* @__PURE__ */ Symbol("elementType");
   var optionalSymbol = /* @__PURE__ */ Symbol("optional");
+  var intersectionSymbol = /* @__PURE__ */ Symbol("intersection");
   function getDefault(type) {
     return typeof type === "function" ? type[defaultSymbol] : void 0;
   }
@@ -944,6 +970,14 @@ ${issueStrings}`);
     const inner = type[innerTypeSymbol] || type;
     if (typeof inner !== "function" || !value || typeof value !== "object") {
       return value;
+    }
+    const members = inner[intersectionSymbol];
+    if (members) {
+      let result2 = value;
+      for (const member of members) {
+        result2 = applyDefaultsRec(result2, member);
+      }
+      return result2;
     }
     const elementType = inner[elementTypeSymbol];
     if (elementType && Array.isArray(value)) {
@@ -1052,11 +1086,13 @@ ${issueStrings}`);
     });
   }
   function intersection(types22) {
-    return makeType(function validateIntersection(context) {
+    const validate = makeType(function validateIntersection(context) {
       for (const type of types22) {
         context.validate(type);
       }
     });
+    validate[intersectionSymbol] = types22;
+    return validate;
   }
   function literalType(literal) {
     return makeType(function validateLiteral(context) {
@@ -1567,7 +1603,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.38";
+  var version = "3.0.0-alpha.39";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -4699,8 +4735,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-06-22T09:47:19.845Z",
-    hash: "7eb36a97",
+    date: "2026-06-25T07:19:45.013Z",
+    hash: "c3543c60",
     url: "https://github.com/odoo/owl"
   };
 
