@@ -284,8 +284,9 @@ class TestCustomSnippet(TransactionCase):
         #    copied translations directly goes to a new confirmed version
         view2.with_context(delay_translations=True).save(f"<div>{snippet_arch}</div>", xpath='/body[1]/div[1]')
 
-        self.assertEqual(list(view2._fields['arch_db']._get_stored_translations(view2).keys()), ["en_US", "pa_GB"])
-        self.assertIn('Texte Francais', view2.with_context(lang=parseltongue.code).arch)
+        self.assertEqual(list(view2._fields['arch_db']._get_stored_translations(view2).keys()), ['en_US', '_pa_GB', 'pa_GB'])
+        self.assertNotIn('Texte Francais', view2.with_context(lang=parseltongue.code).arch)
+        self.assertIn('Texte Francais', view2.with_context(lang=parseltongue.code, check_translations=True).arch)
 
 
 @tagged('post_install', '-at_install')

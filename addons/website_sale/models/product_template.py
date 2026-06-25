@@ -328,6 +328,7 @@ class ProductTemplate(models.Model):
         if vals.get("description_ecommerce"):
             vals["description_ecommerce"] = adapt_translated_field_value(
                 self.env,
+                self._fields["description_ecommerce"],
                 vals["description_ecommerce"],
                 lambda lang, v: (  # noqa: ARG005
                     ""

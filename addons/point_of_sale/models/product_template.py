@@ -61,8 +61,8 @@ class ProductTemplate(models.Model):
         # when there is no content to display anyway.
         if (public_description := vals.get('public_description')):
             vals['public_description'] = adapt_translated_field_value(
-                self.env, public_description,
-                lambda lang, v: '' if is_html_empty(v) else v
+                self.env, self._fields["public_description"], public_description,
+                lambda lang, v: '' if is_html_empty(v) else v,
             )
         return super().write(vals)
 

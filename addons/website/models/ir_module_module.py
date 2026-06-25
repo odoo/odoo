@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict
 
 import werkzeug
 
@@ -11,6 +11,7 @@ from odoo.http import request
 from odoo.modules import Manifest
 from odoo.tools import SQL, split_every
 from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.translate import StoredTranslations
 
 _logger = logging.getLogger(__name__)
 
@@ -219,22 +220,13 @@ class IrModuleModule(models.Model):
                     k: v for k, v in old_stored_translations.items() if k in valid_langs and k != cur_lang
                 })
             else:
-                old_translations = {
-                    k: old_stored_translations.get(f'_{k}', v)
-                    for k, v in old_stored_translations.items()
-                    if k in valid_langs
-                }
-                # {from_lang_term: {lang: to_lang_term}
-                translation_dictionary = old_field.get_translation_dictionary(
-                    old_translations.pop(cur_lang, old_translations['en_US']),
-                    old_translations
+                # {lang: {old_term: new_term}}
+                translations = StoredTranslations(old_stored_translations).extract_term_translations(
+                    self.env, old_field, 'en_US',
                 )
-                # {lang: {old_term: new_term}
-                translations = defaultdict(dict)
-                for from_lang_term, to_lang_terms in translation_dictionary.items():
-                    for lang, to_lang_term in to_lang_terms.items():
-                        translations[lang][from_lang_term] = to_lang_term
-                new_rec.with_context(install_filename='dummy').update_field_translations(dst_fname, translations)
+                new_rec.with_context(install_filename='dummy').update_field_translations(
+                    dst_fname, translations, source_lang='en_US',
+                )
 
     def _theme_load(self, website):
         """
@@ -508,7 +500,8 @@ class IrModuleModule(models.Model):
 
         # use the translation dic of the generic to translate the specific
         self.env.cr.flush()
-        View = self.env['ir.ui.view']
+        View = self.env['ir.ui.view'].with_context(lang='en_US')
+        env_en = View.env
         field = self.env['ir.ui.view']._fields['arch_db']
         batch_size = PREFETCH_MAX // 10
         self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
@@ -525,26 +518,16 @@ class IrModuleModule(models.Model):
                 langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
                 if not langs_update:
                     continue
-                # get dictionaries limited to the requested languages
-                generic_arch_db_en = generic_arch_db.get('_en_US', generic_arch_db.get('en_US'))
-                specific_arch_db_en = specific_arch_db.get('_en_US', specific_arch_db.get('en_US'))
-                generic_arch_db_update = {k: generic_arch_db.get('_' + k, generic_arch_db[k]) for k in langs_update}
-                specific_arch_db_update = {k: specific_arch_db.get('_' + k, specific_arch_db.get(k, specific_arch_db_en)) for k in langs_update}
-                generic_translation_dictionary = field.get_translation_dictionary(generic_arch_db_en, generic_arch_db_update)
-                specific_translation_dictionary = field.get_translation_dictionary(specific_arch_db_en, specific_arch_db_update)
-                # update specific_translation_dictionary
-                for term_en, specific_term_langs in specific_translation_dictionary.items():
-                    if term_en not in generic_translation_dictionary:
-                        continue
-                    for lang, generic_term_lang in generic_translation_dictionary[term_en].items():
-                        if overwrite or term_en == specific_term_langs[lang]:
-                            specific_term_langs[lang] = generic_term_lang
-                for lang in langs_update:
-                    if specific_arch_db.get('_' + lang) == specific_arch_db.get(lang):
-                        specific_arch_db.pop('_' + lang, None)
-                    specific_arch_db[('_' + lang) if ('_' + lang) in specific_arch_db else lang] = field.translate(
-                        lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
-                field._update_cache(View.with_context(prefetch_langs=True).browse(specific_id), specific_arch_db, dirty=True)
+                generic_arch_db = StoredTranslations(generic_arch_db)
+                specific_arch_db = StoredTranslations(specific_arch_db)
+                # extract {lang: {src_term: translated_term}} from the generic view
+                term_updates = generic_arch_db.extract_term_translations(env_en, field, 'en_US', target_langs=langs_update)
+                new_specific_arch_db = specific_arch_db.translated(
+                    env_en, field, 'en_US', term_updates, overwrite=overwrite,
+                    delay_translations=True,
+                )
+                # like `Translaitonimporter.save()` we bypass the ORM(`View.write()`)
+                field._update_cache(View.with_context(prefetch_langs=True).browse(specific_id), new_specific_arch_db, dirty=True)
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:
             return res
