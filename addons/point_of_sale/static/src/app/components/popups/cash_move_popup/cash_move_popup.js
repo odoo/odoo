@@ -30,7 +30,7 @@ export class CashMovePopup extends Component {
             reason: "",
             cashMoves: [],
         });
-        this.confirm = useAsyncLockedMethod(this.confirm);
+        this.confirm = useAsyncLockedMethod(this.confirm.bind(this));
         this.ui = useService("ui");
         this.inputRef = useRef("inputRef");
         onWillStart(() => {

@@ -46,7 +46,7 @@ export class Navbar extends Component {
             this.hasProductCreationAccess = await this.pos.allowProductCreation();
         });
         useListener(document, "keydown", this.handleKeydown.bind(this));
-        this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
+        this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming.bind(this));
     }
 
     async openLnaPopup() {

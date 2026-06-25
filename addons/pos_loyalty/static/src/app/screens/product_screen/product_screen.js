@@ -8,7 +8,7 @@ patch(ProductScreen.prototype, {
         super.setup(...arguments);
         this.notification = useService("notification");
         useBarcodeReader({
-            coupon: this._onCouponScan,
+            coupon: this._onCouponScan.bind(this),
         });
     },
     async _onCouponScan(code) {

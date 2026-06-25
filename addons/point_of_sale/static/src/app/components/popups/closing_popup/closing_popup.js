@@ -35,7 +35,7 @@ export class ClosePosPopup extends Component {
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.state = proxy(this.getInitialState());
-        this.confirm = useAsyncLockedMethod(this.confirm);
+        this.confirm = useAsyncLockedMethod(this.confirm.bind(this));
     }
     get cashMoveData() {
         const { total, moves } = this.props.default_cash_details.moves.reduce(

@@ -1,10 +1,9 @@
-import { useComponent } from "@web/owl2/utils";
-import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { barcodeService } from "@barcodes/barcode_service";
-import { registry } from "@web/core/registry";
-import { EventBus, onWillDestroy } from "@odoo/owl";
-import { session } from "@web/session";
+import { EventBus, onWillDestroy, useScope } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
+import { registry } from "@web/core/registry";
+import { session } from "@web/session";
+import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
@@ -130,21 +129,18 @@ class NumberBuffer extends EventBus {
      */
     use(config) {
         this.eventsBuffer = [];
-        const currentComponent = useComponent();
+        const scope = useScope();
         config = Object.assign(getDefaultConfig(), config);
 
         this.bufferHolderStack.push({
-            component: currentComponent,
+            scope,
             state: config.state ? config.state : { buffer: "", toStartOver: false },
             config,
         });
         this._setUp();
         onWillDestroy(() => {
-            const currentComponentName = currentComponent.constructor.name;
-            const indexComponent = this.bufferHolderStack.findIndex(
-                (stack) => stack.component.constructor.name === currentComponentName
-            );
-            this.bufferHolderStack.splice(indexComponent, 1);
+            const index = this.bufferHolderStack.findIndex((holder) => holder.scope === scope);
+            this.bufferHolderStack.splice(index, 1);
             this._setUp();
         });
     }
@@ -155,8 +151,7 @@ class NumberBuffer extends EventBus {
         if (!this._currentBufferHolder) {
             return;
         }
-        const { component, state, config } = this._currentBufferHolder;
-        this.component = component;
+        const { state, config } = this._currentBufferHolder;
         this.state = state;
         this.config = config;
         this.decimalPoint = config.decimalPoint || getDecimalPoint();
