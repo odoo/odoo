@@ -345,6 +345,20 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(byproduct_move_line.location_dest_id, shelf2_location)
         self.assertEqual(finished_move_line.location_dest_id, shelf2_location)
 
+    def test_mrp_byproduct_unreserve(self):
+        """ Verify that unreserving the components on a mo,
+        do not affect the byproducts quantity.
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'product_qty': 2,
+            'bom_id': self.bom_byproduct.id
+        })
+        mo.action_confirm()
+        mo.qty_producing = 2
+        mo.do_unreserve()
+        self.assertEqual(mo.move_byproduct_ids.quantity, 2)
+
     def test_check_byproducts_cost_share(self):
         """
         Test that byproducts with total cost_share > 100% or a cost_share < 0%
