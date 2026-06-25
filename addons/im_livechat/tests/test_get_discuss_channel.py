@@ -176,7 +176,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "share": False,
                 },
                 {
+                    "active": True,
                     "all_employee_ids": [],
+                    "company_ids": test_user.company_ids.ids,
                     "should_display_in_call_im_status": False,
                     "id": test_user.id,
                     "im_status": "offline",
@@ -321,7 +323,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "share": False,
                 },
                 {
+                    "active": True,
                     "all_employee_ids": [],
+                    "company_ids": operator.company_ids.ids,
                     "should_display_in_call_im_status": False,
                     "id": operator.id,
                     "im_status": "offline",

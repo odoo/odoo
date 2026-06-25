@@ -501,6 +501,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(self.chat, "discuss.channel/new_message"),
+                self._bus_author_internal(self.chat, self.user_employee),
                 BusResult(
                     self.chat,
                     "mail.record/insert",
@@ -643,6 +644,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(self.channel_group_a, "discuss.channel/new_message"),
+                self._bus_author_internal(self.channel_group_a, self.user_employee),
                 BusResult(
                     self.channel_group_a,
                     "mail.record/insert",
@@ -1184,10 +1186,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                 # discuss.channel.member (message_unread_counter, new_message_separator, …)
                 BusResult(self.user_employee, "mail.record/insert"),
                 BusResult(self.channel_group_b, "discuss.channel/new_message"),
+                BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
                 BusResult(self.guest, "discuss.channel/joined"),
                 # discuss.channel.member (message_unread_counter, new_message_separator, …)
                 BusResult(self.user_employee, "mail.record/insert"),
                 BusResult(self.channel_group_b, "discuss.channel/new_message"),
+                BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
                 # discuss.channel (member_count), discuss.channel.member
                 BusResult(self.channel_group_b, "mail.record/insert"),
                 BusResult((self.channel_group_b, "internal_users"), "mail.record/insert"),
@@ -1484,6 +1488,23 @@ class TestChannelRTC(MailCommon, HttpCase):
         if member.guest_id:
             res["guest_id"] = member.guest_id.id
         return res
+
+    def _bus_author_internal(self, channel, user):
+        return BusResult(
+            (channel, "internal_users"),
+            "mail.record/insert",
+            {
+                "res.partner": [{"id": user.partner_id.id, "user_ids": user.ids}],
+                "res.users": [
+                    {
+                        "active": True,
+                        "company_ids": user.company_ids.ids,
+                        "id": user.id,
+                        "share": False,
+                    },
+                ],
+            },
+        )
 
     def _res_for_partner(self, partner, common=True, internal=False):
         res = {"id": partner.id}

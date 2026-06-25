@@ -699,7 +699,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(admin=24, employee=23):
+        with self.assertQueryCount(admin=25, employee=24):
             record.write({
                 'user_id': self.user_emp_inbox.id,
             })
@@ -787,7 +787,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=20, employee=20):
+        with self.assertQueryCount(admin=21, employee=21):
             record.message_post(
                 body=Markup('<p>Test Post Performances with an inbox ping</p>'),
                 partner_ids=self.user_emp_inbox.partner_id.ids,
@@ -1650,14 +1650,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(employee=5):
+        with self.assertQueryCount(employee=7):
             res = Store().add(messages, "_store_message_fields")._build_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
-        with self.assertQueryCount(employee=16):  # tm: 15
+        with self.assertQueryCount(employee=18):  # tm: 15
             res = Store().add(messages, "_store_message_fields")._build_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
@@ -1777,6 +1777,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
+                                    "user_ids": [],
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),
@@ -1896,6 +1897,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
+                                    "user_ids": [],
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),

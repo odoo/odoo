@@ -199,12 +199,15 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "id": self.users[1].partner_id.id,
                         "is_company": False,
                         "main_user_id": self.users[1].id,
+                        "user_ids": self.users[1].ids,
                         "user_livechat_username": "chuck",
                         "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
                 ),
                 "res.users": self._filter_users_fields(
                     {
+                        "active": True,
+                        "company_ids": self.users[1].company_ids.ids,
                         "id": self.users[1].id,
                         "partner_id": self.users[1].partner_id.id,
                         "share": False,
@@ -307,6 +310,23 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                             ),
                         },
                         "id": channel.id,
+                    },
+                ),
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": [
+                            {"id": self.env.user.partner_id.id, "user_ids": self.env.user.ids},
+                        ],
+                        "res.users": [
+                            {
+                                "active": True,
+                                "company_ids": self.env.user.company_ids.ids,
+                                "id": self.env.user.id,
+                                "share": True,
+                            },
+                        ],
                     },
                 ),
             ]

@@ -230,6 +230,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {"store_data": transfer_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {"res.partner": [{"id": self.chatbot_script.operator_partner_id.id, "user_ids": []}]},
+                ),
+                BusResult(
                     discuss_channel,
                     "mail.record/insert",
                     {
@@ -277,6 +282,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     discuss_channel,
                     "discuss.channel/new_message",
                     {"store_data": joined_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {"res.partner": [{"id": self.chatbot_script.operator_partner_id.id, "user_ids": []}]},
                 ),
                 BusResult(
                     discuss_channel,
@@ -330,12 +340,15 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             },
                         ),
                         "res.users": self._filter_users_fields({
+                            "active": True,
                             "all_employee_ids": [],
+                            "company_ids": self.user_employee.company_ids.ids,
                             "should_display_in_call_im_status": False,
                             "id": self.user_employee.id,
                             "im_status": "offline",
                             "im_status_access_token": self.user_employee._get_im_status_access_token(),
                             "partner_id": self.partner_employee.id,
+                            "share": False,
                         }),
                     },
                 ),

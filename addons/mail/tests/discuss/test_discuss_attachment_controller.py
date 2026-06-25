@@ -11,17 +11,28 @@ from odoo.tools.misc import file_open
 
 @odoo.tests.tagged("mail_controller")
 class TestDiscussAttachmentController(MailControllerAttachmentCommon):
-    def _new_message_payload(self, channel, message, attachments):
-        store_data = (
+    def _new_message_notifications(self, channel, message, attachments):
+        store = (
             Store(bus_channel=channel)
             .add(message, "_store_message_fields")
             .add(message, {"attachment_ids": attachments.ids})
-            ._build_result()
         )
+        store_data = store._build_result()
         self.assertFalse(
             [vals for vals in store_data["ir.attachment"] if "ownership_token" in vals],
         )
-        return {"id": channel.id, "store_data": store_data}
+        notifications = [
+            BusResult(
+                channel,
+                "discuss.channel/new_message",
+                {"id": channel.id, "store_data": store_data},
+            ),
+        ]
+        if internal_data := store._internal_store._build_result():
+            notifications.append(
+                BusResult((channel, "internal_users"), "mail.record/insert", internal_data),
+            )
+        return notifications
 
     def test_attachment_allowed_upload_public_channel(self):
         """Test access to upload an attachment on an allowed upload public channel"""
@@ -120,11 +131,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                                 ),
                             ),
                         ),
-                        BusResult(
-                            channel,
-                            "discuss.channel/new_message",
-                            self._new_message_payload(channel, message, posted),
-                        ),
+                        *self._new_message_notifications(channel, message, posted),
                         BusResult(
                             persona,
                             "mail.record/insert",
@@ -216,11 +223,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
 
         def new_message(attachment):
             message = channel.message_ids[0]
-            return BusResult(
-                channel,
-                "discuss.channel/new_message",
-                self._new_message_payload(channel, message, attachment),
-            )
+            return self._new_message_notifications(channel, message, attachment)
 
         with self.assertBus(
             lambda: [
@@ -229,7 +232,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                     "mail.record/insert",
                     Store().add(channel, ["last_interest_dt"]),
                 ),
-                new_message(attachment),
+                *new_message(attachment),
                 BusResult(
                     self.user_portal,
                     "mail.record/insert",
@@ -247,7 +250,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         attachment = IrAttachment.create(
             {"name": "Posted", "res_id": 0, "res_model": "mail.compose.message"},
         )
-        with self.assertBus(lambda: [new_message(attachment)]):
+        with self.assertBus(lambda: new_message(attachment)):
             channel.with_user(self.user_admin).message_post(
                 attachment_ids=attachment.ids,
                 author_id=partner.id,
@@ -273,11 +276,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                     "mail.record/insert",
                     Store().add(channel, ["last_interest_dt"]),
                 ),
-                BusResult(
-                    channel,
-                    "discuss.channel/new_message",
-                    self._new_message_payload(channel, message, attachment),
-                ),
+                *self._new_message_notifications(channel, message, attachment),
             ]
 
         with self.assertBus(notifications):

@@ -59,6 +59,7 @@ class ResPartner(models.Model):
             "main_user_id",
             lambda res: (res.attr("partner_id"), res.many("livechat_expertise_ids", ["name"])),
         )
+        res.many("user_ids", ["active", "company_ids", "share"], internal=True, sudo=True)
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):

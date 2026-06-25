@@ -201,6 +201,26 @@ class TestChannelInternals(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(
+                    (test_group, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": [
+                            {
+                                "id": self.env.user.partner_id.id,
+                                "user_ids": self.env.user.ids,
+                            },
+                        ],
+                        "res.users": [
+                            {
+                                "active": True,
+                                "company_ids": self.env.user.company_ids.ids,
+                                "id": self.env.user.id,
+                                "share": False,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
                     test_group,
                     "mail.record/insert",
                     {
@@ -255,12 +275,15 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ),
                         "res.users": self._filter_users_fields(
                             {
+                                "active": True,
                                 "all_employee_ids": [],
+                                "company_ids": self.test_user.company_ids.ids,
                                 "should_display_in_call_im_status": False,
                                 "id": self.test_user.id,
                                 "im_status": "offline",
                                 "im_status_access_token": self.test_user._get_im_status_access_token(),
                                 "partner_id": self.test_partner.id,
+                                "share": False,
                             },
                         ),
                     },
@@ -311,6 +334,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "active": True,
                                 "all_employee_ids": [],
+                                "company_ids": self.test_user.company_ids.ids,
                                 "should_display_in_call_im_status": False,
                                 "id": self.test_user.id,
                                 "im_status": "offline",
@@ -1094,6 +1118,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         all_users = all_test_user + mentions_test_user + nothing_test_user
         notifications = [BusResult(user, "mail.message/notification") for user in all_users]
         notifications.append(BusResult(channel, "discuss.channel/new_message"))
+        notifications.append(BusResult((channel, "internal_users"), "mail.record/insert"))
         with self.assertBus(notifications):
             # sending mention message
             with self.with_user("employee"):
@@ -1499,6 +1524,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         lambda member: [
                             close_window(eve, group),
                             BusResult(group, "discuss.channel/new_message"),
+                            BusResult((group, "internal_users"), "mail.record/insert"),
                             *store_notifications(group, leave(group, member)),
                         ],
                     ),
@@ -1509,6 +1535,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         lambda member: [
                             close_window(john, group),
                             BusResult(group, "discuss.channel/new_message"),
+                            BusResult((group, "internal_users"), "mail.record/insert"),
                             *store_notifications(
                                 group,
                                 name_update(group, [self.env.user, bob, alice])
