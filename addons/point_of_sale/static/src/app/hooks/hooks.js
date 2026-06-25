@@ -1,57 +1,7 @@
-import { useComponent, useEnv, useRef } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import { onMounted, onPatched, proxy, useListener } from "@odoo/owl";
-import { KeepLast } from "@web/core/utils/concurrency";
 import { ConnectionLostError } from "@web/core/network/rpc";
-
-/**
- * Introduce error handlers in the component.
- *
- * IMPROVEMENT: This is a terrible hook. There could be a better way to handle
- * the error when the order failed to sync.
- * FIXME POSREF: move this to the error_handler registry.
- */
-export function useErrorHandlers() {
-    const component = useComponent();
-    const dialog = useEnv().services.dialog;
-
-    component._handlePushOrderError = async function (error) {
-        // This error handler receives `error` equivalent to `error.message` of the rpc error.
-        if (error.message === "Backend Invoice") {
-            dialog.add(ConfirmationDialog, {
-                title: _t("Please print the invoice from the backend"),
-                body:
-                    _t(
-                        "The order has been synchronized earlier. Please make the invoice from the backend for the order: "
-                    ) + error.data.order.name,
-            });
-        } else if (error.code < 0) {
-            // XmlHttpRequest Errors
-            dialog.add(ConfirmationDialog, {
-                title: _t("Unable to sync order"),
-                body: _t(
-                    "Check the internet connection then try to sync again by clicking on the red wifi button (upper right of the screen)."
-                ),
-            });
-        } else if (error.data) {
-            // OpenERP Server Errors
-            dialog.add(ErrorDialog, {
-                traceback:
-                    error.data.debug.status.message_body ||
-                    _t("The server encountered an error while receiving your order."),
-            });
-        } else {
-            // ???
-            await dialog.add(AlertDialog, {
-                title: _t("Unknown Error"),
-                body: _t("The order could not be sent to the server due to an unknown error"),
-                showReloadButton: true,
-            });
-        }
-    };
-}
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useRef } from "@web/owl2/utils";
 
 /**
  * Assumes t-ref="root" in the root element of the component that uses this hook.
@@ -73,7 +23,6 @@ export function useAutoFocusToLast() {
 }
 
 export function useAsyncLockedMethod(method) {
-    const component = useComponent();
     let called = false;
     return async (...args) => {
         if (called) {
@@ -81,7 +30,7 @@ export function useAsyncLockedMethod(method) {
         }
         try {
             called = true;
-            return await method.call(component, ...args);
+            return await method(...args);
         } finally {
             called = false;
         }

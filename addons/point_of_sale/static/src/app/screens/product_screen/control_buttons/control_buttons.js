@@ -28,7 +28,7 @@ export class ControlButtons extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.clickPrintBill = useAsyncLockedMethod(this.clickPrintBill);
+        this.clickPrintBill = useAsyncLockedMethod(this.clickPrintBill.bind(this));
     }
     async clickPrintBill() {
         // Need to await to have the result in case of automatic skip screen.

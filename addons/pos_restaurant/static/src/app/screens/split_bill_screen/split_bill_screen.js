@@ -1,21 +1,22 @@
-import { registry } from "@web/core/registry";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, proxy } from "@odoo/owl";
-import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
+import { Component, onWillDestroy, props, proxy, types as t } from "@odoo/owl";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
-import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
+import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderDisplay, PriceFormatter };
-    static props = {
-        disallow: { type: Boolean, optional: true },
-        orderUuid: { type: String },
-    };
+
+    props = props({
+        disallow: t.boolean().optional(),
+        orderUuid: t.string(),
+    });
 
     setup() {
         this.pos = usePos();
@@ -23,7 +24,8 @@ export class SplitBillScreen extends Component {
         this.qtyTracker = proxy({});
         this.priceTracker = proxy({});
         this.isTransferred = false;
-        useRouterParamsChecker();
+
+        useRouterParamsChecker(this.constructor.name);
 
         onWillDestroy(() => {
             // Removing on all lines because the current order change during the split

@@ -7,7 +7,7 @@ import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { user } from "@web/core/user";
-import { Component, onMounted, onWillUnmount, computed, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, computed, proxy, props, types as t } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -47,12 +47,12 @@ export class ProductScreen extends Component {
         ProductCard,
         BarcodeVideoScanner,
     };
-    static props = {
-        orderUuid: { type: String },
-    };
+
+    props = props({
+        orderUuid: t.string(),
+    });
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
@@ -62,7 +62,7 @@ export class ProductScreen extends Component {
             quantityByProductTmplId: {},
         });
 
-        useRouterParamsChecker();
+        useRouterParamsChecker(this.constructor.name);
         onMounted(() => {
             this.currentOrder.deselectOrderline();
             this.pos.openOpeningControl();
@@ -98,13 +98,13 @@ export class ProductScreen extends Component {
         this.sound = useService("mail.sound_effects");
 
         useBarcodeReader({
-            product: this._barcodeProductAction,
-            quantity: this._barcodeProductAction,
-            weight: this._barcodeProductAction,
-            price: this._barcodeProductAction,
-            client: this._barcodePartnerAction,
-            discount: this._barcodeDiscountAction,
-            gs1: this._barcodeGS1Action,
+            product: this._barcodeProductAction.bind(this),
+            quantity: this._barcodeProductAction.bind(this),
+            weight: this._barcodeProductAction.bind(this),
+            price: this._barcodeProductAction.bind(this),
+            client: this._barcodePartnerAction.bind(this),
+            discount: this._barcodeDiscountAction.bind(this),
+            gs1: this._barcodeGS1Action.bind(this),
         });
 
         this.numberBuffer.use({

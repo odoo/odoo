@@ -22,7 +22,8 @@ export class TipScreen extends Component {
         this.dialog = useService("dialog");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.priceIncl;
-        useRouterParamsChecker();
+
+        useRouterParamsChecker(this.constructor.name);
 
         this.adjustableTipLine = this.currentOrder.adjustableTipLine;
         if (!this.adjustableTipLine) {

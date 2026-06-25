@@ -1,20 +1,19 @@
-import { _t } from "@web/core/l10n/translation";
-import { parseFloat } from "@web/views/fields/parsers";
 import { formatCurrency } from "@web/core/currency";
-import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { parseFloat } from "@web/views/fields/parsers";
 
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
-import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
-import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
+import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
+import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -37,9 +36,9 @@ export class PaymentScreen extends Component {
         this.payment_methods_from_config = this.configPaymentMethods || [];
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
-        useRouterParamsChecker();
-        useErrorHandlers();
         this.error = false;
+
+        useRouterParamsChecker(this.constructor.name);
         onMounted(this.onMounted);
     }
 

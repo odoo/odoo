@@ -17,10 +17,8 @@ export class OrderSummary extends Component {
         Orderline,
         OrderDisplay,
     };
-    static props = {};
 
     setup() {
-        super.setup();
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         this.pos = usePos();
