@@ -177,3 +177,36 @@ class TestSessionExecution(PopulateTestCase):
         start_populate(session)
 
         self.assertTrue(session.is_done)
+
+    def test_deleting_blueprint_cascades_to_leftover_session_data(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Cascade Test Blueprint',
+            'definition_json': [
+                {
+                    'name': 'test_populate.product',
+                    'count': 2,
+                    'fields': {
+                        'name': {'generator': 'textual.char'},
+                    },
+                },
+            ],
+        })
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+        })
+
+        start_populate(session)
+
+        jobs = self.env['populate.job'].search([('session_id', '=', session.id)])
+        model_data = self.env['populate.model.data'].search([('job_id', 'in', jobs.ids)])
+        products = self.env['test_populate.product'].browse(model_data.mapped('res_id'))
+        self.assertTrue(jobs)
+        self.assertTrue(model_data)
+        self.assertTrue(products)
+
+        blueprint.unlink()
+
+        self.assertFalse(session.exists())
+        self.assertFalse(jobs.exists())
+        self.assertFalse(model_data.exists())
+        self.assertTrue(products.exists())
