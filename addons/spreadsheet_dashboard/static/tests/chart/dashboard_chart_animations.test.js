@@ -1,12 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Model, components } from "@odoo/o-spreadsheet";
+import { Model, components, stores } from "@odoo/o-spreadsheet";
 import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+
+const { ViewportsStore } = stores;
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
@@ -23,22 +25,26 @@ function spyCharts() {
 }
 
 test("Charts are animated only at first render", async () => {
-    const env = await makeSpreadsheetMockEnv();
-    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    const serverEnv = await makeSpreadsheetMockEnv();
+    const setupModel = new Model(
+        {},
+        { custom: { odooDataProvider: new OdooDataProvider(serverEnv) } }
+    );
     createBasicChart(setupModel, "chartId");
     const charts = spyCharts();
-    const { model } = await createDashboardActionWithData(setupModel.exportData());
+    const { env } = await createDashboardActionWithData(setupModel.exportData());
+    const viewStore = env.getStore(ViewportsStore);
 
     expect(".o-figure").toHaveCount(1);
     expect(charts["chartId"].config.options.animation.animateRotate).toBe(true);
 
     // Scroll the figure out of the viewport and back in
-    model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: 0, offsetY: 500 });
+    viewStore.setViewportOffset({ offsetX: 0, offsetY: 500 });
     await animationFrame();
     await animationFrame();
     expect(".o-figure").toHaveCount(0);
 
-    model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: 0, offsetY: 0 });
+    viewStore.setViewportOffset({ offsetX: 0, offsetY: 0 });
     await animationFrame();
     expect(".o-figure").toHaveCount(1);
     expect(charts["chartId"].config.options.animation).toBe(false);
