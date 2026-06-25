@@ -324,6 +324,10 @@ export class FontPlugin extends Plugin {
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
+        remove_format_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
         normalize_handlers: this.normalize.bind(this),
 
         /** Overrides */
