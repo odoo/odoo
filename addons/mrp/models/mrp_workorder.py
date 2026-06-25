@@ -328,7 +328,7 @@ class MrpWorkorder(models.Model):
                 or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing)):
                 workorder.duration_expected = workorder._get_duration_expected()
 
-    @api.depends('time_ids.duration', 'qty_produced')
+    @api.depends('time_ids.duration', 'time_ids.loss_type', 'qty_produced')
     def _compute_duration(self):
         for order in self:
             order.duration = order.get_duration()
@@ -363,6 +363,14 @@ class MrpWorkorder(models.Model):
                     order.state = 'progress'
                 enddate = fields.Datetime.now()
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
+                # If existing entries would overlap with the new one, push the new entry
+                # to start exactly where the latest existing entry ends.
+                end_dates = order.time_ids.filtered('date_end').mapped('date_end')
+                if end_dates:
+                    latest_end = max(end_dates)
+                    if latest_end > date_start:
+                        date_start = latest_end
+                        enddate = latest_end + timedelta(seconds=_float_duration_to_second(delta_duration))
                 if order.duration_expected >= new_order_duration or old_order_duration >= order.duration_expected:
                     # either only productive or only performance (i.e. reduced speed) time respectively
                     self.env['mrp.workcenter.productivity'].create(
