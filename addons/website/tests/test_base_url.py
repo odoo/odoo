@@ -149,3 +149,28 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
         with self.assertRaises(ValueError):
             # if more than one record, an error we should be raised
             Attachment.search([], limit=2).get_base_url()
+
+    def test_03_get_base_url_website_id(self):
+        """Test that in record without website_id, context takes priority over base_url.
+
+        Reproduces a multi-website scenario where the base_url is set to website B. A public
+        user books an appointment on website A. Without the fix, generated email links point to website B.
+        """
+        ICP = self.env['ir.config_parameter'].sudo()
+        website_a_domain = 'https://website-a.example.com'
+        website_b_domain = 'https://website-b.example.com'
+        website_a = self.env['website'].create({'name': 'Website A', 'domain': website_a_domain})
+        self.env['website'].create({'name': 'Website B', 'domain': website_b_domain})
+
+        ICP.set_param('web.base.url', website_b_domain)
+
+        # A record with no website_id set
+        attach = self.env['ir.attachment'].create({'name': 'test context website_id', 'website_id': False})
+        self.assertEqual(
+            attach.get_base_url(), website_b_domain,
+            "Without context, should fall back to web.base_url (website B's domain).",
+        )
+        self.assertEqual(
+            attach.with_context(website_id=website_a.id).get_base_url(), website_a_domain,
+            "With website_id in context set to website A, should return website A's domain.",
+        )
