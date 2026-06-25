@@ -231,7 +231,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_flow_10_operation_type',
             'l10n_fr_pdp_last_flow_id',
             'l10n_fr_pdp_status',
-            'l10n_fr_pdp_error_message',
         ])
 
     def _correct_partner(self, invoice):

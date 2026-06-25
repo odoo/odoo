@@ -2,6 +2,8 @@ import re
 from collections import defaultdict
 from datetime import datetime
 
+from markupsafe import Markup
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict, html2plaintext
@@ -14,6 +16,10 @@ from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 PAID_CODES = frozenset({'ESC', 'RAB', 'REM', 'MPA', 'MEN'})
 G1_05_RE = re.compile(r'^(?! )(?!.*  )[A-Za-z0-9+\-_/ ]{1,20}(?<! )$')  # can't start with space, can't have 2 consecutive spaces, max 20 chars, allowed chars are alphanumeric, space, -, _, /, can't end with space
+PDP_TRACKED_FIELDS = {
+    'l10n_fr_pdp_last_flow_id',
+    'l10n_fr_pdp_status',
+}
 
 
 class AccountMove(models.Model):
@@ -74,6 +80,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_fr_pdp_last_flow_id',
         store=True,
         copy=False,
+        tracking=True,
     )
     l10n_fr_pdp_status = fields.Selection(
         selection=[
@@ -85,8 +92,8 @@ class AccountMove(models.Model):
         compute='_compute_l10n_fr_pdp_status',
         store=True,
         copy=False,
+        tracking=True,
     )
-    l10n_fr_pdp_display_info = fields.Boolean(related='company_id.l10n_fr_f10_enable_reporting')
     l10n_fr_pdp_flow_10_report_type = fields.Selection(  # This field dictates if a move has to be reported or not.
         selection=[('transaction', 'Transaction'), ('payment', 'Payment')],
         compute='_compute_l10n_fr_pdp_flow_10_report_type',
@@ -98,10 +105,6 @@ class AccountMove(models.Model):
         compute='_compute_l10n_fr_pdp_flow_10_operation_type',
         store=True,
         copy=False,
-    )
-    l10n_fr_pdp_error_message = fields.Text(
-        string="Flow 10 blocking errors",
-        compute='_compute_l10n_fr_pdp_error_message',
     )
     l10n_fr_pdp_has_error = fields.Boolean(
         compute='_compute_l10n_fr_pdp_has_error',
@@ -274,6 +277,63 @@ class AccountMove(models.Model):
             company.account_peppol_edi_user._pdp_send_response(moves, 'AP')
         return res
 
+    def _message_track(self, fields_iter, initial_values_dict):
+        tracked_fields = set(fields_iter)
+        pdp_fields = tracked_fields & PDP_TRACKED_FIELDS
+        if not pdp_fields:
+            return super()._message_track(fields_iter, initial_values_dict)
+
+        tracking = super()._message_track(tracked_fields - pdp_fields, initial_values_dict)
+        for move in self:
+            initial_values = initial_values_dict.get(move.id, {})
+            if any(
+                field_name in initial_values and initial_values[field_name] != move[field_name]
+                for field_name in pdp_fields
+            ):
+                move._l10n_fr_pdp_message_log_ereporting_status()
+        return tracking
+
+    def _l10n_fr_pdp_message_log_ereporting_status(self):
+        self.ensure_one()
+        if self.l10n_fr_pdp_status in {False, 'out_of_scope'}:
+            return
+
+        status_selection = self._fields['l10n_fr_pdp_status']._description_selection(self.env)
+        status_label = dict(status_selection)[self.l10n_fr_pdp_status]
+        flow = self.l10n_fr_pdp_last_flow_id
+        if flow:
+            flow_label = (
+                Markup('<a href="/web#id=') + str(flow.id)
+                + Markup('&amp;model=l10n.fr.pdp.reports.flow&amp;view_type=form">')
+                + flow.display_name
+                + Markup('</a>')
+            )
+        else:
+            flow_label = self.env._("None")
+        body = (
+            Markup('<ul>')
+            + Markup('<li><span class="fw-bold">') + self.env._("E-reporting Flow:")
+            + Markup('</span> ') + flow_label + Markup('</li>')
+            + Markup('<li><span class="fw-bold">') + self.env._("E-reporting Status:")
+            + Markup('</span> ') + status_label + Markup('</li>')
+        )
+        if (errors := (
+            self.l10n_fr_pdp_last_flow_id.state == 'error'
+            and [self.env._("Last Flow is in error")]
+            or self._get_l10n_fr_pdp_errors()
+        )):
+            error_lines = Markup('').join(
+                Markup('<li>') + error.lstrip('- ') + Markup('</li>')
+                for error in errors
+                if error
+            )
+            body += (
+                Markup('<li><span class="fw-bold">') + self.env._("E-reporting Errors:")
+                + Markup('</span><ul>') + error_lines + Markup('</ul></li>')
+            )
+        body += Markup('</ul>')
+        self._message_log(body=body)
+
     def button_cancel(self):
         res = super().button_cancel()
         status = None
@@ -437,24 +497,6 @@ class AccountMove(models.Model):
             else:
                 move.l10n_fr_pdp_flow_10_report_type = None
 
-    @api.depends(
-        'commercial_partner_id.country_id',
-        'commercial_partner_id.vat',
-        'company_id.account_fiscal_country_id',
-        'date',
-        'l10n_fr_pdp_flow_10_report_type',
-        'line_ids.matched_credit_ids.credit_move_id',
-        'line_ids.matched_debit_ids.debit_move_id',
-        'move_type',
-    )
-    def _compute_l10n_fr_pdp_error_message(self):
-        for move in self:
-            if move.l10n_fr_pdp_last_flow_id.state == 'error':
-                move.l10n_fr_pdp_error_message = self.env._('Last Flow is in error')
-                continue
-            errors = move._get_l10n_fr_pdp_errors()
-            move.l10n_fr_pdp_error_message = '- ' + '\n- '.join(errors) if errors else None
-
     # -------------------------------------------------------------------------
     # Business Methods
     # -------------------------------------------------------------------------
@@ -499,14 +541,15 @@ class AccountMove(models.Model):
                 ref_move = self.env._(" in referenced move %s", move.name) if move != self else ""
                 if not move.name or not G1_05_RE.match(move.name):
                     yield self.env._("Move name is not valid%s.", ref_move)
-                if not move.partner_shipping_id.street:
-                    yield self.env._("Missing address street (line 1)%s.", ref_move)
-                if not move.partner_shipping_id.city:
-                    yield self.env._("Missing address city%s.", ref_move)
-                if not move.partner_shipping_id.zip:
-                    yield self.env._("Missing address zip code%s.", ref_move)
-                if not move.partner_shipping_id.country_id:
-                    yield self.env._("Missing address country%s.", ref_move)
+                if transaction_type == 'b2bi':
+                    if not move.partner_shipping_id.street:
+                        yield self.env._("Missing address street (line 1)%s.", ref_move)
+                    if not move.partner_shipping_id.city:
+                        yield self.env._("Missing address city%s.", ref_move)
+                    if not move.partner_shipping_id.zip:
+                        yield self.env._("Missing address zip code%s.", ref_move)
+                    if not move.partner_shipping_id.country_id:
+                        yield self.env._("Missing address country%s.", ref_move)
 
         transaction_type = self._l10n_fr_pdp_get_transaction_type()
         if lazy:
