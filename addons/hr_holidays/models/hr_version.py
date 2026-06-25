@@ -206,6 +206,7 @@ class HrVersion(models.Model):
                 render_values={'self': new_leave, 'origin': all_new_leave_origin[index]},
                 subtype_xmlid='mail.mt_note',
             )
+<<<<<<< 06cb6db109d07fa89484bd4fa5b5379ea12073a1
 
     # override to add work_entry_type from leave
     def _get_leave_work_entry_type(self, leave):
@@ -271,3 +272,16 @@ class HrVersion(models.Model):
     @api.model
     def _get_work_entry_source_fields(self):
         return super()._get_work_entry_source_fields() + ['leave_ids']
+||||||| 2d54db3ac0b6d807e580315e2633f3e2b10a700c
+=======
+
+    def _update_leave_state(self, leave, leaves_state, refuse_leave=False):
+        if leave.id not in leaves_state:
+            leaves_state[leave.id] = leave.state
+        if leave.state not in ['refuse', 'confirm']:
+            if refuse_leave:
+                leave.action_refuse()
+            else:
+                leave.action_back_to_approval()
+        return leaves_state
+>>>>>>> eb980721a17fc71428ce31e9a0907ce5f90fc876
