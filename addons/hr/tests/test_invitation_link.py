@@ -70,6 +70,24 @@ class TestInvitationLink(TransactionCase):
         self.assertTrue(user.employee_ids, "an employee must be created for the invited user")
         self.assertEqual(link.used_count, 1, "the link use must be recorded")
 
+    def test_signup_cannot_hijack_existing_user(self):
+        victim = self.Users.create({
+            'name': 'Victim Admin', 'login': 'victim@example.com',
+            'group_ids': [(6, 0, self.env.ref('base.group_system').ids)]})
+        link = self.Link.create({'max_uses': 5})
+        with self.assertRaises(UserError):
+            self._signup(link, 'victim@example.com', password='Attacker-Pwd-9')
+        # The rejected signup never reached the password write nor consumed a use.
+        self.assertEqual(victim.login, 'victim@example.com', "login must be untouched")
+        self.assertTrue(victim.has_group('base.group_system'), "admin rights must be untouched")
+        self.assertFalse(victim.employee_ids, "no employee may be attached to the victim")
+        self.assertEqual(link.used_count, 0, "a rejected signup must not consume a use")
+        # Also rejected when only the email address (not the login) matches.
+        self.Users.create({'name': 'Boss', 'login': 'boss', 'email': 'boss@example.com'})
+        with self.assertRaises(UserError):
+            self._signup(link, 'boss@example.com', password='Attacker-Pwd-9')
+        self.assertEqual(link.used_count, 0)
+
     def test_signup_respects_company(self):
         company = self.env['res.company'].create({'name': 'Invite Co'})
         link = self.Link.create({'company_id': company.id})

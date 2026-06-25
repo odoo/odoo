@@ -7,6 +7,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
+from odoo.tools.mail import email_normalize_all
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -414,12 +415,17 @@ class ResUsers(models.Model):
         login = values.get('login')
         if not link._is_email_domain_allowed(login):
             raise UserError(_("Registrations from this email address are not allowed for this invitation link."))
+        emails = email_normalize_all(login)
+        if self.sudo().with_context(active_test=False).search_count([
+                '|', '|', ('login', '=', login),
+                          ('login', 'in', emails),
+                          ('email_normalized', 'in', emails)]):
+            raise UserError(_("An account already exists for this email address. Please log in instead."))
         # Reserve one use (row-locked, raises if the quota is now full) before
         # creating anything, so concurrent signups cannot exceed max_uses.
         link._consume()
-        # Creating the employee auto-provisions the linked Light user (see
-        # hr.employee._get_or_create_self_service_user). The person then owns a
-        # Light (self-service) account, never a billable/regular one.
+        # Creating the employee auto-provisions a brand-new Light self-service
+        # user (the email was just verified to belong to no existing account).
         employee = self.env['hr.employee'].sudo().with_company(link.company_id).create({
             'name': values.get('name') or login,
             'work_email': login,
