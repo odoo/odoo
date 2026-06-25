@@ -38,7 +38,7 @@ class TestExpenseMargin(TestExpenseCommon):
                 'name': 'expense_1',
                 'date': '2020-10-07',
                 'product_id': product_with_no_cost.id,
-                'total_amount_currency': 100,
+                'price_unit_currency': 100,
                 'tax_ids': [Command.set(self.company_data['default_tax_purchase'].ids)],
                 'sale_order_id': sale_order.id,
             },
@@ -47,7 +47,7 @@ class TestExpenseMargin(TestExpenseCommon):
                 'name': 'expense_2',
                 'date': '2020-10-07',
                 'product_id': product_with_no_cost.id,
-                'total_amount_currency': 100,
+                'price_unit_currency': 100,
                 'tax_ids': False,
                 'sale_order_id': sale_order.id
             },

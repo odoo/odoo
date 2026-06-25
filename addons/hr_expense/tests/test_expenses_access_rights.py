@@ -64,7 +64,6 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             'employee_id': expense_employee.id,
             # Expense without foreign currency but analytic account.
             'product_id': self.product_a.id,
-            'price_unit': 1000.0,
         })
         self.start_tour("/odoo", 'hr_expense_access_rights_test_tour', login="test-expense")
         self.assertRecordValues(expense, [{'state': 'submitted'}])
@@ -75,7 +74,6 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             'employee_id': self.expense_employee.id,
             'product_id': self.product_a.id,
             'quantity': 1,
-            'price_unit': 1,
         })
         expense.with_user(self.expense_user_employee).action_submit()
         with self.assertRaises(UserError):
@@ -97,7 +95,6 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             'employee_id': another_employee.id,
             'product_id': self.product_a.id,
             'quantity': 1,
-            'price_unit': 1,
         })
         expense.with_user(another_standard_user).action_submit()
         with self.assertRaises(AccessError):

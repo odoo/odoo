@@ -127,7 +127,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'name': 'expense_1 invoicing=order, expense=sales_price',
             'date': '2016-01-01',
             'product_id': cls.company_data['service_order_sales_price'].id,
-            'total_amount': 100.34,
+            'price_unit_currency': 100.34,
             'analytic_distribution': {cls.analytic_account_1.id: 100},
             'employee_id': cls.expense_employee.id,
             'sale_order_id': cls.expense_sale_order.id,
@@ -136,14 +136,14 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'name': 'expense_2 invoicing=order, expense=sales_price',
             'date': '2016-01-02',
             'product_id': cls.company_data['service_order_sales_price'].id,
-            'total_amount': 100.21,
+            'price_unit_currency': 100.21,
             'sale_order_id': cls.expense_sale_order.id,
         })
         cls.sale_exp_deliv_sale_3 = cls.create_expenses({
             'name': 'expense_3 invoicing=delivery, expense=sales_price',
             'date': '2016-01-03',
             'product_id': cls.company_data['service_delivery_sales_price'].id,
-            'total_amount': 10012.49,
+            'price_unit_currency': 10012.49,
             'analytic_distribution': {cls.analytic_account_1.id: 100},
             'sale_order_id': cls.expense_sale_order.id,
         })
@@ -152,7 +152,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             'date': '2016-01-03',
             'product_id': cls.company_data['service_delivery_sales_price'].id,
             'analytic_distribution': {cls.analytic_account_1.id: 100},
-            'total_amount': 10012.49,
+            'price_unit_currency': 10012.49,
             'sale_order_id': cls.expense_sale_order.id,
         })
         cls.sale_exp_deliv_cost_5 = cls.create_expenses({

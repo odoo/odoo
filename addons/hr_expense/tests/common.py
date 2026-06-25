@@ -118,7 +118,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
 
         default_product_values = {
             'product_id': cls.product_c.id,
-            'total_amount_currency': 1000.00,
+            'price_unit_currency': 1000.00,
         }
         create_values = []
         for value_dict in values:

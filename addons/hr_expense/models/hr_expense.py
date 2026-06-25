@@ -171,13 +171,13 @@ class HrExpense(models.Model):
     total_amount_currency = fields.Monetary(
         string="Total In Currency",
         currency_field='currency_id',
-        compute='_compute_total_amount_currency', precompute=True, store=True, readonly=False,
+        compute='_compute_total_amount_currency', precompute=True, store=True,
         tracking=True,
     )
     total_amount = fields.Monetary(
         string="Total",
         currency_field='company_currency_id',
-        compute='_compute_total_amount', inverse='_inverse_total_amount', precompute=True, store=True, readonly=False,
+        compute='_compute_total_amount', precompute=True, store=True,
         tracking=True,
     )
     untaxed_amount_currency = fields.Monetary(
@@ -187,7 +187,7 @@ class HrExpense(models.Model):
     )
     untaxed_amount = fields.Monetary(
         string="Total Untaxed Amount",
-        currency_field='currency_id',
+        currency_field='company_currency_id',
         compute='_compute_tax_amount', precompute=True, store=True,
     )
     amount_residual = fields.Monetary(
@@ -195,9 +195,21 @@ class HrExpense(models.Model):
         currency_field='company_currency_id',
         related='account_move_id.amount_residual', readonly=True,
     )
+    price_unit_currency = fields.Float(
+        compute='_compute_price_unit_currency',
+        precompute=True,
+        store=True,
+        readonly=False,
+        copy=True,
+        min_display_digits='Product Price',
+    )
     price_unit = fields.Float(
         string="Unit Price",
-        compute='_compute_price_unit', precompute=True, store=True, required=True, readonly=True,
+        compute='_compute_price_unit',
+        precompute=True,
+        store=True,
+        required=True,
+        readonly=True,
         copy=True,
         min_display_digits='Product Price',
     )
@@ -412,6 +424,7 @@ class HrExpense(models.Model):
     def _onchange_product_has_cost(self):
         """ Reset quantity to 1, in case of 0-cost product. To make sure switching non-0-cost to 0-cost doesn't keep the quantity."""
         if not self.product_has_cost and self.state == 'draft':
+            self.price_unit_currency = self.total_amount_currency
             self.quantity = 1
 
     @api.depends_context('lang')
@@ -435,27 +448,17 @@ class HrExpense(models.Model):
                 date=expense.date or date_today,
             )
 
-    @api.depends('currency_id', 'total_amount_currency', 'date')
+    @api.depends('currency_id', 'company_id', 'company_currency_id', 'date')
     def _compute_currency_rate(self):
         """
-            We want the default odoo rate when the following change:
-            - the currency of the expense
-            - the total amount in foreign currency
-            - the date of the expense
-            this will cause the rate to be recomputed twice with possible changes but we don't have the required fields
-            to store the override state in stable
+        Use the default Odoo conversion rate for the expense currency/date/company.
+        The rate is no longer inferred from the company-currency total: totals are
+        computed from unit prices and the currency rate, not the other way around.
         """
         date_today = fields.Date.context_today(self)
         for expense in self:
             if expense.is_multiple_currency:
-                if (
-                        expense.currency_id != expense._origin.currency_id
-                        or expense.total_amount_currency != expense._origin.total_amount_currency
-                        or expense.date != expense._origin.date
-                ):
-                    expense._set_expense_currency_rate(date_today=date_today)
-                else:
-                    expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
+                expense._set_expense_currency_rate(date_today=date_today)
             else:  # Mono-currency case computation shortcut, no need for the label if there is no conversion
                 expense.currency_rate = 1.0
                 expense.label_currency_rate = False
@@ -529,80 +532,22 @@ class HrExpense(models.Model):
             expense.department_id = expense.employee_id.department_id
             expense.manager_id = expense._get_default_responsible_for_approval()
 
-    @api.depends('quantity', 'price_unit', 'tax_ids')
+    @api.depends('quantity', 'price_unit_currency', 'currency_id')
     def _compute_total_amount_currency(self):
-        AccountTax = self.env['account.tax']
-        for expense in self.filtered('product_has_cost'):
-            base_line = expense._prepare_base_line_for_taxes_computation(price_unit=expense.price_unit, quantity=expense.quantity)
-            AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
-            AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
-            expense.total_amount_currency = base_line['tax_details']['total_included_currency']
-
-    @api.onchange('total_amount_currency')
-    def _inverse_total_amount_currency(self):
         for expense in self:
-            if not expense.is_editable:
-                raise UserError(_(
-                    "Uh-oh! You can’t edit this expense.\n\n"
-                    "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
-                ))
-            expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity != 0 else 0.
+            expense.total_amount_currency = expense.currency_id.round(
+                expense.price_unit_currency * expense.quantity
+            )
 
-    @api.depends(
-        'date',
-        'company_id',
-        'currency_id',
-        'company_currency_id',
-        'is_multiple_currency',
-        'total_amount_currency',
-        'product_id',
-        'employee_id.user_id.partner_id',
-        'quantity',
-    )
+    @api.depends('total_amount_currency', 'currency_rate', 'company_currency_id', 'is_multiple_currency')
     def _compute_total_amount(self):
-        AccountTax = self.env['account.tax']
         for expense in self:
-            if not expense.company_id:
-                # This would be happening when emptying the required company_id field, triggering the "onchange"s.
-                # A traceback would occur because company_currency_id would be set to False.
-                # Instead of using the env company, recomputing the interface just to be blocked when trying to save
-                # we choose not to recompute anything and wait for a proper company to be inputted.
-                continue
-
             if expense.is_multiple_currency:
-                base_line = expense._prepare_base_line_for_taxes_computation(
-                    price_unit=expense.total_amount_currency * expense.currency_rate,
-                    quantity=1.0,
-                    currency_id=expense.company_currency_id,
-                    rate=1.0,
+                expense.total_amount = expense.company_currency_id.round(
+                    expense.total_amount_currency * expense.currency_rate
                 )
-                AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
-                AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
-                expense.total_amount = base_line['tax_details']['total_included_currency']
             else:  # Mono-currency case computation shortcut
                 expense.total_amount = expense.total_amount_currency
-
-    def _inverse_total_amount(self):
-        """ Allows to set a custom rate on the expense, and avoid the override when it makes no sense """
-        AccountTax = self.env['account.tax']
-        for expense in self:
-            if expense.is_multiple_currency:
-                base_line = expense._prepare_base_line_for_taxes_computation(
-                    price_unit=expense.total_amount,
-                    quantity=1.0,
-                    currency=expense.company_currency_id,
-                )
-                AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
-                AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
-                tax_details = base_line['tax_details']
-                expense.tax_amount = tax_details['total_included_currency'] - tax_details['total_excluded_currency']
-                expense.untaxed_amount =  tax_details['total_excluded_currency']
-            else:
-                expense.total_amount_currency = expense.total_amount
-                expense.tax_amount = expense.tax_amount_currency
-                expense.untaxed_amount = expense.untaxed_amount_currency
-            expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
-            expense.price_unit = expense.total_amount / expense.quantity if expense.quantity else expense.total_amount
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
@@ -627,12 +572,8 @@ class HrExpense(models.Model):
         for expense in self:
             expense.split_expense_count = count_per_expense_origin_id.get(expense.split_expense_origin_id.id, 0)
 
-    @api.depends('total_amount_currency', 'tax_ids')
+    @api.depends('total_amount_currency', 'tax_ids', 'company_id')
     def _compute_tax_amount_currency(self):
-        """
-             Note: as total_amount_currency can be set directly by the user (for product without cost)
-             or needs to be computed (for product with cost), `untaxed_amount_currency` can't be computed in the same method as `total_amount_currency`.
-        """
         AccountTax = self.env['account.tax']
         for expense in self:
             if not expense.company_id:
@@ -652,12 +593,16 @@ class HrExpense(models.Model):
             expense.tax_amount_currency = tax_details['total_included_currency'] - tax_details['total_excluded_currency']
             expense.untaxed_amount_currency = tax_details['total_excluded_currency']
 
-    @api.depends('total_amount', 'currency_rate', 'tax_ids', 'is_multiple_currency')
+    @api.depends(
+        'total_amount',
+        'tax_amount_currency',
+        'untaxed_amount_currency',
+        'tax_ids',
+        'is_multiple_currency',
+        'company_id',
+        'company_currency_id',
+    )
     def _compute_tax_amount(self):
-        """
-             Note: as total_amount can be set directly by the user when the currency_rate is overridden,
-             the tax must be computed after the total_amount.
-        """
         AccountTax = self.env['account.tax']
         for expense in self:
             if not expense.company_id:
@@ -671,7 +616,8 @@ class HrExpense(models.Model):
                 base_line = expense._prepare_base_line_for_taxes_computation(
                     price_unit=expense.total_amount,
                     quantity=1.0,
-                    currency=expense.company_currency_id,
+                    currency_id=expense.company_currency_id,
+                    rate=1.0,
                 )
                 AccountTax._add_tax_details_in_base_line(base_line, expense.company_id)
                 AccountTax._round_base_lines_tax_details([base_line], expense.company_id)
@@ -682,33 +628,34 @@ class HrExpense(models.Model):
                 expense.tax_amount = expense.tax_amount_currency
                 expense.untaxed_amount = expense.untaxed_amount_currency
 
-    @api.depends('total_amount', 'total_amount_currency')
-    def _compute_price_unit(self):
+    @api.depends('product_id', 'product_has_cost', 'product_uom_id', 'company_id')
+    def _compute_price_unit_currency(self):
         """
-           The price_unit is the unit price of the product if no product is set and no attachment overrides it.
-           Otherwise it is always computed from the total_amount and the quantity else it would break the Receipt Entry
-           when edited after creation.
+        Compute the expense-currency unit price for products with a configured cost.
+        For products without cost, this field is an editable source amount: users,
+        OCR and imports set it directly, and quantity is forced to 1.
         """
         for expense in self:
-            if expense.state != 'draft':
-                continue
-
             if not expense.company_id:
-                # This would be happening when emptying the required company_id field, triggering the "onchange"s.
-                # A traceback would occur because company_currency_id would be set to False.
-                # Instead of using the env company, recomputing the interface just to be blocked when trying to save
-                # we choose not to recompute anything and wait for a proper company to be inputted.
                 continue
 
-            product_id = expense.product_id
-            if expense._needs_product_price_computation():
-                expense.price_unit = product_id._price_compute(
+            if expense.product_has_cost:
+                product = expense.product_id
+                expense.price_unit_currency = product._price_compute(
                     'standard_price',
                     uom=expense.product_uom_id,
                     company=expense.company_id,
-                )[product_id.id]
-            else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                )[product.id]
+
+    @api.depends('price_unit_currency', 'currency_rate')
+    def _compute_price_unit(self):
+        for expense in self:
+            if expense.state != 'draft':
+                continue
+            if not expense.company_id:
+                continue
+
+            expense.price_unit = expense.price_unit_currency * expense.currency_rate
 
     @api.depends('selectable_payment_method_line_ids')
     def _compute_payment_method_line_id(self):
@@ -898,10 +845,6 @@ class HrExpense(models.Model):
         elif vals.get('state') == 'refused' or vals.get('approval_state') == 'refused':
             self._check_can_refuse()
 
-        if 'currency_id' in vals:
-            self._set_expense_currency_rate(date_today=fields.Date.context_today(self))
-            for expense in self:
-                expense.total_amount = expense.total_amount_currency * expense.currency_rate
         return res
 
     @api.model_create_multi
@@ -1206,7 +1149,7 @@ class HrExpense(models.Model):
         vals = {
             'employee_id': employee.id,
             'name': expense_description,
-            'total_amount_currency': price,
+            'price_unit_currency': price,
             'product_id': product.id if product else None,
             'product_uom_id': product.uom_id.id,
             'tax_ids': [Command.set(product.supplier_taxes_id.filtered(lambda r: r.company_id == company).ids)],
@@ -1352,7 +1295,7 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             expense = self.env['hr.expense'].create([{
-                'price_unit': 0,
+                'price_unit_currency': 0,
             }])
             attachment.write({'res_model': 'hr.expense', 'res_id': expense.id})
 
@@ -1582,7 +1525,7 @@ class HrExpense(models.Model):
         return [{
             'name': self.name,
             'product_id': self.product_id.id,
-            'total_amount_currency': price,
+            'price_unit_currency': price,
             'tax_ids': self.tax_ids.ids,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
@@ -1751,10 +1694,16 @@ class HrExpense(models.Model):
 
         # Tax lines.
         total_tax_line_balance = 0.0
+        total_tax_line_amount_currency = 0.0
         for tax_line in tax_results['tax_lines_to_add']:
             total_tax_line_balance += tax_line['balance']
+            total_tax_line_amount_currency += tax_line['amount_currency']
             move_lines.append(tax_line)
+
         base_move_line['balance'] = self.total_amount - total_tax_line_balance
+        base_move_line['amount_currency'] = self.currency_id.round(
+            self.total_amount_currency - total_tax_line_amount_currency
+        )
 
         # Outstanding payment line.
         move_lines.append({

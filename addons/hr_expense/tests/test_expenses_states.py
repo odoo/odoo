@@ -19,7 +19,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
             'name': 'Expense Company 1',
             'payment_mode': 'company_account',
             # To avoid duplicated expense wizard
-            'total_amount_currency': 1000,
+            'price_unit_currency': 1000,
             'date': '2017-01-01',
         })
         cls.expenses_all = cls.expenses_employee + cls.expenses_company
