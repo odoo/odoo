@@ -282,6 +282,6 @@
         ],
     },
     'author': 'Odoo S.A.',
-    'post_init_hook': '_sync_light_users_post_init',
     'license': 'LGPL-3',
+    'post_init_hook': '_sync_light_users_post_init',
 }

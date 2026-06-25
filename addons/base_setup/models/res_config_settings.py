@@ -53,13 +53,13 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def open_new_user_default_groups(self):
-        default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
+        default_group = self.env.ref('base.default_user_regular_group', raise_if_not_found=False)
         if not default_group:
             default_group = self.env['res.groups'].create({
                 'name': _('Default access for new users'),
             })
             self.env['ir.model.data'].create({
-                'name': 'default_user_group',
+                'name': 'default_user_regular_group',
                 'module': 'base',
                 'res_id': default_group.id,
                 'model': 'res.groups',

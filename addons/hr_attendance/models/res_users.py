@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import models
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
-
-    @api.model
-    def _get_maximal_light_user_groups(self):
-        groups = super()._get_maximal_light_user_groups()
-        group = self.env.ref('hr_attendance.group_hr_attendance_own', raise_if_not_found=False)
-        return groups | group if group else groups
 
     def _clean_attendance_officers(self):
         attendance_officers = self.env['hr.employee'].search(

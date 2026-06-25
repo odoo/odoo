@@ -8,7 +8,7 @@
             <field name="name">Officer: Manage all vehicles</field>
             <field name="sequence">10</field>
             <field name="privilege_id" ref="res_groups_privilege_fleet"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user_regular'))]"/>
         </record>
         <record id="fleet_group_manager" model="res.groups">
             <field name="name">Administrator</field>

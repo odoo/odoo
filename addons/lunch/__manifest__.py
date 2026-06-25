@@ -51,6 +51,6 @@ If you want to save your employees' time and avoid them to always have coins in 
         ],
     },
     'author': 'Odoo S.A.',
-    'post_init_hook': '_sync_light_users_post_init',
     'license': 'LGPL-3',
+    'post_init_hook': '_sync_light_users_post_init',
 }

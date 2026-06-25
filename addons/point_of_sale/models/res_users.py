@@ -6,12 +6,6 @@ class ResUsers(models.Model):
     _inherit = ['res.users', 'pos.load.mixin']
 
     @api.model
-    def _get_maximal_light_user_groups(self):
-        groups = super()._get_maximal_light_user_groups()
-        group = self.env.ref('point_of_sale.group_pos_user', raise_if_not_found=False)
-        return groups | group if group else groups
-
-    @api.model
     def _load_pos_data_domain(self, data, config):
         return [('id', '=', self.env.uid)]
 

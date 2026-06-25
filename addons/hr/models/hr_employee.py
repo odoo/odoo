@@ -1605,7 +1605,8 @@ class HrEmployee(models.Model):
         if not login:
             sequence = self.env['ir.sequence'].sudo().next_by_code('hr.employee.user.login')
             login = '__emp_%s' % (sequence or uuid.uuid4().hex)
-        light_groups = self.env.ref('base.group_user') + ResUsers._get_maximal_light_user_groups()
+        # Reimplement default_groups just to test.
+        groups = ResUsers._default_groups(group='user')
         return ResUsers.create({
             'name': vals.get('name') or login,
             'login': login,
@@ -1614,7 +1615,7 @@ class HrEmployee(models.Model):
             'partner_id': work_contact.id or False,
             'company_id': company_id,
             'company_ids': [Command.set([company_id])],
-            'group_ids': [Command.set(light_groups.ids)],
+            'group_ids': [Command.set(groups.ids)],
         })
 
     def _prepare_resource_values(self, vals, tz):

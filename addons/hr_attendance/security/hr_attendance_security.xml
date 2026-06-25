@@ -45,4 +45,8 @@
         <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
 
+    <record id="base.default_user_group" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_own'))]"/>
+    </record>
+
     </odoo>
