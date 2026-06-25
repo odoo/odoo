@@ -7,7 +7,7 @@
             <t t-if="this.isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
-                        <span class="px-1" t-out="this.state.activeTab"/>
+                        <span class="px-1" t-out="this.activeTab()"/>
                         <i class="fa fa-caret-down ms-2"/>
                     </button>
                     <t t-set-slot="content">
@@ -22,7 +22,7 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.activeTab() === tab.id ? 'active' : ''}"
                         t-on-click="() => this.setTab(tab.id)">
                         <t t-out="tab.name" />
                     </button>
@@ -37,7 +37,7 @@
                     t-on-focusin="this.onColorFocusin"
                     t-on-focusout="this.onColorFocusout"/>
         </div>
-        <t t-set="activeTab" t-value="this.tabs.find((tab) => this.state.activeTab === tab.id)" />
+        <t t-set="activeTab" t-value="this.tabs.find((tab) => this.activeTab() === tab.id)" />
         <t t-component="activeTab.component" t-props="{
             applyColor: this.applyColor.bind(this),
             onColorClick: this.onColorApply.bind(this),
@@ -60,8 +60,8 @@
             defaultColors: this.DEFAULT_COLORS,
             getUsedCustomColors: this.props.getUsedCustomColors,
             grayscales: this.grayscales,
-            currentCustomColor: this.state.currentCustomColor,
-            currentColorPreview: this.state.currentColorPreview,
+            currentCustomColor: this.currentCustomColor(),
+            currentColorPreview: this.currentColorPreview(),
             selectedColor: this.props.state.selectedColor,
         }" />
     </div>

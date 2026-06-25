@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, props, signal, t, useEffect, useListener } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -87,19 +87,15 @@ export class ColorPicker extends Component {
         this.getPreviewColor = () => {};
         this.isMobileOS = isMobileOS();
 
-        this.state = proxy({
-            activeTab: this.props.state.selectedTab || this.getDefaultTab(),
-            currentCustomColor: this.props.state.selectedColor,
-            currentColorPreview: undefined,
-        });
+        this.activeTab = signal(this.props.state.selectedTab || this.getDefaultTab());
+        this.currentCustomColor = signal(this.props.state.selectedColor);
+        this.currentColorPreview = signal(undefined);
         this.usedCustomColors = this.props.getUsedCustomColors();
-        useLayoutEffect(
-            () => {
-                // Recompute the positioning of the popover if any.
-                this.env[POSITION_BUS]?.trigger("update");
-            },
-            () => [this.state.activeTab]
-        );
+        useEffect(() => {
+            void this.activeTab();
+            // Recompute the positioning of the popover if any.
+            this.env[POSITION_BUS]?.trigger("update");
+        });
         const documents = [
             window.top,
             ...Array.from(window.top.frames).filter((frame) => {
@@ -135,7 +131,7 @@ export class ColorPicker extends Component {
     }
 
     setTab(tab) {
-        this.state.activeTab = tab;
+        this.activeTab.set(tab);
         // Reset the preview revert callback, as it is tab-specific.
         this.setOperationCallbacks({ onPreviewRevertCallback: () => {} });
         this.applyColorResetPreview();
@@ -170,7 +166,7 @@ export class ColorPicker extends Component {
     }
 
     applyColor(color) {
-        this.state.currentCustomColor = color;
+        this.currentCustomColor.set(color);
         this.props.applyColor(color);
         this.defaultColorSet = this.getDefaultColorSet();
         this.onApplyCallback();
@@ -187,14 +183,14 @@ export class ColorPicker extends Component {
 
     applyColorResetPreview() {
         this.props.applyColorResetPreview();
-        this.state.currentColorPreview = undefined;
+        this.currentColorPreview.set(undefined);
         this.onPreviewRevertCallback();
     }
 
     onColorPreview(ev) {
         const color = ev.hex || ev.gradient || this.processColorFromEvent(ev);
         this.props.applyColorPreview(color);
-        this.state.currentColorPreview = this.getPreviewColor();
+        this.currentColorPreview.set(this.getPreviewColor());
     }
 
     onColorHover(ev) {
@@ -322,13 +318,13 @@ export class ColorPicker extends Component {
         // Re-apply the current preview only when the mouse genuinely
         // re-enters the picker from outside. Moving between internal
         // boundaries (like iframe inputs) should not reset previews.
-        if (this.state.currentColorPreview && !mouseEnteredFromWithinPicker) {
+        if (this.currentColorPreview() && !mouseEnteredFromWithinPicker) {
             // Sometimes the previews can be reverted outside of the color
             // picker, for example, if a user hovers any of the previewable
             // options in html builder. So here we reset the preview and apply
             // it again, in order to have the correct preview
             this.applyColorResetPreview();
-            this.props.applyColorPreview(this.state.currentColorPreview);
+            this.props.applyColorPreview(this.currentColorPreview());
         }
     }
 
@@ -381,18 +377,7 @@ export function useColorPicker(refName, props, options = {}) {
         }
     }
 
-    useLayoutEffect(
-        (el) => {
-            if (!el) {
-                return;
-            }
-            el.addEventListener("click", onClick);
-            return () => {
-                el.removeEventListener("click", onClick);
-            };
-        },
-        () => [root.el]
-    );
+    useListener(() => root.el, "click", onClick);
 
     return colorPicker;
 }
