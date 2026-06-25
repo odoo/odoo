@@ -1,5 +1,6 @@
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { contains } from "@web/../tests/web_test_helpers";
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -86,4 +87,10 @@ export async function createSpreadsheetWithList(params = {}) {
 
     await waitForDataLoaded(model);
     return { model, env };
+}
+
+export async function openListSidePanel(listId) {
+    await contains(".o-topbar-menu[data-id='data']").click();
+    await contains(".o-menu-item[data-name='list_data_sources']").click();
+    await contains(`.o-menu-item[data-name='item_list_${listId}']`).click();
 }
