@@ -388,11 +388,19 @@ class AccountMove(models.Model):
         month_start_date, month_end_date = get_month(self.date)
         company_fiscalyear_dates = self.company_id.sudo().compute_fiscalyear_dates(self.date)
         fiscalyear_start_date, fiscalyear_end_date = company_fiscalyear_dates['date_from'], company_fiscalyear_dates['date_to']
+        current_tan = self.company_id.partner_id._get_additional_identifier('IN_TAN')
+
+        companies_with_same_tan = self.env['res.company'].search([
+            ('l10n_in_tds_feature', '=', True)
+        ]).filtered(
+            lambda c: c.partner_id._get_additional_identifier('IN_TAN') == current_tan
+        )
+
         default_domain = [
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
             ('move_id.move_type', '!=', 'entry'),
             ('company_id.l10n_in_tds_feature', '!=', False),
-            ('company_id.l10n_in_tan', '=', self.company_id.l10n_in_tan),
+            ('company_id', 'in', companies_with_same_tan.ids),
             ('parent_state', '=', 'posted')
         ]
         if commercial_partner_id.l10n_in_pan_entity_id:

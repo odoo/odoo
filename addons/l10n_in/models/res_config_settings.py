@@ -52,10 +52,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_withholding_journal_id',
         readonly=False
     )
-    l10n_in_tan = fields.Char(
-        related='company_id.l10n_in_tan',
-        readonly=False
-    )
+    l10n_in_tan = fields.Char()
 
     # GST settings
     l10n_in_is_gst_registered = fields.Boolean(
@@ -102,6 +99,8 @@ class ResConfigSettings(models.TransientModel):
                 self._update_l10n_in_feature("l10n_in_edi_feature")
             if self.module_l10n_in_ewaybill:
                 self._update_l10n_in_feature("l10n_in_ewaybill_feature")
+            if self.company_id.l10n_in_tds_feature:
+                self.company_id.partner_id._set_additional_identifier('IN_TAN', self.l10n_in_tan)
 
     def _update_l10n_in_feature(self, column):
         """ This way, after installing the module, the field will already be set for the active company. """
@@ -172,6 +171,7 @@ class ResConfigSettings(models.TransientModel):
 
     def get_values(self):
         res = super().get_values()
+        res['l10n_in_tan'] = self.env.company.partner_id._get_additional_identifier('IN_TAN')
         res['l10n_in_gsp'] = self.env['ir.config_parameter'].sudo().get_str('l10n_in.gsp_provider')
         if not res['l10n_in_gsp']:
             if self._l10n_in_is_first_time_setup():
