@@ -1,16 +1,12 @@
 import re
 
-from odoo.tools.partner_identifiers import (
-    ALL_IDENTIFIERS_METADATA,
-    validate_identifier,
-)
 from odoo.tools.partner_identifier_validation import validate_email
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
 
-CORNER_CASE_IDENTIFIER_METADATA = {
+CORNER_CASE_IDENTIFIERS_METADATA = {
     'EMAIL': {
         'scheme': 'EM',
         'countries': False,
@@ -77,14 +73,7 @@ ELECTRONIC_ADDRESS_SCHEMES_CODELIST = [
 ]
 
 
-ISO_IDENTIFIERS_METADATA = {
-    metadata.get('scheme'): {'key': key, **metadata}
-    for key, metadata in ALL_IDENTIFIERS_METADATA.items()
-    if metadata.get('scheme')
-}
-
-
-PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
+ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
 
 
 def normalize_vat_for_ubl(country_code, vat):
@@ -97,24 +86,3 @@ def normalize_vat_for_ubl(country_code, vat):
     if country_code == 'NO' and vat[-3:] != 'MVA':
         vat += 'MVA'
     return vat
-
-
-def normalize_iso_identifier(scheme, value):
-    meta = ISO_IDENTIFIERS_METADATA.get(scheme)
-    if not meta:
-        return value
-    validation = validate_identifier(meta['key'], value)
-    return validation.get('value')
-
-
-def validate_participant_identifier(scheme, endpoint):
-    """ Validate and normalize routing scheme and endpoint."""
-    meta = ISO_IDENTIFIERS_METADATA.get(scheme)
-    if not meta:
-        return {'valid': True, 'scheme': scheme, 'value': endpoint, 'key': None, 'example': None}
-    validation = validate_identifier(meta['key'], endpoint)
-    endpoint = PEPPOL_ENDPOINT_INVALIDCHARS_RE.sub('', validation['value'])
-    if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
-        validation['valid'] = False
-    validation['value'] = endpoint
-    return {'scheme': scheme, 'key': meta['key'], **validation}

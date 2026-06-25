@@ -91,7 +91,11 @@ class PdpRegistration(models.TransientModel):
     @api.depends('company_id.pdp_identifier')
     def _compute_pdp_identifier(self):
         for wizard in self:
-            wizard.pdp_identifier = wizard.company_id.pdp_identifier or wizard.company_id.partner_id._get_suggested_pdp_identifier()
+            wizard.pdp_identifier = (
+                wizard.company_id.pdp_identifier
+                or wizard.company_id.partner_id._get_additional_identifier('FR_CTC')
+                or wizard.company_id.partner_id._l10n_fr_pdp_get_siren()
+            )
 
     @api.depends('company_id.partner_id.additional_identifiers')
     def _compute_siren_number(self):

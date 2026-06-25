@@ -28,8 +28,8 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             commercial_partner = partner.commercial_partner_id
             if commercial_partner.routing_scheme != '0225' or not commercial_partner.routing_endpoint:
                 constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's PDP identifier is missing: %s", commercial_partner.display_name)
-            id_type, id_value = commercial_partner._l10n_fr_pdp_get_base_identifier()
-            if not id_type or not id_value:
+            identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
+            if not identifier_vals.get('scheme') or not identifier_vals.get('value'):
                 constraints[f"ubl_21_fr_{partner_type}_siret_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", commercial_partner.display_name)
             if not commercial_partner.vat or commercial_partner.vat == '/':
                 constraints[f"ubl_21_fr_{partner_type}_vat_required"] = self.env._("The following partner's VAT is missing: %s", commercial_partner.display_name)
@@ -105,15 +105,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        id_type, party_id = commercial_partner._l10n_fr_pdp_get_base_identifier()
-        if id_type == 'siret':
-            party_id_scheme = "0009"
-        else:  # id_type == 'siren'
-            party_id_scheme = "0002"
-        # [UBL-SR-16] Buyer identifier shall occur maximum once
-        vals['party_node']['cac:PartyIdentification'] = {
-            'cbc:ID': {'_text': party_id, 'schemeID': party_id_scheme},
-        }
+        if identifier_vals := commercial_partner._get_preferred_legal_entity_identifier_vals():
+            # [UBL-SR-16] Buyer identifier shall occur maximum once
+            vals['party_node']['cac:PartyIdentification'] = {
+                'cbc:ID': {'_text': identifier_vals['value'], 'schemeID': identifier_vals['scheme']},
+            }
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

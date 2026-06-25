@@ -60,7 +60,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
 
     def test_pdp_create_participant_missing_siren(self):
         self.env.company.partner_id.write({
-            'routing_identifier': '0002:552008443',
+            'routing_identifier': None,
             'additional_identifiers': {},
         })
         self.assertFalse(self.env.company.partner_id._l10n_fr_pdp_get_siren())

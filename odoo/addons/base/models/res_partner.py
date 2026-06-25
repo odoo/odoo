@@ -8,8 +8,8 @@ import re
 import typing
 from collections import defaultdict
 from random import randint
+from stdnum.eu import vat as eu_vat
 from zoneinfo import ZoneInfo
-
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
@@ -19,11 +19,11 @@ from odoo.tools.translate import LazyGettext
 from odoo.tools.partner_identifiers import (
     ADDITIONAL_IDENTIFIERS_METADATA,
     ALL_IDENTIFIERS_METADATA,
+    TIN_METADATA,
     get_deduced_identifiers,
     get_tin_metadata_of_country,
     is_identifier_void,
-    pick_preferred_identifier,
-    validate_identifier,
+    normalize_identifier,
     validation_error_message,
 )
 
@@ -1275,9 +1275,7 @@ class ResPartner(models.Model):
         """
         for partner in self:
             for key, value in (partner.additional_identifiers or {}).items():
-                result = validate_identifier(key, value)
-                if not result['valid']:
-                    raise ValidationError(validation_error_message(self.env, key, result['example']))
+                self.env['res.partner']._validate_identifier(key, value, validation='error')  # will raise ValidationError if invalid
 
     @api.onchange('vat', 'country_id')
     def _onchange_vat(self):
@@ -1312,6 +1310,91 @@ class ResPartner(models.Model):
         """
         assert validation in (False, 'error', 'setnull')
         return vat, country and country.code or ''
+
+    @api.model
+    def _validate_identifier(self, key, value, validation=False):
+        """ Run the per-identifier-type validator (if any) and return a uniform
+        `{valid, value, example}` dict.
+        """
+        assert validation in (False, 'error', 'setnull')
+        value = normalize_identifier(value)
+        if not value:
+            return {'valid': True, 'value': value, 'example': None}
+
+        if (tin_meta := TIN_METADATA.get(key)) and (country_code := tin_meta.get('countries')[:1]):
+            country = self.env['res.country'].search([('code', '=', country_code[0])], limit=1)
+            tin, _country_code = self._run_vat_checks(country, value, validation=validation)
+            example = tin_meta.get('examples') or tin_meta.get('placeholder')
+            return {'valid': bool(tin), 'value': tin, 'example': example}
+
+        metadata = self._get_all_identifiers_metadata().get(key) or {}
+        example = metadata.get('examples') or metadata.get('placeholder')
+        validation_vals = {'valid': True, 'value': value, 'example': example}
+        validation_function = metadata.get('validation_function')
+
+        # For VAT-like identifiers (that are not in `vat` field) without a dedicated validator,
+        # fallback to eu_vat.validate only when the value looks like a prefixed EU VAT (starts with a 2-letter code).
+        supported_countries = eu_vat.MEMBER_STATES
+        if not validation_function and metadata.get('category') == 'VAT' and value[:2].lower() in supported_countries:
+            validation_function = eu_vat.validate
+
+        if validation_function:
+            try:
+                value_normalized = validation_function(value)
+            except Exception:  # noqa: BLE001
+                validation_vals['valid'] = False
+            else:
+                validation_vals['value'] = value_normalized
+
+        if not validation_vals['valid'] and validation == 'error':
+            identifier_label = self._get_identifier_label(key)
+            raise ValidationError(validation_error_message(self.env, identifier_label, validation_vals['value'], example=validation_vals['example']))
+        if not validation_vals['valid'] and validation == 'setnull':
+            _logger.warning("Invalid identifier %s for key %s. Returning None.", value, key)
+            validation_vals['value'] = None
+        return validation_vals
+
+    @api.model
+    def _validate_identifier_by_scheme(self, scheme, value, validation=False):
+        assert validation in (False, 'error', 'setnull')
+        ResPartner = self.env['res.partner']
+        meta = ResPartner._get_all_identifiers_metadata_by_scheme().get(scheme)
+        if not meta:
+            # Needs to return True to handle `odemo` scheme
+            return {'valid': True, 'scheme': scheme, 'value': value, 'key': None, 'example': None}
+        validation = ResPartner._validate_identifier(meta['key'], value, validation=validation)
+        return {'scheme': scheme, 'key': meta['key'], **validation}
+
+    @api.model
+    def _format_identifier(self, identifier_type, value):
+        value = normalize_identifier(value)
+        if not value:
+            return None
+        if format_function := self._get_all_identifiers_metadata().get(identifier_type, {}).get('format'):
+            return format_function(value)
+        return value
+
+    @api.model
+    def _pick_preferred_identifier(self, identifiers, filter_func=None, sort_key=None):
+        """ Pick the best identifier from a candidates dict.
+
+        :param identifiers: dict {identifier_type: value} as from `_get_all_identifiers()`
+        :param filter_func: optional (key, value, metadata) -> bool
+        :param sort_key: optional (key, value, metadata) -> comparable
+        :return: dict `{'key': ..., 'value': ..., **metadata}` of the winner, or empty dict if no candidate.
+        """
+        candidates = []
+        for key, value in identifiers.items():
+            meta = self._get_all_identifiers_metadata().get(key) or {}
+            if filter_func and not filter_func(key, value, meta):
+                continue
+            candidates.append((key, value, meta))
+        if not candidates:
+            return {}
+        if sort_key:
+            candidates.sort(key=lambda c: sort_key(*c))
+        winner_key, winner_value, winner_meta = candidates[0]
+        return {'key': winner_key, 'value': winner_value, **winner_meta}
 
     @api.depends('country_id')
     def _compute_available_additional_identifiers_metadata(self):
@@ -1350,9 +1433,7 @@ class ResPartner(models.Model):
             identifiers.pop(identifier_type, None)
             self.additional_identifiers = identifiers
             return
-        validation = validate_identifier(identifier_type, value)
-        if not validation['valid']:
-            raise ValidationError(validation_error_message(self.env, identifier_type, validation['example']))
+        validation = self.env['res.partner']._validate_identifier(identifier_type, value, validation='error')  # possibly raises ValidationError
         normalized_value = validation['value']
         identifiers[identifier_type] = normalized_value  # set the normalized value
         deduced_identifiers = get_deduced_identifiers(identifier_type, normalized_value)
@@ -1385,6 +1466,14 @@ class ResPartner(models.Model):
         return ALL_IDENTIFIERS_METADATA
 
     @api.model
+    def _get_all_identifiers_metadata_by_scheme(self):
+        return {
+            metadata.get('scheme'): {'key': key, **metadata}
+            for key, metadata in self._get_all_identifiers_metadata().items()
+            if metadata.get('scheme')
+        }
+
+    @api.model
     def _get_all_additional_identifiers_metadata(self):
         """ Returns a dict with the metadata of the additional identifiers.
         TO BE OVERRIDEN by modules that want to add or modify the default metadata.
@@ -1399,6 +1488,11 @@ class ResPartner(models.Model):
     def _get_tax_category_priority(self):
         return {'VAT': 0, 'TIN': 0, 'GST': 0}
 
+    @api.model
+    def _get_identifier_label(self, identifier_key):
+        """Return the label of an identifier given its key."""
+        return self._get_all_identifiers_metadata().get(identifier_key, {}).get('label', '')
+
     def _get_preferred_legal_entity_identifier_vals(self):
         """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred legal entity identifier for the given partner.
         The selection is based on the following rules:
@@ -1409,7 +1503,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         partner = self.commercial_partner_id
         priorities = self._get_legal_entity_category_priority()
-        identifier_vals = pick_preferred_identifier(
+        identifier_vals = self._pick_preferred_identifier(
             partner._get_all_identifiers(enrich=True),
             filter_func=lambda k, v, m: m.get('category') in priorities or k == 'TIN',
             sort_key=lambda k, v, m: (m.get('sequence', 100), priorities.get(m.get('category'), 100)),
@@ -1426,7 +1520,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         partner = self.commercial_partner_id
         priorities = self._get_tax_category_priority()
-        identifier_vals = pick_preferred_identifier(
+        identifier_vals = self._pick_preferred_identifier(
             partner._get_all_identifiers(enrich=True),
             filter_func=lambda k, v, m: m.get('category') in priorities or k == 'TIN',
             sort_key=lambda k, v, m: (priorities.get(m.get('category'), 100), m.get('sequence', 100)),
@@ -1450,7 +1544,7 @@ class ResPartner(models.Model):
             # well-formed companion id (e.g. a 13-digit RO fiscal code is not a valid 10-digit CUI).
             new_identifiers = {
                 k: v for k, v in deduced_identifiers.items()
-                if k not in identifiers and validate_identifier(k, v)['valid']
+                if k not in identifiers and self.env['res.partner']._validate_identifier(k, v)['valid']
             }
             if not new_identifiers:
                 continue
@@ -1479,14 +1573,12 @@ class ResPartner(models.Model):
                 continue
             if not value:
                 continue
-            result = validate_identifier(key, value)
-            if not result['valid']:
-                raise ValidationError(validation_error_message(self.env, key, result['example']))
+            result = self.env['res.partner']._validate_identifier(key, value, validation='error')  # possibly raises ValidationError
             cleaned[key] = result['value']
         # Compute deduced identifiers (e.g. FR_SIRET => FR_SIREN). Only keep the well-formed ones.
         for key, value in list(cleaned.items()):
             for deduced_key, deduced_value in get_deduced_identifiers(key, value).items():
-                if deduced_key not in cleaned and validate_identifier(deduced_key, deduced_value)['valid']:
+                if deduced_key not in cleaned and self.env['res.partner']._validate_identifier(deduced_key, deduced_value)['valid']:
                     cleaned[deduced_key] = deduced_value
         vals['additional_identifiers'] = cleaned
 
