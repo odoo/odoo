@@ -9,12 +9,12 @@ patch(BoothRegistration.prototype, {
         super.start();
         this.categoryPrice = this.selectedBoothCategory ? this.selectedBoothCategory.dataset.price : undefined;
     },
-    onBoothTypeChange(ev, currentTargetEl) {
-        super.onBoothTypeChange(ev, currentTargetEl);
-        this.categoryPrice = parseFloat(currentTargetEl.dataset.price);
+    onBoothTypeChange(ev) {
+        super.onBoothTypeChange(ev);
+        this.categoryPrice = parseFloat(ev.currentTarget.dataset.price);
     },
-    onBoothChange(ev, currentTargetEl) {
-        super.onBoothChange(ev, currentTargetEl);
+    onBoothChange(ev) {
+        super.onBoothChange(ev);
         const boothCount = this.countSelectedBooths();
         const boothTotalPriceEl = this.el.querySelector(".o_wbooth_booth_total_price");
         boothTotalPriceEl?.classList.toggle("d-none", !boothCount || !this.categoryPrice);

@@ -42,8 +42,8 @@ patch(PortalComposer.prototype, {
         super.setup();
         patchDynamicContent(this.dynamicContent, {
             ".o-mail-Composer-stars i": {
-                "t-on-click.withTarget": this.onClickStar.bind(this),
-                "t-on-mousemove.withTarget": this.onMoveStar.bind(this),
+                "t-on-click": this.onClickStar.bind(this),
+                "t-on-mousemove": this.onMoveStar.bind(this),
                 "t-on-mouseleave": this.onMoveLeaveStar.bind(this),
                 "t-att-class": (el) => {
                     const index = Math.floor(this.starValue);
@@ -109,15 +109,15 @@ patch(PortalComposer.prototype, {
         return res;
     },
 
-    onClickStar(ev, oldFn, currentTargetEl) {
-        const index = [...currentTargetEl.parentElement.children].indexOf(currentTargetEl);
+    onClickStar(ev) {
+        const index = [...ev.currentTarget.parentElement.children].indexOf(ev.currentTarget);
         this.starValue = index + 1;
         this.userClick = true;
         this.ratingInputEl.value = this.starValue;
     },
 
-    onMoveStar(ev, oldFn, currentTargetEl) {
-        const index = [...currentTargetEl.parentElement.children].indexOf(currentTargetEl);
+    onMoveStar(ev) {
+        const index = [...ev.currentTarget.parentElement.children].indexOf(ev.currentTarget);
         this.starValue = index + 1;
     },
 

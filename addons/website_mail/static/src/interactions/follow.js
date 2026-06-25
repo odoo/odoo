@@ -12,7 +12,7 @@ export class Follow extends Interaction {
             "t-att-class": () => ({ "d-none": false }),
         },
         ".js_follow_btn, .js_unfollow_btn": {
-            "t-on-click.prevent.withTarget": this.onToggleFollowClick,
+            "t-on-click.prevent": this.onToggleFollowClick,
         },
     };
 
@@ -95,10 +95,9 @@ export class Follow extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onToggleFollowClick(ev, currentTargetEl) {
-        const jsFollowEl = currentTargetEl.closest(".js_follow");
+    async onToggleFollowClick(ev) {
+        const jsFollowEl = ev.currentTarget.closest(".js_follow");
         let email = jsFollowEl.querySelector(".js_follow_email");
 
         if (email && !/.+@.+/.test(email.value)) {

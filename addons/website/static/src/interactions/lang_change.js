@@ -5,10 +5,11 @@ import { redirect } from "@web/core/utils/urls";
 export class LangChange extends Interaction {
     static selector = ".js_change_lang";
     dynamicContent = {
-        _root: { "t-on-click.prevent.withTarget": this.onLangChangeClick },
+        _root: { "t-on-click.prevent": this.onLangChangeClick },
     };
 
-    onLangChangeClick(ev, el) {
+    onLangChangeClick(ev) {
+        const el = ev.currentTarget;
         const lang = encodeURIComponent(el.dataset.url_code);
         const redirectURL = new URL(el.getAttribute("href"), window.location.origin);
         redirectURL.searchParams.delete("edit_translations");

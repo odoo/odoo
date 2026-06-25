@@ -9,10 +9,10 @@ export class WebsiteEventTrack extends Interaction {
             "t-on-scroll": () => this.updateAgendaScroll(),
             "t-on-resize": () => this.updateAgendaScroll(),
         },
-        "#event_track_search": { "t-on-input.prevent.withTarget": (ev, currentTargetEl) => {
-            this.searchText = currentTargetEl.value.toLowerCase();
+        "#event_track_search": { "t-on-input.prevent": (ev) => {
+            this.searchText = ev.currentTarget.value.toLowerCase();
         }},
-        ".o_we_online_agenda": { "t-on-scroll.withTarget": this.onAgendaScroll },
+        ".o_we_online_agenda": { "t-on-scroll": this.onAgendaScroll },
         ".event_track": { "t-att-class": (el) => ({ "invisible": !el.textContent.toLowerCase().includes(this.searchText) }) },
         "#search_summary": { "t-att-class": () => ({ "invisible": !this.searchText }) },
         "#search_number": { "t-out": () => this.tracks.filter(element => !element.classList.contains('invisible')).length },
@@ -24,7 +24,7 @@ export class WebsiteEventTrack extends Interaction {
         },
         ".o_we_agenda_horizontal_scroller": { "t-att-style": () => ({ "width": this.computeScrollerWidth() }) },
         ".o_we_agenda_card_filter_badges .o_badge_clickable": {
-            "t-on-click.withTarget": this.onBadgeFilterClick,
+            "t-on-click": this.onBadgeFilterClick,
         },
     };
 
@@ -107,19 +107,19 @@ export class WebsiteEventTrack extends Interaction {
 
     /**
      * @param {Event} event
-     * @param {Object} currentTargetEl
      */
-    onAgendaScroll(event, currentTargetEl) {
-        const tableEl = currentTargetEl.querySelector("table");
+    onAgendaScroll(event) {
+        const currentTarget = event.currentTarget;
+        const tableEl = currentTarget.querySelector("table");
         const gutter = 4; // = map-get($spacers, 1)
-        const gap = tableEl.clientWidth - currentTargetEl.clientWidth - gutter;
+        const gap = tableEl.clientWidth - currentTarget.clientWidth - gutter;
 
-        currentTargetEl.classList.add("o_we_online_agenda_is_scrolling");
-        currentTargetEl.classList.toggle("o_we_online_agenda_has_content_hidden", gap > Math.ceil(currentTargetEl.scrollLeft));
+        currentTarget.classList.add("o_we_online_agenda_is_scrolling");
+        currentTarget.classList.toggle("o_we_online_agenda_has_content_hidden", gap > Math.ceil(currentTarget.scrollLeft));
 
         requestAnimationFrame(() => {
             setTimeout(() => {
-                currentTargetEl.classList.remove("o_we_online_agenda_is_scrolling");
+                currentTarget.classList.remove("o_we_online_agenda_is_scrolling");
             }, 200);
         });
 
@@ -136,12 +136,12 @@ export class WebsiteEventTrack extends Interaction {
         }
     }
 
-    onBadgeFilterClick(ev, el) {
+    onBadgeFilterClick(ev) {
         const target = document.getElementById("event_track_search");
-        if (target.value === el.title) {
+        if (target.value === ev.currentTarget.title) {
             target.value = "";
         } else {
-            target.value = el.title;
+            target.value = ev.currentTarget.title;
             target.dispatchEvent(new Event("input"));
         }
     }

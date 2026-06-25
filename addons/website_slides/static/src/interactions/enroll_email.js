@@ -9,17 +9,16 @@ export class EnrollEmail extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         ".o_wslides_js_channel_enroll": {
-            "t-on-click.prevent.withTarget": this.openDialog,
+            "t-on-click.prevent": this.openDialog,
         },
     };
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    openDialog(ev, currentTargetEl) {
-        const alertEl = currentTargetEl.closest(".alert");
-        const channelId = parseInt(currentTargetEl.dataset.channelId);
+    openDialog(ev) {
+        const alertEl = ev.currentTarget.closest(".alert");
+        const channelId = parseInt(ev.currentTarget.dataset.channelId);
         this.services.dialog.add(ConfirmationDialog, {
             title: _t("Request Access."),
             body: _t("Do you want to request access to this course?"),

@@ -4,15 +4,14 @@ import { registry } from "@web/core/registry";
 export class BoothSponsorDetails extends Interaction {
     static selector = "#o_wbooth_contact_details_form";
     dynamicContent = {
-        "input[id='contact_details']": { "t-on-click.withTarget": this.onClickContactDetails },
+        "input[id='contact_details']": { "t-on-click": this.onClickContactDetails },
     }
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    onClickContactDetails(ev, currentTargetEl) {
-        this.useContactDetails = currentTargetEl.checked;
+    onClickContactDetails(ev) {
+        this.useContactDetails = ev.currentTarget.checked;
 
         const contactDetailsEl = this.el.querySelector("#o_wbooth_contact_details");
         contactDetailsEl.classList.toggle("d-none", !this.useContactDetails);

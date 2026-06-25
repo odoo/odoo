@@ -10,7 +10,7 @@ export class AddressForm extends Interaction {
     dynamicContent = {
         "input[name='street']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
         "input[name='street_name']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
-        ".js_autocomplete_result": { "t-on-click.withTarget": this.onClickAutocompleteResult },
+        ".js_autocomplete_result": { "t-on-click": this.onClickAutocompleteResult },
     };
 
     setup() {
@@ -50,10 +50,10 @@ export class AddressForm extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onClickAutocompleteResult(ev, currentTargetEl) {
-        const dropdownEl = currentTargetEl.parentNode;
+    async onClickAutocompleteResult(ev) {
+        const currentTarget = ev.currentTarget;
+        const dropdownEl = currentTarget.parentNode;
         dropdownEl.innerText = "";
         dropdownEl.classList.add("d-flex", "justify-content-center", "align-items-center");
 
@@ -62,8 +62,8 @@ export class AddressForm extends Interaction {
         dropdownEl.appendChild(spinnerEl);
 
         const address = await this.waitFor(googlePlacesSession.getAddressDetails({
-            address: currentTargetEl.innerText,
-            google_place_id: currentTargetEl.dataset.googlePlaceId,
+            address: currentTarget.innerText,
+            google_place_id: currentTarget.dataset.googlePlaceId,
         }));
 
         if (address.formatted_street_number) {

@@ -5,7 +5,7 @@ export class PortalSearchPanel extends Interaction {
     static selector = ".o_portal_search_panel";
     dynamicContent = {
         ".dropdown-item": {
-            "t-on-click.prevent.withTarget": this.onDropdownItemClick,
+            "t-on-click.prevent": this.onDropdownItemClick,
         },
         _root: {
             "t-on-submit.prevent": this.search,
@@ -40,14 +40,14 @@ export class PortalSearchPanel extends Interaction {
         window.location.search = search.toString();
     }
 
-    onDropdownItemClick(ev, currentTargetEl) {
-        currentTargetEl
+    onDropdownItemClick(ev) {
+        ev.currentTarget
             .closest(".dropdown-menu")
             .querySelector(".dropdown-item.active")
             ?.classList.remove("active");
-        currentTargetEl.classList.add("active");
+        ev.currentTarget.classList.add("active");
 
-        this.adaptSearchLabel(currentTargetEl);
+        this.adaptSearchLabel(ev.currentTarget);
     }
 }
 

@@ -7,10 +7,10 @@ export class SaleUpdateLineButton extends Interaction {
     static selector = ".o_portal_sale_sidebar";
     dynamicContent = {
         "a.js_update_line_json": {
-            "t-on-click.prevent.withTarget": this.onUpdateLineClick,
+            "t-on-click.prevent": this.onUpdateLineClick,
         },
         ".js_quantity": {
-            "t-on-change.prevent.withTarget": this.onQuantityChange,
+            "t-on-change.prevent": this.onQuantityChange,
         },
     };
 
@@ -32,27 +32,27 @@ export class SaleUpdateLineButton extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onQuantityChange(ev, currentTargetEl) {
-        const quantity = parseInt(currentTargetEl.value);
+    async onQuantityChange(ev) {
+        const currentTarget = ev.currentTarget;
+        const quantity = parseInt(currentTarget.value);
         await this.waitFor(this.callUpdateLineRoute(this.orderDetail.orderId, {
             "access_token": this.orderDetail.token,
             "input_quantity": quantity >= 0 ? quantity : false,
-            "line_id": currentTargetEl.dataset.lineId,
+            "line_id": currentTarget.dataset.lineId,
         }));
         this.refreshOrderUI();
     }
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onUpdateLineClick(ev, currentTargetEl) {
+    async onUpdateLineClick(ev) {
+        const currentTarget = ev.currentTarget;
         await this.waitFor(this.callUpdateLineRoute(this.orderDetail.orderId, {
             "access_token": this.orderDetail.token,
-            "line_id": currentTargetEl.dataset.lineId,
-            "remove": currentTargetEl.dataset.remove,
+            "line_id": currentTarget.dataset.lineId,
+            "remove": currentTarget.dataset.remove,
         }));
         this.refreshOrderUI();
     }

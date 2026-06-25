@@ -5,10 +5,10 @@ export class WebsiteProfileForumActivity extends Interaction {
     static selector = ".o_wprofile_forum_activity";
     dynamicContent = {
         "#o_wprofile_forum_activity_filter li a": {
-            "t-on-click.withTarget": (ev, currentTargetEl) =>
+            "t-on-click": (ev) =>
                 this.selectTab(
-                    currentTargetEl.getAttribute("href").split("_").at(-1),
-                    currentTargetEl.text
+                    ev.currentTarget.getAttribute("href").split("_").at(-1),
+                    ev.currentTarget.text
                 ),
         },
         ".o_wprofile_forum_activity_search_question": {
