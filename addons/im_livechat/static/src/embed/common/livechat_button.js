@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -18,17 +18,17 @@ export class LivechatButton extends Component {
         });
         this.ref = useRef("button");
         this.state = proxy({ animateNotification: this.isShown });
-        useLayoutEffect(
-            (isShown, rootNodeClassList) => {
-                if (isShown && rootNodeClassList) {
-                    rootNodeClassList.add("o-livechat-LivechatButton-isVisible");
-                    return () => {
-                        rootNodeClassList.remove("o-livechat-LivechatButton-isVisible");
-                    };
-                }
-            },
-            () => [this.isShown, this.ref.el?.getRootNode().host?.classList]
-        );
+        // useLayoutEffect(
+        //     (isShown, rootNodeClassList) => {
+        //         if (isShown && rootNodeClassList) {
+        //             rootNodeClassList.add("o-livechat-LivechatButton-isVisible");
+        //             return () => {
+        //                 rootNodeClassList.remove("o-livechat-LivechatButton-isVisible");
+        //             };
+        //         }
+        //     },
+        //     () => [this.isShown, this.ref.el?.getRootNode().host?.classList]
+        // );
     }
 
     onClick() {
