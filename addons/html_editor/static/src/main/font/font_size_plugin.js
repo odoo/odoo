@@ -90,6 +90,7 @@ export class FontSizePlugin extends Plugin {
         ),
         on_undone_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_redone_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_all_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
 
         is_format_class_predicates: (className) => {
