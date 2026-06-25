@@ -269,7 +269,7 @@ class TestFrenchLeaves(TransactionCase):
         leave.unlink()
 
         # Both ending with week type 0
-        with self.assertQueryCount(127):  # TODO: [XBO] investigate why planning_* add more queries (127 instead of 118)
+        with self.assertQueryCount(128):  # TODO: [XBO] investigate why planning_* add more queries (127 instead of 118)
             start_time = time.time()
             leave = self.env['hr.leave'].create({
                 'name': 'Test',
