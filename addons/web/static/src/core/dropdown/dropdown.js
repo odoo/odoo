@@ -1,4 +1,4 @@
-import { onRendered, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import { onRendered, useChildEnv } from "@web/owl2/utils";
 import {
     Component,
     immediateEffect,
@@ -182,10 +182,10 @@ export class Dropdown extends Component {
             })
         );
 
-        useLayoutEffect(
-            (target) => this.setTargetElement(target),
-            () => [this.target]
-        );
+        // useLayoutEffect(
+        //     (target) => this.setTargetElement(target),
+        //     () => [this.target]
+        // );
 
         onWillUpdateProps(({ disabled }) => {
             if (disabled) {
