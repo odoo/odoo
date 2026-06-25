@@ -26,6 +26,9 @@ export async function openClosePersistedChannel() {
     await expect.waitForSteps(["discuss.channel/new_message"]);
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
+    // Leaving posts the "Visitor left the conversation." message: wait for its
+    // bus notification so it does not race teardown as an unverified step.
+    await expect.waitForSteps(["discuss.channel/new_message"]);
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
     await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
