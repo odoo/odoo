@@ -2588,3 +2588,23 @@ test("(edited) label is not included in editor when editing an already-edited me
     // New text should be the only content; "(edited)" must be at the very end
     await contains(".o-mail-Message-content:text('a (edited)')");
 });
+
+test("Do not call server on save if body only differs by HTML comments", async () => {
+    const pyEnv = await startServer();
+    // Body contains MSO conditional comments (injected by convert_inline.js for
+    // Outlook compatibility) that the editor naturally strips when parsing HTML.
+    // Saving without changes should NOT trigger an update_content RPC.
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: '<div>Hello world<img src="/web/image/1" alt="img"><!--<![endif]--></div>',
+        model: "res.partner",
+        res_id: serverState.partnerId,
+        message_type: "comment",
+    });
+    onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps([]);
+});
