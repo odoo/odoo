@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="branch_code" invisible="country_code != 'PH'"/>
+                <field name="l10n_ph_branch_code" invisible="country_code != 'PH'"/>
                 <field name="l10n_ph_rdo" invisible="country_code != 'PH'"/>
             </xpath>
         </field>
