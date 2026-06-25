@@ -61,96 +61,25 @@ class ResConfigSettings(models.TransientModel):
             'view_mode': 'form',
         }
 
-    def _l10n_cn_baiwang_get_iap_callback_url(self, callback_path, request_id=None):
-        # 1. Look up the param directly using ORM search instead of get_param
-        param = self.env['ir.config_parameter'].sudo().search([
-            ('key', '=', 'web.base.url')  # (Or whichever key your code was originally checking here)
-        ], limit=1)
-
-        base_url = param.value if param else ''
-
-        # (Keep the rest of your existing logic for building the URL below)
-        url = f"{base_url.rstrip('/')}{callback_path}"
-        if request_id:
-            url = f"{url}?requestId={request_id}"
-        return url
-
-    def _l10n_cn_baiwang_build_external_url(self, base_url, company, callback_path, proxy_user=False):
-        request_id = uuid.uuid4().hex
-        callback_url = self._l10n_cn_baiwang_get_iap_callback_url(callback_path, request_id=request_id)
-        query_values = {
-            'taxNo': company.vat or '',
-            'companyName': company.name or '',
-            'callbackUrl': callback_url,
-            'requestId': request_id,
-        }
-        if proxy_user:
-            query_values['idClient'] = proxy_user.id_client
-        query_string = urlencode(query_values)
-        separator = '&' if '?' in base_url else '?'
-        company.sudo().l10n_cn_baiwang_last_request_id = request_id
-        return f"{base_url}{separator}{query_string}"
-
-    def action_l10n_cn_baiwang_register_proxy_user(self):
-        self.ensure_one()
-        company = self.company_id
-        if not company.vat:
-            raise UserError(self.env._("Please set the company Tax ID before registering to the Baiwang proxy."))
-        company._l10n_cn_baiwang_create_proxy_user()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': self.env._("Proxy user ready"),
-                'message': self.env._("Baiwang proxy user registration is completed for this company."),
-                'type': 'success',
-                'sticky': False,
-            },
-        }
-
     def action_l10n_cn_baiwang_subscribe(self):
         self.ensure_one()
-        company = self.company_id
-        if not company.vat:
+        if not self.company_id.vat:
             raise UserError(self.env._("Please set the company Tax ID before subscribing to Baiwang."))
 
-        param = self.env['ir.config_parameter'].sudo().search([
-            ('key', '=', 'l10n_cn_baiwang.subscription_url')
-        ], limit=1)
-
-        # ponytail: default to the exact channel URL requested
-        subscribe_url = param.value if param else 'https://www-pre.baiwang.com/admin-business-config/buyHomePage?operation=1&channelId=jDxcW4B3TH8%2B3iUtaDMMQg==&bindAppKey=Y&sourceId=53&isRedirectUrl=true'
-
-        target_url = self._l10n_cn_baiwang_build_external_url(
-            subscribe_url,
-            company,
-            '/l10n_cn_edi_baiwang/callback/order_complete',
-            proxy_user=company.l10n_cn_baiwang_proxy_user_id,
-        )
         return {
             'type': 'ir.actions.act_url',
-            'url': target_url,
+            'url': self._l10n_cn_baiwang_get_route_url('subscribe', '/l10n_cn_edi_baiwang/callback/order_complete'),
             'target': 'new',
         }
 
     def action_l10n_cn_baiwang_authorize(self):
         self.ensure_one()
-        company = self.company_id
-        if company.l10n_cn_baiwang_subscription_status == 'not_subscribed':
+        if self.company_id.l10n_cn_baiwang_subscription_status == 'not_subscribed':
             raise UserError(self.env._("Please complete Baiwang subscription first."))
-        authorize_url = self.env['ir.config_parameter'].sudo().get_param(
-            'l10n_cn_baiwang.authorization_url',
-            default='https://www-pre.baiwang.com',
-        )
-        target_url = self._l10n_cn_baiwang_build_external_url(
-            authorize_url,
-            company,
-            '/l10n_cn_edi_baiwang/callback/org_auth_code',
-            proxy_user=company.l10n_cn_baiwang_proxy_user_id,
-        )
+
         return {
             'type': 'ir.actions.act_url',
-            'url': target_url,
+            'url': self._l10n_cn_baiwang_get_route_url('authorize', '/l10n_cn_edi_baiwang/callback/org_auth_code'),
             'target': 'new',
         }
 
@@ -198,3 +127,19 @@ class ResConfigSettings(models.TransientModel):
                 'sticky': False,
             },
         }
+
+    def _l10n_cn_baiwang_get_route_url(self, action, callback_path):
+        proxy_user = self.company_id._l10n_cn_baiwang_create_proxy_user()
+        proxy_url = proxy_user._get_server_url().rstrip('/')
+        request_id = uuid.uuid4().hex
+        self.company_id.sudo().l10n_cn_baiwang_last_request_id = request_id
+
+        params = urlencode({
+            'taxNo': self.company_id.vat or '',
+            'companyName': self.company_id.name or '',
+            'callbackUrl': f"{proxy_url}{callback_path}?requestId={request_id}",
+            'requestId': request_id,
+            'idClient': proxy_user.id_client,
+            'environment': self.company_id.l10n_cn_edi_mode,
+        })
+        return f"{proxy_url}/api/l10n_cn_edi_baiwang/1/route/{action}?{params}"
