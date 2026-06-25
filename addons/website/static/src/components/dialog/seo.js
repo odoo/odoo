@@ -779,7 +779,7 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            const { altAttributes, translationRecords } = await this.getAltAttributes();
+            const { altAttributes, translationRecords = [] } = await this.getAltAttributes();
             this.state.altAttributes = altAttributes;
             this.seoContext.translationRecords = translationRecords;
             this.seoContext.updatedAlts = [];
@@ -798,11 +798,16 @@ export class SeoChecks extends Component {
     }
 
     async getAltAttributes() {
+        return this.props.isDefaultLang
+            ? this.getDefaultLangAltAttributes()
+            : this.getTranslatedAltAttributes();
+    }
+
+    async getDefaultLangAltAttributes() {
         const uniqueRecords = new Set();
 
         // Select all relevant <img> elements in the editable page.
-        const documentEl = this.website.pageDocument.documentElement;
-        const imgEls = documentEl.querySelectorAll("#wrapwrap img");
+        const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
 
         imgEls.forEach((el) => {
             // Find the closest ancestor element containing Odoo metadata.
@@ -825,12 +830,6 @@ export class SeoChecks extends Component {
             uniqueRecords.add(`${model}||${id}||${field}||${type}`);
         });
 
-        // Fallback for translated pages
-        const viewId = parseInt(documentEl.dataset.viewid, 10);
-        if (!this.props.isDefaultLang && !uniqueRecords.size && viewId) {
-            uniqueRecords.add(`ir.ui.view||${viewId}||arch||html`);
-        }
-
         // Transform the Set of unique strings back into structured objects.
         const models = Array.from(uniqueRecords).map((entry) => {
             const [model, id, field, type] = entry.split("||");
@@ -839,10 +838,64 @@ export class SeoChecks extends Component {
 
         const results = await rpc("/website/get_alt_images", { models });
 
-        return {
-            altAttributes: JSON.parse(results),
-            translationRecords: models,
-        };
+        return { altAttributes: JSON.parse(results) };
+    }
+
+    async getTranslatedAltAttributes() {
+        // Re-render the current page with the `edit_translations` markers so
+        // every translatable <img> alt carries a `<span data-oe-...>` wrapper
+        // exposing its owning record/field and the source-term hash.
+        const url = new URL(this.website.pageDocument.location.href);
+        url.searchParams.set("edit_translations", "1");
+        const response = await fetch(url);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+
+        const altAttributes = [];
+        const seenIds = new Set();
+        const imgEls = doc.querySelectorAll(
+            '#wrapwrap img[alt*="data-oe-translation-source-sha="]'
+        );
+        for (const imgEl of imgEls) {
+            if (imgEl.closest(".o_not_editable") && !imgEl.classList.contains("o_editable_media")) {
+                continue;
+            }
+            const markerEl = new DOMParser()
+                .parseFromString(imgEl.getAttribute("alt"), "text/html")
+                .querySelector("[data-oe-translation-source-sha]");
+            if (!markerEl) {
+                continue;
+            }
+            const { oeModel, oeId, oeField, oeTranslationSourceSha } = markerEl.dataset;
+            const id = `${oeModel}-${oeId}-${oeField}-${oeTranslationSourceSha}`;
+            if (seenIds.has(id)) {
+                continue;
+            }
+            seenIds.add(id);
+            altAttributes.push({
+                src: imgEl.getAttribute("src"),
+                alt: (markerEl.textContent || "").trim(),
+                decorative: false,
+                updated: false,
+                res_model: oeModel,
+                res_id: parseInt(oeId),
+                field: oeField,
+                source_sha: oeTranslationSourceSha,
+                id,
+            });
+        }
+
+        const recordKeys = new Set();
+        const translationRecords = [];
+        for (const { res_model, res_id, field } of altAttributes) {
+            const key = `${res_model}||${res_id}||${field}`;
+            if (!recordKeys.has(key)) {
+                recordKeys.add(key);
+                translationRecords.push({ model: res_model, id: res_id, field });
+            }
+        }
+
+        return { altAttributes, translationRecords };
     }
 
     async getBrokenLinks() {
