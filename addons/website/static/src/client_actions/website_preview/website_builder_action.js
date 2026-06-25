@@ -460,6 +460,10 @@ export class WebsiteBuilderClientAction extends Component {
                 const { action, method } = closestEl;
                 if (isTopWindowURL(new URL(action))) {
                     if (method === "post") {
+                        // Prevent the default form submission before awaiting
+                        // post(). Otherwise, the browser may submit the form
+                        // before the later preventDefault() call.
+                        ev.preventDefault();
                         const href = await post(action, { csrf_token: odoo.csrf_token }, "url");
                         url = new URL(href);
                     } else {
