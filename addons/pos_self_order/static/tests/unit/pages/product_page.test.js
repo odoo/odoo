@@ -195,3 +195,56 @@ test("hide attribute with single 'is_custom' value", async () => {
     );
     expect(comp.isAddToCartEnabled()).toBe(true);
 });
+
+test("self_multi_attribute_selector: multi attributes are optional and can be selected together", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const product = models["product.template"].get(102);
+    const attribute = models["product.attribute"].create({
+        id: 201,
+        name: "Attribute 1",
+        display_type: "multi",
+        template_value_ids: [],
+        attribute_line_ids: [],
+        create_variant: "no_variant",
+    });
+    const attributeValue1 = models["product.template.attribute.value"].create({
+        id: 201,
+        attribute_id: attribute,
+        price_extra: 0,
+        name: "Attribute Val 1",
+        is_custom: false,
+        html_color: false,
+        image: false,
+        excluded_value_ids: [],
+    });
+    const attributeValue2 = models["product.template.attribute.value"].create({
+        id: 202,
+        attribute_id: attribute,
+        price_extra: 0,
+        name: "Attribute Val 2",
+        is_custom: false,
+        html_color: false,
+        image: false,
+        excluded_value_ids: [],
+    });
+    const attributeLine = models["product.template.attribute.line"].create({
+        id: 201,
+        attribute_id: attribute,
+        product_template_value_ids: [["link", attributeValue1, attributeValue2]],
+    });
+    product.update({ attribute_line_ids: [["set", attributeLine]] });
+
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate: product } });
+
+    expect("h2:contains('Attribute 1') .badge").toHaveCount(0);
+    expect(".self_order_attribute_selection button").toHaveCount(2);
+    expect(".self_order_attribute_selection button:contains('Attribute Val 1')").toHaveCount(1);
+    expect(".self_order_attribute_selection button:contains('Attribute Val 2')").toHaveCount(1);
+    expect(comp.isAddToCartEnabled()).toBe(true);
+
+    await click(".self_order_attribute_selection button:contains('Attribute Val 1')");
+    await click(".self_order_attribute_selection button:contains('Attribute Val 2')");
+
+    expect(comp.getSelectedAttributesValues()).toEqual([201, 202]);
+});

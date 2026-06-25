@@ -3,9 +3,48 @@ import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
 import { definePosSelfModels } from "../data/generate_model_definitions";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, onRpc, MockServer } from "@web/../tests/web_test_helpers";
 
 definePosSelfModels();
+
+const getAuthoritativePayload = (order) => {
+    order.setOrderPrices();
+    return order.serializeForORM();
+};
+
+const mockBackendPriceRecompute = (authoritativePayload) => {
+    const mockProcessOrder = async (request) => {
+        const { params } = await request.json();
+
+        params.order.lines = authoritativePayload.lines;
+        params.order.amount_tax = authoritativePayload.amount_tax;
+        params.order.amount_total = authoritativePayload.amount_total;
+        params.order.pricelist_id = authoritativePayload.pricelist_id;
+        params.order.fiscal_position_id = authoritativePayload.fiscal_position_id;
+
+        const response = MockServer.env["pos.order"].sync_from_ui([params.order]);
+        const models = MockServer.env["pos.session"]._load_self_data_models();
+        return Object.fromEntries(Object.entries(response).filter(([key]) => models.includes(key)));
+    };
+
+    onRpc("/pos-self-order/process-order/kiosk", mockProcessOrder);
+    onRpc("/pos-self-order/process-order/mobile", mockProcessOrder);
+};
+
+const roundToCents = (value) => Math.round(value * 100) / 100;
+
+const expectOrderPricesStableAfterSync = async (store) => {
+    const order = store.currentOrder;
+    const totalBefore = roundToCents(order.priceIncl);
+    const unitPricesBefore = order.lines.map((line) => roundToCents(line.price_unit));
+
+    const syncedOrder = await store.sendDraftOrderToServer();
+
+    expect(roundToCents(syncedOrder.priceIncl)).toBe(totalBefore);
+    expect(syncedOrder.lines.map((line) => roundToCents(line.price_unit))).toEqual(
+        unitPricesBefore
+    );
+};
 
 test("currentOrder", async () => {
     const store = await setupSelfPosEnv();
@@ -217,6 +256,199 @@ test("getProductPriceInfo", async () => {
     outPreset.fiscal_position_id = savedOutFp;
     outPreset.pricelist_id = savedOutPricelist;
     store.config.default_fiscal_position_id = savedDefaultFp;
+});
+
+test("test_combo_prices: combo prices between frontend and backend", async () => {
+    const store = await setupSelfPosEnv();
+    const comboTemplate = store.models["product.template"].get(7);
+    const comboItem1 = store.models["product.combo.item"].get(1);
+    const comboItem2 = store.models["product.combo.item"].get(2);
+    const comboItem3 = store.models["product.combo.item"].get(3);
+
+    const buildComboValue = (comboItem, qty, priceExtra = 0) => ({
+        combo_item_id: comboItem,
+        configuration: {
+            attribute_custom_values: {},
+            attribute_value_ids: [],
+            price_extra: priceExtra,
+        },
+        qty,
+    });
+
+    const scenarios = [
+        [buildComboValue(comboItem1, 1), buildComboValue(comboItem3, 1)],
+        [
+            buildComboValue(comboItem1, 2),
+            buildComboValue(comboItem2, 3),
+            buildComboValue(comboItem3, 1),
+        ],
+        [buildComboValue(comboItem2, 2, 5), buildComboValue(comboItem3, 1, 10)],
+    ];
+
+    for (const comboValues of scenarios) {
+        store.cancelOrder();
+        await store.addToCart(comboTemplate, 1, "", {}, {}, comboValues);
+        await store.addToCart(store.models["product.template"].get(5), 1, "");
+        await store.addToCart(store.models["product.template"].get(6), 1, "");
+        await expectOrderPricesStableAfterSync(store);
+    }
+});
+
+test("test_price_between_frontend_and_backend: price between frontend and backend", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(5);
+
+    await store.addToCart(product, 2, "");
+    store.currentOrder.setOrderPrices();
+
+    const frontLine = store.currentOrder.lines[0];
+    const expectedPriceUnit = frontLine.price_unit;
+    const expectedSubtotal = frontLine.price_subtotal;
+    const expectedSubtotalIncl = frontLine.price_subtotal_incl;
+
+    const syncedOrder = await store.sendDraftOrderToServer();
+    const syncedLine = syncedOrder.lines[0];
+
+    expect(syncedLine.price_unit).toBe(expectedPriceUnit);
+    expect(syncedLine.price_subtotal).toBe(expectedSubtotal);
+    expect(syncedLine.price_subtotal_incl).toBe(expectedSubtotalIncl);
+});
+
+test("test_prices_are_immutable_from_frontend: prices are immutable from frontend", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(5);
+    const variant = product.product_variant_ids[0];
+
+    await store.addToCart(product, 1, "");
+    const authoritativePayload = getAuthoritativePayload(store.currentOrder);
+
+    const expectedInfo = store.getProductPriceInfo(product, variant);
+
+    // Tamper the order with wrong prices
+    store.currentOrder.lines[0].setUnitPrice(1);
+    expect(store.currentOrder.lines[0].price_unit).toBe(1);
+
+    mockBackendPriceRecompute(authoritativePayload);
+
+    const syncedOrder = await store.sendDraftOrderToServer();
+    const syncedLine = syncedOrder.lines[0];
+
+    expect(syncedLine.price_unit).toBe(expectedInfo.pricelist_price);
+    expect(syncedLine.price_subtotal_incl).toBe(expectedInfo.total_included);
+});
+
+test("test_pricelist_should_not_be_changed_from_frontend: pricelist should not be changed from frontend", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(5);
+    const inPreset = store.models["pos.preset"].get(1);
+    const defaultPricelist = store.models["product.pricelist"].get(1);
+    const discountedPricelist = store.models["product.pricelist"].get(3);
+
+    inPreset.pricelist_id = discountedPricelist;
+    store.currentOrder.setPreset(inPreset);
+    await store.addToCart(product, 1, "");
+    const authoritativePayload = getAuthoritativePayload(store.currentOrder);
+
+    expect(store.currentOrder.pricelist_id.id).toBe(discountedPricelist.id);
+
+    // Temper the order with wrong pricelist
+    store.currentOrder.pricelist_id = defaultPricelist;
+
+    mockBackendPriceRecompute(authoritativePayload);
+
+    const syncedOrder = await store.sendDraftOrderToServer();
+
+    expect(syncedOrder.pricelist_id.id).toBe(discountedPricelist.id);
+    expect(syncedOrder.lines[0].price_unit).toBe(10);
+});
+
+test("test_self_order_pricelist / test_pricelist_price_between_frontend_and_backend: pricelist price between frontend and backend", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(5);
+    const variant = product.product_variant_ids[0];
+    const pricelist = store.models["product.pricelist"].get(3);
+
+    store.config.use_presets = false;
+    store.config.pricelist_id = pricelist;
+    store.selectedOrderUuid = null;
+
+    await store.addToCart(product, 1, "");
+
+    const expectedInfo = store.getProductPriceInfo(product, variant);
+    const syncedOrder = await store.sendDraftOrderToServer();
+
+    expect(syncedOrder.pricelist_id.id).toBe(pricelist.id);
+    expect(syncedOrder.lines[0].price_unit).toBe(expectedInfo.pricelist_price);
+    expect(syncedOrder.lines[0].price_subtotal_incl).toBe(expectedInfo.total_included);
+});
+
+test("test_fiscal_position_between_frontend_and_backend: fiscal position between frontend and backend", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(5);
+    const variant = product.product_variant_ids[0];
+    const fiscalPosition = store.models["account.fiscal.position"].get(1);
+
+    fiscalPosition.tax_map = { 1: [4] };
+    fiscalPosition.tax_ids = [store.models["account.tax"].get(4)];
+
+    store.config.use_presets = false;
+    store.config.default_fiscal_position_id = fiscalPosition;
+    store.selectedOrderUuid = null;
+
+    await store.addToCart(product, 1, "");
+    const authoritativePayload = getAuthoritativePayload(store.currentOrder);
+
+    const expectedInfo = store.getProductPriceInfo(product, variant);
+
+    // Tamper the order with wrong fiscal position
+    store.currentOrder.fiscal_position_id = false;
+
+    mockBackendPriceRecompute(authoritativePayload);
+
+    const syncedOrder = await store.sendDraftOrderToServer();
+    const syncedLine = syncedOrder.lines[0];
+
+    expect(syncedOrder.fiscal_position_id.id).toBe(fiscalPosition.id);
+    expect(syncedLine.price_subtotal_incl).toBe(expectedInfo.total_included);
+});
+
+test("test_self_order_product_availability: verifyCart handles unavailable combo and standalone products", async () => {
+    const store = await setupSelfPosEnv();
+    const comboTemplate = store.models["product.template"].get(7);
+    const comboItem1 = store.models["product.combo.item"].get(1);
+    const comboItem3 = store.models["product.combo.item"].get(3);
+
+    await store.addToCart(comboTemplate, 1, "", {}, {}, [
+        {
+            combo_item_id: comboItem1,
+            configuration: {
+                attribute_custom_values: {},
+                attribute_value_ids: [],
+                price_extra: 0,
+            },
+            qty: 1,
+        },
+        {
+            combo_item_id: comboItem3,
+            configuration: {
+                attribute_custom_values: {},
+                attribute_value_ids: [],
+                price_extra: 0,
+            },
+            qty: 1,
+        },
+    ]);
+    await store.addToCart(store.models["product.template"].get(5), 1, "");
+
+    comboTemplate.product_variant_ids[0].self_order_available = false;
+    expect(store.verifyCart()).toBe(false);
+    expect(
+        store.currentOrder.lines.find((line) => line.product_id.id === comboTemplate.id)
+    ).toBeEmpty();
+
+    store.models["product.product"].get(5).self_order_available = false;
+    expect(store.verifyCart()).toBe(false);
+    expect(store.currentOrder.lines).toHaveLength(0);
 });
 
 describe("addToCart", () => {

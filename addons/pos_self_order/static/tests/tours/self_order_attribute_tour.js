@@ -42,29 +42,6 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
     ],
 });
 
-registry.category("web_tour.tours").add("self_multi_attribute_selector", {
-    steps: () => [
-        Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Multi Check Attribute Product"),
-        ...ProductPage.setupAttribute([
-            { name: "Attribute 1", value: "Attribute Val 1" },
-            { name: "Attribute 1", value: "Attribute Val 2" },
-        ]),
-        {
-            content: `Select value for attribute Attribute 1`,
-            trigger: `div h2:contains(Attribute 1)`,
-        },
-        {
-            content: "Check that there are 2 and only 2 attribute buttons",
-            trigger: `.self_order_attribute_selection:has(button:count(2))`,
-        },
-        {
-            content: "Check content attribute buttons",
-            trigger: `.self_order_attribute_selection:has(button:contains(Attribute val 1)):has(button:contains(Attribute val 2))`,
-        },
-    ],
-});
-
 registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
     steps: () => [
         Utils.clickBtn("Order Now"),
