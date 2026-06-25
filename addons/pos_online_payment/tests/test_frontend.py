@@ -353,6 +353,14 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             self.assertTrue(all(config_online_pm_data))
             self.start_pos_tour('test_payment_method_customer_required')
 
+    def test_restaurant_online_payment_flow(self):
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('RestaurantOnlinePaymentTour', login="pos_admin")
+        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
+        self.assertEqual(order.state, "paid", "The order should be paid.")
+        self.assertEqual(len(order.payment_ids), 1, "There should be one payment line in the order.")
+        self.assertEqual(order.payment_ids[0].payment_method_id.id, self.cash_payment_method.id, "The payment should be Cash.")
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests

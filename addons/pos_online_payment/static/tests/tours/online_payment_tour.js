@@ -97,3 +97,20 @@ registry.category("web_tour.tours").add("test_payment_method_customer_required",
             Dialog.is({ title: "Payment provider requirement" }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("RestaurantOnlinePaymentTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.clickBack(),
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentlineDelButton("Online payment", "4.80"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});

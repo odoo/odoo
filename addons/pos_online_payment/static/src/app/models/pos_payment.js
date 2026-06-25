@@ -10,4 +10,13 @@ patch(PosPayment.prototype, {
             return super.canBeAdjusted();
         }
     },
+
+    //@override
+    async cancelPayment() {
+        if (this.payment_method_id.is_online_payment) {
+            this.setPaymentStatus("retry");
+            return true;
+        }
+        return super.cancelPayment(...arguments);
+    },
 });

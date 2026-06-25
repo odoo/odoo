@@ -85,6 +85,7 @@ patch(OrderPaymentValidation.prototype, {
             let lastOrderServerOPData = null;
             for (const onlinePaymentLine of onlinePaymentLines) {
                 const onlinePaymentLineAmount = onlinePaymentLine.getAmount();
+                await this.pos.syncAllOrders({ orders: [this.order] });
                 // The local state is not aware if the online payment has already been done.
                 lastOrderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
                     this.order,
@@ -118,7 +119,6 @@ patch(OrderPaymentValidation.prototype, {
                         return false;
                     }
 
-                    await this.pos.syncAllOrders({ orders: [this.order] });
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.order.selectPaymentline(onlinePaymentLine);
                     const qrCodeUrl = `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`;
