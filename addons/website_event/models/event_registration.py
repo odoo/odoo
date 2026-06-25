@@ -20,3 +20,8 @@ class EventRegistration(models.Model):
         res = super()._get_registration_summary()
         res['registration_answers'] = self.registration_answer_ids.filtered('value_answer_id').mapped('display_name')
         return res
+
+    def get_base_url(self):
+        if self.event_id:
+            return self.event_id.get_base_url()
+        return super().get_base_url()
