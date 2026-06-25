@@ -28,7 +28,7 @@
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d +1d')]"/>
                     </filter>
                     <separator/>
-                    <filter string="Templates" context="{'render_task_templates': True}" name="templates" domain="['|', ('has_template_ancestor', '=', True), ('project_id.is_template', '=', True)]"/>
+                    <filter string="Templates" context="{'render_task_templates': True}" name="templates" domain="[('has_template_ancestor', '=', True)]"/>
                     <group>
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
@@ -528,6 +528,7 @@
                                         'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
                                         'closed_X2M_count': closed_depend_on_count,
                                         'default_is_template': is_template,
+                                        'render_task_templates': False,
                                    }"
                                    widget="notebook_task_one2many">
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
