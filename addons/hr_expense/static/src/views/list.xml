@@ -17,10 +17,10 @@
         </xpath>
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
             <input type="file" name="ufile" class="d-none" t-custom-ref="fileInput" multiple="1" accept="*" t-on-change="this.onChangeFileInput"/>
-            <button t-if="!this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="this.uploadDocument">
+            <button t-if="this.activeActions.create and !this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="this.uploadDocument">
                 Upload
             </button>
-            <button t-if="this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="this.uploadDocument">
+            <button t-if="this.activeActions.create and this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="this.uploadDocument">
                 Scan
             </button>
         </xpath>
