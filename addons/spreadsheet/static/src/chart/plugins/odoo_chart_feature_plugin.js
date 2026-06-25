@@ -86,18 +86,25 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
         }
     }
 
-    _updateChartGranularity(chartId, granularity) {
+    _updateChartGranularity(chartId, newGranularity) {
         const definition = this.getters.getChartDefinition(chartId);
-        const { fieldName } = this.getters.getChartGranularity(chartId);
+        const { fieldName, granularity } = this.getters.getChartGranularity(chartId);
         const newGroupBy = [
-            `${fieldName}:${granularity}`,
+            `${fieldName}:${newGranularity}`,
             ...definition.searchParams.groupBy.slice(1),
         ];
+        const style = definition.dataSetStyles
+            ? definition.dataSetStyles[`${fieldName}:${granularity}`]
+            : undefined;
         this.dispatch("UPDATE_CHART", {
             chartId,
             figureId: this.getters.getFigureIdFromChartId(chartId),
             definition: {
                 ...definition,
+                dataSetStyles: {
+                    ...definition.dataSetStyles,
+                    [`${fieldName}:${newGranularity}`]: style,
+                },
                 // I don't know why it's in both searchParams and metaData.
                 searchParams: {
                     ...definition.searchParams,
