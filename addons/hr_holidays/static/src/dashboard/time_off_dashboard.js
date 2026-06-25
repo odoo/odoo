@@ -1,13 +1,17 @@
-import { TimeOffCard } from "./time_off_card";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { Component, onWillStart, proxy } from "@odoo/owl";
 import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
+import { Component, onWillStart, plugin, props, proxy, types as t } from "@odoo/owl";
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { useService } from "@web/core/utils/hooks";
+import { TimeOffPlugin } from "../views/time_off_plugin";
+import { TimeOffCard } from "./time_off_card";
 
 export class TimeOffDashboard extends Component {
     static components = { TimeOffCard, DateTimeInput };
     static template = "hr_holidays.TimeOffDashboard";
-    static props = ["employeeId"];
+
+    props = props({
+        employeeId: t.or([t.number(), t.literal(null)]),
+    });
 
     setup() {
         this.orm = useService("orm");
@@ -19,9 +23,8 @@ export class TimeOffDashboard extends Component {
             holidays: [],
             allocationRequestDaysHours: "",
         });
-        useBus(this.env.timeOffBus, "update_dashboard", async () => {
-            await this.loadDashboardData();
-        });
+
+        plugin(TimeOffPlugin).onUpdateDashboard(() => this.loadDashboardData());
 
         onWillStart(async () => this.loadDashboardData());
     }

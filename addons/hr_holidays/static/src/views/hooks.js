@@ -1,6 +1,7 @@
-import { useComponent } from "@web/owl2/utils";
+import { plugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { TimeOffPlugin } from "./time_off_plugin";
 import { AllocationFormViewDialog } from "./view_dialog/allocation_form_view_dialog";
 
 export function formatNumber(lang, number, maxDecimals = 2) {
@@ -44,7 +45,7 @@ export function useLeaveCancelWizard() {
 
 export function useNewAllocationRequest() {
     const addDialog = useOwnedDialogs();
-    const component = useComponent();
+    const timeOffPlugin = plugin(TimeOffPlugin);
     return async ({ employeeId, holidayStatusId, forceLargeDialog }) => {
         let size = "md";
         const context = {
@@ -67,9 +68,7 @@ export function useNewAllocationRequest() {
             title: _t("New Allocation"),
             context: context,
             size: size,
-            onRecordSaved: () => {
-                component.env.timeOffBus.trigger("update_dashboard");
-            },
+            onRecordSaved: () => timeOffPlugin.updateDashboard(),
         });
     };
 }

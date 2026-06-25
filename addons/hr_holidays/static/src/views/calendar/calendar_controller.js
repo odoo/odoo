@@ -1,17 +1,17 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
-import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_panel";
-import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calendar_mobile_filter_panel";
+import { onWillStart, plugin, providePlugins } from "@odoo/owl";
 import { TimeOffNewDropdown } from "../../components/time_off_new_dropdown/time_off_new_dropdown";
-import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
 import { useLeaveCancelWizard, useNewAllocationRequest } from "../hooks";
-import { EventBus, onWillStart } from "@odoo/owl";
+import { TimeOffPlugin } from "../time_off_plugin";
+import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
+import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calendar_mobile_filter_panel";
+import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_panel";
 
 export class TimeOffCalendarController extends CalendarController {
     static components = {
@@ -21,11 +21,14 @@ export class TimeOffCalendarController extends CalendarController {
         NewButton: TimeOffNewDropdown,
     };
     static template = "hr_holidays.CalendarController";
+
     setup() {
         super.setup();
-        useSubEnv({
-            timeOffBus: new EventBus(),
-        });
+
+        providePlugins([TimeOffPlugin]);
+
+        this.timeOffPlugin = plugin(TimeOffPlugin);
+
         this.leaveCancelWizard = useLeaveCancelWizard();
         this.newAllocRequest = useNewAllocationRequest();
 
@@ -33,7 +36,9 @@ export class TimeOffCalendarController extends CalendarController {
             this.hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
             if (!this.employeeId && !this.hasEmployee) {
                 this.env.services.notification.add(
-                    _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
+                    _t(
+                        "You are not linked to an employee in the current company, so you cannot create requests for yourself."
+                    ),
                     { type: "warning" }
                 );
             }
@@ -48,7 +53,9 @@ export class TimeOffCalendarController extends CalendarController {
         if (!this.employeeId && !this.hasEmployee) {
             this.displayDialog(AlertDialog, {
                 title: _t("UserError"),
-                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+                body: _t(
+                    "This operation is not allowed as you are not linked to an employee in the current company."
+                ),
             });
             return;
         }
@@ -75,7 +82,7 @@ export class TimeOffCalendarController extends CalendarController {
             viewId: this.model.formViewId,
             onRecordSaved: () => {
                 this.model.load();
-                this.env.timeOffBus.trigger("update_dashboard");
+                this.timeOffPlugin.updateDashboard();
             },
             onRecordDeleted: (record) => {},
             onLeaveCancelled: (record) => {},
@@ -88,7 +95,9 @@ export class TimeOffCalendarController extends CalendarController {
         if (!this.employeeId && !this.hasEmployee) {
             this.displayDialog(AlertDialog, {
                 title: _t("UserError"),
-                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+                body: _t(
+                    "This operation is not allowed as you are not linked to an employee in the current company."
+                ),
             });
             return;
         }
@@ -98,7 +107,10 @@ export class TimeOffCalendarController extends CalendarController {
         } else if (this.employeeId) {
             empId = this.employeeId;
         }
-        this.newAllocRequest({ employeeId: empId, forceLargeDialog: this.props.context.hide_employee_name ?? false })
+        this.newAllocRequest({
+            employeeId: empId,
+            forceLargeDialog: this.props.context.hide_employee_name ?? false,
+        });
     }
 
     _deleteRecord(resId, canCancel) {
@@ -108,14 +120,14 @@ export class TimeOffCalendarController extends CalendarController {
                 body: _t("Are you sure you want to delete this record?"),
                 confirm: async () => {
                     await this.model.unlinkRecord(resId);
-                    this.env.timeOffBus.trigger("update_dashboard");
+                    this.timeOffPlugin.updateDashboard();
                 },
                 cancel: () => {},
             });
         } else {
             this.leaveCancelWizard(resId, () => {
                 this.model.load();
-                this.env.timeOffBus.trigger("update_dashboard");
+                this.timeOffPlugin.updateDashboard();
             });
         }
     }
@@ -128,13 +140,15 @@ export class TimeOffCalendarController extends CalendarController {
         if (!this.employeeId && !this.hasEmployee) {
             this.displayDialog(AlertDialog, {
                 title: _t("UserError"),
-                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+                body: _t(
+                    "This operation is not allowed as you are not linked to an employee in the current company."
+                ),
             });
             return;
         }
         const onDialogClosed = () => {
             this.model.load();
-            this.env.timeOffBus.trigger("update_dashboard");
+            this.timeOffPlugin.updateDashboard();
         };
 
         return new Promise((resolve) => {
