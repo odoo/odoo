@@ -15,3 +15,9 @@ class CalendarEvent(models.Model):
         if self.res_model == 'hr.leave':
             return False
         return super()._need_video_call()
+
+    def _compute_user_can_edit(self):
+        for event in self:
+            super()._compute_user_can_edit()
+            if event.res_model == 'hr.leave':
+                event.user_can_edit = False
