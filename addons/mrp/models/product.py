@@ -405,20 +405,113 @@ class ProductProduct(models.Model):
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         '''extending the method in stock.product to take into account kits'''
-        product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
-        kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
-        kit_products = self.env['product.product']
-        for kit in kit_boms:
-            if kit.product_id:
-                kit_products |= kit.product_id
+        product_ids = super()._search_qty_available_new(
+            operator, value, lot_id, owner_id, package_id
+        )
+        kit_boms_data = self.env['mrp.bom'].search_fetch(
+            [('type', '=', 'phantom')],
+            ['product_id', 'product_tmpl_id', 'product_qty'],
+        )
+        if not kit_boms_data:
+            return list(set(product_ids))
+
+        bom_by_kit_product = {}
+        tmpl_boms = {}
+        for bom in kit_boms_data:
+            if bom.product_id:
+                pid = bom.product_id.id
+                if pid not in bom_by_kit_product:
+                    bom_by_kit_product[pid] = bom
             else:
-                kit_products |= kit.product_tmpl_id.product_variant_ids
-        for product in kit_products:
-            if OPERATORS[operator](product.qty_available, value):
-                product_ids.append(product.id)
-            elif product.id in product_ids:
-                product_ids.pop(product_ids.index(product.id))
-        return list(set(product_ids))
+                tmpl_id = bom.product_tmpl_id.id
+                if tmpl_id not in tmpl_boms:
+                    tmpl_boms[tmpl_id] = bom
+
+        if tmpl_boms:
+            for tmpl in self.env['product.template'].browse(list(tmpl_boms.keys())):
+                bom = tmpl_boms[tmpl.id]
+                for variant in tmpl.product_variant_ids:
+                    if variant.id not in bom_by_kit_product:
+                        bom_by_kit_product[variant.id] = bom
+        kit_product_id_set = set(bom_by_kit_product.keys())
+
+        bom_lines_data = self.env['mrp.bom.line'].search_fetch(
+            [('bom_id', 'in', list({bom.id for bom in bom_by_kit_product.values()}))],
+            ['bom_id', 'product_id', 'product_qty', 'product_uom_id',
+             'bom_product_template_attribute_value_ids'],
+        )
+
+        kit_pids_by_bom_id = collections.defaultdict(set)
+        for pid, bom in bom_by_kit_product.items():
+            kit_pids_by_bom_id[bom.id].add(pid)
+
+        slowpath_kit_ids = set()
+        for line in bom_lines_data:
+            if (line.product_id.id in kit_product_id_set
+                    or line.bom_product_template_attribute_value_ids):
+                slowpath_kit_ids |= kit_pids_by_bom_id[line.bom_id.id]
+        fastpath_bom_id_set = {
+            bom.id for pid, bom in bom_by_kit_product.items()
+            if pid not in slowpath_kit_ids
+        }
+        fastpath_lines = [
+            line for line in bom_lines_data
+            if line.bom_id.id in fastpath_bom_id_set
+        ]
+
+        comp_ids = list({line.product_id.id for line in fastpath_lines})
+
+        domain_quant = self._get_domain_locations()[0]
+        if lot_id:
+            domain_quant.append(('lot_id', '=', lot_id))
+        if owner_id:
+            domain_quant.append(('owner_id', '=', owner_id))
+        if package_id:
+            domain_quant.append(('package_id', '=', package_id))
+        domain_quant.append(('product_id', 'in', comp_ids))
+        comp_qty_available = {
+            p.id: qty
+            for p, qty in self.env['stock.quant']._read_group(
+                domain_quant, ['product_id'], ['quantity:sum'],
+            )
+        }
+
+        lines_by_bom = collections.defaultdict(list)
+        for line in fastpath_lines:
+            lines_by_bom[line.bom_id.id].append(line)
+
+        product_ids_set = set(product_ids)
+        for kit_pid in kit_product_id_set - slowpath_kit_ids:
+            bom = bom_by_kit_product[kit_pid]
+            ratios = []
+            for line in lines_by_bom.get(bom.id, []):
+                comp = line.product_id
+                if not comp.is_storable:
+                    continue
+                line_factor = line.product_uom_id.factor
+                base_factor = comp.uom_id.factor
+                if not line_factor or not base_factor:
+                    continue
+                qty_per_kit = line.product_qty / line_factor * base_factor
+                if not qty_per_kit:
+                    continue
+                ratios.append(comp_qty_available.get(comp.id, 0.0) / qty_per_kit)
+            kit_qty = (min(ratios) * bom.product_qty) // 1 if ratios else 0.0
+            if OPERATORS[operator](kit_qty, value):
+                product_ids_set.add(kit_pid)
+            else:
+                product_ids_set.discard(kit_pid)
+
+        if slowpath_kit_ids:
+            slowpath_products = self.env['product.product'].browse(slowpath_kit_ids)
+            slow_qty = slowpath_products._compute_quantities_dict(lot_id, owner_id, package_id)
+            for product in slowpath_products:
+                if OPERATORS[operator](slow_qty[product.id]['qty_available'], value):
+                    product_ids_set.add(product.id)
+                else:
+                    product_ids_set.discard(product.id)
+
+        return list(product_ids_set)
 
     def action_archive(self):
         filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
