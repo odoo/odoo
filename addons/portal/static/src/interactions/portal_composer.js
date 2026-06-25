@@ -19,10 +19,10 @@ export class PortalComposer extends Interaction {
             "t-on-click": this.onAttachmentButtonClick,
         },
         ".o_portal_chatter_attachment_delete": {
-            "t-on-click.prevent.stop.withTarget": this.locked(this.onAttachmentDeleteClick, true),
+            "t-on-click.prevent.stop": this.locked(this.onAttachmentDeleteClick, true),
         },
         ".o_portal_chatter_composer_btn": {
-            "t-on-click.prevent.withTarget": this.locked(this.onSubmitButtonClick, true),
+            "t-on-click.prevent": this.locked(this.onSubmitButtonClick, true),
         },
     };
 
@@ -77,9 +77,9 @@ export class PortalComposer extends Interaction {
         this.fileInputEl.click();
     }
 
-    async onAttachmentDeleteClick(ev, currentTargetEl) {
+    async onAttachmentDeleteClick(ev) {
         const attachmentId = parseInt(
-            currentTargetEl.closest(".o_portal_chatter_attachment").dataset.id
+            ev.currentTarget.closest(".o_portal_chatter_attachment").dataset.id
         );
         const accessToken = this.attachments.find(
             (attachment) => attachment.id === attachmentId
@@ -169,7 +169,7 @@ export class PortalComposer extends Interaction {
         };
     }
 
-    async onSubmitButtonClick(ev, currentTargetEl) {
+    async onSubmitButtonClick(ev) {
         const error = this.onSubmitCheckContent();
         if (error) {
             this.inputTextareaEl.classList.add("border-danger");
@@ -178,7 +178,7 @@ export class PortalComposer extends Interaction {
             errorEl.classList.remove("d-none");
             return Promise.reject();
         } else {
-            return this.chatterPostMessage(currentTargetEl.dataset.action);
+            return this.chatterPostMessage(ev.currentTarget.dataset.action);
         }
     }
 

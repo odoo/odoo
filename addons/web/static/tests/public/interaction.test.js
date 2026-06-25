@@ -792,31 +792,6 @@ describe("using qualifiers", () => {
         expect("span").toHaveClass("a");
     });
 
-    test("add a listener with the .withTarget qualifier", async () => {
-        let clicked = false;
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                span: {
-                    "t-on-click.withTarget": this.doSomething,
-                    "t-att-class": () => ({ a: clicked }),
-                },
-            };
-            doSomething(ev, el) {
-                clicked = true;
-                expect(ev.defaultPrevented).toBe(false);
-                expect(ev.cancelBubble).toBe(false);
-                expect(el.tagName).toBe("SPAN");
-            }
-        }
-
-        await startInteraction(Test, TemplateTest);
-        expect(clicked).toBe(false);
-        await click("span");
-        expect(clicked).toBe(true);
-        expect("span").toHaveClass("a");
-    });
-
     test("add a listener with several qualifiers", async () => {
         let clicked = false;
         class Test extends Interaction {
@@ -2752,48 +2727,6 @@ describe("debounced (2)", () => {
         expect.verifySteps(["click"]);
     });
 
-    test("debounced requires .withTarget to access currentTarget", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                _root: {
-                    "t-on-click": this.debounced((ev) => {
-                        expect(ev.currentTarget).toBe(null);
-                        expect.step(ev.type);
-                    }, 500),
-                },
-            };
-        }
-        await startInteraction(Test, TemplateTest);
-        expect.verifySteps([]);
-        await click(".test");
-        await advanceTime(25);
-        expect.verifySteps([]);
-        await advanceTime(500);
-        expect.verifySteps(["click"]);
-    });
-
-    test("debounced receives currentTarget when using .withTarget", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                _root: {
-                    "t-on-click.withTarget": this.debounced((ev, el) => {
-                        expect(el.tagName).toBe("DIV");
-                        expect.step(ev.type);
-                    }, 500),
-                },
-            };
-        }
-        await startInteraction(Test, TemplateTest);
-        expect.verifySteps([]);
-        await click(".test");
-        await advanceTime(25);
-        expect.verifySteps([]);
-        await advanceTime(500);
-        expect.verifySteps(["click"]);
-    });
-
     test("debounced handles async event handler", async () => {
         const def = Promise.withResolvers();
         let clicked = 0;
@@ -2949,42 +2882,6 @@ describe("throttled_for_animation (2)", () => {
             static selector = ".test";
             dynamicContent = {
                 _root: { "t-on-click": this.throttled((ev) => expect.step(ev.type)) },
-            };
-        }
-        await startInteraction(Test, TemplateTest);
-        expect.verifySteps([]);
-        await click(".test");
-        expect.verifySteps(["click"]);
-    });
-
-    test("throttledForAnimation does not require .withTarget to access currentTarget", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                _root: {
-                    "t-on-click": this.throttled((ev) => {
-                        expect(ev.currentTarget.tagName).toBe("DIV");
-                        expect.step(ev.type);
-                    }),
-                },
-            };
-        }
-        await startInteraction(Test, TemplateTest);
-        expect.verifySteps([]);
-        await click(".test");
-        expect.verifySteps(["click"]);
-    });
-
-    test("throttledForAnimation receives currentTarget when using .withTarget", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                _root: {
-                    "t-on-click.withTarget": this.throttled((ev, el) => {
-                        expect(el.tagName).toBe("DIV");
-                        expect.step(ev.type);
-                    }),
-                },
             };
         }
         await startInteraction(Test, TemplateTest);

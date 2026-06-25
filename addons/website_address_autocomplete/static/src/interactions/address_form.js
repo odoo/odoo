@@ -8,8 +8,8 @@ export class AddressForm extends Interaction {
     static selector = ".o_address_autocomplete";
     static selectorHas = "input[name='street'][data-autocomplete-enabled='1']";
     dynamicContent = {
-        "input[name='street']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
-        "input[name='street_name']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
+        "input[name='street']": { "t-on-input": this.debounced(this.onStreetInput, 200) },
+        "input[name='street_name']": { "t-on-input": this.debounced(this.onStreetInput, 200) },
         ".js_autocomplete_result": { "t-on-click": this.onClickAutocompleteResult },
     };
 
@@ -28,9 +28,9 @@ export class AddressForm extends Interaction {
 
     /**
      * @param {MouseEvent} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async onStreetInput(ev, inputEl) {
+    async onStreetInput(ev) {
+        const inputEl = ev.target;
         const inputContainerEl = inputEl.parentNode;
         if (inputEl.value.length >= 5) {
             this.keepLast.add(
