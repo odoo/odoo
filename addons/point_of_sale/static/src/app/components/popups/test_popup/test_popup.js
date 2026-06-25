@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { renderToElement } from "@web/core/utils/render";
@@ -12,14 +12,14 @@ export class TestPopup extends Component {
         this.pos = usePos();
         this.ref = useRef("test-dialog");
 
-        useLayoutEffect(
-            () => {
-                if (this.ref.el) {
-                    this.fetchReceiptTemplate();
-                }
-            },
-            () => [this.ref?.el]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.ref.el) {
+        //             this.fetchReceiptTemplate();
+        //         }
+        //     },
+        //     () => [this.ref?.el]
+        // );
     }
 
     async fetchReceiptTemplate() {
