@@ -2826,7 +2826,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         return action
 
-    def split_move_lines(self, chunk_capacity, package_type_id = None):
+    def split_move_lines(self, chunk_capacity, package_type_id=None):
         """ This function separates move lines to create new ones with
         capacity of chunk_capacity.
         """
