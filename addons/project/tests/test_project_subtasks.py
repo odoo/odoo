@@ -470,7 +470,7 @@ class TestProjectSubtasks(TestProjectCommon):
                 }),
             ],
         })
-        child_1, child_2, child_3, child_4 = parent_task.child_ids
+        child_1, child_2, child_3, child_4 = parent_task.child_ids.sorted('id')
         self.assertEqual(9, len(parent_task._get_all_subtasks()), "Should have 9 subtasks")
         parent_task.action_archive()
         self.assertFalse(all((parent_task + child_1._get_all_subtasks() + child_2).mapped('active')),
@@ -562,7 +562,7 @@ class TestProjectSubtasks(TestProjectCommon):
                 Command.create({'name': 'Sub-task 1', 'project_id': self.project_pigs.id}),
             ],
         })
-        subtask_1, subtask_2 = task.child_ids
+        subtask_1, subtask_2 = task.child_ids.sorted('id')
 
         self.assertFalse(subtask_1.display_in_project)
         self.assertTrue(subtask_2.display_in_project)
