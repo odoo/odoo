@@ -70,13 +70,16 @@ export class SettingsPage extends Component {
         return invalidApps;
     }
 
-    onSettingTabClick(key) {
+    onSettingTabClick(key, updateUrl = false) {
         const el = this.settingsRef();
         if (el) {
             const { scrollTop } = el;
             this.scrollMap[this.state.selectedTab] = { scrollTop };
         }
         this.state.selectedTab = key;
+        if (updateUrl) {
+            browser.location.hash = key;
+        }
         this.env.searchState.clearSearch();
     }
 }
