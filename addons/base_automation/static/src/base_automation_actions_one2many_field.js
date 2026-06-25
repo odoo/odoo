@@ -1,5 +1,5 @@
-import { render, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, useListener } from "@odoo/owl";
+import { render, useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, useListener } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -10,15 +10,9 @@ class ActionsOne2ManyField extends Component {
     setup() {
         this.root = useRef("root");
 
-        let adaptCounter = 0;
-        useLayoutEffect(
-            () => {
-                this.adapt();
-            },
-            () => [adaptCounter]
-        );
+        onMounted(() => this.adapt());
+        onPatched(() => this.adapt());
         const throttledRenderAndAdapt = useThrottleForAnimation(() => {
-            adaptCounter++;
             render(this);
         });
         useListener(window, "resize", throttledRenderAndAdapt);
