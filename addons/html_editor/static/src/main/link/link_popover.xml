@@ -14,7 +14,7 @@
                         <label for="o_linkpopover_url_img" class="o_we_input_label">
                             <span class="fa fa-link"></span>
                         </label>
-                        <input id="o_linkpopover_url_img" name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model.proxy="this.state.url" title="URL" placeholder="Type your URL"
+                        <input id="o_linkpopover_url_img" name="o_linkpopover_url_img" t-ref="this.urlRef" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model.proxy="this.state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="this.onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': this.state.type ===  ''}" t-on-click="this.onClickApply">Apply</button>
                     </div>
@@ -41,7 +41,7 @@
                             <label for="o_we_label_link" class="o_we_input_label">
                                 <t t-call="html_editor.TextFieldsIcon"/>
                             </label>
-                            <input t-custom-ref="label"
+                            <input t-ref="this.labelRef"
                                 id="o_we_label_link"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
                                 t-model.proxy="this.state.label"
@@ -53,7 +53,7 @@
                             <label for="o_linkpopover_url" class="o_we_input_label">
                                 <span class="fa fa-link"></span>
                             </label>
-                            <input t-custom-ref="url"
+                            <input t-ref="this.urlRef"
                                 id="o_linkpopover_url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"

@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -56,6 +56,8 @@ export class LinkPopover extends Component {
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
     buttonTypesData = BUTTON_TYPES;
+    urlRef = signal(null);
+    labelRef = signal(null);
 
     setup() {
         this.ui = useService("ui");
@@ -112,17 +114,16 @@ export class LinkPopover extends Component {
 
         this.updateDocumentState();
         this.editingWrapper = useRef("editing-wrapper");
-        this.inputRef = useRef(
-            this.state.isImage || (this.state.label && !this.state.url) ? "url" : "label"
-        );
-        useLayoutEffect(
-            (el) => {
-                if (el) {
-                    el.focus();
-                }
-            },
-            () => [this.inputRef.el]
-        );
+        this.inputRef =
+            this.state.isImage || (this.state.label && !this.state.url)
+                ? this.urlRef
+                : this.labelRef;
+        useEffect(() => {
+            const el = this.inputRef();
+            if (el) {
+                el.focus();
+            }
+        });
         if (!this.state.editing) {
             this.loadAsyncLinkPreview();
         }
