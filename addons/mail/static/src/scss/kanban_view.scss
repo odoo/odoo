@@ -1,5 +1,11 @@
 $o-kanban-attachement-image-size: 80px;
 
+.o-discuss-CategoryKanban .o_kanban_record {
+    width: var(--KanbanRecord-width);
+    flex-grow: 1;
+    margin: calc(var(--KanbanRecord-margin-v) * 0.5) var(--KanbanRecord-margin-h);
+}
+
 .o_kanban_renderer {
     .o_kanban_record.o_kanban_attachment {
         --Card-padding-h: #{map-get($spacers, 0)};
