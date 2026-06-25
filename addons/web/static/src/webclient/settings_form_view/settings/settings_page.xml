@@ -21,7 +21,7 @@
                 <Dropdown menuClass="'my-2 mx-1'">
                     <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
                         <i class="d-inline-block flex-shrink-0 me-2" 
-                            t-attf-style="background: url('#{this.selectedModule.imgurl}') no-repeat center; background-size: contain; width: 23px; height: 23px;" />
+                            t-attf-style="background: url('#{this.selectedModule.imgurl}') center / contain no-repeat; background-size: contain; width: 23px; height: 23px;" />
                         <span class="pe-2" t-out="this.selectedModule.string"/>
                     </span>
                     <t t-set-slot="content">
@@ -38,7 +38,7 @@
                                 onSelected="() => this.onSettingTabClick(module.key)">
                                 
                                 <span class="flex-shrink-0 me-2" 
-                                    t-attf-style="background: url('#{module.imgurl}') no-repeat center; background-size: contain; width: 23px; height: 23px; display: inline-block;" />
+                                    t-attf-style="background: url('#{module.imgurl}') center / contain no-repeat; background-size: contain; width: 23px; height: 23px; display: inline-block;" />
                                 
                                 <span class="app_name text-truncate">
                                     <t t-out="module.string"/>
