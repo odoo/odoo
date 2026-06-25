@@ -176,14 +176,54 @@ class ResPartner(models.Model):
         if not europe:
             europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
         if europe and country and country.id in europe.country_ids.ids:
-            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
-            country_code = _eu_country_vat.get(country.code, country.code).upper()
-            if vat[:2] != country_code and (
-                country_code not in country_codes_to_not_prepend or
-                country_code != self.env.company.country_code
+            vat = re.sub(r'[^A-Za-z0-9]', '', vat).upper()
+            vat_code, vat_number = self._split_vat(vat)
+            vat_country_code = _eu_country_vat_inverse.get(vat_code.upper(), vat_code.upper())
+            vat_country_code_valid = (all(c.isalpha() for c in vat_code) and (
+                vat_code.lower() in _region_specific_vat_codes
+                or self.env['res.country'].search_count([('code', '=', vat_country_code)], limit=1)
+            ))
+
+            partner_country_code = _eu_country_vat.get(country.code, country.code).upper()
+            if partner_country_code != vat_country_code and not vat_country_code_valid and (
+                partner_country_code not in country_codes_to_not_prepend
+                or partner_country_code != self.env.company.country_code
             ):
-                vat = country_code + vat
+                vat = partner_country_code + vat_code + vat_number
         return vat
+
+    def fix_many_eu_vat_numbers(self):
+        """
+        fix_eu_vat_number() can only access one partner at a time.
+        This is not efficient for multiple partners (such as the Luxembourg FAIA export).
+        """
+        europe = self.env.ref('base.europe')
+        country_codes_to_not_prepend = ['RO']
+        country_codes = self.env['res.country'].search([]).mapped('code')
+        if not europe:
+            europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+
+        result_vat = []
+        for partner in self:
+            vat = partner.vat
+            if partner.vat and europe and partner.country_id and partner.country_id.id in europe.country_ids.ids:
+                vat = re.sub(r'[^A-Za-z0-9]', '', vat).upper()
+                vat_code, vat_number = self._split_vat(vat)
+                vat_country_code = _eu_country_vat_inverse.get(vat_code, vat_code)
+                vat_country_code_valid = (all(c.isalpha() for c in vat_code) and (
+                    vat_code.lower() in _region_specific_vat_codes
+                    or vat_country_code in country_codes
+                ))
+
+                partner_country_code = _eu_country_vat.get(partner.country_code, partner.country_code).upper()
+                if partner_country_code != vat_country_code and not vat_country_code_valid and (
+                    partner_country_code not in country_codes_to_not_prepend
+                    or partner_country_code != self.env.company.country_code
+                ):
+                    vat = partner_country_code + vat_code + vat_number
+            result_vat.append(vat)
+
+        return result_vat
 
     @api.constrains('vat', 'country_id')
     def check_vat(self):
