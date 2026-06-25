@@ -41,6 +41,7 @@ export class MailingPreviewIframe extends Component {
                     this.iframeRef()?.contentDocument.body.replaceChildren(
                         this.renderBodyContent()
                     );
+                    this.throttledResize();
                 });
             },
             () => [this.props.record.data.preview_record_ref]
@@ -63,12 +64,20 @@ export class MailingPreviewIframe extends Component {
 
         const updateIframeSize = () => {
             const iframe = this.iframeRef();
+            const content = iframe.contentDocument.body.firstElementChild;
+            if (content) {
+                content.style.zoom = "";
+            }
             if (this.state.isMobileMode) {
                 // same styling for mobile as we have in 'mass_mailing_iframe'
                 iframe.style.width = "367px";
                 iframe.style.height = "668px";
                 iframe.style.transform = "";
                 iframe.style.backgroundColor = "white";
+                // Scale the email down to fit the screen, like a mobile mail client.
+                if (content && content.clientWidth && content.scrollWidth > content.clientWidth) {
+                    content.style.zoom = content.clientWidth / content.scrollWidth;
+                }
                 iframe.contentDocument.body.scrollTop = 0;
             } else {
                 iframe.style.width = "140%";
