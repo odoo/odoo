@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -191,40 +191,40 @@ export class ControlPanel extends Component {
             );
         }
 
-        useLayoutEffect(() => {
-            if (
-                !this.env.isSmall ||
-                ("adaptToScroll" in this.display && !this.display.adaptToScroll)
-            ) {
-                return;
-            }
-            const scrollingEl = this.getScrollingElement();
-            this.scrollingElementResizeObserver.observe(scrollingEl);
-            scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
-            this.root.el.style.top = "0px";
-            this.scrollingElementHeight = scrollingEl.scrollHeight;
-            return () => {
-                this.scrollingElementResizeObserver.unobserve(scrollingEl);
-                scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
-            };
-        });
+        // useLayoutEffect(() => {
+        //     if (
+        //         !this.env.isSmall ||
+        //         ("adaptToScroll" in this.display && !this.display.adaptToScroll)
+        //     ) {
+        //         return;
+        //     }
+        //     const scrollingEl = this.getScrollingElement();
+        //     this.scrollingElementResizeObserver.observe(scrollingEl);
+        //     scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
+        //     this.root.el.style.top = "0px";
+        //     this.scrollingElementHeight = scrollingEl.scrollHeight;
+        //     return () => {
+        //         this.scrollingElementResizeObserver.unobserve(scrollingEl);
+        //         scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
+        //     };
+        // });
 
         // The goal is to automatically open the dropdown menu of embedded actions if there is only one visible embedded action
         // We use a timer to delay the display of that dropdown menu to avoid flicker issues
-        useLayoutEffect(
-            (el, showEmbedded) => {
-                const timer = setTimeout(() => {
-                    if (
-                        showEmbedded &&
-                        this.state.embeddedInfos.visibleEmbeddedActions.length === 1
-                    ) {
-                        el.querySelector(".btn[name='openEmbeddedActions']")?.click();
-                    }
-                }, 100);
-                return () => clearTimeout(timer);
-            },
-            () => [this.root.el, this.state.embeddedInfos.showEmbedded]
-        );
+        // useLayoutEffect(
+        //     (el, showEmbedded) => {
+        //         const timer = setTimeout(() => {
+        //             if (
+        //                 showEmbedded &&
+        //                 this.state.embeddedInfos.visibleEmbeddedActions.length === 1
+        //             ) {
+        //                 el.querySelector(".btn[name='openEmbeddedActions']")?.click();
+        //             }
+        //         }, 100);
+        //         return () => clearTimeout(timer);
+        //     },
+        //     () => [this.root.el, this.state.embeddedInfos.showEmbedded]
+        // );
 
         onMounted(() => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
