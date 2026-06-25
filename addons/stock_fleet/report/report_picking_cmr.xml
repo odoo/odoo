@@ -382,14 +382,14 @@
                                                         </t>
                                                     </div>
                                                     <span class="d-inline-block me-3">
-                                                        <span class="fs-6 me-1 align-middle">&#9744;</span><t t-translation="off">Freight paid</t>
+                                                        <t t-translation="off"><span class="fs-6 me-1 align-middle">&#9744;</span>Freight paid</t>
                                                         <t t-if="not copy_lang_code.startswith('en')">
                                                             / <t t-set="label_key" t-value="'freight_paid'"/>
                                                             <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
                                                         </t>
                                                     </span>
                                                     <span class="d-inline-block me-3">
-                                                        <span class="fs-6 me-1 align-middle">&#9744;</span><t t-translation="off">Freight to be paid</t>
+                                                        <t t-translation="off"><span class="fs-6 me-1 align-middle">&#9744;</span>Freight to be paid</t>
                                                         <t t-if="not copy_lang_code.startswith('en')">
                                                             / <t t-set="label_key" t-value="'freight_to_be_paid'"/>
                                                             <t t-call="stock_fleet.report_cmr_translated_label" t-lang="copy_lang_code"/>
