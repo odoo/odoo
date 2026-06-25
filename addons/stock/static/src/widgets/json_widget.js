@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import { getColor } from "@web/core/colors/colors";
@@ -51,14 +51,14 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
             await loadBundle("web.chartjs_lib");
         });
 
-        useLayoutEffect(() => {
-            this.renderChart();
-            return () => {
-                if (this.chart) {
-                    this.chart.destroy();
-                }
-            };
-        });
+        // useLayoutEffect(() => {
+        //     this.renderChart();
+        //     return () => {
+        //         if (this.chart) {
+        //             this.chart.destroy();
+        //         }
+        //     };
+        // });
     }
     get productUomName(){
         return this.jsonValue["product_uom_name"];
