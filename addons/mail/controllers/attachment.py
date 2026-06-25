@@ -75,7 +75,7 @@ class AttachmentController(ThreadController):
             store = Store().add(
                 attachment,
                 lambda res: (
-                    res.from_method("_store_attachment_fields"),
+                    res.from_method("_store_attachment_fields", chatter_fields=not request.env.user.share),
                     res.from_method("_store_ownership_fields"),
                 ),
             )
