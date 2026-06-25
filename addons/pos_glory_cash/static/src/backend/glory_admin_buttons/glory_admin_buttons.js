@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -24,24 +23,24 @@ export class GloryAdminButtons extends Component {
         this.gloryService = new GloryService((newStatus) => (this.state.status = newStatus));
         this.state = proxy({ status: "DISCONNECTED", resetInProgress: false });
 
-        useLayoutEffect(
-            () => {
-                const { glory_websocket_address, glory_username, glory_password, glory_use_lna } =
-                    this.props.record.data;
-                if (glory_use_lna) {
-                    initLNA(this.notification);
-                }
-                if (glory_websocket_address) {
-                    this.gloryService.connect(
-                        glory_websocket_address,
-                        glory_username,
-                        glory_password,
-                        glory_use_lna
-                    );
-                }
-            },
-            () => [this.props.record.data]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         const { glory_websocket_address, glory_username, glory_password, glory_use_lna } =
+        //             this.props.record.data;
+        //         if (glory_use_lna) {
+        //             initLNA(this.notification);
+        //         }
+        //         if (glory_websocket_address) {
+        //             this.gloryService.connect(
+        //                 glory_websocket_address,
+        //                 glory_username,
+        //                 glory_password,
+        //                 glory_use_lna
+        //             );
+        //         }
+        //     },
+        //     () => [this.props.record.data]
+        // );
     }
 
     get status() {
