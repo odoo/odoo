@@ -35,7 +35,7 @@
                                     'text-danger': this.invalidApps.includes(module.key),
                                     'active': this.selectedModule.key === module.key and this.state.search.value.length === 0,
                                  }"
-                                onSelected="() => this.onSettingTabClick(module.key)">
+                                onSelected="() => this.onSettingTabClick(module.key, true)">
                                 
                                 <span class="flex-shrink-0 me-2" 
                                     t-attf-style="background: url('#{module.imgurl}') center / contain no-repeat; background-size: contain; width: 23px; height: 23px; display: inline-block;" />

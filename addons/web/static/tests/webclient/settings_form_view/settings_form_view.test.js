@@ -1555,6 +1555,100 @@ test("settings view does not display o_not_app settings - mobile", async () => {
     expect(queryAllTexts(".o-dropdown-item")).toEqual(["CRM"]);
 });
 
+test.tags("desktop");
+test("settings view change app - desktop", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="CRM">
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="Other App" name="otherapp">
+                    <h2>Other app tab</h2>
+                    <block>
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+    `;
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction(1);
+    await runAllTimers();
+
+    expect(queryAllTexts(".tab.selected")).toEqual(["CRM"]);
+    expect(queryAllTexts(".app_name")).toEqual(["CRM", "Other App"]);
+
+    await contains("a.tab[data-key='otherapp']").click();
+    await animationFrame();
+
+    expect(queryAllTexts(".tab.selected")).toEqual(["Other App"]);
+    expect(browser.location.href).toBe("https://www.hoot.test/odoo/settings#otherapp");
+});
+
+test.tags("mobile");
+test("settings view change app - mobile", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            path: "settings",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="CRM">
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+                <app string="Other App" name="otherapp">
+                    <h2>Other app tab</h2>
+                    <block>
+                        <setting help="this is bar">
+                            <field name="bar"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+    `;
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction(1);
+    await runAllTimers();
+
+    expect(queryAllTexts(".settings_tab")).toEqual(["CRM"]);
+    await contains(".settings_tab .o-dropdown").click();
+    await animationFrame(); // await the dropdown to be opened
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["CRM", "Other App"]);
+
+    await contains(".o-dropdown-item:eq(1)").click();
+    await animationFrame();
+
+    expect(queryAllTexts(".settings_tab")).toEqual(["Other App"]);
+    expect(browser.location.href).toBe("https://www.hoot.test/odoo/settings#otherapp");
+});
+
 test("settings view shows a message if there are changes", async () => {
     await mountView({
         type: "form",
