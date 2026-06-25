@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -31,11 +31,11 @@ export class CharField extends Component {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
             useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
-            useLayoutEffect(() =>
-                this.dynamicPlaceholder.updateModel(
-                    this.props.dynamicPlaceholderModelReferenceField
-                )
-            );
+            // useLayoutEffect(() =>
+            //     this.dynamicPlaceholder.updateModel(
+            //         this.props.dynamicPlaceholderModelReferenceField
+            //     )
+            // );
         }
         useInputField({
             getValue: () => this.props.record.data[this.props.name] || "",
