@@ -4,8 +4,9 @@ from unittest.mock import Mock, patch
 
 import ldap
 
-import odoo.http
 from odoo.exceptions import AccessDenied
+from odoo.http import request_var
+from odoo.http.session import Session
 from odoo.tests import Form, tagged, users
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -73,13 +74,12 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
         }
 
     def mock_check_identity(self):
-        odoo.http.requestlib._request_stack.push(
-            Mock(
-                httprequest=Mock(environ={"REMOTE_ADDR": "123.123.123.123"}),
-                session=odoo.http.session.Session({"identity-check-last": time.time()}, "foo"),
-            )
+        fake_req = Mock(
+            httprequest=Mock(environ={"REMOTE_ADDR": "123.123.123.123"}),
+            session=Session({"identity-check-last": time.time()}, "foo"),
         )
-        self.addCleanup(odoo.http.requestlib._request_stack.pop)
+        request_reset = request_var.set(fake_req)
+        self.addCleanup(request_var.reset, request_reset)
 
     def test_auth_ldap(self):
         def _get_ldap_dicts(self):
