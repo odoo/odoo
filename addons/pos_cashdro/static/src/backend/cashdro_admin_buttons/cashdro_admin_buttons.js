@@ -7,8 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { downloadFile } from "@web/core/network/download";
 import { Logger } from "@bus/workers/bus_worker_utils";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
-import { useLayoutEffect } from "@web/owl2/utils";
-
 export class CashdroAdminButtons extends Component {
     static template = `pos_cashdro.CashdroAdminButtons`;
     static props = {
@@ -20,14 +18,14 @@ export class CashdroAdminButtons extends Component {
         this.notification = useService("notification");
         this.logger = new Logger("pos_cashdro");
 
-        useLayoutEffect(
-            () => {
-                if (this.props.record.data.cashdro_use_lna) {
-                    initLNA(this.notification);
-                }
-            },
-            () => [this.props.record.data.cashdro_use_lna]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.props.record.data.cashdro_use_lna) {
+        //             initLNA(this.notification);
+        //         }
+        //     },
+        //     () => [this.props.record.data.cashdro_use_lna]
+        // );
     }
 
     async downloadLogs() {
