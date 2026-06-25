@@ -50,6 +50,7 @@ class Job(models.Model):
         required=True,
         index=True,
         precompute=True,
+        ondelete='cascade',
     )
     session_id = fields.Many2one('populate.session', required=True, index=True)
     is_done = fields.Boolean()
