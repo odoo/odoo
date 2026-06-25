@@ -686,7 +686,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             this.props.composer.emailAddSignature = true;
         }
-        const signature = this.thread.effectiveSelf.main_user_id?.getSignatureBlock();
+        const signature = this.store.self_user?.getSignatureBlock();
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
             this.props.composer.emailAddSignature ? signature : ""

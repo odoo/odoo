@@ -31,7 +31,7 @@ registerMessageAction("reply-all", {
     condition: ({ message, thread }) => message.canReplyAll(thread),
     icon: "fa fa-reply",
     name: _t("Reply All"),
-    onSelected: async ({ message, owner, thread }) => {
+    onSelected: async ({ message, owner, store, thread }) => {
         const recipients = await rpc("/mail/thread/recipients", {
             thread_model: thread.model,
             thread_id: thread.id,
@@ -51,7 +51,7 @@ registerMessageAction("reply-all", {
             email,
             message,
             name: name || email,
-            signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
+            signature: store.self_user?.getSignatureBlock(),
         });
         const context = {
             default_body: body,
@@ -73,7 +73,7 @@ registerMessageAction("forward", {
     condition: ({ message, thread }) => message.canForward(thread),
     icon: "fa fa-share",
     name: _t("Forward"),
-    onSelected: async ({ message, owner, store, thread }) => {
+    onSelected: async ({ message, owner, store }) => {
         // usually reply_to is what you want people to see as being "from"
         // showing this avoids "leaking" the actual user when reply_to is an alias
         const emailFrom = message.reply_to || message.email_from || message.author_id?.email;
@@ -88,7 +88,7 @@ registerMessageAction("forward", {
             email,
             message,
             name: name || email,
-            signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
+            signature: store.self_user?.getSignatureBlock(),
         });
         const attachmentIds = message.attachment_ids.map((a) => a.id);
         const newAttachmentIds = await store.env.services.orm.call(
