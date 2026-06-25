@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onPatched } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, onPatched, useListener } from "@odoo/owl";
 
 /**
  * @todo @phoenix i think that most of the "control" code in this component
@@ -32,14 +32,13 @@ export class Powerbox extends Component {
         // If necessary attach the same listener on the document on which
         // the powerbox is mounted, serving the same purpose:
         // do not trigger re-renderings when we are scrolling the powerbox
-        useLayoutEffect(
-            (ownDoc, propsDoc) => {
-                if (ownDoc && propsDoc && ownDoc !== propsDoc) {
-                    ownDoc.addEventListener("mousemove", onMouseMove);
-                    return () => ownDoc.removeEventListener("mousemove", onMouseMove);
-                }
+        useListener(
+            () => {
+                const ownDoc = ref.el?.ownerDocument;
+                return ownDoc && ownDoc !== this.props.document ? ownDoc : null;
             },
-            () => [ref.el?.ownerDocument, this.props.document]
+            "mousemove",
+            onMouseMove
         );
     }
 
