@@ -1513,6 +1513,15 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="l10n_be_work_entry_type_political_leave" model="hr.work.entry.type">
+        <field name="name">Political Leave</field>
+        <field name="code">LEAVE1749</field>
+        <field name="display_code">POL</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
 <!-- BD : Bangladesh -->
     <record id="bd_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Attendance</field>
