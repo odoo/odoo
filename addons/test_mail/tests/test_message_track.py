@@ -48,24 +48,43 @@ class TestTrackingAPI(TestTrackingCommon):
 
     @users('employee')
     def test_mail_track_mixin(self):
-        mixin_records = self.env['mail.test.track.mixin'].create([
-            {
-                'char_field': 'init 1',
-                'selection_field': 'first',
-            }, {
-                'char_field': 'init 2',
-                'selection_field': False,
-            }
-        ])
-        self.flush_tracking()
-
         original_track_finalize = MailTrackMixin._track_finalize
+
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records = self.env['mail.test.track.mixin'].create([
+                {
+                    'char_field': 'init 1',
+                    'selection_field': 'first',
+                }, {
+                    'char_field': 'init 2',
+                    'selection_field': False,
+                }
+            ])
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 1)
+        self.assertFalse(self._new_msgs)
+
+        # manual preparation
         with patch.object(MailTrackMixin, '_track_finalize',
                           autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
              self.mock_mail_gateway(), self.mock_mail_app():
             mixin_records._track_prepare(mixin_records._track_get_fields())
             mixin_records.write({
                 'char_field': 'updated 1',
+                'selection_field': False,
+            })
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 2)
+        self.assertFalse(self._new_msgs)
+
+        # automatic write support
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records.write({
+                'char_field': 'updated 1.1',
                 'selection_field': 'second',
             })
             self.flush_tracking()
@@ -117,7 +136,6 @@ class TestTrackingAPI(TestTrackingCommon):
             {'body': '<p>Manual Tracking Parent 2</p>', 'tracking_values': track_2},
         ], strict=True):
             self.assertMessageFields(msg, expected)
-
 
     @users('employee')
     def test_tracking_create(self):

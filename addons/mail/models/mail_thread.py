@@ -361,14 +361,12 @@ class MailThread(models.AbstractModel):
             )
 
         # auto_subscribe: take values and defaults into account
-        create_values_list = {}
         for thread, values in zip(threads, vals_list):
             create_values = dict(values)
             for key, val in self.env.context.items():
                 if key.startswith('default_') and key[8:] not in create_values:
                     create_values[key[8:]] = val
             thread._message_auto_subscribe(create_values, followers_existing_policy='update')
-            create_values_list[thread.id] = create_values
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self.env.context.get('mail_create_nolog'):
@@ -389,32 +387,14 @@ class MailThread(models.AbstractModel):
                     for thread in threads_no_subtype)
                 threads_no_subtype._message_log_batch(bodies=bodies)
 
-        # post track template if a tracked field changed
-        threads._track_discard()
-        if not self._track_disabled():
-            fnames = self._track_get_fields()
-            for thread in threads:
-                create_values = create_values_list[thread.id]
-                changes = [fname for fname in fnames if create_values.get(fname)]
-                # based on tracked field to stay consistent with write
-                # we don't consider that a falsy field is a change, to stay consistent with previous implementation,
-                # but we may want to change that behaviour later.
-                if changes:
-                    thread._track_prepare_for_template(changes)
         return threads
 
     def write(self, vals):
-        if self.env.context.get('tracking_disable'):
-            return super().write(vals)
-
-        if not self._track_disabled():
-            self._track_prepare(self._fields)
-
-        # Perform write
         result = super().write(vals)
 
-        # update followers
-        self._message_auto_subscribe(vals)
+        # update followers unless explicitly skipped
+        if not self.env.context.get('tracking_disable'):
+            self._message_auto_subscribe(vals)
 
         return result
 
@@ -424,6 +404,7 @@ class MailThread(models.AbstractModel):
         if not self:
             return True
         # discard pending tracking
+        # TDE to check: fire tracking depending on those records (e.g. _track_record) ?
         self._track_discard()
         self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         res = super(MailThread, self).unlink()
@@ -551,8 +532,9 @@ class MailThread(models.AbstractModel):
         # override to generate tracking messages
         super()._track_execute(track_init_values, trackings)
 
-        # log tracking on records
-        self._track_log(track_init_values, trackings, track_records=track_records)
+        # log tracking on records, except during creation time
+        if not self.env.context.get('track_create') or self.env.context.get('track_create_log'):
+            self._track_log(track_init_values, trackings, track_records=track_records)
 
         # fire template-based message generation
         for record_su in self:
@@ -702,34 +684,6 @@ class MailThread(models.AbstractModel):
 
     # track template posting
     # ------------------------------------------------------
-
-    def _track_clear_for_template(self):
-        """ Clear template-based only tracking """
-        self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}', None)
-
-    def _track_prepare_for_template(self, field_names: Iterable[str]):
-        """ Prepare template-based message generation based on changes """
-        self.env.cr.precommit.add(self._track_finalize_for_template)  # call to _track_finalize_for_template bound to this record
-        for record in self.filtered(lambda r: r.id):
-            self.env.cr.precommit.data.setdefault(f'mail.tracking.create.{self._name}', {})[record.id] = field_names
-
-    def _track_finalize_for_template(self):
-        """ Generate template-based message generation for records that have been
-        prepared. """
-        precommit_data = self.env.cr.precommit.data.get(f'mail.tracking.create.{self._name}', {})
-        ids = [id_ for id_, vals in precommit_data.items() if vals]
-        if not ids:
-            return
-
-        # Clean the context to get rid of residual default_* keys that could
-        # cause issues afterward during the mail.message generation.
-        # sudo: be sure to compute end values whatever current user ACLs
-        records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
-        for record_su in records_su:
-            record_su._track_post_template(precommit_data[record_su.id])
-
-        self._track_clear_for_template()
-        return precommit_data
 
     def _track_post_template(self, tracked_fields: Iterable[str]) -> True:
         """ Based on a tracking, post a message based on a template, as defined

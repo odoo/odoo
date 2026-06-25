@@ -11,7 +11,7 @@ from odoo.tools import clean_context, format_datetime, format_date, format_amoun
 if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
     from odoo.models import BaseModel
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
     from markupsafe import Markup
 
 
@@ -25,6 +25,32 @@ class MailTrackMixin(models.AbstractModel):
     # model / crud helpers
     # ------------------------------------------------------
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        # perform tracking values, allowing to post tracking-based content even
+        # when creating records
+        records = super().create(vals_list)
+        if not self._track_disabled():
+            fnames = self._track_get_fields()
+            if fnames:
+                # set a context, notably to allow custom behavior when being in
+                # create mode (e.g. skip classic tracking post, keep only template)
+                records._track_set_context(track_create=True)
+                records._track_prepare(
+                    fnames,
+                    initial_values={
+                        record.id: {fname: False for fname in fnames}
+                        for record in records
+                    },
+                )
+        return records
+
+    def write(self, vals):
+        if not self._track_disabled():
+            self._track_set_context(track_create=False)
+            self._track_prepare(self._fields)
+        return super().write(vals)
+
     def _fallback_lang(self) -> BaseModel:
         if not self.env.context.get("lang"):
             return self.with_context(lang=self.env.user.lang)
@@ -33,6 +59,19 @@ class MailTrackMixin(models.AbstractModel):
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
         return name == 'tracking' or super()._valid_field_parameter(field, name)
+
+    @api.model
+    def fields_get(self, allfields: Collection[str] | None = None, attributes: Collection[str] | None = None) -> dict[str, ValuesType]:
+        # add tracking information at fields_get level
+        fields_get_dict = super().fields_get(allfields, attributes)
+        if not attributes or (set(attributes) & {'tracking', 'tracking_sequence'}):
+            for fname, field_values in fields_get_dict.items():  # do not iterate on _fields, to rely on access checks already done
+                track_value = field_values['tracking'] = getattr(self._fields[fname], 'tracking', False)
+                if (not attributes or 'tracking' in attributes):
+                    field_values['tracking'] = track_value is not False
+                if (not attributes or 'tracking_sequence' in attributes):
+                    field_values['tracking_sequence'] = self._mail_track_get_field_sequence(fname)
+        return fields_get_dict
 
     # track data storage / manipulation
     # ------------------------------------------------------
@@ -57,28 +96,41 @@ class MailTrackMixin(models.AbstractModel):
     def _track_disabled(self):
         return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
 
-    def _track_prepare(self, field_names: Iterable[str]) -> dict[int, ValuesType]:
+    def _track_prepare(self,
+            field_names: Iterable[str],
+            initial_values: dict[int, ValuesType] | None = None,
+        ) -> dict[int, ValuesType]:
         """ Prepare the tracking of `fields_iter` for `self` for tracked
         fields (see `_track_get_fields`). Store initial values for tracked fields
         in precommit data.
 
         :param Iterable[str] field_names: field names to potentially track, to be
             checked against model-based tracked fields
+        :param dict[int, ValuesType] track_init_values: mapping {record_id: initial_values}
+            where initial_values is a dict {field_name: value, ... } containing
+            all initial values. If not given, computed based on self.
         """
         tracked_fnames = self._track_get_fields().intersection(field_names)
         if not self or not tracked_fnames:
             return
+        valid_sudo = self.sudo().filtered(lambda r: r.id)  # be sure to compute initial values whatever current user ACLs
+        if not valid_sudo:
+            return
         self.env.cr.precommit.add(self._track_finalize)
 
-        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self.sudo().filtered(lambda r: r.id):  # be sure to compute initial values whatever current user ACLs
-            record_values = initial_values.setdefault(record.id, {})
-            if record_values is not None:  # None means tracking was disabled for this record
-                for fname in tracked_fnames:
-                    record_values.setdefault(fname, record._track_convert_value(fname, record[fname]))
+        current_iv = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
+        if not initial_values:
+            # None means tracking was disabled for this record
+            unskipped_sudo = valid_sudo.filtered(lambda r: r.id not in current_iv or current_iv[r.id] is not None)
+            initial_values = {
+                record.id: {
+                    fname: record[fname] for fname in tracked_fnames
+                } for record in unskipped_sudo
+            }
+        valid_sudo._track_add_data_values(current_iv, initial_values)
 
         # ease overrides by returning initial values
-        return initial_values
+        return current_iv
 
     def _track_clear(self):
         """ Clear tracking data, without preventing further other tracking. """
@@ -141,6 +193,7 @@ class MailTrackMixin(models.AbstractModel):
         # record
         # sudo: # be sure to compute end values whatever current user ACLs
         records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
+        records_su = records_su.with_context(self._track_get_context())
 
         tracked_fields_get = records_su._track_get_fields_info(fnames)
         trackings = dict()
@@ -206,13 +259,28 @@ class MailTrackMixin(models.AbstractModel):
     def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
         tracked_fields_get = self.fields_get(
             tracked_fields,
-            attributes=('company_dependent', 'string', 'type', 'selection', 'currency_field')
+            attributes=(
+                'company_dependent',
+                'selection',
+                'string',
+                'tracking',
+                'tracking_sequence',
+                'type',
+                'currency_field',
+            )
         )
         if set(tracked_fields_get.keys()) < set(tracked_fields):
             current_fields_info = self.env.cr.precommit.data.get(f'mail.tracking.fields_info.{self._name}', {})
             tracked_fields_get.update(current_fields_info)
 
         return tracked_fields_get
+
+    def _track_get_context(self):
+        return self.env.cr.precommit.data.get(f'mail.tracking.context.{self._name}', {})
+
+    def _track_set_context(self, **context):
+        track_ctx = self.env.cr.precommit.data.setdefault(f'mail.tracking.context.{self._name}', {})
+        track_ctx.update(**context)
 
     # track API
     # ------------------------------------------------------
@@ -410,21 +478,17 @@ class MailTrackMixin(models.AbstractModel):
     def _mail_track_get_field_sequence(self, fname: str) -> int:
         """ Find tracking sequence of a given field, given their name. Current
         parameter 'tracking' should be an integer, but attributes with True
-        are still supported; old naming 'track_sequence' also. """
+        are still supported. """
         if fname not in self._fields:
             return 100
 
         def get_field_sequence(fname):
-            return getattr(
-                self._fields[fname], 'tracking',
-                getattr(self._fields[fname], 'track_sequence', True)
-            )
+            return getattr(self._fields[fname], 'tracking', True)
 
         sequence = get_field_sequence(fname)
         if self._fields[fname].type == 'properties' and sequence is True:
             # default properties sequence is after the definition record
-            parent_sequence = get_field_sequence(self._fields[fname].definition_record)
-            return 100 if parent_sequence is True else parent_sequence
+            sequence = get_field_sequence(self._fields[fname].definition_record)
         return 100 if sequence is True else sequence
 
     # track value management
