@@ -6,7 +6,6 @@ from odoo.tools.partner_identifiers import validation_error_message
 
 from odoo.addons.account.controllers.portal import PortalAccount as CustomerPortal
 from odoo.addons.account.models.company import PEPPOL_LIST
-from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import validate_participant_identifier
 
 
 class PortalAccount(CustomerPortal):
@@ -38,11 +37,12 @@ class PortalAccount(CustomerPortal):
                 invalid_fields.add('country_id')
                 address_values['country_id'] = 'error'
                 error_messages.append(_("That country is not available for Peppol."))
-            result = validate_participant_identifier(peppol_eas, peppol_endpoint)
+            result = request.env['res.partner']._validate_identifier_by_scheme(peppol_eas, peppol_endpoint)
             if not result['valid']:
                 invalid_fields.add('invalid_peppol_endpoint')
                 peppol_endpoint = result['value']
-                endpoint_error_message = validation_error_message(request.env, result['key'], result['example'])
+                identifier_label = request.env['res.partner']._get_identifier_label(result['key'])
+                endpoint_error_message = validation_error_message(request.env, identifier_label, result['value'], example=result['example'])
                 error_messages.append(endpoint_error_message)
             peppol_identifier = f'{peppol_eas}:{peppol_endpoint}'
             if request.env['res.partner']._get_peppol_verification_state(peppol_identifier, edi_format) != 'valid':

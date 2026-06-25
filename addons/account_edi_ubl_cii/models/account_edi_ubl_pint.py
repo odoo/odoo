@@ -2,7 +2,6 @@ from odoo import _, models
 from odoo.tools import formatLang, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
-from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import normalize_iso_identifier
 
 
 class AccountEdiUBLPint(models.AbstractModel):
@@ -150,7 +149,7 @@ class AccountEdiUBLPint(models.AbstractModel):
         partner = vals['party_vals']['partner']
         identifier_vals = partner._get_preferred_routing_identifier_vals()
         if identifier_vals:
-            normalized_value = normalize_iso_identifier(identifier_vals['scheme'], identifier_vals['value'])
+            normalized_value = self.env['res.partner']._validate_identifier_by_scheme(identifier_vals['scheme'], identifier_vals['value']).get('value')
             vals['party_node']['cbc:EndpointID']['_text'] = normalized_value
             vals['party_node']['cbc:EndpointID']['schemeID'] = identifier_vals['scheme']
 

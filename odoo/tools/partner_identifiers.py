@@ -9,7 +9,6 @@ from stdnum.br import cpf as br_cn
 from stdnum.ch import uid as ch_uid
 from stdnum.dk import cvr as dk_cvr
 from stdnum.ee import registrikood as ee_en
-from stdnum.eu import vat as eu_vat
 from stdnum.fi import ytunnus as fi_en
 from stdnum.fr import nir as fr_cn, siret as fr_siret, siren as fr_siren
 from stdnum.gb import vat as gb_vat
@@ -1003,54 +1002,12 @@ ALL_IDENTIFIERS_METADATA = {
 }
 
 
-def get_identifier_metadata(identifier_type):
-    """Metadata dict for `identifier_type`."""
-    return ALL_IDENTIFIERS_METADATA.get(identifier_type) or {}
-
-
-def pick_preferred_identifier(identifiers, filter_func=None, sort_key=None):
-    """ Pick the best identifier from a candidates dict.
-
-    :param identifiers: dict {identifier_type: value} as from `_get_all_identifiers()`
-    :param filter_func: optional (key, value, metadata) -> bool
-    :param sort_key: optional (key, value, metadata) -> comparable
-    :return: dict `{'key': ..., 'value': ..., **metadata}` of the winner, or empty dict if no candidate.
-    """
-    candidates = []
-    for key, value in identifiers.items():
-        meta = get_identifier_metadata(key)
-        if filter_func and not filter_func(key, value, meta):
-            continue
-        candidates.append((key, value, meta))
-    if not candidates:
-        return {}
-    if sort_key:
-        candidates.sort(key=lambda c: sort_key(*c))
-    winner_key, winner_value, winner_meta = candidates[0]
-    return {'key': winner_key, 'value': winner_value, **winner_meta}
-
-
 def get_tin_metadata_of_country(country_code):
     """ First TIN metadata mapped to `country_code`; we assume one tax ID per country. """
     for key, metadata in TIN_METADATA.items():
         if country_code in (TIN_METADATA[key].get('countries') or []):
             return {'key': key, **metadata}
     return {}
-
-
-def get_tin_label_of_country(country_code):
-    """ Label for the country's tax ID. """
-    return get_tin_metadata_of_country(country_code).get('label')
-
-
-def get_tin_placeholder_of_country(country_code):
-    """ Example value for the country's tax ID, used as placeholder. """
-    return get_tin_metadata_of_country(country_code).get('placeholder')
-
-
-def get_identifier_label(identifier_type):
-    """ Label for the identifier. """
-    return get_identifier_metadata(identifier_type).get('label')
 
 
 def get_deduced_identifiers(key, value):
@@ -1100,56 +1057,19 @@ def is_identifier_void(identifier):
     return identifier in ('/', 'na', 'NA', 'N/A', 'not applicable')
 
 
-def format_identifier(identifier_type, value):
-    value = normalize_identifier(identifier_type, value)
-    if not value:
-        return None
-    if format_function := get_identifier_metadata(identifier_type).get('format'):
-        return format_function(value)
-    return value
+def normalize_identifier(value):
+    """ Very basic normalization of identifier, handle the "no value"/void placeholders. """
+    return value.strip() if not is_identifier_void(value) else None
 
 
-def normalize_identifier(identifier_type, value):
-    """ Very basic normalization of identifier, handle the "no value" placeholders. """
-    value = value if not is_identifier_void(value) else None
-    if not value:
-        return value
-    return value.strip()
-
-
-def validate_identifier(identifier_type, value):
-    """ Run the per-scheme stdnum validator (if any) and return a uniform
-    `{valid, value, example}` dict.
-    """
-    value = normalize_identifier(identifier_type, value)
-    if not value:
-        return {'valid': True, 'value': value, 'example': None}
-
-    metadata = get_identifier_metadata(identifier_type)
-    example = metadata.get('examples') or metadata.get('placeholder')
-    function_validation = metadata.get('validation_function')
-    # For VAT identifiers without a dedicated validator, fall back to eu_vat.validate
-    # only when the value looks like a prefixed EU VAT (starts with a 2-letter code).
-    supported_countries = eu_vat.MEMBER_STATES
-    if not function_validation and metadata.get('category') == 'VAT' and value[:2].lower() in supported_countries:
-        function_validation = eu_vat.validate
-    if function_validation:
-        try:
-            value_normalized = function_validation(value)
-        except Exception:  # noqa: BLE001
-            return {'valid': False, 'value': value, 'example': example}
-        else:
-            return {'valid': True, 'value': value_normalized, 'example': example}
-    return {'valid': True, 'value': value, 'example': example}
-
-
-def validation_error_message(env, identifier_type, example=None):
+def validation_error_message(env, identifier_label, identifier_value, example=None):
     """ Return error message to use everywhere a malformed identifier
     is rejected.
     """
     example = env._("\nExample: %(example)s", example=example) if example else ""
     return env._(
-        "Invalid identifier: %(identifier)s.%(example)s",
-        identifier=get_identifier_label(identifier_type),
+        "Invalid identifier: %(identifier_value)s%(identifier_label)s.%(example)s",
+        identifier_value=identifier_value,
+        identifier_label=f' ({identifier_label})' if identifier_label else '',
         example=example
     )
