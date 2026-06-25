@@ -20,7 +20,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
+import { advanceFrame, animationFrame, press, queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
@@ -35,6 +35,36 @@ import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
+
+test("messages still render when thread is reloaded twice in a row", async () => {
+    // Two reloads in quick succession (e.g. overlapping jumps to present) must
+    // not leave the message list stuck on the empty phantom view. The component
+    // mirrors `thread.isLoaded` into `state.mountedAndLoaded`, and the second
+    // reload landing while the first mirror update is still being applied used
+    // to strand `mountedAndLoaded` at false, so no message was ever rendered.
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    const thread = getService("mail.store")["discuss.channel"].get(channelId);
+    thread.isLoaded = false;
+    thread.isLoaded = true;
+    await advanceFrame(1);
+    thread.isLoaded = false;
+    thread.isLoaded = true;
+    await advanceFrame(1);
+    await animationFrame();
+    await contains(".o-mail-Message");
+});
 
 test("dragover files on thread with composer", async () => {
     const pyEnv = await startServer();
