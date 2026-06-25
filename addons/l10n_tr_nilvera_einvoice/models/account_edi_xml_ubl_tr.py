@@ -983,9 +983,16 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
-        partner_vals.update({
-            'vat': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:PartyIdentification//cbc:ID[string-length(text()) > 5]', tree),
-        })
+
+        # if parent class didn't find a name the customer is most likely an individual
+        first_name = self._find_value(f'.//cac:{role}Party/cac:Party/cac:Person/cbc:FirstName', tree) or ""
+        family_name = self._find_value(f'.//cac:{role}Party/cac:Party/cac:Person/cbc:FamilyName', tree) or ""
+        partner_vals['name'] = f"{first_name} {family_name}".strip()
+
+        vat = self._find_value(f'.//cac:{role}Party//cac:PartyIdentification//cbc:ID[string-length(text()) > 5]', tree)
+        if vat:
+            partner_vals['vat'] = vat
+
         return partner_vals
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
