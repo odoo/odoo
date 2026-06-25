@@ -122,7 +122,7 @@ export class FormatPlugin extends Plugin {
                         ? _t("Remove Format")
                         : _t("Selection has no format"),
                 icon: "fa-eraser",
-                run: this.removeFormat.bind(this),
+                run: this.removeAllFormats.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
         ],
@@ -175,10 +175,30 @@ export class FormatPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
+        before_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
+
+    /**
+     * @param {string[]} formats
+     * @param {Node[]} targetedNodes
+     */
+    removeFormats(formats, targetedNodes) {
+        const editableTargetedNodes = targetedNodes.filter(
+            this.dependencies.selection.isNodeEditable
+        );
+        for (const format of formats) {
+            if (
+                !formatsSpecs[format].removeStyle ||
+                !this.hasSelectionFormat(format, editableTargetedNodes)
+            ) {
+                continue;
+            }
+            this._formatSelection(format, { applyStyle: false });
+        }
+    }
 
     unwrapEmptyFormat(insertedNode) {
         const anchorNode = this.dependencies.selection.getEditableSelection().anchorNode;
@@ -200,21 +220,15 @@ export class FormatPlugin extends Plugin {
         return insertedNode;
     }
 
-    removeFormat() {
-        const targetedNodes = this.dependencies.selection
-            .getTargetedNodes()
-            .filter(this.dependencies.selection.isNodeEditable);
-        for (const format of Object.keys(formatsSpecs)) {
-            if (
-                !formatsSpecs[format].removeStyle ||
-                !this.hasSelectionFormat(format, targetedNodes)
-            ) {
-                continue;
-            }
-            this._formatSelection(format, { applyStyle: false });
-        }
+    removeAllFormats() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
         this.dispatchTo("remove_format_handlers");
         this.dependencies.history.addStep();
+    }
+
+    removeFontSizeFormat(el) {
+        this.removeFormats(["fontSize", "setFontSizeClassName"], [el, ...descendants(el)]);
     }
 
     /**
@@ -415,8 +429,20 @@ export class FormatPlugin extends Plugin {
 
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
             if (firstBlockOrClassHasFormat && !applyStyle) {
-                formatSpec.addNeutralStyle &&
-                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
+                const isParentNodeBlockAndCompletelySelected =
+                    isBlock(parentNode) &&
+                    this.dependencies.selection.areNodeContentsFullySelected(parentNode);
+                if (
+                    isParentNodeBlockAndCompletelySelected &&
+                    formatName === "setFontSizeClassName"
+                ) {
+                    for (const node of [parentNode, ...descendants(parentNode).filter(isElement)]) {
+                        removeFormat(node, formatSpec);
+                    }
+                } else {
+                    formatSpec.addNeutralStyle &&
+                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
+                }
             } else if (
                 (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
                 applyStyle
