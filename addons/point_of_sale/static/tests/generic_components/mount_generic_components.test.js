@@ -17,6 +17,7 @@ test("test that generic components can be mounted; the goal is to ensure that th
             Input,
             NumericInput,
         };
+        
         static template = xml`
             <div class="test-container">
                 <OdooLogo />
