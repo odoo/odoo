@@ -390,6 +390,7 @@ export class DescriptionScreen extends Component {
         }
         this.setImages({});
         const termsSet = this._splitToSet(term);
+        const rawTerms = Array.from(termsSet);
 
         //-------words correction--------
         // Check and correct all the terms
@@ -447,7 +448,10 @@ export class DescriptionScreen extends Component {
         }
         return matches.map((match) => ({
             label: match.label,
-            labelTermOrder: this._getMatchTermOrder(match.label, terms),
+            labelTermOrder: this._getMatchTermOrder(
+                match.label,
+                match.id === -1 ? rawTerms : terms
+            ),
             onSelect: () => this._setSelectedIndustry(match.label, match.id),
         }));
     }
