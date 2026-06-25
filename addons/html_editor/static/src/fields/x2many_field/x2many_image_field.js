@@ -41,6 +41,7 @@ export class X2ManyImageField extends ImageField {
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
+            document: window.document,
         };
     }
 

@@ -38,6 +38,7 @@ export class X2ManyMediaViewer extends X2ManyField {
             visibleTabs: this.props.onlyImage ? ["IMAGES"] : ["IMAGES", "VIDEOS"],
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
+            document: window.document,
         };
     }
 
