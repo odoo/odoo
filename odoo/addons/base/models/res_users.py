@@ -386,7 +386,7 @@ class Users(models.Model):
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups())
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     device_ids = fields.One2many('res.device', 'user_id', string='User devices')
-    login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
+    login_date = fields.Datetime(string='Latest authentication', compute='_compute_login_date', readonly=False)
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
@@ -512,6 +512,17 @@ class Users(models.Model):
             user.password = ''
             user.new_password = ''
 
+    @api.depends('log_ids')
+    def _compute_login_date(self):
+        create_date_by_user = self.env['res.users.log']._read_group(
+                domain=[('create_uid', 'in', self.ids)], 
+                groupby=['create_uid'],
+                aggregates=['create_date:max'],
+                )
+
+        for create_uid, create_date in create_date_by_user:
+            create_uid.login_date = create_date  
+    
     def _set_new_password(self):
         for user in self:
             if not user.new_password:
