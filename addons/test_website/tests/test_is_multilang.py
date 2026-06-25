@@ -77,9 +77,9 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         self.url_open(be_prefix)
         self.url_open(be_prefix + '/contactus')
         r = self.url_open(be_prefix)
-        self.assertRegex(r.text, r'<link rel="alternate" hreflang="en" href="http://[^"]+/"/>')
+        self.assertRegex(r.text, r'<link rel="alternate" hreflang="en" href="http://[^"]+/"/?>')
         r = self.url_open(be_prefix + '/contactus')
-        self.assertRegex(r.text, r'<link rel="alternate" hreflang="en" href="http://[^"]+/contactus"/>')
+        self.assertRegex(r.text, r'<link rel="alternate" hreflang="en" href="http://[^"]+/contactus"/?>')
 
     def test_04_multilang_false(self):
         website = self.env['website'].search([], limit=1)
