@@ -461,6 +461,7 @@ export class WebsiteBuilderClientAction extends Component {
             if (closestEl?.action) {
                 const { action, method } = closestEl;
                 if (isTopWindowURL(new URL(action))) {
+                    ev.preventDefault();
                     if (method === "post") {
                         const href = await post(action, { csrf_token: odoo.csrf_token }, "url");
                         url = new URL(href);
