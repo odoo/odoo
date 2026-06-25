@@ -226,7 +226,7 @@
                         <t t-if="this.state.logo">
                             <div class="d-flex gap-3 w-100">
                                 <div class="w-50 d-flex justify-content-end align-items-center gap-3">
-                                    <div class="rounded border position-relative opacity-trigger-hover" t-on-click="this.uploadLogo">
+                                    <div class="o_palette_selection_logo_container rounded border position-relative opacity-trigger-hover" t-on-click="this.uploadLogo">
                                         <img t-att-src="this.state.logo" alt="Logo" class="o_palette_selection_logo px-2 py-1"/>
                                         <div t-on-click="this.uploadLogo"
                                              title="Replace Logo"
@@ -311,7 +311,7 @@
                 </button>
             </div>
         </div>
-        <div class="o_palette_selection_preview_panel d-none d-xl-flex align-items-center justify-content-center p-5 flex-grow-0 flex-shrink-0 mx-auto position-relative" style="width: 40%">
+        <div class="o_palette_selection_preview_panel d-none d-xl-flex align-items-center justify-content-center p-5 flex-grow-0 flex-shrink-0 mx-auto sticky-lg-top z-0 vh-100 align-self-start" style="width: 40%">
             <svg class="o_palette_live_preview w-100 h-auto d-block" width="644" height="613" viewBox="0 0 644 613" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g filter="url(#filter0_d_1021_13393)">
                     <g clip-path="url(#clip0_1021_13393)">
