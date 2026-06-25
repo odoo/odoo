@@ -2655,6 +2655,30 @@ test("(edited) label is not included in editor when editing an already-edited me
     await contains(".o-mail-Message-content:text('a (edited)')");
 });
 
+test("Do not call server on save if body only differs by HTML comments", async () => {
+    const pyEnv = await startServer();
+    // Body has MSO conditional comments, stripped by the editor on parse.
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: '<div>Hello world<img src="/web/image/1" alt="img"><!--<![endif]--></div>',
+        model: "res.partner",
+        res_id: serverState.partnerId,
+        message_type: "comment",
+    });
+    onRpcBefore("/mail/message/update_content", (args) => {
+        expect.step(`update_content:${args.update_data.body}`);
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message button:text('save')");
+    // Real edit next, so the final step also proves the earlier save was a no-op.
+    await click(".o-mail-Message [title='Edit']");
+    await insertText(".o-mail-Message .o-mail-Composer-input", " edited");
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps([`update_content:Hello world edited`]);
+});
+
 test("show actions of 'tracking' in message header", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
