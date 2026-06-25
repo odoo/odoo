@@ -393,6 +393,35 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
         ].flat(),
 });
 
+registry
+    .category("web_tour.tours")
+    .add("test_single_attribute_value_multi_dispaly_type_attribute_product", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                ProductScreen.clickDisplayedProduct("Product A"),
+                ProductConfiguratorPopup.isOptionShown("Value 1"),
+                negateStep(...ProductConfiguratorPopup.isOptionShown("Value 2")),
+                Dialog.confirm("Add"),
+                inLeftSide([...ProductScreen.orderLineHas("Product A", 1)]),
+                {
+                    isActive: ["mobile"],
+                    content: "click review button",
+                    trigger: ".btn-switchpane.review-button",
+                    run: "click",
+                },
+                negateStep(...ProductScreen.orderLineHas("Product A (Value 1)", 1)),
+                { ...back(), isActive: ["mobile"] },
+                ProductScreen.clickDisplayedProduct("Product A"),
+                ProductConfiguratorPopup.isOptionShown("Value 1"),
+                negateStep(...ProductConfiguratorPopup.isOptionShown("Value 2")),
+                ProductConfiguratorPopup.selectMultiOption("Value 1"),
+                Dialog.confirm("Add"),
+                inLeftSide([...ProductScreen.orderLineHas("Product A (Value 1)", 1)]),
+                Chrome.endTour(),
+            ].flat(),
+    });
+
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
     steps: () =>
         [

@@ -627,7 +627,14 @@ export class PosStore extends Reactive {
             );
         }
         const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
-        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+        if (
+            attributeLinesValues.some(
+                (values) =>
+                    values.length > 1 ||
+                    values[0].is_custom ||
+                    (values.length === 1 && values[0].attribute_id.display_type === "multi")
+            )
+        ) {
             let defaultValues = {};
             const searchMatch =
                 this.searchProductWord &&

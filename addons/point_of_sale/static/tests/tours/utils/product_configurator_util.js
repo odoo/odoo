@@ -25,6 +25,15 @@ export function pickColor(name) {
         },
     ];
 }
+export function selectMultiOption(name) {
+    return [
+        {
+            content: `picking color attribute with name ${name}`,
+            trigger: `.modal label span:contains('${name}')`,
+            run: "click",
+        },
+    ];
+}
 export function fillCustomAttribute(value) {
     return [
         {
