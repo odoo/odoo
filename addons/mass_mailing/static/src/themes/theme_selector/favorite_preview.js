@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { renderToFragment } from "@web/core/utils/render";
 
@@ -14,18 +14,27 @@ export class FavoritePreview extends Component {
         this.isRTL = localization.direction === "rtl";
         this.shadowRootRef = useRef("shadowRoot");
         this.styleSheets = [];
+        this.root = undefined;
         onWillStart(async () => {
             this.styleSheets = await this.props.styleSheetsPromise;
         });
+        let template;
         onMounted(() => {
             this.setupShadowRoot();
+            template = this.props.template;
+        });
+        onPatched(() => {
+            if (this.props.template !== template) {
+                template = this.props.template;
+                this.root.replaceChildren(this.renderBodyContent());
+            }
         });
     }
 
     setupShadowRoot() {
-        const root = this.shadowRootRef.el.attachShadow({ mode: "open" });
-        root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...this.styleSheets];
-        root.replaceChildren(this.renderBodyContent());
+        this.root = this.shadowRootRef.el.attachShadow({ mode: "open" });
+        this.root.adoptedStyleSheets = [...this.root.adoptedStyleSheets, ...this.styleSheets];
+        this.root.replaceChildren(this.renderBodyContent());
     }
 
     renderBodyContent() {
