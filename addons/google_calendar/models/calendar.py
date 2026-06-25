@@ -23,6 +23,25 @@ class CalendarEvent(models.Model):
     guests_readonly = fields.Boolean(
         'Guests Event Modification Permission', default=False)
     videocall_source = fields.Selection(selection_add=[('google_meet', 'Google Meet')], ondelete={'google_meet': 'set discuss'})
+    google_unsynced_partner_ids = fields.Many2many(
+        'res.partner', string="Attendees not synced with Google",
+        compute='_compute_google_unsynced_partner_ids')
+
+    @api.depends(
+        'partner_ids.user_ids.google_calendar_rtoken',
+        'partner_ids.user_ids.google_synchronization_stopped',
+    )
+    def _compute_google_unsynced_partner_ids(self):
+        # Flag attendees that are Odoo users but have no active Google
+        # synchronization: their calendar won't reflect this event.
+        for event in self:
+            event.google_unsynced_partner_ids = event.partner_ids.filtered(
+                lambda partner: partner.user_ids and not any(
+                    user.sudo().google_calendar_rtoken
+                    and not user.sudo().google_synchronization_stopped
+                    for user in partner.user_ids
+                )
+            )
 
     @api.depends('recurrence_id.google_id')
     def _compute_google_id(self):
