@@ -290,5 +290,19 @@ class HrVersion(models.Model):
         return res or (work_entry_type.count_as == 'absence' or work_entry_type.request_unit != 'hour')
 
     @api.model
+    def _get_work_entries_postprocess_duration_vals(self, vals, date_start, tz, adapt_to_calendar):
+        leave = vals.get('leave_ids')
+        if adapt_to_calendar and leave and len(leave) == 1 and leave.work_entry_type_request_unit == 'half_day' \
+                and leave.request_date_from != leave.request_date_to:
+            calendar = vals['version_id'].resource_calendar_id
+            if calendar.attendance_ids and any(calendar.attendance_ids.mapped('duration_based')):
+                day = date_start.astimezone(tz).date()
+                _is_half, duration = calendar._get_half_day_leave_hours_on_date(
+                    day, leave.request_date_from, leave.request_date_to,
+                    leave.request_date_from_period, leave.request_date_to_period)
+                return day, (duration if duration else 0.0)
+        return super()._get_work_entries_postprocess_duration_vals(vals, date_start, tz, adapt_to_calendar)
+
+    @api.model
     def _get_work_entry_source_fields(self):
         return super()._get_work_entry_source_fields() + ['leave_ids']

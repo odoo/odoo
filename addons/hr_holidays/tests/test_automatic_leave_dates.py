@@ -19,6 +19,22 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             'request_unit': 'half_day',
             'unit_of_measure': 'day',
         })
+        cls.duration_based_calendar = cls.env["resource.calendar"].create({
+            "name": "Duration based",
+            "attendance_ids": [
+                Command.clear(),
+                *[Command.create({"duration_hours": 8, "dayofweek": str(i)}) for i in range(7)],
+            ],
+        })
+        cls.mixed_duration_and_fixed_calendar = cls.env["resource.calendar"].create({
+            "name": "Mixed Duration and Fixed",
+            "attendance_ids": [
+                Command.clear(),
+                Command.create({"duration_hours": 8, "dayofweek": "0"}),
+                Command.create({"hour_from": 8, "hour_to": 13, "dayofweek": "1"}),
+                Command.create({"hour_from": 14, "hour_to": 17, "dayofweek": "1"}),
+            ],
+        })
 
     def test_no_attendances(self):
         calendar = self.env['resource.calendar'].create({
@@ -307,6 +323,86 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         })
 
         self.assertEqual(leave.number_of_days, 5)
+
+    def test_attendance_based_on_duration_multi_day_half_day(self):
+        employee = self.employee_emp
+        employee.resource_calendar_id = self.duration_based_calendar
+        with Form(
+            self.env["hr.leave"].with_context(default_employee_id=employee.id),
+        ) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            leave_form.request_date_from = date(2019, 9, 2)  # Monday
+            leave_form.request_date_to = date(2019, 9, 3)  # Tuesday
+
+            leave_form.request_date_from_period = "am"
+            leave_form.request_date_to_period = "am"
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertEqual(leave_form.record.number_of_days, 1.5)
+            self.assertEqual(leave_form.record.number_of_hours, 12)
+
+            leave_form.request_date_from_period = "pm"
+            leave_form.request_date_to_period = "pm"
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertEqual(leave_form.record.number_of_days, 1.5)
+            self.assertEqual(leave_form.record.number_of_hours, 12)
+
+    def test_attendance_based_on_duration_multi_day_half_day_public_holiday(self):
+        employee = self.employee_emp
+        employee.resource_calendar_id = self.duration_based_calendar
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2019, 9, 3, 0, 0, 0),  # Tuesday
+            'date_to': datetime(2019, 9, 3, 23, 59, 59),
+            'resource_id': False,
+            'calendar_id': False,
+            'company_id': employee.company_id.id,
+        })
+        with Form(
+            self.env["hr.leave"].with_context(default_employee_id=employee.id),
+        ) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            leave_form.request_date_from = date(2019, 9, 2)  # Monday
+            leave_form.request_date_to = date(2019, 9, 3)  # Tuesday, public holiday
+
+            leave_form.request_date_from_period = "am"
+            leave_form.request_date_to_period = "am"
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertEqual(leave_form.record.number_of_days, 1)
+            self.assertEqual(leave_form.record.number_of_hours, 8)
+
+            leave_form.request_date_from_period = "pm"
+            leave_form.request_date_to_period = "pm"
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertEqual(leave_form.record.number_of_days, 0.5)
+            self.assertEqual(leave_form.record.number_of_hours, 4)
+
+    def test_attendance_based_on_duration_multi_day_half_day_mixed_calendar(self):
+        employee = self.employee_emp
+        employee.resource_calendar_id = self.mixed_duration_and_fixed_calendar
+        with Form(
+            self.env["hr.leave"].with_context(default_employee_id=employee.id),
+        ) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            leave_form.request_date_from = date(2019, 9, 2)  # Monday
+            leave_form.request_date_to = date(2019, 9, 3)  # Tuesday
+
+            leave_form.request_date_from_period = "am"
+            leave_form.request_date_to_period = "am"
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertEqual(leave_form.record.number_of_days, 1.5)
+            self.assertEqual(leave_form.record.number_of_hours, 13)
+
+            leave_form.request_date_from_period = "pm"
+            leave_form.request_date_to_period = "pm"
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertEqual(leave_form.record.number_of_days, 1.5)
+            self.assertEqual(leave_form.record.number_of_hours, 12)
 
     def test_attendance_next_day(self):
         self.env.user.tz = 'Europe/Brussels'
