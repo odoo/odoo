@@ -272,7 +272,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         self.assertEqual(imported_invoice.partner_id.vat, self.partner_a.vat)
 
         # Change the VAT to trigger the VAT mismatch logic
-        self.partner_a.vat = 'BE4695478703'
+        self.partner_a.vat = 'BE0477472701'
         # A new partner should be created
         imported_invoice = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
         self.assertRecordValues(imported_invoice.partner_id, [{
