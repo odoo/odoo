@@ -167,6 +167,47 @@ export class PosOrderlineAccounting extends Base {
         return this.price_unit * (1 - this.getDiscount() / 100);
     }
 
+    getUnitPriceFromDisplayPrice(price) {
+        const special_mode =
+            this.config.iface_tax_included === "total" ? "total_included" : "total_excluded";
+
+        const targetTotalIncluded = Number(price) / this.order_id.orderSign;
+        if (!Number.isFinite(targetTotalIncluded)) {
+            return 0.0;
+        }
+
+        // The entered price is the per-unit, tax-included amount BEFORE discount.
+        // Use total_included mode to invert taxes and recover the tax-excluded unit price.
+        const baseLine = this.getBaseLine({ quantity: 1, price_unit: targetTotalIncluded });
+        const taxesComputation = accountTaxHelpers.get_tax_details(
+            baseLine.tax_ids,
+            targetTotalIncluded,
+            1,
+            {
+                precision_rounding: baseLine.currency_id.rounding,
+                rounding_method: "round_globally",
+                product: baseLine.product_id,
+                product_uom: baseLine.product_uom_id,
+                special_mode,
+                filter_tax_function: baseLine.filter_tax_function,
+            }
+        );
+        if (baseLine.tax_ids.length === 0) {
+            return taxesComputation.total_excluded; // No tax, return the price as is.
+        }
+        return baseLine.tax_ids[0].price_include
+            ? taxesComputation.total_included
+            : taxesComputation.total_excluded;
+    }
+
+    getQuantityFromDisplayPrice(price) {
+        const unitDisplayPrice =
+            this.config.iface_tax_included === "total"
+                ? this.unitPrices.total_included
+                : this.unitPrices.total_excluded;
+        return unitDisplayPrice ? price / this.order_id.orderSign / unitDisplayPrice : 0;
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */

@@ -276,10 +276,13 @@ export class OrderSummary extends Component {
 
     async setLinePrice(line, price) {
         line.price_type = "manual";
+        const parsedPrice = typeof price === "number" ? price : parseFloat(price);
+
         if (line.product_id.to_weight) {
-            const val = line.price_unit ? parseFloat(price) / line.price_unit : 0;
+            const val = line.getQuantityFromDisplayPrice(parsedPrice);
             line.setQuantity(val, false);
         } else {
+            price = line.getUnitPriceFromDisplayPrice(parsedPrice);
             line.setUnitPrice(price);
         }
     }
