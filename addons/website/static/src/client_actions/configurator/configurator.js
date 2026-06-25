@@ -421,18 +421,20 @@ export class DescriptionScreen extends Component {
                 .slice(0, limit)
                 .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         } else {
-            let synonymMatches = this.state.industries.filter((val, index) => {
+            let synonymMatches = this.state.industries.flatMap((val) => {
                 // To match, every term should be contained in the synonym
-                for (const candidate of [...(val.synonyms || "").split(/[|,]/)]) {
+                for (const synonym of (val.synonyms || "").split(/[|,]/)) {
                     // Check if industry label has already matched
+                    const label = synonym.trim();
                     if (
-                        terms.every((term) => candidate.toLowerCase().includes(term)) &&
+                        label &&
+                        terms.every((term) => label.toLowerCase().includes(term)) &&
                         !matches.includes(val)
                     ) {
-                        return true;
+                        return [{ ...val, label }];
                     }
                 }
-                return false;
+                return [];
             });
             synonymMatches = synonymMatches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
             matches = matches.concat(synonymMatches);
