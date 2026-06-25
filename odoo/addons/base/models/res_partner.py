@@ -1333,6 +1333,8 @@ class ResPartner(models.Model):
 
     def _get_additional_identifier(self, identifier_type):
         """Convenience getter for an entry of the JSON."""
+        if not self:
+            return None
         self.ensure_one()
         return (self.additional_identifiers or {}).get(identifier_type)
 
