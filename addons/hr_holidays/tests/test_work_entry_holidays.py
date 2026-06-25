@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
-from odoo.fields import Date
+from odoo.fields import Command, Date
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 from odoo.addons.hr_holidays.tests.common import TestHolidayContract
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -33,7 +33,12 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'wage': 1000,
         })
 
-        cls.work_entry_type.requires_allocation = False
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Extra attendance',
+            'code': 'WORKTEST201',
+            'count_as': 'working_time',
+            'requires_allocation': False,
+        })
 
         cls.work_entry_type_remote = cls.env['hr.work.entry.type'].create({
             'name': 'Remote Work',
@@ -69,6 +74,23 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'company_id': cls.external_company.id,
             'date_version': cls.start.date() - relativedelta(days=5),
             'contract_date_start': cls.start.date() - relativedelta(days=5),
+        })
+        cls.duration_based_calendar = cls.env["resource.calendar"].create({
+            "name": "Duration based",
+            "attendance_ids": [
+                Command.clear(),
+                *[Command.create({'duration_hours': 8, "dayofweek": str(i)}) for i in range(7)],
+            ],
+        })
+        cls.mixed_duration_and_fixed_calendar = cls.env["resource.calendar"].create({
+            "name": "Mixed Duration and Fixed",
+            "attendance_ids": [
+                Command.clear(),
+                Command.create({"duration_hours": 8, "dayofweek": "0"}),
+                Command.create({"duration_hours": 8, "dayofweek": "1"}),
+                Command.create({"hour_from": 8, "hour_to": 11, "dayofweek": "2"}),
+                Command.create({"hour_from": 13, "hour_to": 18, "dayofweek": "2"}),
+            ],
         })
 
     def test_time_week_leave_work_entry(self):
@@ -247,6 +269,319 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertTrue(all(vals['work_entry_type_id'] in [self.work_entry_type_leave, self.half_day_work_entry_type] for vals in leave_work_entries))
         self.assertEqual(8.0, next(vals for vals in leave_work_entries if vals['date'] == date(2025, 11, 27))['duration'])
         self.assertEqual(4.0, next(vals for vals in leave_work_entries if vals['date'] == date(2025, 11, 28))['duration'])
+
+    def test_work_entries_duration_based_leave_across_multiple_days(self):
+        """
+        Verify work entry generation for a multi-day hour-based leave on a duration-based calendar.
+
+        A leave from Monday 18:00 to Wednesday 03:00 should generate:
+        - a 6h leave work entry on Monday,
+        - an 8h leave work entry on Tuesday,
+        - a 3h leave work entry on Wednesday.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Duration Based Employee',
+            'wage': 5000.0,
+            'date_version': Date.to_date('2018-01-01'),
+            'contract_date_start': Date.to_date('2018-01-01'),
+            'contract_date_end': Date.today() + relativedelta(years=2),
+            'resource_calendar_id': self.duration_based_calendar.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Multi-day Leave',
+            'employee_id': employee.id,
+            'work_entry_type_id': self.hours_work_entry_type.id,
+            'request_date_from': date(2025, 11, 3),  # Monday, 18:00
+            'request_hour_from': 18,
+            'request_date_to': date(2025, 11, 5),  # Wednesday, 03:00
+            'request_hour_to': 3,
+        })
+        self.assertAlmostEqual(leave.number_of_hours, 17)
+        leave.action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+
+        leave_work_entries = {
+            vals['date']: vals for vals in work_entries_vals
+            if vals['employee_id'] == employee and vals['work_entry_type_id'] == self.hours_work_entry_type
+        }
+        self.assertAlmostEqual(6.0, leave_work_entries[date(2025, 11, 3)]['duration'])
+        self.assertAlmostEqual(8.0, leave_work_entries[date(2025, 11, 4)]['duration'])
+        self.assertAlmostEqual(3.0, leave_work_entries[date(2025, 11, 5)]['duration'])
+
+    def test_work_entries_duration_based_leave_across_multiple_days_mixed_calendar(self):
+        """
+        Verify work entry generation for a multi-day hour-based leave on a mixed calendar.
+
+        A leave from Monday 18:00 to Wednesday 15:00 should generate:
+        - a 6h leave work entry on Monday,
+        - an 8h leave work entry on Tuesday,
+        - a 5h leave work entry on Wednesday.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Mixed Calendar Employee',
+            'wage': 5000.0,
+            'date_version': Date.to_date('2018-01-01'),
+            'contract_date_start': Date.to_date('2018-01-01'),
+            'contract_date_end': Date.today() + relativedelta(years=2),
+            'resource_calendar_id': self.mixed_duration_and_fixed_calendar.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Multi-day Leave',
+            'employee_id': employee.id,
+            'work_entry_type_id': self.hours_work_entry_type.id,
+            'request_date_from': date(2025, 11, 3),  # Monday, 18:00
+            'request_hour_from': 18,
+            'request_date_to': date(2025, 11, 5),  # Wednesday, 15:00
+            'request_hour_to': 15,
+        })
+        self.assertAlmostEqual(leave.number_of_hours, 19)
+        leave.action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        leave_work_entries = {
+            vals['date']: vals for vals in work_entries_vals
+            if vals['employee_id'] == employee and vals['work_entry_type_id'] == self.hours_work_entry_type
+        }
+        self.assertAlmostEqual(6.0, leave_work_entries[date(2025, 11, 3)]['duration'])
+        self.assertEqual(8.0, leave_work_entries[date(2025, 11, 4)]['duration'])
+        self.assertEqual(5.0, leave_work_entries[date(2025, 11, 5)]['duration'])
+
+    def test_work_entries_overlap_half_day_leaves_duration_based(self):
+        """
+        Verify work entry generation for overlapping half-day leaves on a duration-based calendar.
+
+        A leave from Thursday AM to Friday AM should generate:
+        - a full-day leave work entry on Thursday (8h),
+        - a half-day leave work entry on Friday morning (4h),
+        - a half-day attendance work entry on Friday afternoon (4h).
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Duration Based Employee',
+            'wage': 5000.0,
+            'date_version': Date.to_date('2018-01-01'),
+            'resource_calendar_id': self.duration_based_calendar.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Half-Day Leave',
+            'employee_id': employee.id,
+            'request_date_from': date(2025, 11, 27),
+            'request_date_from_period': 'am',
+            'request_date_to': date(2025, 11, 28),
+            'request_date_to_period': 'am',
+            'work_entry_type_id': self.half_day_work_entry_type.id,
+        })
+        leave.action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        work_entries_vals = [
+            vals for vals in work_entries_vals
+            if vals['employee_id'] == employee
+            and vals['date'] >= date(2025, 11, 27)
+            and vals['date'] <= date(2025, 11, 28)
+        ]
+
+        leave_work_entries = {vals['date']: vals for vals in work_entries_vals if vals['work_entry_type_id'] == self.half_day_work_entry_type}
+        self.assertEqual(2, len(leave_work_entries))
+        self.assertEqual(8.0, leave_work_entries[date(2025, 11, 27)]['duration'])
+        self.assertEqual(4.0, leave_work_entries[date(2025, 11, 28)]['duration'])
+
+        attendance_work_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'] != self.half_day_work_entry_type]
+        self.assertEqual(1, len(attendance_work_entries), "Friday afternoon should still be worked")
+        self.assertEqual(date(2025, 11, 28), attendance_work_entries[0]['date'])
+        self.assertEqual(4.0, attendance_work_entries[0]['duration'])
+
+    def test_work_entries_overlap_half_day_leaves_mixed_calendar(self):
+        """
+        Verify work entry generation for overlapping half-day leaves on a mixed calendar.
+
+        A leave from Tuesday AM to Wednesday AM should generate:
+        - a full-day leave work entry on Tuesday (8h),
+        - a half-day leave work entry on Wednesday morning (3h),
+        - a half-day attendance work entry on Wednesday afternoon (5h).
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Mixed Calendar Employee',
+            'wage': 5000.0,
+            'date_version': Date.to_date('2018-01-01'),
+            'resource_calendar_id': self.mixed_duration_and_fixed_calendar.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Half-Day Leave',
+            'employee_id': employee.id,
+            'request_date_from': date(2025, 11, 4),  # Tuesday
+            'request_date_from_period': 'am',
+            'request_date_to': date(2025, 11, 5),  # Wednesday
+            'request_date_to_period': 'am',
+            'work_entry_type_id': self.half_day_work_entry_type.id,
+        })
+        leave.action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        work_entries_vals = [
+            vals for vals in work_entries_vals
+            if vals['employee_id'] == employee
+            and vals['date'] >= date(2025, 11, 4)
+            and vals['date'] <= date(2025, 11, 5)
+        ]
+
+        leave_work_entries = {vals['date']: vals for vals in work_entries_vals if vals['work_entry_type_id'] == self.half_day_work_entry_type}
+        self.assertEqual(2, len(leave_work_entries))
+        self.assertEqual(8.0, leave_work_entries[date(2025, 11, 4)]['duration'])
+        self.assertEqual(3.0, leave_work_entries[date(2025, 11, 5)]['duration'])
+
+        attendance_work_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'] != self.half_day_work_entry_type]
+        self.assertEqual(1, len(attendance_work_entries), "Wednesday afternoon should still be worked")
+        self.assertEqual(date(2025, 11, 5), attendance_work_entries[0]['date'])
+        self.assertEqual(5.0, attendance_work_entries[0]['duration'])
+
+    def test_work_entries_worked_leave_over_lunch_break_mixed_calendar(self):
+        """
+        Ensures worked leave overlapping a regular leave is fully swallowed on duration-based calendar days,
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Mixed Calendar Employee',
+            'wage': 5000.0,
+            'date_version': Date.to_date('2018-01-01'),
+            'resource_calendar_id': self.mixed_duration_and_fixed_calendar.id,
+        })
+
+        self.work_entry_type.request_unit = 'hour'
+        self.work_entry_type.unit_of_measure = 'hour'
+        self.work_entry_type.allow_request_on_top = True
+
+        self.env['hr.leave'].create([
+            {
+                'name': 'Days off',
+                'employee_id': employee.id,
+                'work_entry_type_id': self.hours_work_entry_type.id,
+                'request_date_from': date(2025, 11, 4),
+                'request_hour_from': 0,
+                'request_date_to': date(2025, 11, 5),
+                'request_hour_to': 18,
+            },
+            {
+                'name': 'Worked through the absense',
+                'employee_id': employee.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'request_date_from': date(2025, 11, 4),
+                'request_hour_from': 9,
+                'request_date_to': date(2025, 11, 5),
+                'request_hour_to': 13,
+            },
+        ]).action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        worked_entries = [
+            vals for vals in work_entries_vals
+            if vals['employee_id'] == employee and vals['work_entry_type_id'] == self.work_entry_type
+        ]
+
+        tuesday_hours = sum(vals['duration'] for vals in worked_entries if vals['date'] == date(2025, 11, 4))
+        self.assertEqual(tuesday_hours, 0.0)
+
+    def test_work_entries_multi_day_half_day_leave_mixed_calendar_full_fixed_day(self):
+        """
+        A half-day leave from Tuesday PM to Wednesday PM on a mixed calendar
+        (Tuesday duration-based, Wednesday fixed 08:00-11:00 / 13:00-18:00) should generate:
+        - a 4h leave work entry on Tuesday,
+        - an 8h leave work entry on Wednesday (not 8h per fixed attendance).
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Mixed Calendar Employee',
+            'wage': 5000.0,
+            'date_version': Date.to_date('2018-01-01'),
+            'resource_calendar_id': self.mixed_duration_and_fixed_calendar.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Half-Day Leave',
+            'employee_id': employee.id,
+            'request_date_from': date(2025, 11, 4),  # Tuesday
+            'request_date_from_period': 'pm',
+            'request_date_to': date(2025, 11, 5),  # Wednesday
+            'request_date_to_period': 'pm',
+            'work_entry_type_id': self.half_day_work_entry_type.id,
+        })
+        self.assertAlmostEqual(leave.number_of_days, 1.5)
+        self.assertAlmostEqual(leave.number_of_hours, 12)
+        leave.action_approve()
+
+        work_entries_vals = employee.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        leave_work_entries = {
+            vals['date']: vals for vals in work_entries_vals
+            if vals['employee_id'] == employee and vals['work_entry_type_id'] == self.half_day_work_entry_type
+        }
+        self.assertEqual(4.0, leave_work_entries[date(2025, 11, 4)]['duration'])
+        self.assertEqual(8.0, leave_work_entries[date(2025, 11, 5)]['duration'])
+
+    def test_multi_day_half_day_leave_duration_based_public_holiday_timezone(self):
+        """
+        A public holiday on Wednesday (in Europe/Brussels) starts on Tuesday 23:00 UTC.
+        It must only remove Wednesday from a Tuesday PM -> Thursday AM half-day leave,
+        not Tuesday as well.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Duration Based Employee',
+            'wage': 5000.0,
+            'tz': 'Europe/Brussels',
+            'date_version': Date.to_date('2018-01-01'),
+            'resource_calendar_id': self.duration_based_calendar.id,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': self.duration_based_calendar.id,
+            'date_from': datetime(2025, 11, 11, 23, 0),  # Wednesday 00:00 in Brussels
+            'date_to': datetime(2025, 11, 12, 22, 59, 59),  # Wednesday 23:59:59 in Brussels
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Half-Day Leave',
+            'employee_id': employee.id,
+            'request_date_from': date(2025, 11, 11),  # Tuesday
+            'request_date_from_period': 'pm',
+            'request_date_to': date(2025, 11, 13),  # Thursday
+            'request_date_to_period': 'am',
+            'work_entry_type_id': self.half_day_work_entry_type.id,
+        })
+        self.assertAlmostEqual(leave.number_of_days, 1)
+        self.assertAlmostEqual(leave.number_of_hours, 8)
+
+    def test_multi_day_half_day_leave_duration_based_working_time_calendar_leave(self):
+        """
+        A global calendar leave counted as working time (e.g. a company training day)
+        is not a public holiday: it must not be removed from a half-day leave duration.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Duration Based Employee',
+            'wage': 5000.0,
+            'tz': 'Europe/Brussels',
+            'date_version': Date.to_date('2018-01-01'),
+            'resource_calendar_id': self.duration_based_calendar.id,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Company Training',
+            'calendar_id': self.duration_based_calendar.id,
+            'count_as': 'working_time',
+            'date_from': datetime(2025, 11, 12, 7, 0),
+            'date_to': datetime(2025, 11, 12, 16, 0),
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Half-Day Leave',
+            'employee_id': employee.id,
+            'request_date_from': date(2025, 11, 11),  # Tuesday
+            'request_date_from_period': 'pm',
+            'request_date_to': date(2025, 11, 13),  # Thursday
+            'request_date_to_period': 'am',
+            'work_entry_type_id': self.half_day_work_entry_type.id,
+        })
+        self.assertAlmostEqual(leave.number_of_days, 2)
+        self.assertAlmostEqual(leave.number_of_hours, 16)
 
     def test_work_entries_overlap_hours_leaves(self):
         """Test that hour-based leaves correctly split a single day's work entry.
