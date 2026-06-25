@@ -373,11 +373,6 @@
                             <field name="display_name" invisible="not work_entry_type_id"/>
                         </div>
                         <group name="col_left" class="m-0">
-                            <field name="employee_id"
-                                invisible="not context.get('is_management_related', False)"
-                                groups="hr_holidays.group_hr_holidays_responsible"
-                                widget="many2one_avatar_employee"
-                                readonly="not context.get('is_new_record', False)"/>
                             <label for="request_date_from" string="Dates"/>
                             <div id="full_date" class="o_row">
                                 <field
@@ -595,9 +590,6 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='title']" position="attributes">
                 <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//group[@name='col_left']/field[@name='employee_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//group[@name='col_left']/*[1]" position="before">
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
@@ -855,7 +847,6 @@
             'search_default_waiting_for_me_manager': 2,
             'search_default_current_year': 3,
             'hide_employee_name': 1,
-            'is_management_related': True,
             }</field>
         <field name="domain">[('employee_id.company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
