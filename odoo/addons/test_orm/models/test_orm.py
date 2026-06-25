@@ -141,6 +141,7 @@ class TestOrmMessage(models.Model):
         string='Discussion Properties',
         definition='discussion.attributes_definition',
     )
+    length = fields.Integer(compute_sql='_compute_sql_length', compute_sudo=True, store=False)
 
     @api.depends('discussion.messages.important')
     def _compute_has_important_sibling(self):
@@ -209,6 +210,9 @@ class TestOrmMessage(models.Model):
             message.double_size = 0
             size = message.size
             message.double_size = message.double_size + size
+
+    def _compute_sql_length(self, table):
+        return SQL("length(%(col_name)s)", col_name=table.name)
 
     @api.depends('author', 'author.partner_id')
     def _compute_author_partner(self):

@@ -10,7 +10,7 @@ class TestDefaultView(common.TransactionCase):
     def test_default_form_view(self):
         self.assertEqual(
             etree.tostring(self.env['test_orm.message']._get_default_form_view()),
-            b'<form><sheet string="Test ORM Message"><group><group><field name="discussion"/></group></group><group><field name="body"/></group><group><group><field name="author"/><field name="size"/><field name="discussion_name"/><field name="important"/><field name="priority"/><field name="has_important_sibling"/></group><group><field name="name"/><field name="double_size"/><field name="author_partner"/><field name="label"/><field name="active"/><field name="attributes"/></group></group><group><separator/></group></sheet></form>',
+            b'<form><sheet string="Test ORM Message"><group><group><field name="discussion"/></group></group><group><field name="body"/></group><group><group><field name="author"/><field name="size"/><field name="discussion_name"/><field name="important"/><field name="priority"/><field name="has_important_sibling"/><field name="length"/></group><group><field name="name"/><field name="double_size"/><field name="author_partner"/><field name="label"/><field name="active"/><field name="attributes"/></group></group><group><separator/></group></sheet></form>',
         )
         self.assertEqual(
             etree.tostring(self.env['test_orm.creativework.edition']._get_default_form_view()),

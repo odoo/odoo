@@ -338,6 +338,20 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         cat.invalidate_recordset()
         self.assertFalse(cat.dummy)
 
+    def test_10_non_stored_compute_sql(self):
+        field = self.env['test_orm.message']._fields['length']
+        self.assertFalse(field.store)
+        self.assertFalse(field.compute)
+        self.assertFalse(field.inverse)
+
+        # why does it fail with search?
+        for message in self.env['test_orm.message'].search_fetch([], ['id', 'length']):
+            self.assertEqual(len(message.name), message.length)
+
+        all_name_lengths_sorted = sorted(self.env['test_orm.message'].search([]).mapped(lambda m: len(m.name)), reverse=True)
+        all_lengths_sorted = self.env['test_orm.message'].search([], order='length DESC').mapped('length')
+        self.assertEqual(all_name_lengths_sorted, all_lengths_sorted)
+
     def test_11_stored(self):
         """ test stored fields """
         def check_stored(disc):

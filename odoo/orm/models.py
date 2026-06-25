@@ -3148,7 +3148,7 @@ class BaseModel(metaclass=MetaModel):
             if ignore_when_in_cache and not any(field._cache_missing_ids(self)):
                 # field is already in cache: don't fetch it
                 continue
-            if field.store:
+            if field.store or field.compute_sql:
                 fields_to_fetch.append(field)
             else:
                 # optimization: fetch field dependencies
