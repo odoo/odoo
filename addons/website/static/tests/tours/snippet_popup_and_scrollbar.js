@@ -46,18 +46,9 @@ function toggleBackdrop(snippet) {
     return changeOption(`${snippet}`, "[data-action-id='setBackdrop'] .form-check-input");
 }
 
-const scrollIntoView = (selector) => ({
-    content: `Scroll into view to make sure snippet controls are visible`,
-    trigger: `:iframe ${selector}`,
-    run() {
-        this.anchor.scrollIntoView();
-    },
-});
-
 registerWebsitePreviewTour(
     "snippet_popup_and_scrollbar",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -153,7 +144,7 @@ registerWebsitePreviewTour(
         checkScrollbar(true),
         {
             content: "Open the Cookie Bar.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:has(.fa-eye-slash)",
             run: "click",
         },
         goBackToBlocks(),
@@ -168,6 +159,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
             run: "click",
         },
+        checkScrollbar(true),
         {
             trigger: ":iframe:not(:has(.o_loading_screen))",
         },
@@ -182,20 +174,41 @@ registerWebsitePreviewTour(
                 ".o_customize_tab .options-container[data-container-title='Media List'] .oe_snippet_clone",
             run: "click",
         },
+        {
+            trigger: ":iframe #website_cookies_bar .modal-content:has(.s_media_list:count(2))",
+        },
         checkScrollbar(false),
         {
-            content: "Select the Media List snippet in the Cookies Bar.",
+            content: "Select the first Media List snippet in the Cookies Bar.",
             trigger: ":iframe #website_cookies_bar .modal-content .s_media_list",
             run: "click",
         },
-        scrollIntoView("#website_cookies_bar .s_media_list_item:last-child"),
         {
             content: "Remove the first Media List snippet in the Cookies Bar.",
             trigger:
                 ".o_customize_tab [data-container-title='Media List'] button.oe_snippet_remove",
             run: "click",
         },
-        scrollIntoView("#website_cookies_bar .s_media_list_item:last-child"),
+        {
+            trigger: ":iframe #website_cookies_bar .modal-content:has(.s_media_list:count(1))",
+        },
+        {
+            content: "Trick to change sidebar menu",
+            trigger: ":iframe #website_cookies_bar .modal-content .s_media_list .s_media_list_item",
+            run: "click",
+        },
+        {
+            content: "Check the sidebar menu has changed",
+            trigger: ".o-website-builder_sidebar:has([data-container-title='Media item'])",
+        },
+        {
+            content: "Select the second Media List snippet in the Cookies Bar.",
+            trigger: ":iframe #website_cookies_bar .modal-content .s_media_list",
+            run: "click",
+        },
+        {
+            trigger: ".o-website-builder_sidebar:not(:has([data-container-title='Media item']))",
+        },
         {
             content: "Remove the second Media List snippet in the Cookies Bar.",
             trigger:
