@@ -237,6 +237,10 @@ class ResCompany(models.Model):
             return uninstalled_modules.button_immediate_install()
         return is_ready_and_not_test
 
+    def _check_existing_companies_needs_l10n(self):
+        self.ensure_one()
+        return not self.country_id
+
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         delegated_fnames = set(self._get_company_root_delegated_field_names())
@@ -353,7 +357,7 @@ class ResCompany(models.Model):
 
         companies_needs_l10n = (
             vals.get('country_id')
-            and self.filtered(lambda company: not company.country_id)
+            and self.filtered(lambda company: company._check_existing_companies_needs_l10n())
         ) or self.browse()
         if not invalidation_fields.isdisjoint(vals):
             self.env.registry.clear_cache()
