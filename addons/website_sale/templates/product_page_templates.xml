@@ -26,8 +26,8 @@
         <t t-call="website.layout" additional_title="product.name">
             <div
                 id="wrap"
-                t-attf-class="o_wsale_product_page {{(website.shop_border_color or website.shop_border_width) and 'o_wsale_custom_border'}}"
-                t-attf-style="--o-wsale-border-color: {{website.shop_border_color}}; --o-wsale-border-width: {{website.shop_border_width}}"
+                t-attf-class="o_wsale_product_page {{website.shop_border_color and 'o_wsale_custom_border_color'}} {{website.shop_border_width and 'o_wsale_custom_border_width'}}"
+                t-attf-style="{{website.shop_border_color and '--o-wsale-border-color:' + website.shop_border_color + ';' or ''}} {{website.shop_border_width and '--o-wsale-border-width:' + website.shop_border_width + ';' or ''}}"
                 t-att-data-has-available-uoms="has_available_uoms"
             >
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="Drag blocks here to add them on all products"/>

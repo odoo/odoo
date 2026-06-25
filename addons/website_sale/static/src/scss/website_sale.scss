@@ -5,11 +5,14 @@
     // Set the default border width to replace SCSS var with CSS
     --border-width: #{$border-width};
 
-    .o_wsale_custom_border {
+    .o_wsale_custom_border_color {
         --o-border-color: var(--o-wsale-border-color);
         --border-color: var(--o-wsale-border-color);
         --o-wsale-card-border-color: var(--o-wsale-border-color);
-        --border-width: var(--o-wsale-border-width, #{$border-width});
+    }
+
+    .o_wsale_custom_border_width {
+        --border-width: var(--o-wsale-border-width);
 
         .accordion {
             --accordion-border-width: var(--border-width);
@@ -618,10 +621,10 @@
         }
 
         &.o_wsale_page_contained {
-            --o-wsale-topbar-border-width: 0 0 #{$border-width} 0;
+            --o-wsale-topbar-border-width: 0 0 var(--border-width) 0;
 
             @include media-breakpoint-up(sm) {
-                --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} #{$border-width};
+                --o-wsale-topbar-border-width: 0 var(--border-width) var(--border-width) var(--border-width);
             }
 
             &:where(:not(.o_wsale_has_sidebar)) {
@@ -862,15 +865,15 @@
 
         &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_design_grid)) {
             &.o_wsale_page_contained .oe_product_cart {
-                --o-wsale-card-border-width: 0 #{$border-width $border-width $border-width};
+                --o-wsale-card-border-width: 0 var(--border-width) var(--border-width) var(--border-width);
 
                 @include media-breakpoint-up(lg) {
-                    --o-wsale-card-border-width: 0 #{$border-width $border-width} 0;
+                    --o-wsale-card-border-width: 0 var(--border-width) var(--border-width) 0;
                 }
             }
 
             &.o_wsale_page_fluid .oe_product_cart {
-                --o-wsale-card-border-width: 0 0 #{$border-width};
+                --o-wsale-card-border-width: 0 0 #{$border-width} ;
                 --o-wsale-card-padding: calc(var(--o-wsale-products-grid-gap-y) * 0.5) 0 calc(var(--o-wsale-products-grid-gap-y) * 0.5) calc(var(--o-wsale-products-grid-gap, 16px) * 0.5);
             }
 
@@ -925,7 +928,7 @@
                         &:before {
                             @include o-position-absolute(0, auto, 0);
                             transform: translateX(calc(var(--_line-gap) * -1));
-                            border-left: $border-width solid $border-color;
+                            border-left: var(--border-width) solid $border-color;
                             content: "";
                         }
                     }

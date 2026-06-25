@@ -203,11 +203,11 @@
 .wishlist-section {
     &:where(:has(.o_wsale_products_opt_design_grid)) {
         .o_wsale_products_opt_design_grid {
-            border-left: $border-width solid $border-color;
+            border-left: var(--border-width) solid var(--border-color);
         }
         .o_wishlist_products_header {
             padding: 0 $container-padding-x * 0.5;
-            border: $border-width solid $border-color;
+            border: var(--border-width) solid var(--border-color);
             border-top: 0;
         }
     }

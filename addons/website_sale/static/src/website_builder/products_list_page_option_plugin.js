@@ -78,8 +78,15 @@ export class SetBorderColor extends PreviewableWebsiteConfigAction {
     static id = "setBorderColor";
 
     async apply({ editingElement: shopContainerEl, isPreviewing, params, value }) {
-        await super.apply({ editingElement: shopContainerEl, isPreviewing, params, value });
-        shopContainerEl.style.setProperty("--o-wsale-border-color", value);
+        // The reset button applies an empty value: treat it as a removal so the
+        // marker class doesn't linger with an empty --o-wsale-border-color (which
+        // would resolve --border-color: var(--o-wsale-border-color) to nothing).
+        if (!value) {
+            this.clean({ editingElement: shopContainerEl, isPreviewing, params });
+        } else {
+            await super.apply({ editingElement: shopContainerEl, isPreviewing, params, value });
+            shopContainerEl.style.setProperty("--o-wsale-border-color", value);
+        }
 
         if (!isPreviewing) {
             await rpc("/shop/config/website", { 'shop_border_color': value });
@@ -114,9 +121,10 @@ export class SetBorderWidth extends PreviewableWebsiteConfigAction {
         shopContainerEl.style.removeProperty("--o-wsale-border-width");
     }
 
-    // so the input shows the currently-applied width when re-opened
+    // so the input shows the currently-applied width when re-opened;
+    // return undefined (not "") when unset so the input's `default` applies
     getValue({ editingElement: shopContainerEl }) {
-        return shopContainerEl.style.getPropertyValue("--o-wsale-border-width");
+        return shopContainerEl.style.getPropertyValue("--o-wsale-border-width") || undefined;
     }
 }
 
