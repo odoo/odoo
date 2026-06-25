@@ -112,7 +112,6 @@ class ResConfigSettings(models.TransientModel):
             values['l10n_cn_baiwang_subscription_status'] = status
         if org_auth_code := response.get('org_auth_code'):
             values['l10n_cn_baiwang_org_auth_code'] = org_auth_code
-            values['l10n_cn_baiwang_subscription_status'] = 'authorized'
 
         if values:
             company.sudo().write(values)

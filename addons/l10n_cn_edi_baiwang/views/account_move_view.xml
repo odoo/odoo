@@ -27,10 +27,10 @@
             </xpath>
 
             <!-- Baiwang E-Fapiao tab in notebook -->
-            <xpath expr="//field[@name='l10n_cn_fapiao']" position="attributes">
+            <xpath expr="//field[@name='fapiao']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//field[@name='l10n_cn_fapiao']" position="after">
+            <xpath expr="//field[@name='fapiao']" position="after">
                 <field name="l10n_cn_baiwang_invoice_type_code" 
                        invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund')"/>
             </xpath>
