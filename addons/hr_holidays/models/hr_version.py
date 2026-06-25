@@ -183,3 +183,13 @@ class HrVersion(models.Model):
                 render_values={'self': new_leave, 'origin': all_new_leave_origin[index]},
                 subtype_xmlid='mail.mt_note',
             )
+
+    def _update_leave_state(self, leave, leaves_state, refuse_leave=False):
+        if leave.id not in leaves_state:
+            leaves_state[leave.id] = leave.state
+        if leave.state not in ['refuse', 'confirm']:
+            if refuse_leave:
+                leave.action_refuse()
+            else:
+                leave.action_back_to_approval()
+        return leaves_state
