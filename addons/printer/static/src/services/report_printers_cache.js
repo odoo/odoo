@@ -19,7 +19,8 @@ function writeToStorage(cache) {
     }
 }
 
-registry.category("services").add("report_printers_cache", {
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
+export const reportPrintersCacheService = {
     dependencies: ["action", "bus_service", "orm", "ui"],
 
     start(env, { action, bus_service: bus, orm, ui }) {
@@ -62,7 +63,9 @@ registry.category("services").add("report_printers_cache", {
 
                 return new Promise((resolve) => {
                     const onPrinterSelected = ({ detail }) => {
-                        if (detail.reportId !== reportId) return;
+                        if (detail.reportId !== reportId) {
+                            return;
+                        }
 
                         const { deviceSettings: newSettings } = detail;
                         if (newSettings) {
@@ -79,4 +82,6 @@ registry.category("services").add("report_printers_cache", {
             },
         };
     },
-});
+};
+
+registry.category("services").add("report_printers_cache", reportPrintersCacheService);
