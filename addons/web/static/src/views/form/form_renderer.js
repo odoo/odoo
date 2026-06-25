@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { render, useRef, useSubEnv } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -16,7 +16,17 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, props, t, xml, proxy } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    props,
+    signal,
+    t,
+    useEffect,
+    xml,
+    proxy,
+} from "@odoo/owl";
 
 export const formRendererProps = {
     archInfo: t.object(),
@@ -65,38 +75,42 @@ export class FormRenderer extends Component {
         const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
-            useLayoutEffect(
-                (record, rootEl) => {
-                    if (!rootEl) {
-                        return;
-                    }
-                    let elementToFocus;
-                    if (record.isNew) {
-                        const focusableSelectors = [
-                            'input[type="text"]',
-                            "textarea",
-                            "[contenteditable]",
-                        ];
-                        for (const id of autofocusFieldIds) {
-                            elementToFocus = rootEl.querySelector(`#${id}`);
-                            if (elementToFocus) {
-                                break;
-                            }
+            const mounted = signal(false);
+            onMounted(() => mounted.set(true));
+            useEffect(() => {
+                if (!mounted()) {
+                    return;
+                }
+                const record = this.props.record;
+                const rootEl = rootRef.el;
+                if (!rootEl) {
+                    return;
+                }
+                let elementToFocus;
+                if (record.isNew) {
+                    const focusableSelectors = [
+                        'input[type="text"]',
+                        "textarea",
+                        "[contenteditable]",
+                    ];
+                    for (const id of autofocusFieldIds) {
+                        elementToFocus = rootEl.querySelector(`#${id}`);
+                        if (elementToFocus) {
+                            break;
                         }
-                        elementToFocus =
-                            elementToFocus ||
-                            rootEl.querySelector(
-                                focusableSelectors
-                                    .map((sel) => `.o_content .o_field_widget ${sel}`)
-                                    .join(", ")
-                            );
                     }
-                    if (elementToFocus) {
-                        elementToFocus.focus();
-                    }
-                },
-                () => [this.props.record, rootRef.el]
-            );
+                    elementToFocus =
+                        elementToFocus ||
+                        rootEl.querySelector(
+                            focusableSelectors
+                                .map((sel) => `.o_content .o_field_widget ${sel}`)
+                                .join(", ")
+                        );
+                }
+                if (elementToFocus) {
+                    elementToFocus.focus();
+                }
+            });
         }
 
         if (this.env.inDialog) {
