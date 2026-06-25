@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import {
     CustomFieldCard
@@ -25,17 +24,17 @@ export class CustomContentKanbanLikeWidget extends Component {
         });
 
         // Initialize the state and update available documents when updating the quotation template.
-        useLayoutEffect((saleOrderTemplate) => {
-            this.updateState();
-        }, () => [this.props.record.data.sale_order_template_id]);
+        // useLayoutEffect((saleOrderTemplate) => {
+        //     this.updateState();
+        // }, () => [this.props.record.data.sale_order_template_id]);
 
         // Make quotation tab readonly on confirmation
-        useLayoutEffect((saleOrderState) => {
-            if (saleOrderState === 'sale') {
-                this.state.readonly = true;
-                this.props.record.save(); // trigger refresh to update form
-            }
-        }, () => [this.props.record.data.state]);
+        // useLayoutEffect((saleOrderState) => {
+        //     if (saleOrderState === 'sale') {
+        //         this.state.readonly = true;
+        //         this.props.record.save(); // trigger refresh to update form
+        //     }
+        // }, () => [this.props.record.data.state]);
 
     }
 
