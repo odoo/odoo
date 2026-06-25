@@ -74,7 +74,10 @@ class ProductReplenish(models.TransientModel):
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
             res['warehouse_id'] = warehouse.id
         if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
-            res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
+            route_domain = self._get_route_domain(product_tmpl_id)
+            if product_tmpl_id.route_ids:
+                route_domain &= Domain('product_ids', '=', product_tmpl_id.id)
+            res['route_id'] = self.env['stock.route'].search(route_domain, limit=1).id
             if not res['route_id'] and product_tmpl_id.route_ids:
                 res["route_id"] = product_tmpl_id.route_ids.filtered(
                     lambda r: r.company_id == self.env.company or not r.company_id
@@ -166,6 +169,4 @@ class ProductReplenish(models.TransientModel):
     def _get_route_domain(self, product_tmpl_id):
         company = product_tmpl_id.company_id or self.env.company
         domain = Domain.AND([self._get_allowed_route_domain(), self.env['stock.route']._check_company_domain(company)])
-        if product_tmpl_id.route_ids:
-            domain &= Domain('product_ids', '=', product_tmpl_id.id)
         return domain
