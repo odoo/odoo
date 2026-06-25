@@ -46,94 +46,84 @@ class ReportCmr(models.AbstractModel):
         }
 
     def _get_pickings_data(self, pickings, kg_uom, m3_uom):
+        def _get_goods_row(package=False, move=False, mls=False):
+            if mls:
+                products = []
+                hs_codes = []
+                for (product, unit), mls in mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
+                    products.append((
+                        sum(mls.mapped('quantity')),
+                        unit.name if unit else False,
+                        product.with_context(lang=primary_lang, display_default_code=False).display_name,
+                        product.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False,
+                    ))
+                    hs_codes.append(product.hs_code if 'hs_code' in product._fields else False)
+                    weight = package.shipping_weight or packages_weight.get(package, 0) if package else (sum(mls.mapped('quantity_product_uom')) * product.weight)
+                    volume = 0.0
+                    if package:
+                        volume = package.package_type_id.packaging_length *\
+                                package.package_type_id.width *\
+                                package.package_type_id.height *\
+                                packages_volume_factor if package.package_type_id else 0.0
+                    else:
+                        volume = (sum(mls.mapped('quantity_product_uom')) * product.volume)
+            else:
+                products = [(
+                    move.quantity,
+                    move.uom_id.name if has_uom_id and move.uom_id else False,
+                    move.product_id.with_context(display_default_code=False).display_name,
+                    move.product_id.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False,
+                )]
+                hs_codes = [move.product_id.hs_code if 'hs_code' in move.product_id._fields else False]
+                weight = move.quantity_product_uom * move.product_id.weight
+                volume = move.quantity_product_uom * move.product_id.volume
+
+            return {
+                'package_name': package.name if package else False,
+                'packing_method': package.package_type_id.name if package and package.package_type_id else False,
+                'products': products,
+                'hs_codes': hs_codes,
+                'weight': kg_uom.round(weight_uom._compute_quantity(weight, kg_uom)),
+                'volume': m3_uom.round(volume * volume_factor),
+            }
+
+        # weight and volume should always be in kg and cubic meter regardless of the system unit
+        weight_uom = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        volume_uom = self.env['product.template']._get_volume_uom_id_from_ir_config_parameter()
+        volume_factor = 1 if volume_uom == m3_uom else 0.028
+        has_uom_id = 'uom_id' in self.env['stock.move.line']._fields
+
+        # to convert package volume dimensions from cubic mm to cubic m
+        packages_volume_factor = 1e-9 if volume_uom == m3_uom else 1
+
         done_pickings = pickings.filtered(lambda p: p.state == 'done')
         done_outermost_packages = done_pickings.package_history_ids.outermost_dest_id
         ongoing_outermost_packages = (pickings - done_pickings).move_line_ids.result_package_id.outermost_package_id
-
         packageless_moves = pickings.move_ids.filtered(lambda m: not m.package_ids)
         packageless_mls = pickings.move_line_ids.filtered(lambda ml: not ml.result_package_id and ml.move_id not in packageless_moves)
-        has_uom_id = 'uom_id' in self.env['stock.move.line']._fields
+
+        packages_weight = done_outermost_packages._get_weight()
+        packages_weight.update(ongoing_outermost_packages._get_weight(pickings.ids))
 
         consignee_id = pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id
         en_lang = self.env['res.lang'].search([('code', '=like', 'en_%'), ('active', '=', True)], limit=1)
         primary_lang = en_lang.code if en_lang else (pickings[0].company_id.partner_id.lang or 'en_US')
         secondary_lang = consignee_id.lang or 'en_US'
 
-        packages_weight = done_outermost_packages._get_weight()
-        packages_weight.update(ongoing_outermost_packages._get_weight(pickings.ids))
-
-        # weight and volume should always be in kg and cubic meter regardless of the system unit
-        weight_uom = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        volume_uom = self.env['product.template']._get_volume_uom_id_from_ir_config_parameter()
-        volume_factor = 1 if volume_uom == m3_uom else 0.028
-
-        # to convert package volume dimensions from cubic mm to cubic m
-        packages_volume_factor = 1e-9 if volume_uom == m3_uom else 1
-
         goods_rows = []
+        for package in done_outermost_packages:
+            mls = done_pickings.move_line_ids.filtered(lambda ml: ml.package_history_id.outermost_dest_id == package)
+            goods_rows.append(_get_goods_row(package, False, mls))
 
-        for package in (ongoing_outermost_packages | done_outermost_packages):
-            if package in done_outermost_packages:
-                package_mls = done_pickings.move_line_ids.filtered(lambda ml: ml.package_history_id.outermost_dest_id == package)
-            else:
-                package_mls = package.move_line_ids.filtered(lambda ml: ml.picking_id.id in pickings.ids)
-
-            products = []
-            hs_codes = []
-            for (prod, unit), mls in package_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
-                products.append(
-                    sum(mls.mapped('quantity')),
-                    unit.name if unit else False,
-                    prod.with_context(lang=primary_lang, display_default_code=False).display_name,
-                    prod.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False
-                )
-                hs_codes.append(prod.hs_code if 'hs_code' in prod._fields else False)
-
-            package_volume = package.package_type_id.packaging_length *\
-                package.package_type_id.width *\
-                package.package_type_id.height if package.package_type_id else 0.0
-
-            goods_rows.append({
-                'package_name': package.name or False,
-                'packing_method': package.package_type_id.name if package.package_type_id else False,
-                'products': products,
-                'hs_codes': hs_codes,
-                'weight': kg_uom.round(weight_uom._compute_quantity(package.shipping_weight or packages_weight.get(package, 0), kg_uom)),
-                'volume': m3_uom.round(package_volume * packages_volume_factor * volume_factor),
-            })
+        for package in ongoing_outermost_packages:
+            mls = package.move_line_ids.filtered(lambda ml: ml.picking_id.id in pickings.ids)
+            goods_rows.append(_get_goods_row(package, False, mls))
 
         for move in packageless_moves:
-            hs = move.product_id.hs_code if 'hs_code' in move.product_id._fields else False
-            goods_rows.append({
-                'package_name': False,
-                'packing_method': False,
-                'products': [(
-                    move.quantity,
-                    move.uom_id.name if has_uom_id and move.uom_id else False,
-                    move.product_id.with_context(lang=primary_lang, display_default_code=False).display_name,
-                    move.product_id.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False
-                )],
-                'hs_codes': [hs],
-                'weight': kg_uom.round(weight_uom._compute_quantity(move.quantity_product_uom * move.product_id.weight, kg_uom)),
-                'volume': m3_uom.round(move.quantity_product_uom * move.product_id.volume * volume_factor),
-            })
+            goods_rows.append(_get_goods_row(False, move, False))
 
-        for (prod, unit), mls in packageless_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
-            qty = sum(mls.mapped('quantity_product_uom'))
-            hs = prod.hs_code if 'hs_code' in prod._fields else False
-            goods_rows.append({
-                'package_name': False,
-                'packing_method': False,
-                'products': [(
-                    sum(mls.mapped('quantity')),
-                    unit.name if unit else False,
-                    prod.with_context(lang=primary_lang, display_default_code=False).display_name,
-                    prod.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False
-                )],
-                'hs_codes': [hs],
-                'weight': kg_uom.round(weight_uom._compute_quantity(qty * prod.weight, kg_uom)),
-                'volume': m3_uom.round(qty * prod.volume * volume_factor),
-            })
+        for (__, __), mls in packageless_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
+            goods_rows.append(_get_goods_row(False, False, mls))
 
         return {
             'should_compress_goods_rows': len(pickings.move_ids) > 9,
