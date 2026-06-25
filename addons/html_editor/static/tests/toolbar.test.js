@@ -647,6 +647,30 @@ test("toolbar works: change font size correctly when closest block element has a
     expect(fontSizeInputEl).toHaveValue(h1Size);
 });
 
+test("toolbar font size selector reflects heading size after remove format", async () => {
+    const { el } = await setupEditor(`<h2 class="display-3-fs">[heading 2]</h2>`);
+    await expandToolbar();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    await waitFor(".o-we-toolbar");
+    const inputEl = await getIframeInput(
+        ".o-we-toolbar [name='font_size'] iframe.o_font_size_selector_iframe",
+        "input[name='font_size_input']"
+    );
+    expect(inputEl).toHaveValue(getFontSizeFromVar("display-3-font-size"));
+
+    await click(".btn[name='remove_format']");
+    await animationFrame();
+
+    expect(getContent(el)).toBe(`<h2>[heading 2]</h2>`);
+    expect(inputEl).toHaveValue(getFontSizeFromVar("h2-font-size"));
+});
+
 test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
     await expandToolbar();
