@@ -303,12 +303,9 @@ class HrAttendance(models.Model):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
         result = super().write(vals)
         if not self.env.context.get('skip_time_rules') and any(
-            f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id')
+            f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'state')
         ):
-            today = date.today()
-            self.filtered(
-                lambda a: a.state == 'validated' and a.check_in and a.check_in.date() < today
-            ).with_context(source_bounds_from_write=True)._process_time_rules()
+            self._trigger_time_rules(from_write=True)
         return result
 
     def unlink(self):
@@ -694,15 +691,14 @@ class HrAttendance(models.Model):
         """)
 
     @api.model
-    def _cron_process_day_time_rules(self):
+    def _cron_process_day_undertime_rules(self):
         """Daily cron: process day-based time rules for yesterday's validated attendances."""
         yesterday = date.today() - timedelta(days=1)
         start = datetime.combine(yesterday, time.min)
         end = datetime.combine(yesterday, time.max)
         sources = self.sudo().with_context(active_test=False).search([
-            ('check_in', '<=', end),
+            ('check_out', '<=', end),
             ('check_out', '>=', start),
-            ('check_out', '!=', False),
             ('state', '=', 'validated'),
             ('is_time_rule_output', '=', False),
             ('source_attendance_id', '=', False),
@@ -710,7 +706,7 @@ class HrAttendance(models.Model):
         if not sources:
             return
         affected = [(a.employee_id, a.check_in, a.check_out) for a in sources]
-        self._process_time_rules_for(affected, rule_period='day')
+        self._process_time_rules_for(affected, rule_period='day', rule_operator='less_than')
 
     @api.model
     def _cron_process_week_time_rules(self):
@@ -724,9 +720,8 @@ class HrAttendance(models.Model):
         start = datetime.combine(week_start, time.min)
         end = datetime.combine(week_end, time.max)
         sources = self.sudo().with_context(active_test=False).search([
-            ('check_in', '<=', end),
+            ('check_out', '<=', end),
             ('check_out', '>=', start),
-            ('check_out', '!=', False),
             ('state', '=', 'validated'),
             ('is_time_rule_output', '=', False),
             ('source_attendance_id', '=', False),
@@ -736,15 +731,33 @@ class HrAttendance(models.Model):
         affected = [(a.employee_id, a.check_in, a.check_out) for a in sources]
         self._process_time_rules_for(affected, rule_period='week')
 
-    def _process_time_rules(self):
+    def _trigger_time_rules(self, from_write=False):
+        """Apply the full day/week, past/current, exceed/undertime split for validated source attendances."""
+        ctx = {'source_bounds_from_write': True} if from_write else {}
+        today = date.today()
+        validated = self.filtered(lambda a: a.state == 'validated')
+        validated.filtered(
+            lambda a: a.check_out and a.check_out.date() < today
+        ).with_context(**ctx)._process_time_rules(rule_period='day')
+
+        validated.filtered(
+            lambda a: a.check_out and a.check_out.date() >= today
+        ).with_context(**ctx)._process_time_rules(rule_period='day', rule_operator='exceed')
+
+        latest_monday = today - timedelta(days=today.weekday())
+        validated.filtered(
+            lambda a: a.check_out and a.check_out.date() < latest_monday
+        ).with_context(**ctx)._process_time_rules(rule_period='week')
+
+    def _process_time_rules(self, rule_period=None, rule_operator=None):
         """Recompute time rule output attendances for employees/dates affected by self."""
         source = self.filtered(lambda a: not a.is_time_rule_output and a.check_in and a.check_out)
         if not source:
             return
         affected = [(a.employee_id, a.check_in, a.check_out) for a in source]
-        self._process_time_rules_for(affected)
+        self._process_time_rules_for(affected, rule_period, rule_operator)
 
-    def _process_time_rules_for(self, affected, rule_period=None):
+    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None):
         if not affected:
             return
 
@@ -755,6 +768,9 @@ class HrAttendance(models.Model):
         ])
         if not rules:
             return
+
+        if rule_operator:
+            rules = rules.filtered(lambda r: r.threshold_operator == rule_operator)
 
         if rule_period == 'day':
             day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
@@ -912,37 +928,37 @@ class HrAttendance(models.Model):
                     vals['state'] = 'draft' if company.attendance_validation == 'manual_validation' else 'validated'
         res = super().create(vals_list)
         if not self.env.context.get('skip_time_rules'):
-            today = date.today()
-            res.filtered(
-                lambda a: a.state == 'validated' and a.check_in and a.check_in.date() < today
-            )._process_time_rules()
+            res._trigger_time_rules()
         return res
 
     def action_validate(self):
         self.write({'state': 'validated'})
-        today = date.today()
-        self.filtered(
-            lambda a: a.check_out and a.check_in and a.check_in.date() < today
-        )._process_time_rules()
 
     def action_refuse(self):
-        self.write({'state': 'refused'})
+        self.with_context(skip_time_rules=True).write({'state': 'refused'})
         to_cleanup = self.filtered(lambda a: a.check_in and a.check_out and not a.is_time_rule_output and not a.source_attendance_id)
-        if to_cleanup:
-            all_children = to_cleanup.sudo().mapped('overtime_attendance_ids')
-            max_child_co = {}
-            for child in all_children:
-                sid = child.source_attendance_id.id
-                if child.check_out and (sid not in max_child_co or child.check_out > max_child_co[sid]):
-                    max_child_co[sid] = child.check_out
-            all_children.with_context(skip_time_rules=True).unlink()
-            auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
-            for src in to_cleanup.sudo():
-                original_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
-                if not src.active or original_co != src.check_out:
-                    src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
-            affected = [(a.employee_id, a.check_in, a.check_out) for a in to_cleanup]
-            self._process_time_rules_for(affected)
+        if not to_cleanup:
+            return
+        all_children = to_cleanup.sudo().mapped('overtime_attendance_ids')
+        max_child_co = {}
+        for child in all_children:
+            sid = child.source_attendance_id.id
+            if child.check_out and (sid not in max_child_co or child.check_out > max_child_co[sid]):
+                max_child_co[sid] = child.check_out
+        all_children.with_context(skip_time_rules=True).unlink()
+        auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
+        for src in to_cleanup.sudo():
+            original_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
+            if not src.active or original_co != src.check_out:
+                src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
+        today = date.today()
+        latest_monday = today - timedelta(days=today.weekday())
+        affected = [(a.employee_id, a.check_in, a.check_out) for a in to_cleanup]
+        past_day = [(e, ci, co) for e, ci, co in affected if co.date() < today]
+        past_week = [(e, ci, co) for e, ci, co in affected if co.date() < latest_monday]
+        self._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
+        self._process_time_rules_for(affected, rule_period='day', rule_operator='exceed')
+        self._process_time_rules_for(past_week, rule_period='week')
 
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})

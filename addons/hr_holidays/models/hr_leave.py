@@ -1137,10 +1137,7 @@ class HrLeave(models.Model):
         if self.env.context.get('leave_fast_create'):
             holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
         if not self.env.context.get('skip_time_rules'):
-            today = fields.Date.today()
-            past = holidays.filtered(lambda l: not l.is_time_rule_output and l.date_to and l.date_to.date() < today)
-            if past:
-                past._process_time_rules()
+            holidays._trigger_time_rules()
         return holidays
 
     def write(self, vals):
@@ -1204,6 +1201,10 @@ class HrLeave(models.Model):
                 if employee_id:
                     holiday.add_follower(employee_id)
 
+        trigger_fields = {'employee_id', 'date_from', 'date_to', 'work_entry_type_id', 'state'}
+        if not self.env.context.get('skip_time_rules') and trigger_fields.intersection(values):
+            self._trigger_time_rules()
+
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -1232,17 +1233,17 @@ class HrLeave(models.Model):
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         res = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
         if not self.env.context.get('skip_time_rules') and affected:
-            self._process_time_rules_for(affected)
+            self._trigger_time_rules_for_affected(affected)
         return res
 
     @api.model
-    def _cron_process_day_time_rules(self):
+    def _cron_process_day_undertime_rules(self):
         """Daily cron: process day-based time rules for yesterday's validated leaves."""
         yesterday = date.today() - timedelta(days=1)
         start = datetime.combine(yesterday, time.min)
         end = datetime.combine(yesterday, time.max)
         sources = self.sudo().search([
-            ('date_from', '<=', end),
+            ('date_to', '<=', end),
             ('date_to', '>=', start),
             ('state', '=', 'validate'),
             ('time_rule_id', '=', False),
@@ -1250,7 +1251,7 @@ class HrLeave(models.Model):
         if not sources:
             return
         affected = [(l.employee_id, l.date_from, l.date_to) for l in sources]
-        self._process_time_rules_for(affected, rule_period='day')
+        self._process_time_rules_for(affected, rule_period='day', rule_operator='less_than')
 
     @api.model
     def _cron_process_week_time_rules(self):
@@ -1261,7 +1262,7 @@ class HrLeave(models.Model):
         start = datetime.combine(week_start, time.min)
         end = datetime.combine(week_end, time.max)
         sources = self.sudo().search([
-            ('date_from', '<=', end),
+            ('date_to', '<=', end),
             ('date_to', '>=', start),
             ('state', '=', 'validate'),
             ('time_rule_id', '=', False),
@@ -1279,7 +1280,28 @@ class HrLeave(models.Model):
         affected = [(l.employee_id, l.date_from, l.date_to) for l in source]
         self._process_time_rules_for(affected)
 
-    def _process_time_rules_for(self, affected, rule_period=None):
+    def _trigger_time_rules(self):
+        """Apply the full day/week, past/current, exceed/undertime split for validated source leaves."""
+        validated = self.filtered(lambda l: l.state == 'validate' and not l.is_time_rule_output and l.date_from and l.date_to)
+        if not validated:
+            return
+        self._trigger_time_rules_for_affected([(l.employee_id, l.date_from, l.date_to) for l in validated])
+
+    def _trigger_time_rules_for_affected(self, affected):
+        """Apply day/week, past/current, exceed/undertime split for (employee, date_from, date_to) tuples."""
+        if not affected:
+            return
+        today = fields.Date.today()
+        latest_monday = today - timedelta(days=today.weekday())
+        to_date = lambda dt: dt.date() if hasattr(dt, 'date') else dt
+        past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
+        today = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
+        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_monday]
+        self._process_time_rules_for(past_day, rule_period='day')
+        self._process_time_rules_for(today, rule_period='day', rule_operator='exceed')
+        self._process_time_rules_for(past_week, rule_period='week')
+
+    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None):
         """Recompute time rule outputs for the given (employee, date_from, date_to) tuples.
         """
         if not affected:
@@ -1292,6 +1314,9 @@ class HrLeave(models.Model):
         ])
         if not rules:
             return
+
+        if rule_operator:
+            rules = rules.filtered(lambda r: r.threshold_operator == rule_operator)
 
         if rule_period == 'day':
             day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
@@ -1361,17 +1386,38 @@ class HrLeave(models.Model):
             if not all_source_leaves:
                 continue
 
-            # collect max child date_to before deletion so we can restore source date_to
+            is_weekly = bool(rules) and all(r.quantity_period == 'week' for r in rules)
+
             all_children = self.env['hr.leave'].sudo().search([
                 ('source_leave_id', 'in', all_source_leaves.ids),
             ])
-            max_child_dt = {}
-            for child in all_children:
-                sid = child.source_leave_id.id
-                if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
-                    max_child_dt[sid] = child.date_to
 
-            all_children.with_context(skip_time_rules=True).unlink()
+            if is_weekly:
+                # only delete prior weekly-rule outputs; day-rule outputs must be preserved
+                non_weekly = all_children.filtered(lambda l: l.time_rule_id not in rules)
+                (all_children - non_weekly).with_context(skip_time_rules=True).unlink()
+                # day-rule excess outputs may have shrunk source date_to; restore the original
+                # span so weekly totals are computed against the full leave duration
+                max_child_dt = {}
+                for child in non_weekly:
+                    src = child.source_leave_id
+                    if child.date_from > src.date_to:
+                        continue  # deficit child extends past source end — ignore for span restoration
+                    sid = src.id
+                    if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
+                        max_child_dt[sid] = child.date_to
+            else:
+                # collect max child date_to before deletion so we can restore source date_to;
+                # deficit children extend past source.date_to and must not inflate it
+                max_child_dt = {}
+                for child in all_children:
+                    src = child.source_leave_id
+                    if child.date_from > src.date_to:
+                        continue
+                    sid = src.id
+                    if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
+                        max_child_dt[sid] = child.date_to
+                all_children.with_context(skip_time_rules=True).unlink()
 
             modified_sources = self.env['hr.leave']
             for src in all_source_leaves:
@@ -1381,11 +1427,12 @@ class HrLeave(models.Model):
                         'active': True,
                         'date_to': original_dt,
                         'request_date_to': original_dt.date(),
+                        'date_from': src.date_from,
                     })
                     modified_sources |= src
 
             if modified_sources:
-                modified_sources._create_resource_leave()
+                modified_sources.with_context(**auto_ctx)._create_resource_leave()
 
             excess, deficit = rules._evaluate_rules(all_source_leaves, start_dt, end_dt)
             for emp, by_leave in excess.items():
@@ -1700,10 +1747,7 @@ class HrLeave(models.Model):
             self.filtered(lambda holiday: holiday.validation_type != 'no_validation').activity_update()
 
         if not self.env.context.get('skip_time_rules'):
-            today = fields.Date.today()
-            past = self.filtered(lambda l: not l.is_time_rule_output and l.date_to and l.date_to.date() < today)
-            if past:
-                past._process_time_rules()
+            self._trigger_time_rules()
 
         return True
 
@@ -1714,8 +1758,8 @@ class HrLeave(models.Model):
 
         self._notify_manager()
         validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
-        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        validated_holidays.with_context(skip_time_rules=True).write({'state': 'refuse', 'first_approver_id': current_employee.id})
+        (self - validated_holidays).with_context(skip_time_rules=True).write({'state': 'refuse', 'second_approver_id': current_employee.id})
         # Delete the meeting
         self.mapped('meeting_id').write({'active': False})
         # Post a second message, more verbose than the tracking message
@@ -1757,7 +1801,7 @@ class HrLeave(models.Model):
                         'date_to': original_dt,
                         'request_date_to': original_dt.date(),
                     })
-            self._process_time_rules_for(affected)
+            self._trigger_time_rules_for_affected(affected)
         return True
 
     def _notify_manager(self):

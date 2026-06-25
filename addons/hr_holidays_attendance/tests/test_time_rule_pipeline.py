@@ -1939,11 +1939,6 @@ class TestTimeRulePipeline(TransactionCase):
         with freeze_time('2024-01-01 17:06:00'):
             Attendance._cron_auto_check_out()
 
-        # Auto-checkout happened today (Jan 1); time rules are deferred to the next
-        # morning's daily cron, which targets yesterday.
-        with freeze_time('2024-01-02 01:00:00'):
-            Attendance._cron_process_day_time_rules()
-
         output_atts = Attendance.search([
             ('employee_id', '=', self.cal_emp.id),
             ('is_time_rule_output', '=', True),
@@ -2177,3 +2172,588 @@ class TestTimeRuleCronBehavior(TransactionCase):
             )
         finally:
             rule.write({'active': False})
+
+
+@tagged('-at_install', 'post_install', 'work_entry_pipeline')
+class TestTimeRulePipelineLeaves(TransactionCase):
+    """Leave-based time rule pipeline tests.
+
+    Covers create/write/validate/refuse triggers, the past-vs-today day split,
+    current-week deferral for weekly rules, cron methods, and edge cases.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env['hr.time.rule'].search([]).write({'active': False})
+
+        cls.src_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Leave Src (pipeline)', 'code': 'LVSRC',
+            'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+        })
+        cls.out_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Leave Out (pipeline)', 'code': 'LVOUT',
+            'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+        })
+
+        cls.emp = cls.env['hr.employee'].create({
+            'name': 'Leave Pipeline Employee',
+            'tz': 'UTC',
+            'attendance_based': False,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+
+    def _make_leave(self, date_from_dt, date_to_dt, *, state='validate', skip_rules=False, emp=None, wet=None):
+        ctx = dict(leave_fast_create=True, leave_exact_dates=True, leave_skip_state_check=True)
+        if skip_rules:
+            ctx['skip_time_rules'] = True
+        leave = self.env['hr.leave'].with_context(**ctx).sudo().create({
+            'employee_id': (emp or self.emp).id,
+            'work_entry_type_id': (wet or self.src_type).id,
+            'date_from': date_from_dt,
+            'date_to': date_to_dt,
+            'request_date_from': date_from_dt.date(),
+            'request_date_to': date_to_dt.date(),
+            'state': state,
+        })
+        return leave.with_context({})
+
+    def _outputs(self, leave, out_type=None):
+        domain = [('source_leave_id', '=', leave.id)]
+        if out_type:
+            domain.append(('work_entry_type_id', '=', out_type.id))
+        return self.env['hr.leave'].sudo().search(domain)
+
+    def _output_hours(self, leave, out_type=None):
+        return sum((l.date_to - l.date_from).total_seconds() / 3600 for l in self._outputs(leave, out_type))
+
+    def test_past_leave_exceed_creates_output(self):
+        """Validated past leave with exceed rule creates output immediately on create()."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h past
+            self.assertAlmostEqual(self._output_hours(leave), 2.0, places=5,
+                                   msg="6h leave with 4h threshold -> 2h output")
+        finally:
+            rule.write({'active': False})
+
+    def test_past_leave_less_than_creates_output(self):
+        """Validated past leave with less_than rule creates output immediately on create()."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Less than 8h/day',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h past
+            self.assertTrue(self._outputs(leave), "Past leave with less_than rule must produce output")
+        finally:
+            rule.write({'active': False})
+
+    def test_today_leave_exceed_fires_immediately(self):
+        """Today's leave with exceed rule fires immediately; exceed is never deferred."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day (today)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+                self.assertTrue(self._outputs(leave), "Today's exceed leave must fire immediately")
+                self.assertAlmostEqual(self._output_hours(leave), 2.0, places=5)
+        finally:
+            rule.write({'active': False})
+
+    def test_today_leave_less_than_deferred(self):
+        """Today's leave with less_than rule is deferred to the daily cron."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Less than 8h/day (today)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+                self.assertFalse(self._outputs(leave), "Today's less_than leave must be deferred")
+        finally:
+            rule.write({'active': False})
+
+    def test_write_check_out_extended_triggers_reprocess(self):
+        """Extending check_out via write() triggers rule reprocessing for validated attendances."""
+        att_src_wet = self.env['hr.work.entry.type'].create({
+            'name': 'Att Src (write extend)', 'code': 'ATSRCW', 'requires_allocation': False,
+        })
+        ot_type = self.env['hr.work.entry.type'].create({
+            'name': 'Write Extend OT', 'code': 'LVWEXT', 'requires_allocation': False,
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (write extend att)',
+            'working_hours_mode': 'day',
+            'expected_hours': 4,
+            'work_entry_type_id': ot_type.id,
+            'condition_work_entry_type_ids': [att_src_wet.id],
+        })
+        try:
+            att = self.env['hr.attendance'].with_context(skip_time_rules=True).create({
+                'employee_id': self.emp.id,
+                'check_in': datetime(2022, 12, 12, 8),
+                'check_out': datetime(2022, 12, 12, 12),  # 4h, at threshold, no excess
+                'work_entry_type_id': att_src_wet.id,
+                'state': 'validated',
+            })
+            outputs = self.env['hr.attendance'].search([
+                ('source_attendance_id', '=', att.id), ('is_time_rule_output', '=', True),
+            ])
+            self.assertFalse(outputs, "4h at 4h threshold: no excess")
+
+            att.write({'check_out': datetime(2022, 12, 12, 16)})  # extend to 8h
+            outputs = self.env['hr.attendance'].search([
+                ('source_attendance_id', '=', att.id), ('is_time_rule_output', '=', True),
+            ])
+            self.assertAlmostEqual(
+                sum(o.worked_hours for o in outputs), 4.0, places=5,
+                msg="Extended to 8h -> 4h excess output",
+            )
+        finally:
+            rule.write({'active': False})
+
+    def test_write_date_extended_triggers_reprocess(self):
+        """Extending a leave's date_to via write() triggers rule reprocessing."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (write extend)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(
+                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 12), skip_rules=True,  # 4h, no excess
+            )
+            self.assertFalse(self._outputs(leave), "4h at 4h threshold: no excess yet")
+
+            leave.with_context(skip_time_rules=False, leave_exact_dates=True, leave_skip_state_check=True).sudo().write({
+                'date_to': datetime(2022, 12, 12, 16),
+                'request_date_to': date(2022, 12, 12),
+            })
+            self.assertAlmostEqual(self._output_hours(leave), 4.0, places=5,
+                                   msg="Extended to 8h -> 4h excess output")
+        finally:
+            rule.write({'active': False})
+
+    def test_two_leaves_same_day_aggregate(self):
+        """Two leaves for the same employee on the same day are evaluated together.
+
+        Leave A: 2h (08:00-10:00) + Leave B: 3h (10:00-13:00) = 5h total.
+        Rule threshold: exceed 4h/day.
+        Expected: 1h excess attributed to Leave B (the interval that pushed past 4h).
+        """
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day (aggregate)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave_a = self._make_leave(
+                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 10), skip_rules=True,  # 2h
+            )
+            leave_b = self._make_leave(
+                datetime(2022, 12, 12, 10), datetime(2022, 12, 12, 13),  # 3h, triggers rules
+            )
+            self.assertFalse(self._outputs(leave_a), "Leave A (2h) stays under threshold")
+            self.assertAlmostEqual(self._output_hours(leave_b), 1.0, places=5,
+                                   msg="Leave B's last 1h is the excess above 4h threshold")
+        finally:
+            rule.write({'active': False})
+
+    def test_write_state_validate_triggers_rules(self):
+        """Writing state='validate' on a confirmed leave triggers time rule evaluation."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (state write)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(
+                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14), state='confirm',
+            )
+            self.assertFalse(self._outputs(leave), "Confirmed leave has no outputs")
+
+            leave.sudo().with_context(leave_skip_state_check=True).write({'state': 'validate'})
+            self.assertTrue(self._outputs(leave), "write(state='validate') must trigger rules")
+        finally:
+            rule.write({'active': False})
+
+    def test_refuse_clears_output_leaves(self):
+        """Refusing a validated leave removes its time rule output leaves."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (refuse)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+            self.assertTrue(self._outputs(leave), "Output must exist after validation")
+
+            leave.sudo().action_refuse()
+            self.assertFalse(self._outputs(leave), "Refusing leave must clear output leaves")
+        finally:
+            rule.write({'active': False})
+
+    def test_output_leaves_not_reprocessed(self):
+        """Output leaves (is_time_rule_output=True) are excluded from rule re-evaluation."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (no recurse)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id, self.out_type.id],
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+            first_level = self._outputs(leave)
+            self.assertTrue(first_level, "Source leave must produce outputs")
+            for out in first_level:
+                self.assertFalse(
+                    self._outputs(out),
+                    "Output leave must not produce nested outputs",
+                )
+        finally:
+            rule.write({'active': False})
+
+    def test_no_active_rule_no_output(self):
+        """With no active time rules, creating a validated leave produces no output."""
+        leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+        self.assertFalse(self._outputs(leave), "No active rule: no output must be created")
+
+    def test_weekly_rule_past_complete_week_fires(self):
+        """A weekly exceed rule fires for leaves entirely within a past complete ISO week."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 20h',
+            'working_hours_mode': 'week',
+            'threshold_operator': 'exceed',
+            'expected_hours': 20,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            # Mon 2022-12-12 to Fri 2022-12-16 (past complete week): 5 days × 6h = 30h > 20h
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 16, 14))
+            self.assertTrue(self._outputs(leave), "Weekly rule must fire for past complete-week leave")
+        finally:
+            rule.write({'active': False})
+
+    def test_weekly_rule_current_week_deferred(self):
+        """A weekly rule is deferred for leaves ending within the current (incomplete) ISO week."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 20h (deferred)',
+            'working_hours_mode': 'week',
+            'threshold_operator': 'exceed',
+            'expected_hours': 20,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-14'):  # Wednesday inside Mon Dec 12 - Sun Dec 18
+                leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 14, 14))
+                self.assertFalse(self._outputs(leave), "Weekly rule must defer for current-week leave")
+        finally:
+            rule.write({'active': False})
+
+    def test_day_cron_processes_yesterday_undertime(self):
+        """_cron_process_day_undertime_rules() fires less_than day rules for yesterday's leaves."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Less than 8h (day cron)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+                self.assertFalse(self._outputs(leave), "Today's less_than leave deferred")
+
+            with freeze_time('2022-12-13'):
+                self.env['hr.leave']._cron_process_day_undertime_rules()
+
+            self.assertTrue(self._outputs(leave), "Day cron must process yesterday's undertime leave")
+        finally:
+            rule.write({'active': False})
+
+    def test_week_cron_processes_past_week(self):
+        """_cron_process_week_time_rules() fires weekly rules for the just-ended Mon-Sun week."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 20h (week cron)',
+            'working_hours_mode': 'week',
+            'threshold_operator': 'exceed',
+            'expected_hours': 20,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-14'):  # Wednesday, current week Mon Dec 12-Sun Dec 18
+                leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 14, 14))  # ~30h
+                self.assertFalse(self._outputs(leave), "Weekly rule deferred during current week")
+
+            with freeze_time('2022-12-19'):  # Monday: Dec 12-18 week is now complete
+                self.env['hr.leave']._cron_process_week_time_rules()
+
+            self.assertTrue(self._outputs(leave), "Week cron must fire for just-ended week's leave")
+        finally:
+            rule.write({'active': False})
+
+    def test_skip_time_rules_context_prevents_trigger(self):
+        """Creating a leave with skip_time_rules=True suppresses rule evaluation."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (skip ctx)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            leave = self._make_leave(
+                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14), skip_rules=True,
+            )
+            self.assertFalse(self._outputs(leave), "skip_time_rules=True must prevent output creation")
+        finally:
+            rule.write({'active': False})
+
+    def test_multiple_employees_independent_outputs(self):
+        """The rule evaluates each employee's leaves independently."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (multi-emp)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        emp2 = self.env['hr.employee'].create({
+            'name': 'Leave Pipeline Emp2',
+            'tz': 'UTC',
+            'attendance_based': False,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+        try:
+            leave1 = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))             # 6h
+            leave2 = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 11), emp=emp2)   # 3h
+
+            self.assertAlmostEqual(self._output_hours(leave1), 2.0, places=5,
+                                   msg="emp: 6h - 4h = 2h output")
+            self.assertFalse(self._outputs(leave2), "emp2: 3h < 4h threshold, no output")
+        finally:
+            rule.write({'active': False})
+
+    def test_sequential_rules_priority(self):
+        """Two exceed rules (different sequences): lower seq classifies its excess first."""
+        out_type2 = self.env['hr.work.entry.type'].create({
+            'name': 'Leave Out Seq2', 'code': 'LVOUTSEQ2',
+            'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+        })
+        rule1 = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day (seq=10)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'sequence': 10,
+        })
+        rule2 = self.env['hr.time.rule'].create({
+            'name': 'Exceed 6h/day (seq=20)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 6,
+            'work_entry_type_id': out_type2.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'sequence': 20,
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 16))  # 8h
+            # rule1 (seq=10): 8h - 4h = 4h → out_type  (hours 4-8 classified)
+            # rule2 (seq=20): remaining src_type is hours 0-4 (4h) → 4h < 6h threshold → no excess
+            self.assertAlmostEqual(self._output_hours(leave, self.out_type), 4.0, places=5,
+                                   msg="Rule1 (seq=10): 8h - 4h = 4h output")
+            self.assertAlmostEqual(self._output_hours(leave, out_type2), 0.0, places=5,
+                                   msg="Rule2 (seq=20): remaining 4h < 6h threshold")
+        finally:
+            rule1.write({'active': False})
+            rule2.write({'active': False})
+
+    def test_day_and_week_cron_independence(self):
+        """Day cron only fires day rules; week cron only fires week rules; neither interferes."""
+        day_rule = self.env['hr.time.rule'].create({
+            'name': 'Less than 8h/day (cron indep)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        out_type_week = self.env['hr.work.entry.type'].create({
+            'name': 'Leave Week Out (indep)', 'code': 'LVWKINDEP',
+            'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+        })
+        week_rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 3h (cron indep)',
+            'working_hours_mode': 'week',
+            'threshold_operator': 'exceed',
+            'expected_hours': 3,
+            'work_entry_type_id': out_type_week.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+                self.assertFalse(self._outputs(leave), "Today: both rules deferred")
+
+            with freeze_time('2022-12-13'):
+                self.env['hr.leave']._cron_process_day_undertime_rules()
+
+            self.assertTrue(self._outputs(leave, self.out_type), "Day cron must fire the day rule")
+            self.assertFalse(self._outputs(leave, out_type_week), "Day cron must not fire the week rule")
+
+            with freeze_time('2022-12-19'):  # Monday: week Dec 12-18 complete
+                self.env['hr.leave']._cron_process_week_time_rules()
+
+            self.assertTrue(self._outputs(leave, out_type_week), "Week cron must fire the week rule")
+            self.assertTrue(self._outputs(leave, self.out_type), "Week cron must not clear the day output")
+        finally:
+            day_rule.write({'active': False})
+            week_rule.write({'active': False})
+
+    def test_no_output_when_wet_not_in_conditions(self):
+        """Leave with a WET not listed in condition_work_entry_type_ids produces no output."""
+        other_type = self.env['hr.work.entry.type'].create({
+            'name': 'Leave Other (pipeline)', 'code': 'LVOTHER',
+            'count_as': 'absence', 'requires_allocation': False, 'time_off_selectable': False,
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (wrong WET)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],  # only src_type, not other_type
+        })
+        try:
+            leave = self._make_leave(
+                datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14), wet=other_type,
+            )
+            self.assertFalse(self._outputs(leave), "Wrong WET: rule conditions not matched, no output")
+        finally:
+            rule.write({'active': False})
+
+    def test_employee_domain_filters_out_employee(self):
+        """A rule whose employee_domain excludes the employee produces no output."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h (emp domain)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'exceed',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'employee_domain': '[("id", "=", -1)]',  # matches no employee
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+            self.assertFalse(self._outputs(leave), "Employee excluded by domain: no output must be created")
+        finally:
+            rule.write({'active': False})
+
+    def test_day_and_week_cron_independence_att(self):
+        """Day cron fires day rules only; week cron fires week rules only; neither interferes (attendance)."""
+        src_wet = self.env['hr.work.entry.type'].create({
+            'name': 'Att Src (day/week indep)', 'code': 'ATSRCINDEP', 'requires_allocation': False,
+        })
+        day_out_type = self.env['hr.work.entry.type'].create({
+            'name': 'Att Day Out (indep)', 'code': 'ATDAYINDEP', 'requires_allocation': False,
+        })
+        week_out_type = self.env['hr.work.entry.type'].create({
+            'name': 'Att Week Out (indep)', 'code': 'ATWKINDEP', 'requires_allocation': False,
+        })
+        day_rule = self.env['hr.time.rule'].create({
+            'name': 'Less than 8h/day (att cron indep)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8,
+            'work_entry_type_id': day_out_type.id,
+            'condition_work_entry_type_ids': [src_wet.id],
+        })
+        week_rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 3h (att cron indep)',
+            'working_hours_mode': 'week',
+            'threshold_operator': 'exceed',
+            'expected_hours': 3,
+            'work_entry_type_id': week_out_type.id,
+            'condition_work_entry_type_ids': [src_wet.id],
+        })
+
+        def _att_outputs(att, wet=None):
+            domain = [('source_attendance_id', '=', att.id), ('is_time_rule_output', '=', True)]
+            if wet:
+                domain.append(('work_entry_type_id', '=', wet.id))
+            return self.env['hr.attendance'].sudo().search(domain)
+
+        try:
+            with freeze_time('2022-12-12'):
+                att = self.env['hr.attendance'].create({
+                    'employee_id': self.emp.id,
+                    'check_in': datetime(2022, 12, 12, 8),
+                    'check_out': datetime(2022, 12, 12, 14),  # 6h, today: both rules deferred
+                    'work_entry_type_id': src_wet.id,
+                    'state': 'validated',
+                })
+                self.assertFalse(_att_outputs(att), "Today: both rules deferred")
+
+            with freeze_time('2022-12-13'):
+                self.env['hr.attendance']._cron_process_day_undertime_rules()
+
+            self.assertTrue(_att_outputs(att, day_out_type), "Day cron must fire the day rule")
+            self.assertFalse(_att_outputs(att, week_out_type), "Day cron must not fire the week rule")
+
+            with freeze_time('2022-12-19'):  # Monday: week Dec 12-18 complete
+                self.env['hr.attendance']._cron_process_week_time_rules()
+
+            self.assertTrue(_att_outputs(att, week_out_type), "Week cron must fire the week rule")
+            self.assertTrue(_att_outputs(att, day_out_type), "Week cron must not clear the day output")
+        finally:
+            day_rule.write({'active': False})
+            week_rule.write({'active': False})
