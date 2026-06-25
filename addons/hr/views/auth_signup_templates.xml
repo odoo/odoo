@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template id="invite_signup" name="Invitation link sign up">
+        <t t-call="web.login_layout">
+            <form class="oe_signup_form" role="form" method="post" t-attf-action="/hr/invite/{{link_id}}/{{access_token}}">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <p t-if="company_name" class="text-center text-muted">
+                    You have been invited to join <strong t-out="company_name"/>.
+                </p>
+
+                <div class="mb-3 field-name">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" name="name" t-att-value="name" id="name" class="form-control"
+                        placeholder="John Doe" autofocus="autofocus" required="required" autocomplete="name"/>
+                </div>
+
+                <div class="mb-3 field-login">
+                    <label for="login" class="form-label">Email</label>
+                    <input type="email" name="login" t-att-value="login" id="login" class="form-control"
+                        autocomplete="username" autocapitalize="off" required="required" placeholder="name@example.com"/>
+                </div>
+
+                <t t-call="auth_signup.fields"/>
+
+                <p class="alert alert-danger" t-if="error" role="alert">
+                    <t t-out="error"/>
+                </p>
+                <div class="text-center oe_login_buttons d-grid pt-3">
+                    <button type="submit" class="btn btn-primary mb-1">Sign up</button>
+                    <a href="/web/login" class="btn btn-link btn-sm mt-2" role="button">Already have an account?</a>
+                </div>
+            </form>
+        </t>
+    </template>
+
     <!-- Page shown when an invitation link is expired / disabled / over quota. -->
     <template id="invite_invalid" name="Invitation link unavailable">
         <t t-call="web.login_layout">

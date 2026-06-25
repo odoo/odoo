@@ -1,46 +1,53 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import werkzeug
 
-from odoo import http
+from odoo import _, http
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.addons.auth_signup.controllers.main import AuthSignupHome
-from odoo.addons.web.controllers.home import ensure_db
+from odoo.http.session import authenticate
+from odoo.tools import consteq
+from odoo.addons.web.controllers.home import ensure_db, Home
 
 
-class HrInviteHome(AuthSignupHome):
+class HrInviteHome(Home):
 
-    @http.route('/hr/invite/<string:access_token>', type='http', auth='public')
-    def hr_invite(self, access_token, **kw):
-        """Public entry point of an HR invitation link: validate the token then
-        hand over to the (revamped) standard signup form."""
+    @http.route('/hr/invite/<int:link_id>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], sitemap=False)
+    def hr_invite(self, link_id, access_token, **kw):
         ensure_db()
-        link = request.env['hr.invitation.link'].sudo().with_context(active_test=False).search(
-            [('access_token', '=', access_token)], limit=1)
-        if not link:
+        link = request.env['hr.invitation.link'].sudo().browse(link_id).exists()
+        if not link or not access_token or not link.access_token or not consteq(link.access_token, access_token):
             raise werkzeug.exceptions.NotFound()
         ok, reason = link._is_valid()
         if not ok:
             return request.render('hr.invite_invalid', {'reason': reason})
-        # Remember the link for the signup POST (which carries no token in its URL).
-        request.session['hr_invite_link_id'] = link.id
-        return request.redirect('/web/signup')
 
-    def get_auth_signup_qcontext(self):
-        qcontext = super().get_auth_signup_qcontext()
-        if request.session.get('hr_invite_link_id'):
-            # An invitation link is its own authorization: allow the signup form
-            # even when global signup is disabled (b2b), and flag it for the view.
-            qcontext['signup_enabled'] = True
-            qcontext['hr_invite'] = True
-        return qcontext
+        qcontext = {
+            'link_id': link.id,
+            'access_token': access_token,
+            'company_name': link.company_id.name,
+            'name': kw.get('name', ''),
+            'login': kw.get('login', ''),
+        }
+        if request.httprequest.method == 'POST':
+            try:
+                uid = self._do_invite_signup(link, kw)
+                return request.redirect(self._login_redirect(uid))
+            except (UserError, ValidationError) as e:
+                qcontext['error'] = e.args[0] if e.args else str(e)
+        return request.render('hr.invite_signup', qcontext)
 
-    def do_signup(self, qcontext, do_login=True):
-        link_id = request.session.get('hr_invite_link_id')
-        if link_id:
-            # Route res.users.signup() to lite-user provisioning + link enforcement.
-            request.update_context(hr_invite_link_id=link_id)
-        res = super().do_signup(qcontext, do_login)
-        if link_id:
-            # Only reached when the signup succeeded (do_signup raises otherwise).
-            request.session.pop('hr_invite_link_id', None)
-        return res
+    def _do_invite_signup(self, link, params):
+        """Validate the submitted form, provision the Light user/employee and log
+        the new user in. Returns the freshly created user id."""
+        name = (params.get('name') or '').strip()
+        login = (params.get('login') or '').strip()
+        password = params.get('password')
+        if not (name and login and password):
+            raise UserError(_("Please fill in all the required fields."))
+        if password != params.get('confirm_password'):
+            raise UserError(_("Passwords do not match; please retype them."))
+        values = {'name': name, 'login': login, 'password': password}
+        login, password = request.env['res.users'].sudo()._signup_from_invitation(values, link.id)
+        request.env.cr.commit()
+        credential = {'login': login, 'password': password, 'type': 'password'}
+        return authenticate(request.session, request.env, credential)['uid']
