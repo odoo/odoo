@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('passkeys_tour_delete', {
             },
         }, {
             content: "Open Passkey dropdown",
-            trigger: '[name="auth_passkey_key_ids"] .o_dropdown_kanban .o-dropdown:not(:visible)',
+            trigger: '[name="auth_passkey_key_ids"] .o_dropdown_kanban .o-dropdown',
             run: 'click',
         }, {
             content: "Delete Passkey",
