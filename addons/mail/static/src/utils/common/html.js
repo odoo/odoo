@@ -72,3 +72,18 @@ export function getInnerHtml(element) {
 export function getOuterHtml(element) {
     return escapeNode(element);
 }
+
+/**
+ * Remove all HTML comment nodes from the given elements and their descendants.
+ * @param {...Element} elements
+ */
+export function removeHtmlComments(...elements) {
+    for (const element of elements) {
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_COMMENT);
+        const comments = [];
+        while (walker.nextNode()) {
+            comments.push(walker.currentNode);
+        }
+        comments.forEach((c) => c.remove());
+    }
+}
