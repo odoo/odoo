@@ -7,7 +7,6 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
 {
     trigger: '.o_app[data-menu-xmlid="lunch.menu_lunch"]',
     content: "Start by accessing the lunch app.",
-    tooltipPosition: 'bottom',
     run: "click",
 },
 {
@@ -31,19 +30,16 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
 {
     trigger: 'textarea[id="note_0"]',
     content: "Add additionnal information about your order.",
-    tooltipPosition: 'bottom',
     run: "edit allergy to peanuts",
 },
 {
     trigger: 'button[name="add_to_cart"]',
     content: "Add your order to the cart.",
-    tooltipPosition: 'bottom',
     run: "click",
 },
 {
     trigger: 'button:contains("Order Now")',
     content: "Validate your order",
-    tooltipPosition: 'left',
     run: 'click',
 }, {
     trigger: ".o_lunch_widget_line li[name='o_lunch_order_line'] .badge:contains('Ordered')",

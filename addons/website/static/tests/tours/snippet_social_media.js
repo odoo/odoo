@@ -50,8 +50,7 @@ const replaceIconByImage = function (url) {
         },
         {
             content: "Select the image",
-            trigger:
-                ".o_select_media_dialog .o_button_area[aria-label='landscape_md_1.jpg']",
+            trigger: ".o_select_media_dialog .o_button_area[aria-label='landscape_md_1.jpg']",
             run: "click",
         },
         ...preventRaceConditionStep,
@@ -115,7 +114,6 @@ registerWebsitePreviewTour(
         {
             content: "Drag the twitter link at the end of the list",
             trigger: ".o_social_media_list button.o_drag_handle",
-            tooltipPosition: "bottom",
             run: "drag_and_drop .o_social_media_list tr:last-child",
         },
         ...preventRaceConditionStep,
