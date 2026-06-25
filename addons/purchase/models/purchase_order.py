@@ -958,7 +958,7 @@ class PurchaseOrder(models.Model):
                 result['views'] = form_view
             result['res_id'] = invoices.id
         else:
-            result = {'type': 'ir.actions.act_window_close'}
+            return {'type': 'ir.actions.act_window_close'}
 
         result['context'] = literal_eval(result['context'])
         if len(self.partner_id) == 1:
