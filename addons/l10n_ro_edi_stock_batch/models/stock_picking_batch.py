@@ -168,8 +168,10 @@ class StockPickingBatch(models.Model):
     def action_done(self):
         # EXTENDS 'stock_picking_batch'
         self.ensure_one()
-        self._check_company()
+        if not self.l10n_ro_edi_stock_enable:
+            return super().action_done()
 
+        self._check_company()
         self.picking_ids.with_context(l10n_ro_edi_stock_validate_carrier=True)._l10n_ro_edi_stock_validate_carrier()
 
         # Carrier should be the same on all pickings
