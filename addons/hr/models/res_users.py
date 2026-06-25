@@ -395,16 +395,6 @@ class ResUsers(models.Model):
         res.many("all_employee_ids", "_store_im_status_fields", sudo=True)
 
     @api.model
-    def signup(self, values, token=None):
-        # When the signup happens through a valid HR invitation link (no
-        # auth_signup token), provision a Light self-service user + employee
-        # instead of a regular template user.
-        link_id = self.env.context.get('hr_invite_link_id')
-        if link_id and not token:
-            return self._signup_from_invitation(values, link_id)
-        return super().signup(values, token)
-
-    @api.model
     def _signup_from_invitation(self, values, link_id):
         link = self.env['hr.invitation.link'].sudo().browse(link_id).exists()
         if not link:

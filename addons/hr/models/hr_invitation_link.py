@@ -51,7 +51,7 @@ class HrInvitationLink(models.Model):
     def _compute_url(self):
         for link in self:
             base_url = link.get_base_url()
-            link.url = f"{base_url}/hr/invite/{link.access_token}" if link.access_token else False
+            link.url = f"{base_url}/hr/invite/{link.id}/{link.access_token}" if link.access_token else False
 
     def _normalize_domains(self):
         """Return the list of allowed bare domains (lower-cased, no leading '@')."""

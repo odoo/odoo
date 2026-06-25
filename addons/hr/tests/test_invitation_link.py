@@ -18,14 +18,15 @@ class TestInvitationLink(TransactionCase):
         cls.Users = cls.env['res.users']
 
     def _signup(self, link, login, name='New Person', password='Sup3rPwd!x'):
-        return self.Users.with_context(hr_invite_link_id=link.id).signup(
-            {'name': name, 'login': login, 'password': password})
+        # Mirror what the /hr/invite controller does for a submitted form.
+        return self.Users._signup_from_invitation(
+            {'name': name, 'login': login, 'password': password}, link.id)
 
     def test_token_and_url_generated(self):
         link = self.Link.create({})
         self.assertTrue(link.access_token)
         self.assertEqual(len(link.access_token), 32)
-        self.assertTrue(link.url.endswith('/hr/invite/%s' % link.access_token))
+        self.assertTrue(link.url.endswith('/hr/invite/%s/%s' % (link.id, link.access_token)))
 
     def test_validity_expired(self):
         link = self.Link.create({'expiration_datetime': fields.Datetime.now() - timedelta(days=1)})
