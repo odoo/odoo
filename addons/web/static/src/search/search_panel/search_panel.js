@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { render, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -74,15 +74,15 @@ export class SearchPanel extends Component {
             render(this);
         });
 
-        useLayoutEffect(
-            (el) => {
-                if (el && this.hasImportedState) {
-                    el.style["min-width"] = this.width;
-                    el.scroll({ top: this.scrollTop });
-                }
-            },
-            () => [this.root.el]
-        );
+        // useLayoutEffect(
+        //     (el) => {
+        //         if (el && this.hasImportedState) {
+        //             el.style["min-width"] = this.width;
+        //             el.scroll({ top: this.scrollTop });
+        //         }
+        //     },
+        //     () => [this.root.el]
+        // );
 
         useSetupAction({
             getGlobalState: () => ({
