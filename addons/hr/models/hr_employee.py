@@ -1401,7 +1401,7 @@ class HrEmployee(models.Model):
                 if value is SENTINEL:
                     continue
                 if field.translate:
-                    value = dict(value) if value else None
+                    value = None if value is None else value.copy()
                 field._update_cache(record, value)
 
     @api.model

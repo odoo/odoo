@@ -3,7 +3,7 @@ from hashlib import sha256
 from unittest.mock import patch
 
 import odoo.tests
-from odoo.tools.translate import TranslationImporter
+from odoo.tools.translate import StoredTranslations, TranslationImporter
 from odoo.exceptions import ValidationError
 
 
@@ -525,21 +525,13 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             self.test1.name = {'nl_NL': 'Mes 3'}
 
         with self.assertRaises(ValidationError):
-            # some of the translations are False but not others
+            # some of the translations are False
             self.test1.name = {'en_US': 'Knife', 'fr_FR': False}
 
         # write empty dict means write nothing
         self.assertNotIn(self.test1.id, self.env.transaction.field_dirty[name_field])
         self.test1.name = {}
         self.assertNotIn(self.test1.id, self.env.transaction.field_dirty[name_field])
-
-        # write `False` for all languages means write `False`
-        self.assertNotEqual(name_field._get_stored_translations(self.test1), False)
-        with self.assertQueryCount(0, flush=False):
-            self.test1.name = {'en_US': False, 'fr_FR': False}
-            self.assertIsNone(name_field._get_stored_translations(self.test1))
-        self.test1.invalidate_recordset()
-        self.assertIsNone(name_field._get_stored_translations(self.test1))
 
         # model terms translated field
         html_field = self.test1._fields['html']
@@ -565,21 +557,13 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             self.test1.html = {'nl_NL': '<p>Mes</p>'}
 
         with self.assertRaises(ValidationError):
-            # some of the translations are False but not others
+            # some of the translations are False
             self.test1.html = {'en_US': '<p>Knife</p>', 'fr_FR': False}
 
         # write empty dict means write nothing
         self.assertNotIn(self.test1.id, self.env.transaction.field_dirty[html_field])
         self.test1.html = {}
         self.assertNotIn(self.test1.id, self.env.transaction.field_dirty[html_field])
-
-        # write `False` for all languages means write `False`
-        self.assertIsNotNone(html_field._get_stored_translations(self.test1))
-        with self.assertQueryCount(0, flush=False):
-            self.test1.html = {'en_US': False, 'fr_FR': False}
-            self.assertIsNone(html_field._get_stored_translations(self.test1))
-        self.test1.invalidate_recordset()
-        self.assertIsNone(html_field._get_stored_translations(self.test1))
 
     def test_write_translated_dict_translate_count(self):
         self.env['res.lang']._activate_lang('nl_NL')
@@ -652,3 +636,145 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
             'name': expected_name_dict,
             'html': expected_html_dict,
         })
+
+    def test_write_stored_translations_from_related(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        test2 = self.test2.with_context(lang='en_US')
+        test3 = self.test3.with_context(lang='en_US')
+
+        # Seed an extra language that StoredTranslations replace must drop.
+        self.test1.update_field_translations('name', {'nl_NL': 'Mes'})
+        self.test1.update_field_translations('html', {'nl_NL': {
+            'Knife': 'Mes',
+            'Fork': 'Vork',
+            'Spoon': 'Lepel',
+        }})
+
+        test2.name = StoredTranslations({
+            'en_US': 'New knife',
+            'fr_FR': 'Nouveau couteau',
+        })
+        test3.html = StoredTranslations({
+            'en_US': '<p>New knife</p><p>Fork</p><p>Spoon</p>',
+            'fr_FR': '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>',
+        })
+
+        expected_name = {
+            'en_US': 'New knife',
+            'fr_FR': 'Nouveau couteau',
+            # nl_NL was dropped by the StoredTranslations replace
+            'nl_NL': 'New knife',
+        }
+        expected_html = {
+            'en_US': '<p>New knife</p><p>Fork</p><p>Spoon</p>',
+            'fr_FR': '<p>Nouveau couteau</p><p>Fourchette</p><p>Cuiller</p>',
+            'nl_NL': '<p>New knife</p><p>Fork</p><p>Spoon</p>',
+        }
+        self._check_translation_value(self.test1, {
+            'name': expected_name,
+            'html': expected_html,
+        })
+        self._check_translation_value(test2, {
+            'name': expected_name,
+            'html': expected_html,
+        })
+        self._check_translation_value(test3, {
+            'name': expected_name,
+            'html': expected_html,
+        })
+        expected_stored_name = {'en_US': 'New knife', 'fr_FR': 'Nouveau couteau'}
+        self.assertEqual(self.test1._fields['name']._get_stored_translations(self.test1), expected_stored_name)
+
+    def test_create_related_stored_translations(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        model = self.env['test_translation.related_translation_2'].with_context(lang='en_US')
+        record = model.create({
+            'related_id': self.test1.id,
+            'name': StoredTranslations({
+                'en_US': 'Fork',
+                'fr_FR': 'Fourchette',
+            }),
+            'html': StoredTranslations({
+                'en_US': '<p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Fourchette</p><p>Cuiller</p>',
+            }),
+        })
+
+        expected = {
+            'name': {
+                'en_US': 'Fork',
+                'fr_FR': 'Fourchette',
+                'nl_NL': 'Fork',
+            },
+            'html': {
+                'en_US': '<p>Fork</p><p>Spoon</p>',
+                'fr_FR': '<p>Fourchette</p><p>Cuiller</p>',
+                'nl_NL': '<p>Fork</p><p>Spoon</p>',
+            },
+        }
+        self._check_translation_value(record, expected)
+        self._check_translation_value(self.test1, expected)
+        self.assertEqual(
+            self.test1._fields['name']._get_stored_translations(self.test1),
+            {'en_US': 'Fork', 'fr_FR': 'Fourchette'},
+        )
+
+    def test_create_related_translated_dict_non_inherited(self):
+        """Plain dict create on non-inherited related fields must keep all langs."""
+        self.env['res.lang']._activate_lang('nl_NL')
+        model = self.env['test_translation.related_translation_2'].with_context(lang='en_US')
+        record = model.create({
+            'related_id': self.test1.id,
+            'name': {
+                'en_US': 'Spoon',
+                'fr_FR': 'Cuiller',
+            },
+            'html': {
+                'en_US': '<p>Spoon</p>',
+                'fr_FR': '<p>Cuiller</p>',
+            },
+        })
+
+        expected = {
+            'name': {
+                'en_US': 'Spoon',
+                'fr_FR': 'Cuiller',
+                'nl_NL': 'Spoon',
+            },
+            'html': {
+                'en_US': '<p>Spoon</p>',
+                'fr_FR': '<p>Cuiller</p>',
+                'nl_NL': '<p>Spoon</p>',
+            },
+        }
+        self._check_translation_value(record, expected)
+        self._check_translation_value(self.test1, expected)
+
+    def test_create_inherited_stored_translations(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        model = self.env['test_translation.related_translation_4'].with_context(lang='en_US')
+        record = model.create({
+            'name': StoredTranslations({
+                'en_US': 'Plate',
+                'fr_FR': 'Assiette',
+            }),
+            'html': StoredTranslations({
+                'en_US': '<p>Plate</p>',
+                'fr_FR': '<p>Assiette</p>',
+            }),
+        })
+
+        expected = {
+            'name': {
+                'en_US': 'Plate',
+                'fr_FR': 'Assiette',
+                'nl_NL': 'Plate',
+            },
+            'html': {
+                'en_US': '<p>Plate</p>',
+                'fr_FR': '<p>Assiette</p>',
+                'nl_NL': '<p>Plate</p>',
+            },
+        }
+        self._check_translation_value(record, expected)
+        self._check_translation_value(record.related_id, expected)
