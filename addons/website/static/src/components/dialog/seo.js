@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { deduceURLfromText } from "@html_editor/main/link/utils";
 import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
@@ -580,21 +580,21 @@ export class TitleDescription extends Component {
         );
 
         // Update the title when its input value changes
-        useLayoutEffect(
-            () => {
-                document.title = this.title;
-            },
-            () => [this.seoContext.title]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         document.title = this.title;
+        //     },
+        //     () => [this.seoContext.title]
+        // );
 
         // Restore the original title when unmounting the component
-        useLayoutEffect(
-            () => {
-                const initialTitle = document.title;
-                return () => (document.title = initialTitle);
-            },
-            () => []
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         const initialTitle = document.title;
+        //         return () => (document.title = initialTitle);
+        //     },
+        //     () => []
+        // );
     }
 
     //--------------------------------------------------------------------------
@@ -687,27 +687,27 @@ export class BrokenLink extends Component {
             checkingLink: false,
         });
 
-        useLayoutEffect(
-            (input) => {
-                if (!input) {
-                    return;
-                }
-                const options = {
-                    body: this.website.pageDocument.body,
-                    position: "bottom-fit",
-                    urlChosen: () => {
-                        this.link.newLink = input.value;
-                    },
-                };
-                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
-                    input,
-                    options,
-                    this.env
-                );
-                return () => unmountAutocompleteWithPages();
-            },
-            () => [this.urlInputRef.el]
-        );
+        // useLayoutEffect(
+        //     (input) => {
+        //         if (!input) {
+        //             return;
+        //         }
+        //         const options = {
+        //             body: this.website.pageDocument.body,
+        //             position: "bottom-fit",
+        //             urlChosen: () => {
+        //                 this.link.newLink = input.value;
+        //             },
+        //         };
+        //         const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+        //             input,
+        //             options,
+        //             this.env
+        //         );
+        //         return () => unmountAutocompleteWithPages();
+        //     },
+        //     () => [this.urlInputRef.el]
+        // );
     }
 
     async modifyLink(link) {
