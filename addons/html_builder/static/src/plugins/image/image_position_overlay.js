@@ -82,19 +82,11 @@ export class ImagePositionOverlay extends Component {
             this.reloadSavePoint = this.props.history?.makeSavePoint() ?? (() => {});
             this.dimensionOverlay();
             this.props.targetEl.classList.add("o_we_image_positioning");
-            this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
-                trigger: "manual",
-                container: this.overlayRef.el,
-            });
-            this.tooltip.show();
+            this.refreshTooltip();
         });
 
         onPatched(() => {
-            this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
-                trigger: "manual",
-                container: this.overlayRef.el,
-            });
-            this.tooltip.show();
+            this.refreshTooltip();
         });
 
         onWillUnmount(() => {
@@ -102,6 +94,14 @@ export class ImagePositionOverlay extends Component {
             this.builderOverlayContainerEl.style.clipPath = "";
             this.tooltip.dispose();
         });
+    }
+
+    refreshTooltip() {
+        this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
+            trigger: "manual",
+            container: this.overlayRef.el,
+        });
+        this.tooltip.show();
     }
 
     apply() {
