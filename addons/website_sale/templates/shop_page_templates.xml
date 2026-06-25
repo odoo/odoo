@@ -177,9 +177,9 @@
             <t t-set="opt_wsale_show_shop_title" t-value="is_view_active('website_sale.products_shop_title')"/>
             <t t-set="opt_wsale_shop_title_align" t-value="is_view_active('website_sale.products_shop_title_align')"/>
 
-            <t t-set="opt_wsale_show_category_title" t-value="bool(category) and category.show_category_title"/>
-            <t t-set="opt_wsale_show_category_description" t-value="bool(category) and category.show_category_description"/>
-            <t t-set="opt_wsale_category_align" t-value="bool(category) and category.align_category_content"/>
+            <t t-set="opt_wsale_show_category_title" t-value="website.show_category_title"/>
+            <t t-set="opt_wsale_show_category_description" t-value="website.show_category_description"/>
+            <t t-set="opt_wsale_category_align" t-value="website.align_category_content"/>
 
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
 
@@ -296,7 +296,6 @@
 
                             <header
                                 id="o_wsale_products_header"
-                                t-att-data-category-id="category.id"
                                 t-att-data-category-name="category.name"
                                 t-attf-class="d-flex flex-column gap-2
                                     {{_header_has_content and 'pt-4 pb-3' or opt_wsale_design_grid and 'py-3'}}

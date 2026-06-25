@@ -689,7 +689,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if category:
             values["main_object"] = category
         values["structured_data"] = products.with_context(
-            shop_category_id=category.id if category else False,
+            shop_category_id=category.id if category else False
         )._render_jsonld()
         values.update(self._get_additional_shop_values(values, **post))
 
@@ -980,7 +980,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             lambda categ: categ.website_id.id in (website.id, False)
         )[:1]
         structured_data = product.with_context(
-            shop_category_id=category.id if category else False,
+            shop_category_id=category.id if category else False
         )._render_jsonld(is_detail_page=True)
         keep = QueryURL(SHOP_PATH, **request.session.get("attribute_value_params", {}))
 
@@ -1943,6 +1943,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Restrict options we can write to.
         writable_fields = {
+            "align_category_content",
+            "show_category_title",
+            "show_category_description",
             "shop_page_container",
             "shop_ppg",
             "shop_ppr",
@@ -1980,24 +1983,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:
             self.env.website.write(write_vals)
-
-    @route(["/shop/config/category"], type="jsonrpc", auth="user")
-    def _change_category_config(self, category_id, **options):
-        category = self.env["product.public.category"].browse(int(category_id))
-        if not category.exists():
-            raise NotFound
-
-        # Restrict options we can write to.
-        targeted_options = {
-            "show_category_title",
-            "show_category_description",
-            "align_category_content",
-        }
-        modified_options = {
-            option: value for option, value in options.items() if option in targeted_options
-        }
-        if modified_options:
-            category.write(modified_options)
 
     def order_lines_2_google_api(self, order_lines):
         """Transform a list of order lines into a dict for google analytics."""
