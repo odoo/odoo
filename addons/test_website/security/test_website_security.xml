@@ -2,13 +2,13 @@
 
     <record id="test_website.group_test_website_admin" model="res.groups">
         <field name="name">Test Administrator</field>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user_regular'))]"/>
     </record>
 
     <record id="group_test_website_tester" model="res.groups">
         <field name="name">Tester</field>
         <field name="comment">Tests about Website with additional model</field>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user_regular'))]"/>
     </record>
 
     <record id="base.user_admin" model="res.users">

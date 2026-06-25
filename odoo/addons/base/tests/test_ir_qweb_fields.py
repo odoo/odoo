@@ -160,8 +160,8 @@ class TestQwebFieldMany2Many(common.TransactionCase):
             'login': 'user2@example.com',
         })
         self.assertEqual(
-            self.value_to_html(user.all_group_ids[:2].sorted()),
-            'Role / User, Technical Features',
+            self.value_to_html(user.all_group_ids[:3].sorted()),
+            'Role / Light User, Role / User, Technical Features',
         )
 
 

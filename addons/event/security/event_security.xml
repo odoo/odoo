@@ -9,7 +9,7 @@
         <record id="group_event_registration_desk" model="res.groups">
             <field name="name">Registration Desk</field>
             <field name="sequence">10</field>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user_regular'))]"/>
             <field name="privilege_id" ref="res_groups_privilege_events"/>
         </record>
 

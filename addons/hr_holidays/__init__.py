@@ -8,4 +8,4 @@ from . import wizard
 
 def _sync_light_users_post_init(env):
     # Grant the time-off employee group to Light users provisioned before install.
-    env['res.users']._sync_maximal_light_user_groups()
+    env['res.users']._sync_light_user_groups()

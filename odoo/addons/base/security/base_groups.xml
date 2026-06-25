@@ -23,9 +23,22 @@
             Note that the field 'category_id' is set later in
             base/data/ir_module_category_data.xml
         -->
+        <record model="res.groups" id="group_user">
+            <field name="name">Role / Light User</field>
+            <field name="comment">Access to the home menu with limited access</field>
+            <field name="api_key_duration">90.0</field>
+        </record>
+
+        <record model="res.groups" id="group_user_regular">
+            <field name="name">Role / User</field>
+            <field name="comment">Access to the home menu with regular access</field>
+            <field name="implied_ids" eval="[Command.link(ref('group_user'))]"/>
+            <field name="api_key_duration">90.0</field>
+        </record>
+
         <record model="res.groups" id="group_erp_manager">
             <field name="name">Access Rights</field>
-            <field name="implied_ids" eval="[Command.link(ref('group_user'))]"/>
+            <field name="implied_ids" eval="[Command.link(ref('group_user_regular'))]"/>
         </record>
 
         <record model="res.groups" id="group_sanitize_override">
@@ -37,12 +50,6 @@
             <field name="comment">Access to the settings to configure the apps</field>
             <field name="implied_ids" eval="[Command.link(ref('group_erp_manager')), Command.link(ref('group_sanitize_override'))]"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
-        </record>
-
-        <record model="res.groups" id="group_user">
-            <field name="name">Role / User</field>
-            <field name="comment">Access to the home menu</field>
-            <field name="api_key_duration">90.0</field>
         </record>
 
         <record model="res.groups" id="group_multi_company">
@@ -111,8 +118,11 @@
     </data>
 
     <data noupdate="1">
+        <record id="default_user_regular_group" model="res.groups">
+            <field name="name">Default access for new regular users</field>
+        </record>
         <record id="default_user_group" model="res.groups">
-            <field name="name">Default access for new users</field>
+            <field name="name">Default access for new light users</field>
         </record>
     </data>
 </odoo>

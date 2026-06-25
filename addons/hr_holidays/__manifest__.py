@@ -101,6 +101,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         ],
     },
     'author': 'Odoo S.A.',
-    'post_init_hook': '_sync_light_users_post_init',
     'license': 'LGPL-3',
+    'post_init_hook': '_sync_light_users_post_init',
 }

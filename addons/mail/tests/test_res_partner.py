@@ -499,7 +499,7 @@ class TestPartner(MailCommon):
     def test_log_portal_group(self):
         Users = self.env['res.users']
         subtype_note = self.env.ref('mail.mt_note')
-        group_portal, group_user = self.env.ref('base.group_portal'), self.env.ref('base.group_user')
+        group_portal, group_user = self.env.ref('base.group_portal'), self.env.ref('base.group_user_regular')
 
         # check at update
         new_user = Users.create({

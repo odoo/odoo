@@ -336,7 +336,7 @@ class TestUsers2(UsersCommonCase):
         during installation, so it always works (because it uses the normal
         group_ids field).
         """
-        default_group = self.env.ref('base.default_user_group')
+        default_group = self.env.ref('base.default_user_regular_group')
         test_group = self.env['res.groups'].create({'name': 'test_group'})
         default_group.implied_ids = test_group
 
