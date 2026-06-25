@@ -102,11 +102,22 @@ class BaseString(Field[str | typing.Literal[False]]):
         return PsycopgJson(cache_value_dict)
 
     def get_column_update(self, record):
-        if self.translate:
-            assert self not in record.env._field_depends_context, f"translated field {self} cannot depend on context"
-            value = record.env.transaction.field_data[self][record.id]
-            return PsycopgJson(value) if value else None
-        return super().get_column_update(record)
+        if not self.translate:
+            return super().get_column_update(record)
+
+        assert self not in record.env._field_depends_context, f"translated field {self} cannot depend on context"
+        value = record.env.transaction.field_data[self][record.id]
+        if value is None:
+            return None
+        if callable(self.translate):
+            return PsycopgJson(value)
+        # (is_partial, translations)
+        if not isinstance(value, StoredTranslations):
+            return PsycopgJson((True, value))
+        if 'en_US' not in value:  # usually impossible, but best effort to fixup the corrupted data
+            _logger.warning("auto fix StoredTranslations %s for record %s", dict(value), record)
+            value['en_US'] = next(iter(value.values()))
+        return PsycopgJson((False, value))
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -322,7 +333,11 @@ class BaseString(Field[str | typing.Literal[False]]):
 
         records.env.remove_to_compute(self, records)
         lang = records.env.lang or 'en_US'
-        if isinstance(value, dict):
+        if isinstance(value, StoredTranslations):
+            assert self.store and any(records._ids)
+            self._update_cache(records.with_context(prefetch_langs=True), value.copy(), dirty=True)
+            return
+        elif isinstance(value, dict):
             if not value:
                 return
             active_langs = records.env['res.lang']._get_active_by('code')

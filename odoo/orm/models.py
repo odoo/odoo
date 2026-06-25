@@ -40,7 +40,6 @@ from operator import itemgetter
 
 import psycopg2.errors
 import psycopg2.extensions
-from psycopg2.extras import Json
 
 from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
@@ -2853,30 +2852,30 @@ class BaseModel(metaclass=MetaModel):
             value_en = translations.get('en_US', True)
             if not value_en and value_en != '':
                 translations.pop('en_US')
-            translations = {
-                lang: translation if isinstance(translation, str) else None
-                for lang, translation in translations.items()
-            }
             if not translations:
                 return False
 
-            translation_fallback = translations['en_US'] if translations.get('en_US') is not None \
-                else translations[self.env.lang] if translations.get(self.env.lang) is not None \
-                else next((v for v in translations.values() if v is not None), None)
-            self.invalidate_recordset([field_name])
-            self.env.cr.execute(SQL(
-                """ UPDATE %(table)s
-                    SET %(field)s = NULLIF(
-                        jsonb_strip_nulls(%(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s),
-                        '{}'::jsonb)
-                    WHERE id = %(id)s
-                """,
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(field_name),
-                fallback=Json({'en_US': translation_fallback}),
-                value=Json(translations),
-                id=self.id,
-            ))
+            drop_langs = {lang for lang, value in translations.items() if not isinstance(value, str)}
+            translations = {lang: value for lang, value in translations.items() if lang not in drop_langs}
+            if drop_langs:
+                stored_translations = field._get_stored_translations(self)
+                if stored_translations is None:
+                    if not translations:
+                        return False
+                    if 'en_US' not in translations:
+                        translations['en_US'] = translations['en_US'] if translations.get('en_US') is not None \
+                            else translations[self.env.lang] if translations.get(self.env.lang) is not None \
+                            else next((v for v in translations.values() if v is not None), None)
+                    write_value = StoredTranslations(translations)
+                else:
+                    write_value = StoredTranslations({
+                        **{lang: value for lang, value in stored_translations.items() if lang not in drop_langs},
+                        **translations
+                    })
+            else:
+                write_value = translations
+            self[field_name] = write_value
+            return True
         else:
             old_values = field._get_stored_translations(self)
             if not old_values:
@@ -2919,13 +2918,8 @@ class BaseModel(metaclass=MetaModel):
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
                 new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
-            field._update_cache(self.with_context(prefetch_langs=True), StoredTranslations(new_values), dirty=True)
 
-        # the following write is incharge of
-        # 1. mark field as modified
-        # 2. execute logics in the override `write` method
-        # even if the value in cache is the same as the value written
-        self[field_name] = self[field_name]
+            self[field_name] = StoredTranslations(new_values)
         return True
 
     def get_field_translations(self, field_name: str, langs: Collection[str] | None = None) -> tuple[list[dict[str, str]], dict[str, typing.Any]]:
@@ -3934,10 +3928,13 @@ class BaseModel(metaclass=MetaModel):
                     #     (column or {'en_US': next(iter(expr.values()))}) | expr
                     # )
                     expr = SQL(
-                        """CASE WHEN %(expr)s IS NULL THEN NULL ELSE
-                            COALESCE(%(table)s.%(column)s, jsonb_build_object(
-                                'en_US', jsonb_path_query_first(%(expr)s, '$.*')
-                            )) || %(expr)s
+                        """CASE
+                            WHEN (%(expr)s -> 0)::boolean THEN
+                                COALESCE(
+                                    %(table)s.%(column)s,
+                                    jsonb_build_object('en_US', jsonb_path_query_first(%(expr)s -> 1, '$.*'))
+                                ) || (%(expr)s -> 1)
+                            ELSE (%(expr)s -> 1)
                         END""",
                         table=SQL.identifier(self._table),
                         column=column,
