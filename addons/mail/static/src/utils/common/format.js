@@ -480,7 +480,9 @@ export function trimEmptyBlocksAround(content) {
                 return;
             }
             trimTextNodes(node, side);
-            if (isHtmlEmpty(node.innerHTML)) {
+            // isHtmlEmpty intentionally ignores images, which must not be trimmed.
+            const containsImage = node.nodeName === "IMG" || node.querySelector("img");
+            if (isHtmlEmpty(node.innerHTML) && !containsImage) {
                 removeNode(node);
                 return trimTextNodes(element, side);
             }
