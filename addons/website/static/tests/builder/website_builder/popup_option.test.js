@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, delay, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -6,6 +6,7 @@ import {
     defineWebsiteModels,
     insertCategorySnippet,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
@@ -251,5 +252,44 @@ describe("Popup options: popup in page before edit", () => {
         expect(":iframe .s_popup").toHaveCount(1);
         expect("div[data-container-title='Block']").toHaveCount(1);
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+    });
+});
+
+describe("Popup visibility", () => {
+    test("Rapid show/hide of popup stays consistent", async () => {
+        await setupWebsiteBuilderWithSnippet("s_popup", {
+            loadIframeBundles: true,
+            loadAssetsFrontendJS: true,
+            enableIframeTransitions: true,
+        });
+
+        await contains(".o_we_invisible_entry i.fa-eye").click();
+        await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+        await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
+            contains(".o_we_invisible_entry i.fa-eye").click()
+        );
+        expect(":iframe body").not.toHaveClass("modal-open");
+        expect(".o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+        expect(":iframe .s_popup").toHaveClass("d-none");
+        expect(":iframe .s_popup").toHaveAttribute("data-invisible", "1");
+        expect(":iframe .s_popup > .modal").toHaveStyle("display: none");
+        expect(":iframe .s_popup > .modal").not.toHaveClass("show");
+
+        await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+        await waitFor(":iframe .s_popup:not(.d-none)");
+
+        await contains(".o_we_invisible_entry i.fa-eye").click();
+        await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () =>
+            contains(".o_we_invisible_entry i.fa-eye-slash").click()
+        );
+        // Wait for everything to settle, without the delay, we may not catch a
+        // potential inconsistency.
+        await delay(100);
+        expect(":iframe body").toHaveClass("modal-open");
+        expect(".o_we_invisible_entry i").toHaveClass("fa-eye");
+        expect(":iframe .s_popup").not.toHaveClass("d-none");
+        expect(":iframe .s_popup").not.toHaveAttribute("data-invisible");
+        expect(":iframe .s_popup > .modal").toHaveStyle("display: block");
+        expect(":iframe .s_popup > .modal").toHaveClass("show");
     });
 });
