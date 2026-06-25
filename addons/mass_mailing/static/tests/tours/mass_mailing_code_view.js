@@ -13,7 +13,6 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
         }, {
             trigger: 'input#subject_0',
             content: 'Pick the email subject.',
-            tooltipPosition: 'bottom',
             run: "edit Test",
         }, {
             trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',

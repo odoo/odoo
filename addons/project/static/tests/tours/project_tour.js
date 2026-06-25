@@ -77,7 +77,6 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: ".o_breadcrumb .o_back_button",
         content: 'Go back to kanban view',
-        tooltipPosition: "right",
         run: "click",
     }, {
         trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button",

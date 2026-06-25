@@ -11,20 +11,17 @@ function websiteCreateEventTourSteps() {
         {
             content: "Click here to add new content to your website.",
             trigger: ".o_menu_systray .o_new_content_container > button",
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: "[data-module-xml-id='base.module_website_event']",
             content: "Click here to create a new event.",
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: '.modal-dialog .o_field_widget[name="name"] .o_input',
             content: "Create a name for your new event and click Continue. e.g: Technical Training",
             run: "edit Technical Training",
-            tooltipPosition: "left",
         },
         {
             trigger: "button[data-field='date_begin']",
@@ -50,7 +47,6 @@ function websiteCreateEventTourSteps() {
             trigger:
                 ".modal-dialog div[name='event_ticket_ids'] .o_field_x2many_list_row_add button:contains('Add a line')",
             content: "Click here to add a ticket",
-            tooltipPosition: "bottom",
             run: "click",
         },
         {
@@ -59,7 +55,6 @@ function websiteCreateEventTourSteps() {
         {
             trigger: ".modal-footer button.btn-primary",
             content: "Click Save to create the event.",
-            tooltipPosition: "right",
             run: "click",
         },
         ...insertSnippet({
@@ -71,13 +66,11 @@ function websiteCreateEventTourSteps() {
         {
             trigger: ".o_menu_systray_item.o_website_publish_container a",
             content: "Click to publish your event.",
-            tooltipPosition: "top",
             run: "click",
         },
         {
             trigger: ".o_website_edit_in_backend > a",
             content: "Click here to customize your event further.",
-            tooltipPosition: "bottom",
         },
     ];
 }
