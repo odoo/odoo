@@ -684,11 +684,17 @@ export function parseCssValue(cssValue) {
     const match = /^(-?\d*\.?\d+)([a-z%]*)$/i.exec(cssValue.trim());
     const result = {
         string: cssValue,
+        toString() {
+            return `${this.string}`;
+        },
     };
     if (match) {
         Object.assign(result, {
             number: parseFloat(match[1]),
             unit: match[2] || null,
+            toString() {
+                return `${this.number}${this.unit ?? ""}`;
+            },
         });
     }
     return result;

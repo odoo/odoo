@@ -297,6 +297,25 @@ export class EmailNode {
         return this.children.at(-1);
     }
 
+    get nextSibling() {
+        if (!this.parent) {
+            return undefined;
+        }
+        const index = this.parent.children.indexOf(this);
+        return this.parent.children.at(index + 1);
+    }
+
+    get previousSibling() {
+        if (!this.parent) {
+            return undefined;
+        }
+        const index = this.parent.children.indexOf(this);
+        if (index === 0) {
+            return undefined;
+        }
+        return this.parent.children.at(index - 1);
+    }
+
     spliceChildren(start, deleteCount, ...items) {
         const removedChildren = this.children.splice(start, deleteCount, ...items);
         for (const child of removedChildren) {

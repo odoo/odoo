@@ -334,7 +334,10 @@ export class RenderPlugin extends Plugin {
         emailNode.layout = this.processThrough("refine_layout_processors", emailNode.layout, {
             emailNode,
         });
-        for (const childEmailNode of emailNode.children) {
+        // TODO EGGMAIL: if enforcing constraints adds siblings or ancestors,
+        // they won't go through the "refine_layout_processors" hook.
+        // (known limitation, update this code if a change is necessary)
+        for (const childEmailNode of [...emailNode.children]) {
             this.enforceConstraints(childEmailNode);
         }
     }

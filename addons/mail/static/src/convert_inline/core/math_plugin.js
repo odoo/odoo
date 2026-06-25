@@ -105,8 +105,37 @@ export class MathPlugin extends Plugin {
         };
     }
 
-    ratioPercentage(value, total, percentageLeft = 100) {
-        return Math.min(percentageLeft, Math.trunc((value / total) * 100000) / 1000);
+    ratioPercentage(
+        value,
+        { inputUnit = 1, outputUnit = 100, precision = 2, percentageLeft } = {}
+    ) {
+        const truncatedValue = this.formatPercentage(value, {
+            inputUnit,
+            outputUnit,
+            precision,
+        });
+        if (percentageLeft !== undefined) {
+            return Math.min(percentageLeft, truncatedValue);
+        }
+        return truncatedValue;
+    }
+
+    formatPercentage(value, { inputUnit = 1, outputUnit = 100, precision = 2 } = {}) {
+        const precisionFactor = 10 ** precision;
+        return Math.trunc(((value * outputUnit) / inputUnit) * precisionFactor) / precisionFactor;
+    }
+
+    closestValue(value, collection = []) {
+        value = Number(value);
+        let dist, key;
+        for (const testKey of collection) {
+            const testDist = Math.abs(value - Number(testKey));
+            if (!dist || dist > testDist) {
+                dist = testDist;
+                key = testKey;
+            }
+        }
+        return key;
     }
 }
 

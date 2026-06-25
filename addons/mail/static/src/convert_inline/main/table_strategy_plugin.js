@@ -125,8 +125,9 @@ export class TableStrategyPlugin extends Plugin {
         // - identify that the node is a tableLayout Cell or a hybridTableLayout Cell
         // - splice horizontal padding cells inside the row
         // DONE
-        if (emailNode.analysis.facts.acceptCellPaddingRight) {
-            this.applyCellPaddingRight(layout, { emailNode });
+        // apply new dimensions in case padding cells had to be inserted
+        if (emailNode.analysis.facts.acceptCellNewWidth) {
+            this.applyCellNewWidth(layout, { emailNode });
         }
     }
 
@@ -169,7 +170,8 @@ export class TableStrategyPlugin extends Plugin {
         );
     }
 
-    applyCellPaddingRight(layout, { emailNode }) {
+    applyCellNewWidth(layout, { emailNode }) {
+        // todo set values => new width attribute and style
         const parent = emailNode.parent;
         if (!parent) {
             return;
@@ -316,6 +318,7 @@ export class TableStrategyPlugin extends Plugin {
             );
             if (acceptTableStrategyReport) {
                 const report = { ...tableStrategyReport };
+                const facts = { tableStrategyReport: report };
                 report.spacing = { ...report.spacing, marginRect };
                 const constraintsForDescendants = [];
                 let shouldPropagate = true;
@@ -331,8 +334,19 @@ export class TableStrategyPlugin extends Plugin {
                         ...tableStrategyReport.descendantBackground.cleanup
                     );
                 }
+                if (analysis.facts.acceptCellNewWidth) {
+                    // TODO EGGMAIL: working here
+                    // this approach can work but seems very complex
+                    // need to think of a way to simplify that
+                    // offset might be counted as a margin
+                    // offset cells are not properly counted
+                    facts.cellMargin = this.containerPadding(
+                        marginRect,
+                        report.spacing.referenceRect
+                    );
+                }
                 return {
-                    facts: { tableStrategyReport: report },
+                    facts,
                     shouldPropagate,
                     constraintsForDescendants,
                 };
@@ -550,23 +564,31 @@ export class TableStrategyPlugin extends Plugin {
             const rowEmailNode = builders["row"](rowMeasure);
             rows.push(rowEmailNode);
             for (const cellMeasure of rowMeasure.children) {
-                const widthRatio = this.ratioPercentage(cellMeasure.width, width, ratio);
+                const widthRatio = this.ratioPercentage(cellMeasure.width, {
+                    inputUnit: width,
+                    percentageLeft: ratio,
+                });
                 cellMeasure.widthRatio = widthRatio;
                 ratio -= widthRatio;
                 if (cellMeasure.type === "cellWithOffset") {
-                    cellMeasure.offsetWidthRatio = this.ratioPercentage(
-                        cellMeasure.offsetWidth,
-                        width,
-                        ratio
-                    );
+                    cellMeasure.offsetWidthRatio = this.ratioPercentage(cellMeasure.offsetWidth, {
+                        inputUnit: width,
+                        percentageLeft: ratio,
+                    });
                     ratio -= cellMeasure.offsetWidthRatio;
                     for (const cell of builders["cellWithOffset"](cellMeasure)) {
+                        cell.analysis.facts.rowWidth = width;
                         rowEmailNode.appendChild(cell);
                     }
                 } else if (cellMeasure.type === "emptyCell") {
-                    rowEmailNode.appendChild(builders["emptyCell"](cellMeasure));
+                    const cell = builders["emptyCell"](cellMeasure);
+                    cell.analysis.facts.rowWidth = width;
+                    rowEmailNode.appendChild(cell);
+
                 } else if (cellMeasure.type === "cell") {
-                    rowEmailNode.appendChild(builders["cell"](cellMeasure));
+                    const cell = builders["cell"](cellMeasure);
+                    cell.analysis.facts.rowWidth = width;
+                    rowEmailNode.appendChild(cell);
                 }
             }
         }
@@ -704,9 +726,9 @@ export class TableStrategyPlugin extends Plugin {
         }
         if (!isLast) {
             cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
-            cellEmailNode.analysis.facts.acceptCellPaddingRight = true;
         }
         emailNode.analysis.facts.useTableStrategy = true;
+        cellEmailNode.analysis.facts.acceptCellNewWidth = true;
         cellEmailNode.analysis.facts.acceptDescendantBackground = true;
         cellEmailNode.analysis.facts.acceptDescendantBorder = true;
         return cellEmailNode;

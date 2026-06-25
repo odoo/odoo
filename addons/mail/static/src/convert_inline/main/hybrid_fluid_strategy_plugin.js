@@ -63,6 +63,16 @@ export class HybridFluidStrategyPlugin extends Plugin {
         };
     }
 
+    /**
+     * TODO EGGMAIL NOW: WORKING HERE NOW:
+     * background color for card body should be applied on cell, but the
+     * logic does not support it => need custo:
+     * secondary report which will fight for priority over the first one
+     * -> need to check in which order constraints are packed, and/or
+     * use !important, because this use case does not make much sense
+     * technically, but functionally it's what we want => need custom main
+     * plugin
+     */
     applyDescendantBackground(layout, { emailNode }) {
         const facts = emailNode.analysis.facts;
         const { useHybridFluidTableStrategy, acceptDescendantBackground, tableStrategyReport } =
@@ -104,44 +114,72 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (emailNode.analysis.facts.acceptCellMobileMarginBottom) {
             this.applyCellMobileMarginBottom(layout, { emailNode });
         }
-        if (emailNode.analysis.facts.acceptCellPaddingRight) {
-            this.applyCellPaddingRight(layout, { emailNode });
+        if (emailNode.analysis.facts.acceptCellNewWidth) {
+            this.applyCellNewWidth(layout, { emailNode });
         }
     }
 
     addTableOuterSpacingFacts(layout, { emailNode }) {
-        // Rely on the spacing_plugin to build a margin wrapper
-        // around the table
-        // TODO EGGMAIL: replace test value
         emailNode.analysis.facts.desktopMarginStyleInfo = this.getMarginStyleInfo(
             StyleInfo.from({
-                margin: "16px",
+                "margin-top": "16px",
+                "margin-bottom": "16px",
             }),
             emailNode.layout.ancestorTag
         );
     }
 
     applyCellMobileMarginBottom(layout, { emailNode }) {
-        // TODO EGGMAIL: replace test value
+        // TODO EGGMAIL: can be improved by hardcoding multiple values and
+        // defining a heuristic to choose the closest one
         layout.setAttributes({ classNames: "o-ci-m-margin-bottom-16" });
     }
 
-    applyCellPaddingRight(layout, { emailNode }) {
+    applyCellNewWidth(layout, { emailNode }) {
         const parent = emailNode.parent;
         if (!parent) {
             return;
         }
-        // TODO EGGMAIL: replace test value
+        const rowWidth = emailNode.analysis.facts.rowWidth;
+        const { referenceRect, marginRect } = emailNode.analysis.facts.tableStrategyReport.spacing;
+        const paddingRect = this.containerPadding(marginRect, referenceRect);
+        const widthRatio = this.ratioPercentage(referenceRect.width, {
+            inputUnit: rowWidth,
+        });
+        const rightRatio = this.ratioPercentage(paddingRect.right, {
+            inputUnit: rowWidth,
+        });
+        const leftRatio = this.ratioPercentage(paddingRect.left, {
+            inputUnit: rowWidth,
+        });
+        // Padding cells
+        const index = parent.children.indexOf(emailNode);
         parent.spliceChildren(
-            parent.children.indexOf(emailNode) + 1,
+            index + 1,
             0,
             new EmailNode({
                 layout: new EmptyCellLayout({
-                    style: { width: `3%` },
-                    attributes: { width: `3%` },
+                    style: { width: `${rightRatio}%` },
+                    attributes: { width: `${rightRatio}%` },
                 }),
             })
         );
+        parent.spliceChildren(
+            index,
+            0,
+            new EmailNode({
+                layout: new EmptyCellLayout({
+                    style: { width: `${leftRatio}%` },
+                    attributes: { width: `${leftRatio}%` },
+                }),
+            })
+        );
+        // New width
+        layout.setAttributes({
+            style: { width: `${widthRatio}%` },
+            attributes: { width: `${widthRatio}%` },
+            classNames: "o-ci-m-horizontal-margin-16",
+        });
     }
 
     analyzeElementLayout({ layout, analysis }, { referenceNode }) {
@@ -315,9 +353,9 @@ export class HybridFluidStrategyPlugin extends Plugin {
         }
         if (!isLast) {
             cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
-            cellEmailNode.analysis.facts.acceptCellPaddingRight = true;
         }
         cellEmailNode.analysis.facts.useHybridFluidTableStrategy = true;
+        cellEmailNode.analysis.facts.acceptCellNewWidth = true;
         cellEmailNode.analysis.facts.acceptDescendantBackground = true;
         cellEmailNode.analysis.facts.acceptDescendantBorder = true;
         return cellEmailNode;
