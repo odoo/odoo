@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -44,22 +43,22 @@ export class PartnerList extends Component {
         });
         this.onScroll = debounce(this.onScroll.bind(this), 200);
 
-        useLayoutEffect(
-            () => {
-                if (this.state.loading || !this.modalRef.el) {
-                    return;
-                } else if (!this.modalContent) {
-                    this.modalContent = this.modalRef.el.querySelector(".modal-body");
-                }
-
-                const scrollMethod = this.onScroll.bind(this);
-                this.modalContent.addEventListener("scroll", scrollMethod);
-                return () => {
-                    this.modalContent.removeEventListener("scroll", scrollMethod);
-                };
-            },
-            () => [this.modalRef.el]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.state.loading || !this.modalRef.el) {
+        //             return;
+        //         } else if (!this.modalContent) {
+        //             this.modalContent = this.modalRef.el.querySelector(".modal-body");
+        //         }
+        //
+        //         const scrollMethod = this.onScroll.bind(this);
+        //         this.modalContent.addEventListener("scroll", scrollMethod);
+        //         return () => {
+        //             this.modalContent.removeEventListener("scroll", scrollMethod);
+        //         };
+        //     },
+        //     () => [this.modalRef.el]
+        // );
     }
     get globalState() {
         return this.pos.screenState.partnerList;
