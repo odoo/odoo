@@ -300,6 +300,7 @@ class ProductTemplate(models.Model):
                     if is_html_empty(v) and not ("media_iframe_video" in v or "data-embedded" in v)
                     else v
                 ),
+                self._fields["description_ecommerce"],
             )
         return super().write(vals)
 

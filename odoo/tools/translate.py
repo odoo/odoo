@@ -47,6 +47,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable
     from typing import Literal
     from odoo.api import Environment
+    from odoo.orm.fields import Field
     from odoo.orm.fields_textual import BaseString
 
 __all__ = [
@@ -740,6 +741,7 @@ def adapt_translated_field_value(
     env: Environment,
     val: dict[str, str] | str | Literal[False] | None,
     adapter: Callable[[str, str], str],
+    field: Field,
 ) -> dict[str, str] | str | Literal[False] | None:
     """Apply an adapter to a translated field value, handling all supported value formats.
 
@@ -752,13 +754,22 @@ def adapt_translated_field_value(
                 or None/False
     :param adapter: callable(lang, value) -> str; receives language code and value,
                     returns the adapted value for each translation
+    :param field: the translated field
     :return: the adapted value
     """
     if val is None or val is False:
         return val
     if not isinstance(val, dict):
         return adapter(env.lang or 'en_US', val)
-    return {k: adapter(k, v) for k, v in val.items()}
+    assert field.translate
+    adapted = {k: adapter(k, v) for k, v in val.items()}
+    if isinstance(val, StoredTranslations):
+        model = env[field.model_name]
+        return StoredTranslations({
+            k: field.convert_to_cache(v, model)
+            for k, v in adapted.items()
+        })
+    return adapted
 
 
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
