@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, props, proxy, t, useEffect } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -44,23 +44,18 @@ export class FontSizeSelector extends Component {
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
         const htmlStyle = getHtmlStyle(document);
         this.fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
-        useLayoutEffect(
-            () => {
-                // blur on close
-                if (this.fontSizeInput) {
-                    // Focus input on dropdown open, blur on close.
-                    if (this.dropdown.isOpen) {
-                        this.fontSizeInput.select();
-                    } else if (
-                        this.iframeContentRef.el?.contains(this.props.document.activeElement)
-                    ) {
-                        this.fontSizeInput.blur();
-                        this.props.onBlur?.();
-                    }
+        useEffect(() => {
+            // blur on close
+            if (this.fontSizeInput) {
+                // Focus input on dropdown open, blur on close.
+                if (this.dropdown.isOpen) {
+                    this.fontSizeInput.select();
+                } else if (this.iframeContentRef.el?.contains(this.props.document.activeElement)) {
+                    this.fontSizeInput.blur();
+                    this.props.onBlur?.();
                 }
-            },
-            () => [this.dropdown.isOpen]
-        );
+            }
+        });
     }
 
     get fontSizeInput() {
