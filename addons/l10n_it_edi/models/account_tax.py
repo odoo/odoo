@@ -80,21 +80,21 @@ class AccountTax(models.Model):
     def _l10n_it_filter_kind(self, kind):
         # EXTENDS l10n_it
         match kind:
+            case 'enasarco':
+                return self.filtered(lambda tax: tax.l10n_it_withholding_type == 'RT04')
             case 'withholding':
                 return self.filtered(lambda tax: tax.l10n_it_withholding_type)
             case 'withholding_no_enasarco':
                 # Enasarco has both withholding and pension fund types,
                 # but it must be considered a pension fund for the checks.
-                return self.filtered(lambda tax:
-                    tax.l10n_it_withholding_type
-                    and tax.l10n_it_withholding_type != 'RT04'
-                )
+                return self.filtered(lambda tax: tax.l10n_it_withholding_type) - self._l10n_it_filter_kind('enasarco')
             case 'pension_fund':
                 return self.filtered(lambda tax: tax.l10n_it_pension_fund_type)
             case 'vat':
-                return super()._l10n_it_filter_kind('vat').filtered(lambda tax:
-                    not tax.l10n_it_withholding_type
-                    and not tax.l10n_it_pension_fund_type,
+                return (
+                    super()._l10n_it_filter_kind('vat')
+                    - self._l10n_it_filter_kind('withholding')
+                    - self._l10n_it_filter_kind('pension_fund')
                 )
             case _:
                 return super()._l10n_it_filter_kind(kind)

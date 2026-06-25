@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from collections import namedtuple
 from lxml import etree
 
 from odoo import Command, fields
@@ -364,8 +360,7 @@ class TestItEdiReverseCharge(TestItEdi):
         bill.action_post()
         self.assertTrue(bill.l10n_it_edi_is_self_invoice)
 
-        xml = bill._l10n_it_edi_render_xml()
-        invoice_tree = etree.fromstring(xml)
+        invoice_tree = self._render(bill)
         linked_ref = invoice_tree.xpath("//*[local-name()='DatiFattureCollegate']/*[local-name()='IdDocumento']/text()")
         self.assertIn('FT00001', linked_ref)
 
@@ -400,7 +395,6 @@ class TestItEdiReverseCharge(TestItEdi):
         credit_note = self.env['account.move'].browse(reversal['res_id'])
         credit_note.action_post()
 
-        xml = credit_note._l10n_it_edi_render_xml()
-        invoice_tree = etree.fromstring(xml)
+        invoice_tree = self._render(credit_note)
         linked_ids = invoice_tree.xpath("//*[local-name()='DatiFattureCollegate']/*[local-name()='IdDocumento']/text()")
         self.assertIn(bill.ref, linked_ids)
