@@ -42,6 +42,14 @@
                     Recurring events must be created directly in Outlook Calendar.
                 </div>
             </xpath>
+
+            <xpath expr="//field[@name='partner_ids'][@widget='many2manyattendee']" position="after">
+                <div class="alert alert-warning o_form_header mt-2" role="status"
+                    invisible="not microsoft_unsynced_partner_ids">
+                    <p><strong>The following attendees are not synchronized to Outlook:</strong></p>
+                    <field name="microsoft_unsynced_partner_ids" widget="many2manyattendee" class="oe_inline"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

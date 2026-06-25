@@ -10,4 +10,19 @@
             </field>
         </field>
     </record>
+
+    <record id="view_google_calendar_event_form" model="ir.ui.view">
+        <field name="name">google_calendar.event.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids'][@widget='many2manyattendee']" position="after">
+                <div class="alert alert-warning o_form_header mt-2" role="status"
+                    invisible="not google_unsynced_partner_ids">
+                    <p><strong>The following attendees are not synchronized to Google:</strong></p>
+                    <field name="google_unsynced_partner_ids" widget="many2manyattendee" class="oe_inline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>
