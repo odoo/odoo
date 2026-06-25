@@ -1094,11 +1094,10 @@ class AccountMove(models.Model):
 
     @api.depends('needed_terms')
     def _compute_invoice_date_due(self):
-        today = fields.Date.context_today(self)
         for move in self:
             needed_terms = move.needed_terms or ()
             due_date = max((k['date_maturity'] for k, _ in needed_terms if k), default=False)
-            move.invoice_date_due = due_date or move.invoice_date_due or today
+            move.invoice_date_due = due_date or move.invoice_date_due or move.invoice_date
 
     def _compute_delivery_date(self):
         pass
