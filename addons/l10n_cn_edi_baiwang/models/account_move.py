@@ -90,15 +90,15 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
         domain="[('partner_id', '=', partner_id)]",
-        help="The customer's bank account to be printed on the Chinese Baiwang E-Fapiao."
+        help="The customer's bank account to be printed on the Chinese Baiwang E-Fapiao.",
     )
     l10n_cn_baiwang_red_form_uuid = fields.Char(
-        string="Red Form UUID", 
-        compute='_compute_l10n_cn_baiwang_latest_edi_data'
+        string="Red Form UUID",
+        compute='_compute_l10n_cn_baiwang_latest_edi_data',
     )
     l10n_cn_baiwang_red_form_number = fields.Char(
-        string="Red Form Number", 
-        compute='_compute_l10n_cn_baiwang_latest_edi_data'
+        string="Red Form Number",
+        compute='_compute_l10n_cn_baiwang_latest_edi_data',
     )
     l10n_cn_baiwang_red_form_status = fields.Selection(
         selection=[
@@ -108,15 +108,15 @@ class AccountMove(models.Model):
             ('failed', 'Failed'),
         ],
         string="Red Form Status",
-        compute='_compute_l10n_cn_baiwang_latest_edi_data'
+        compute='_compute_l10n_cn_baiwang_latest_edi_data',
     )
 
     # ─── Computed Methods ───────────────────────────────────────────────
 
     @api.depends(
-        'l10n_cn_edi_document_ids.state', 
-        'l10n_cn_edi_document_ids.baiwang_uuid', 
-        'l10n_cn_edi_document_ids.baiwang_red_form_number'
+        'l10n_cn_edi_document_ids.state',
+        'l10n_cn_edi_document_ids.baiwang_uuid',
+        'l10n_cn_edi_document_ids.baiwang_red_form_number',
     )
     def _compute_l10n_cn_baiwang_latest_edi_data(self):
         for move in self:

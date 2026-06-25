@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
 
+
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
@@ -28,9 +29,9 @@ class AccountTax(models.Model):
             ('simplified_3_1_5', '3%→1.5% Simplified (按3%简易征收减按1.5%计征)'),
         ],
         string="VAT Special Policy",
-        help="增值税特殊管理"
+        help="增值税特殊管理",
     )
-    
+
     l10n_cn_free_tax_mark = fields.Selection(
         selection=[
             ('1', '1 Export & Other Tax Exemptions (出口免税和其他免税优惠政策)'),
@@ -38,9 +39,9 @@ class AccountTax(models.Model):
             ('3', '3 General Zero Rate (普通零税率)'),
         ],
         string="Free Tax Mark",
-        help="零税率标识"
+        help="零税率标识",
     )
-    
+
     l10n_cn_reduced_tax_code = fields.Selection(
         selection=[
             ('01', '01 Individual Housing Rental (个人出租住房)'),
@@ -48,5 +49,5 @@ class AccountTax(models.Model):
             ('05', '05 Housing Rental (住房租赁)'),
         ],
         string="Reduced Tax Code",
-        help="减按征税标识"
+        help="减按征税标识",
     )
