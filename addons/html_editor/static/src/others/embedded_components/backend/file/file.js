@@ -1,5 +1,5 @@
-import { proxy } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { signal, useEffect } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -16,28 +16,23 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
         // override the state by an embedded state.
         this.state = useEmbeddedState(this.props.host);
         this.fileModel.state = this.state;
-        this.localState = proxy({
-            editFileName: false,
-        });
+        this.editFileName = signal(false);
         this.nameInput = useRef("nameInput");
-        useLayoutEffect(
-            () => {
-                if (this.localState.editFileName) {
-                    this.nameInput.el.focus();
-                    this.nameInput.el.select();
-                }
-            },
-            () => [this.localState.editFileName]
-        );
+        useEffect(() => {
+            if (this.editFileName()) {
+                this.nameInput.el.focus();
+                this.nameInput.el.select();
+            }
+        });
     }
 
     onBlurNameInput(ev) {
-        this.localState.editFileName = false;
+        this.editFileName.set(false);
         this.renameFile();
     }
 
     onFocusFileName(ev) {
-        this.localState.editFileName = true;
+        this.editFileName.set(true);
     }
 
     onKeydownNameInput(ev) {
@@ -47,7 +42,7 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
             ev.preventDefault();
         }
         if (this.renameFile()) {
-            this.localState.editFileName = false;
+            this.editFileName.set(false);
             this.env.editorShared?.setSelectionAfter(this.props.host);
         }
     }
