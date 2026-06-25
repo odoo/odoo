@@ -10,6 +10,7 @@ import {
     htmlToTextContentInline,
     htmlToHtmlInline,
 } from "@mail/utils/common/format";
+import { removeHtmlComments } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
@@ -650,6 +651,8 @@ export class Message extends Record {
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
         updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        // The editor drops HTML comments (e.g. MSO ones) on parse; ignore them here too.
+        removeHtmlComments(messageBodyEl, updatedBodyEl);
         if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
             return;
         }
