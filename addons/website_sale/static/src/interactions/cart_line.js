@@ -10,31 +10,29 @@ export class CartLine extends Interaction {
     static selector = '.o_cart_product';
     dynamicContent = {
         '.css_quantity > input.js_quantity': {
-            't-on-change.withTarget': this.locked(this.debounced(this.changeQuantity, 500)),
+            't-on-change': this.locked(this.debounced(this.changeQuantity, 500)),
         },
         '.css_quantity > button': {
-            't-on-click.prevent.withTarget': this.locked(this.incOrDecQuantity),
+            't-on-click.prevent': this.locked(this.incOrDecQuantity),
         },
         '.js_delete_product': { 't-on-click.prevent': this.locked(this.deleteProduct) },
     };
 
     /**
      * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async changeQuantity(ev, currentTargetEl) {
-        await this._changeQuantity(currentTargetEl);
+    async changeQuantity(ev) {
+        await this._changeQuantity(ev.target);
     }
 
     /**
      * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
      */
-    async incOrDecQuantity(ev, currentTargetEl) {
-        const input = currentTargetEl.closest('.css_quantity').querySelector('input.js_quantity');
+    async incOrDecQuantity(ev) {
+        const input = ev.currentTarget.closest('.css_quantity').querySelector('input.js_quantity');
         const maxQuantity = parseFloat(input.dataset.max || Infinity);
         const oldQuantity = parseFloat(input.value || 0);
-        const newQuantity = currentTargetEl.name === 'minus_button'
+        const newQuantity = ev.currentTarget.name === 'minus_button'
             ? Math.min(Math.max(oldQuantity - 1, 0), maxQuantity)
             : Math.min(oldQuantity + 1, maxQuantity);
         if (oldQuantity !== newQuantity) {
