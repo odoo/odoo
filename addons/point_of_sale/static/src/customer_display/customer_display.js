@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, whenReady } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, whenReady } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
@@ -21,11 +21,14 @@ export class CustomerDisplay extends Component {
         this.time = useTime();
 
         this.scrollableRef = useRef("scrollable");
-        useLayoutEffect(() => {
-            this.scrollableRef.el
-                ?.querySelector(".orderline.selected")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
+        onMounted(() => this.scrollSelectedIntoView());
+        onPatched(() => this.scrollSelectedIntoView());
+    }
+
+    scrollSelectedIntoView() {
+        this.scrollableRef.el
+            ?.querySelector(".orderline.selected")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     get qrPaymentData() {
