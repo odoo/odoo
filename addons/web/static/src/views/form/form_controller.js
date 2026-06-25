@@ -352,7 +352,11 @@ export class FormController extends Component {
     }
 
     displayName() {
-        return this.model.root.data.display_name || (this.model.root.isNew && _t("New")) || "";
+        return (
+            this.model.root.data.display_name?.split("\n")[0] ||
+            (this.model.root.isNew && _t("New")) ||
+            ""
+        );
     }
 
     async onPagerUpdate({ offset, resIds }) {
