@@ -4,7 +4,6 @@ import time
 from odoo.addons.iot_drivers import main
 from odoo.addons.iot_drivers.tools import helpers, system
 from odoo.addons.iot_drivers.tools.system import IS_WINDOWS, IOT_IDENTIFIER
-from odoo.addons.iot_drivers.server_logger import server_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -41,8 +40,6 @@ def handle_message(message_type: str, communication_type: str, **kwargs: dict) -
             return {**base_response, **res}
         case 'server_clear':
             helpers.disconnect_from_server()
-            if server_logger:
-                server_logger.close()
         case 'server_update':
             system.update_conf({
                 'remote_server': kwargs['server_url']
