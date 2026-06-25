@@ -1,5 +1,6 @@
 import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
+import { WebsocketWorker } from "@bus/workers/websocket_worker";
 
 import {
     click,
@@ -14,7 +15,7 @@ import {
 
 import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
 
-import { Command } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -75,6 +76,7 @@ test("bus subscription updated when joining locally pinned thread", async () => 
 });
 
 test("bus subscription is refreshed when channel is joined", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     const later = luxon.DateTime.now().plus({ seconds: 2 });
@@ -94,6 +96,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
 });
 
 test("bus subscription is refreshed when channel is left", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
