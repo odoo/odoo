@@ -35,6 +35,37 @@ class AccountTax(models.Model):
     l10n_in_tds_feature_enabled = fields.Boolean(related='company_id.l10n_in_tds_feature')
     l10n_in_tcs_feature_enabled = fields.Boolean(related='company_id.l10n_in_tcs_feature')
 
+    def _update_reverse_charge_from_children(self):
+        for tax in self:
+            tax.with_context(skip_reverse_charge_sync=True).write({
+                'l10n_in_reverse_charge': any(
+                    tax.children_tax_ids.mapped('l10n_in_reverse_charge')
+                )
+            })
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        taxes = super().create(vals_list)
+        taxes.filtered(
+            lambda t: t.amount_type == 'group' and t.country_code == 'IN'
+        )._update_reverse_charge_from_children()
+        return taxes
+
+    def write(self, vals):
+        res = super().write(vals)
+        if self.env.context.get('skip_reverse_charge_sync'):
+            return res
+        taxes_to_update = self.env['account.tax']
+        if 'l10n_in_reverse_charge' in vals:
+            taxes_to_update |= self.env['account.tax'].search([
+                ('children_tax_ids', 'in', self.ids),
+                ('country_id.code', '=', 'IN'),
+            ])
+        if 'children_tax_ids' in vals:
+            taxes_to_update |= self
+        taxes_to_update._update_reverse_charge_from_children()
+        return res
+
     @api.model
     @api.readonly
     def name_search(self, name='', domain=None, operator='ilike', limit=100):

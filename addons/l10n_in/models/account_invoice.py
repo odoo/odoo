@@ -508,6 +508,61 @@ class AccountMove(models.Model):
             return 'l10n_in.l10n_in_report_invoice_document_inherit'
         return super()._get_name_invoice_report()
 
+    @api.model
+    def _l10n_in_fetch_base_line_tax_map(self):
+        tax_vals_map = {}
+        gst_tags = {
+            'igst': self.env.ref('l10n_in.tax_tag_igst'),
+            'cgst': self.env.ref('l10n_in.tax_tag_cgst'),
+            'sgst': self.env.ref('l10n_in.tax_tag_sgst'),
+            'cess': self.env.ref('l10n_in.tax_tag_cess'),
+        }
+        domain = [
+            ('move_id', 'in', self.ids),
+            ('l10n_in_gstr_section', 'in', ['sale_b2b_rcm', 'sale_b2b_regular', 'sale_b2cl',
+                                            'sale_b2cs', 'sale_exp_wp', 'sale_exp_wop',
+                                                'sale_sez_wp', 'sale_sez_wop', 'sale_deemed_export',
+                                            'sale_cdnr_rcm', 'sale_cdnr_regular', 'sale_cdnr_deemed_export',
+                                            'sale_cdnr_sez_wp', 'sale_cdnr_sez_wop', 'sale_cdnur_b2cl',
+                                            'sale_cdnur_exp_wp', 'sale_cdnur_exp_wop']),
+        ]
+        tax_details_sql = self.env['account.move.line']._get_query_tax_details_from_domain(domain=domain)
+        tax_details = self.env.execute_query_dict(tax_details_sql)
+        # Retrieve base lines and tax lines based on tax_details
+        base_lines = self.env['account.move.line'].browse([tax['base_line_id'] for tax in tax_details])
+        tax_lines = self.env['account.move.line'].browse([tax['tax_line_id'] for tax in tax_details])
+        base_lines_map = {line.id: line for line in base_lines}
+        tax_lines_map = {line.id: line for line in tax_lines}
+        for tax_vals in tax_details:
+            base_line = base_lines_map[tax_vals['base_line_id']]
+            tax_line = tax_lines_map[tax_vals['tax_line_id']]
+            tax_vals_map.setdefault(base_line, {
+                'rate_by_tax_tag': {},
+                'gst_tax_rate': 0.00,
+                'igst': 0.00,
+                'cgst': 0.00,
+                'sgst': 0.00,
+                'cess': 0.00,
+            })
+            for tax_type, tag_id in gst_tags.items():
+                if tag_id in tax_line.tax_tag_ids:
+                    tax_vals_map[base_line][tax_type] += tax_vals['tax_amount']
+                    if tax_type in ['igst', 'cgst', 'sgst']:
+                        tax_vals_map[base_line]['rate_by_tax_tag'][tax_type] = tax_line.tax_line_id.amount
+            tax_vals_map[base_line]['gst_tax_rate'] = sum(tax_vals_map[base_line]['rate_by_tax_tag'].values())
+        return tax_vals_map
+
+    @api.model
+    def _l10n_in_set_base_line_tax_details(self):
+        for base_line, tax_data in self._l10n_in_fetch_base_line_tax_map().items():
+            base_line.write({
+                'l10n_in_line_tax_rate': tax_data['gst_tax_rate'],
+                'l10n_in_line_igst_amt': tax_data['igst'],
+                'l10n_in_line_cgst_amt': tax_data['cgst'],
+                'l10n_in_line_sgst_amt': tax_data['sgst'],
+                'l10n_in_line_cess_amt': tax_data['cess'],
+            })
+
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
         posted = super()._post(soft)
@@ -543,6 +598,7 @@ class AccountMove(models.Model):
                     partner_id=move.partner_id.id,
                     name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
                 ))
+        posted._l10n_in_set_base_line_tax_details()
         return posted
 
     def _l10n_in_get_warehouse_address(self):
@@ -696,6 +752,9 @@ class AccountMove(models.Model):
         tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
         # we set the section on the invoice lines
         moves.line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+        # For some cases like reversal of pos_order, gstr_section is set on posted move on reconciliation.
+        # See - `test_gstr1_json_with_closing_entry_by_product`
+        moves.filtered(lambda m: m.state == 'posted')._l10n_in_set_base_line_tax_details()
 
     def _get_l10n_in_invoice_label(self):
         self.ensure_one()
