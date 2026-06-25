@@ -64,6 +64,7 @@ export function checkTicketData(data, basic = false, simplified = false) {
     //   is_cashier,
     //   cashier_name,
     //   is_qr_code,
+    //   has_portal_url
     //   payment_lines: [{
     // 	  name,
     // 	  amount,
@@ -96,6 +97,10 @@ export function checkTicketData(data, basic = false, simplified = false) {
         );
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         const ticket = doc.getElementById("pos-receipt");
+        const getElementInTicketByText = (selector, text) =>
+            Array.from(ticket.querySelectorAll(selector)).find((el) =>
+                el.textContent.includes(text)
+            );
 
         if (!ticket && !Object.keys(data).length) {
             return true;
@@ -194,6 +199,16 @@ export function checkTicketData(data, basic = false, simplified = false) {
         } else if (data.is_qr_code === false) {
             if (ticket.querySelector(".invoice-qr-code")) {
                 throw new Error("A QR code has been found in receipt.");
+            }
+        }
+
+        if (data.has_portal_url) {
+            const selfInvoicingURL = getElementInTicketByText(
+                "#pos-receipt .text-small",
+                `${order.config._base_url}/pos/ticket`
+            );
+            if (!selfInvoicingURL) {
+                throw new Error("No valid self invoicing URL has been found in receipt.");
             }
         }
 
