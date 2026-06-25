@@ -1,7 +1,6 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+
 
 TAX_SYSTEM = [
     ("RF01", "[RF01] Ordinario"),
@@ -153,38 +152,6 @@ class ResCompany(models.Model):
                 ], limit=1)
             else:
                 company.l10n_it_edi_purchase_journal_id = company.l10n_it_edi_purchase_journal_id
-
-    def _l10n_it_edi_export_check(self):
-        checks = {
-            'company_vat_codice_fiscale_missing': {
-                'fields': [('vat', 'l10n_it_codice_fiscale')],
-                'message': _("Company/ies should have a VAT number or Codice Fiscale."),
-            },
-            'company_address_missing': {
-                'fields': [('street', 'street2'), ('zip',), ('city',), ('country_id',)],
-                'message': _("Company/ies should have a complete address, verify their Street, City, Zipcode and Country."),
-            },
-            'company_l10n_it_tax_system_missing': {
-                'fields': [('l10n_it_tax_system',)],
-                'message': _("Company/ies should have a Tax System"),
-            },
-        }
-        errors = {}
-        for key, check in checks.items():
-            for fields_tuple in check.pop('fields'):
-                if invalid_records := self.filtered(lambda record: not any(record[field] for field in fields_tuple)):
-                    errors[f"l10n_it_edi_{key}"] = {
-                        'message': check['message'],
-                        'action_text': _("View Company/ies"),
-                        'action': invalid_records._get_records_action(name=_("Check Company Data")),
-                    }
-        if self.filtered(lambda x: not x.l10n_it_edi_proxy_user_id):
-            errors['l10n_it_edi_settings_l10n_it_edi_proxy_user_id'] = {
-                'message': _("You need to set the Codice Fiscale on your company."),
-                'action_text': _("View Company/ies"),
-                'action': self._get_records_action(name=_("Check Company Data")),
-            }
-        return errors
 
     @api.onchange("l10n_it_has_tax_representative")
     def _onchange_l10n_it_has_tax_represeentative(self):

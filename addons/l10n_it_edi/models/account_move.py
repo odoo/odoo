@@ -5,17 +5,18 @@ import string
 import uuid
 import unicodedata
 from datetime import datetime
+
 from lxml import etree
-from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
+from stdnum.it import codicefiscale, iva
+
 from odoo.exceptions import LockError, UserError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, cleanup_xml_node, float_compare, float_is_zero, float_repr, float_round, html2plaintext
 from odoo.tools.sql import column_exists, create_column
 
-from stdnum.it import codicefiscale, iva
-
-from odoo import _, api, Command, fields, models, modules
+from odoo import _, api, Command, fields, models
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from odoo.tools.mimetypes import guess_mimetype
@@ -458,9 +459,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         return (
             self.state == 'posted'
-            and self.company_id.account_fiscal_country_id.code == 'IT'
+            and (self.country_code == 'IT' or self.commercial_partner_id.invoice_edi_format == 'it_edi_xml')
             and self.journal_id.type == 'sale'
             and self.l10n_it_edi_state in (False, 'rejected')
+            and not self.l10n_it_edi_attachment_file
         )
 
     def _l10n_it_edi_add_base_lines_xml_values(self, base_lines_aggregated_values, is_downpayment):
@@ -999,11 +1001,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         template_reference = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', raise_if_not_found=False)
         buyer = self.commercial_partner_id
-        checks = ['partner_address_missing', 'partner_vat_codice_fiscale_missing']
         return bool(
             template_reference
             and not self.l10n_it_edi_is_self_invoice
-            and list(buyer._l10n_it_edi_export_check(checks).keys()) == ['l10n_it_edi_partner_address_missing']
+            and not ((buyer.street or buyer.street2) and buyer.zip and buyer.city and buyer.country_id)
             and (not buyer.country_id or buyer.country_id.code == 'IT')
             and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
             and (self.company_id.l10n_it_tax_system == 'RF19' or self.amount_total <= 400)
@@ -2001,85 +2002,145 @@ class AccountMove(models.Model):
             sending activity and returns an errors dictionary ready for the
             actionable_errors widget to display. """
 
+        many = len(self) > 1
+        today = fields.Date.context_today(self)
         companies = self.mapped("company_id")
-        companies_partners = companies.mapped("partner_id")
-        moves_full = self.filtered(lambda m: not m._l10n_it_edi_is_simplified())
-        moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
+        companies_partners = self.mapped("company_id.partner_id")
+        partners = self.mapped("commercial_partner_id") - companies_partners
+        simplified_moves = self.filtered(lambda move: move._l10n_it_edi_is_simplified())
+        simplified_partners = simplified_moves.mapped("commercial_partner_id") - companies_partners
+        full_partners = partners - simplified_partners
+        reps = companies.mapped("l10n_it_tax_representative_partner_id")
 
-        full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
-        simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)
-        representatives = companies.mapped("l10n_it_tax_representative_partner_id").filtered(lambda p: p not in companies_partners | simplified | full)
+        def add_error(records, suffix, error_code, error_code_detail=None, level='warning'):
+            error_key = (many and error_code_detail) or error_code
+            checks.setdefault(error_key, {'suffixes': set(), 'records': self.env[records._name] if records else None})
+            check = checks[error_key]
+            check['suffixes'].add(suffix)
+            check['level'] = level
+            if records:
+                check['records'] |= records
 
-        return {
-            **companies._l10n_it_edi_export_check(),
-            **full._l10n_it_edi_export_check(['partner_address_missing']),
-            **simplified._l10n_it_edi_export_check(['partner_country_missing']),
-            **(simplified | full)._l10n_it_edi_export_check(['partner_vat_codice_fiscale_missing']),
-            **representatives._l10n_it_edi_export_check(['partner_vat_missing']),
-            **self._l10n_it_edi_base_export_check(),
-            **self._l10n_it_edi_export_taxes_check(),
+        def needs_pa_fields(move):
+            partner = move.commercial_partner_id
+            return (
+                partner._l10n_it_edi_is_public_administration()
+                or (len(partner.l10n_it_pa_index or '') == 7 and (move.l10n_it_cig or move.l10n_it_cup))
+            )
+
+        def filter_product_lines(filter_func):
+            return self.filtered(lambda move:
+                move.invoice_line_ids.filtered(lambda line: line.display_type == 'product' and filter_func(line)))
+
+        checks = {}
+
+        if self.filtered(lambda move: move.l10n_it_edi_proxy_mode == 'test'):
+            add_error(
+                self.env['ir.config_parameter'].search([('key', '=', 'l10n_it_edi.proxy_user_edi_mode')]),
+                _("Change your environment to 'prod' on the System Parameters to use the IT EDI."),
+                'l10n_it_edi_param_test',
+                level='info',
+            )
+
+        if records := companies.filtered(lambda com: not com.l10n_it_tax_system):
+            add_error(records, _("Tax system"), 'company_config_missing', 'company_tax_system_missing')
+        if records := companies.filtered(lambda com: not com.vat and not com.l10n_it_codice_fiscale):
+            add_error(records, _("VAT number or Fiscal Code"), 'company_config_missing', 'company_identifier_missing')
+        if records := companies.filtered(lambda com: not (com.street or com.street2) or not com.zip or not com.city or not com.country_id):
+            add_error(records, _("address (Street, City, Zipcode, Country)"), 'company_config_missing', 'company_address_missing')
+
+        if records := partners.filtered(lambda par: not par.vat and not par.l10n_it_codice_fiscale):
+            add_error(records, _("VAT number or Fiscal Code"), 'partner_config_missing', 'partner_identifier_missing')
+        if records := simplified_partners.filtered(lambda par: not par.country_id):
+            add_error(records, _("Country (for simplified invoices)"), 'partner_config_missing')
+        if records := full_partners.filtered(lambda par: not (par.street or par.street2) or not par.zip or not par.city or not par.country_id):
+            add_error(records, _("address (Street, City, Zipcode, Country)"), 'partner_config_missing')
+
+        if records := reps.filtered(lambda rep: not rep.vat):
+            add_error(records, _("VAT number"), 'representative_config_missing')
+        if records := reps.filtered(lambda rep: not rep.country_id):
+            add_error(records, _("Country"), 'representative_config_missing')
+
+        if records := self.filtered(lambda move: move.l10n_it_edi_is_self_invoice and move._l10n_it_edi_services_or_goods() == 'both'):
+            add_error(records, _("Products and services cannot be mixed"), 'move_invalid_mix_services_goods')
+
+        if records := self.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > today):
+            add_error(records, _("invalid Origin Document Date"), 'move_missing_origin_document')
+        if records := self.filtered(lambda move: needs_pa_fields(move) and not move.l10n_it_origin_document_type):
+            add_error(records, _("missing Origin Document Type"), 'move_missing_origin_document')
+        if records := self.filtered(lambda move: needs_pa_fields(move) and (not move.l10n_it_cig or not move.l10n_it_cup)):
+            add_error(records, _("missing CIG and CUP"), 'move_missing_origin_document')
+
+        if records := filter_product_lines(lambda line: len(line.tax_ids._l10n_it_filter_kind('vat')) != 1):
+            add_error(records, _("exactly one VAT tax set per line"), 'move_invalid_tax_per_line')
+        if records := filter_product_lines(lambda line: len(line.tax_ids._l10n_it_filter_kind('withholding_no_enasarco')) > 1):
+            add_error(records, _("at most one Withholding tax set per line"), 'move_invalid_tax_per_line')
+        if records := filter_product_lines(lambda line: len(line.tax_ids._l10n_it_filter_kind('pension_fund')) > 1):
+            add_error(records, _("at most one Pension Fund tax set per line"), 'move_invalid_tax_per_line')
+
+        if records := self.filtered(lambda move: move.invoice_pdf_report_id and not move.l10n_it_edi_attachment_name):
+            if rejected := records.filtered(lambda move: move.l10n_it_edi_state == 'rejected'):
+                add_error(rejected, _("Reset it draft, fix its data and re-confirm"), 'move_rejected')
+            if already_sent := records - rejected:
+                add_error(already_sent, _("Delete the PDF, so we can re-generate it and keep it consistent with the XML."), 'move_already_sent')
+
+        action_titles = {
+            'res.company': _("View Company/ies"),
+            'res.partner': _("View Partner(s)"),
+            'account.move': _("View Invoice(s)"),
+            'ir.config_parameter': _("View Parameter(s)"),
+        }
+        action_texts = {
+            'res.company': _("Check Company Data"),
+            'res.partner': _("Check Partner(s)"),
+            'account.move': _("Check Invoice(s)"),
+            'ir.config_parameter': _("Check Parameter(s)"),
+        }
+        action_messages = {
+            'res.company': _("Company(ies) should have missing info:"),
+            'res.partner': _("Partner(s) should have missing info:"),
+            'account.move': _("Check the following information on the Electronic Invoicing tab:"),
+            'representative_config_missing': _("Company representative(s) should have missing info:"),
+            'move_invalid_tax_per_line': _("Invoice(s) must have:"),
+            'move_invalid_mix_services_goods': "",
+            'ir.config_parameter': "",
+            'move_already_sent': _("Invoice(s) already sent:"),
+            'move_rejected': _("Invoice(s) was rejected:"),
         }
 
-    def _l10n_it_edi_base_export_check(self):
-        def build_error(message, records):
-            return {
-                'message': message,
-                **({
-                    'action_text': _("View invoice(s)"),
-                    'action': records._get_records_action(name=_("Invoice(s) to check")),
-                } if len(self) > 1 else {})
-            }
+        alerts = {}
 
-        errors = {}
-        if moves := self.filtered(lambda move: move.l10n_it_edi_is_self_invoice and move._l10n_it_edi_services_or_goods() == 'both'):
-            errors['l10n_it_edi_move_rc_mixed_product_types'] = build_error(
-                message=_("Cannot apply Reverse Charge to bills which contains both services and goods."),
-                records=moves)
-
-        if pa_moves := self.filtered(lambda move: move.commercial_partner_id._l10n_it_edi_is_public_administration()):
-            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type):
-                message = _("Partner(s) belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
-                errors['move_missing_origin_document'] = build_error(message=message, records=moves)
-            today = fields.Date.context_today(self)
-            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > today):
-                message = _("The Origin Document Date cannot be in the future.")
-                errors['l10n_it_edi_move_future_origin_document_date'] = build_error(message=message, records=moves)
-        if pa_moves := self.filtered(lambda move: len(move.commercial_partner_id.l10n_it_pa_index or '') == 7):
-            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and (move.l10n_it_cig or move.l10n_it_cup)):
-                message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
-                errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
-        return errors
-
-    def _l10n_it_edi_export_taxes_check(self):
-        errors = {}
-        for kind_code, kind_desc, min_len in (
-            ('vat', _('VAT'), 1),
-            ('withholding_no_enasarco', _('Withholding'), 0),
-            ('pension_fund', _('Pension Fund'), 0),
-        ):
-            errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len))
-        return errors
-
-    def _l10n_it_edi_check_lines_for_tax_kind(self, kind_code, kind_desc, min_len=1):
-        assert min_len in (0, 1)
-        if self.invoice_line_ids.filtered(lambda line:
-            line.display_type == 'product'
-            and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= 1),
-        ):
-            return {
-                f'l10n_it_edi_move_{kind_code}_tax_per_line': {
-                    'message': _(
-                        "Invoices must have %(number)s one %(kind)s tax set per line.",
-                        number=_("exactly") if min_len == 1 else _("at most"),
-                        kind=kind_desc,
-                    ),
-                    **({
-                        'action_text': _("View invoice(s)"),
-                        'action': self._get_records_action(name=_("Check taxes on invoice lines")),
-                    } if len(self) > 1 else {}),
+        if self.filtered(lambda move: not move.l10n_it_edi_proxy_mode):
+            alerts['l10n_it_edi_invite_authorize'] = {
+                'level': 'info',
+                'message': _("You must authorize Odoo in the Settings to use the IT EDI."),
+                'action_text': _("View Settings"),
+                'action': {
+                    'name': _("Settings"),
+                    'type': 'ir.actions.act_url',
+                    'target': 'self',
+                    'url': '/odoo/settings#l10n_it_edi_setting',
                 },
             }
-        return {}
+
+        for error_code, values in checks.items():
+            model = values['records']._name
+            kwargs = {}
+            if model == 'res.partners':
+                kwargs['views'] = self.env.ref('l10n_it_edi.res_partner_tree_l10n_it', raise_if_not_found=False) if many else [('form', False)]
+            action_message = action_messages[error_code] if error_code in action_messages else action_messages[model]
+            action = (
+                False if (model == 'account.move' and not many)
+                else values['records']._get_records_action(name=action_titles.get(model), **kwargs)
+            )
+            alerts[f"l10n_it_edi_{error_code}"] = {
+                'message': f"{action_message} {', '.join(values['suffixes'])}".lstrip(),
+                'action_text': action_texts.get(model),
+                'action': action,
+                'level': values['level'],
+            }
+
+        return alerts
 
     def _l10n_it_edi_get_formatters(self):
         def format_alphanumeric(text, maxlen=None):
