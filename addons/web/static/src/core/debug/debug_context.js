@@ -1,4 +1,4 @@
-import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 import { user } from "@web/core/user";
 import { registry } from "../registry";
 
@@ -74,9 +74,9 @@ export function useDebugCategory(category, context = {}) {
     const env = useEnv();
     if (env.debug) {
         const debugContext = useEnvDebugContext();
-        useLayoutEffect(
-            () => debugContext.activateCategory(category, context),
-            () => []
-        );
+        // useLayoutEffect(
+        //     () => debugContext.activateCategory(category, context),
+        //     () => []
+        // );
     }
 }
