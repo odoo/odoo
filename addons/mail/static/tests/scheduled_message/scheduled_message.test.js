@@ -381,7 +381,7 @@ test("Open chat when clicking on channel mention", async () => {
     await openFormView("res.partner", partnerId);
     await click(".o_channel_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow:text('my-channel')");
+    await contains(".o-mail-ChatWindow-name:text('my-channel')");
 });
 
 test("Scheduled message with attachments", async () => {

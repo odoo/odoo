@@ -23,7 +23,7 @@ test("can open DM from @username in command palette", async () => {
     await insertText(".o_command_palette_search input", "@");
     await insertText("input[placeholder='Search a conversation']", "Mario");
     await click(".o_command.focused:has(.oi-user):text('Mario')");
-    await contains(".o-mail-ChatWindow:text('Mario')");
+    await contains(".o-mail-ChatWindow-name:text('Mario')");
 });
 
 test("can open channel from @channel_name in command palette", async () => {
@@ -56,7 +56,7 @@ test("can open channel from @channel_name in command palette", async () => {
     await contains(".o_command:text('Create Channel')");
     await contains(".o_command:text('Create Chat')");
     await click(".o_command.focused:has(.fa-hashtag):text('project')");
-    await contains(".o-mail-ChatWindow:text('project')");
+    await contains(".o-mail-ChatWindow-name:text('project')");
 });
 
 test("Conversation mentions in the command palette with @", async () => {
