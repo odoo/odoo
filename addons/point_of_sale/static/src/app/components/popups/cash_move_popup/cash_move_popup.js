@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -32,7 +31,6 @@ export class CashMovePopup extends Component {
         });
         this.confirm = useAsyncLockedMethod(this.confirm);
         this.ui = useService("ui");
-        this.inputRef = useRef("inputRef");
         onWillStart(() => {
             this.loadCashMoves();
         });
@@ -102,7 +100,7 @@ export class CashMovePopup extends Component {
     }
     onClickButton(type) {
         this.state.type = type;
-        this.inputRef.el.focus();
+        this.inputRef?.().focus();
     }
     format(value) {
         return this.env.utils.isValidFloat(value)

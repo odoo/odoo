@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 
 export const ELEM_ID_PREFIX = "fpe-";
@@ -8,7 +8,7 @@ export class FloorPlanBase extends Component {
     setup() {
         super.setup();
         this.floorPlanStore = useFloorPlanStore();
-        this.containerRef = useRef("container");
+        this.containerRef = signal.ref();
         this.canvasRef = useRef("canvas");
         this.state = proxy({ canvasWidth: 0, canvasHeight: 0 });
     }
@@ -58,9 +58,9 @@ export class FloorPlanBase extends Component {
         }
 
         const bounds = element.getBounds();
-        const containerRect = this.containerRef.el.getBoundingClientRect();
-        const scrollLeft = this.containerRef.el.scrollLeft;
-        const scrollTop = this.containerRef.el.scrollTop;
+        const containerRect = this.containerRef().getBoundingClientRect();
+        const scrollLeft = this.containerRef().scrollLeft;
+        const scrollTop = this.containerRef().scrollTop;
 
         const visibleArea = {
             left: scrollLeft,
@@ -77,7 +77,7 @@ export class FloorPlanBase extends Component {
             bounds.top + bounds.height <= visibleArea.bottom;
 
         if (!isVisible) {
-            this.containerRef.el.scrollTo({
+            this.containerRef().scrollTo({
                 left: bounds.left - (containerRect.width - bounds.width) / 2,
                 top: bounds.top - (containerRect.height - bounds.height) / 2,
                 behavior: behavior || "smooth",

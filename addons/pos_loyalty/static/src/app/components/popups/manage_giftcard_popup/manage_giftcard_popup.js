@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -37,8 +36,7 @@ export class ManageGiftCardPopup extends Component {
             amountError: false,
             expirationDate: luxon.DateTime.now().plus({ year: 1 }),
         });
-        this.inputRef = useRef("input");
-        this.amountInputRef = useRef("amountInput");
+        this.inputRef = signal.ref();
         this.batchedGiftcardCodeKeydown = debounce(this.checkGiftCard.bind(this), 500);
         onMounted(this.onMounted);
     }
@@ -49,7 +47,7 @@ export class ManageGiftCardPopup extends Component {
         const expirationDateInput = document.querySelector(".o_exp_date_container").children[1];
         expirationDateInput.classList.remove("o_input");
         expirationDateInput.classList.add("form-control", "form-control-lg");
-        this.inputRef.el.focus();
+        this.inputRef().focus();
     }
 
     onKeydownGiftCardCode() {

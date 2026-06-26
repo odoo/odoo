@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useRef } from "@web/owl2/utils";
+import { useComponent, useEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
@@ -53,15 +53,11 @@ export function useErrorHandlers() {
     };
 }
 
-/**
- * Assumes t-ref="root" in the root element of the component that uses this hook.
- */
-export function useAutoFocusToLast() {
-    const root = useRef("root");
+export function useAutoFocusToLast(rootRef) {
     let target = null;
     function autofocus() {
         const prevTarget = target;
-        const allInputs = root.el.querySelectorAll("input");
+        const allInputs = rootRef().querySelectorAll("input");
         target = allInputs[allInputs.length - 1];
         if (target && target !== prevTarget) {
             target.focus();
@@ -167,16 +163,17 @@ export function useIsChildLarger(container) {
     });
 
     const computeSize = () => {
-        if (!container.el || !container.el.children.length) {
+        const containerEl = container();
+        if (!containerEl || !containerEl.children.length) {
             return;
         }
 
         let acc = 0;
         let nbrItems = 0;
         let isLarger = false;
-        const containerWidth = container.el.clientWidth - 10;
+        const containerWidth = containerEl.clientWidth - 10;
 
-        for (const child of container.el.children) {
+        for (const child of containerEl.children) {
             acc += child.clientWidth;
             if (acc < containerWidth) {
                 nbrItems++;

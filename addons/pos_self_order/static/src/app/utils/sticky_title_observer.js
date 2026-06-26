@@ -1,12 +1,11 @@
-import { useRef } from "@web/owl2/utils";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 
-export const useStickyTitleObserver = (name, callback) => {
-    const ref = useRef(name);
+export const useStickyTitleObserver = (refSignal, callback) => {
     let observer;
 
     onMounted(() => {
-        if (!ref?.el) {
+        const el = refSignal();
+        if (!el) {
             return;
         }
 
@@ -14,12 +13,13 @@ export const useStickyTitleObserver = (name, callback) => {
             threshold: 0,
         });
 
-        observer.observe(ref.el);
+        observer.observe(el);
     });
 
     onWillUnmount(() => {
-        if (observer && ref?.el) {
-            observer.unobserve(ref.el);
+        const el = refSignal();
+        if (observer && el) {
+            observer.unobserve(el);
         }
     });
 };

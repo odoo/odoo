@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, whenReady } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal, whenReady } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
@@ -20,9 +20,9 @@ export class CustomerDisplay extends Component {
         this.order = useService("customer_display_data");
         this.time = useTime();
 
-        this.scrollableRef = useRef("scrollable");
+        this.scrollableRef = signal.ref();
         useLayoutEffect(() => {
-            this.scrollableRef.el
+            this.scrollableRef()
                 ?.querySelector(".orderline.selected")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
         });

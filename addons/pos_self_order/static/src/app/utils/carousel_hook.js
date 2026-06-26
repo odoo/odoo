@@ -1,6 +1,5 @@
 /* global Carousel */
 
-import { useRef } from "@web/owl2/utils";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { session } from "@web/session";
 
@@ -10,11 +9,10 @@ import { session } from "@web/session";
  * - Videos play from the beginning and switch to the next slide
  *   after their full duration.
  *
- * @param {string} refName
+ * @param {string} carouselRef
  * @param {number} [timeIntervalSec=5]
  */
-export function useCarousel(refName, timeIntervalSec = 5) {
-    const carouselRef = useRef(refName);
+export function useCarousel(carouselRef, timeIntervalSec = 5) {
     let carousel;
     let timeoutId;
 
@@ -51,13 +49,14 @@ export function useCarousel(refName, timeIntervalSec = 5) {
     };
 
     onMounted(() => {
-        carousel = new Carousel(carouselRef.el);
-        carouselRef.el.addEventListener("slid.bs.carousel", scheduleNextSlide);
+        const carouselEl = carouselRef();
+        carousel = new Carousel(carouselEl);
+        carouselEl.addEventListener("slid.bs.carousel", scheduleNextSlide);
         setTimeout(scheduleNextSlide, 100);
     });
 
     onWillUnmount(() => {
         _clearTimeout();
-        carouselRef.el?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
+        carouselRef()?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
     });
 }

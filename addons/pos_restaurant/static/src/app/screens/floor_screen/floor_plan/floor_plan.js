@@ -54,7 +54,7 @@ export class FloorPlan extends FloorPlanBase {
             this.scrollFloorId = selectedFloor.id; // Track the previous floor when this method is called again (to save its position)
             const scrollPosition = this.floorPlanStore.getFloorScrollPositions(selectedFloor.id);
             if (scrollPosition) {
-                this.containerRef.el?.scrollTo(scrollPosition);
+                this.containerRef()?.scrollTo(scrollPosition);
             } else {
                 // Scroll to first visible table
                 const firstTable = selectedFloor.getFirstVisibleTable();
@@ -66,10 +66,10 @@ export class FloorPlan extends FloorPlanBase {
     }
 
     saveScrollPosition() {
-        if (!this.scrollFloorId || !this.containerRef.el) {
+        const scrollContainerEl = this.containerRef();
+        if (!this.scrollFloorId || !scrollContainerEl) {
             return;
         }
-        const scrollContainerEl = this.containerRef.el;
         this.floorPlanStore.storeFloorScrollPosition(this.scrollFloorId, {
             left: scrollContainerEl.scrollLeft,
             top: scrollContainerEl.scrollTop,
@@ -105,7 +105,7 @@ export class FloorPlan extends FloorPlanBase {
         let canvasWidth = size.width;
         let canvasHeight = size.height;
 
-        const scrollContainer = this.containerRef.el;
+        const scrollContainer = this.containerRef();
 
         // Add some padding if overflow
         if (canvasWidth > scrollContainer.clientWidth) {
@@ -252,7 +252,7 @@ export class FloorPlan extends FloorPlanBase {
         };
 
         useDraggable({
-            ref: this.canvasRef,
+            ref: this.canvasRef, // TODO-PARP: ?
             elements: ".table",
             enabled: true,
             onDragStart: ({ addClass, element }) => {},

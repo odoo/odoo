@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, computed, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, computed, proxy, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
@@ -22,10 +21,11 @@ export class ProductListPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.dialog = useService("dialog");
-        this.categoryListRef = useRef("category_list");
-        this.subCategoryListRef = useRef("sub_category_list");
-        this.productListRef = useRef("product_list");
-        this.subCategoryContainerRef = useRef("sub_cat_container");
+        this.categoryListRef = signal.ref();
+        this.subCategoryListRef = signal.ref();
+        this.productListRef = signal.ref();
+        this.subCategoryContainerRef = signal.ref();
+        this.categoryContainerRef = signal.ref();
 
         const initCategories = !this.selfOrder.currentCategory;
         if (initCategories) {
@@ -60,7 +60,7 @@ export class ProductListPage extends Component {
 
         this.scrollShadow = useScrollShadow(this.productListRef);
         useDraggableScroll(this.categoryListRef);
-        useHorizontalScrollShadow(this.categoryListRef, useRef("category_container"));
+        useHorizontalScrollShadow(this.categoryListRef, this.categoryContainerRef);
         useDraggableScroll(this.subCategoryListRef);
         Object.defineProperty(this.state, "quantityByProductTmplId", {
             get: computed(() =>
@@ -79,14 +79,15 @@ export class ProductListPage extends Component {
         onMounted(() => {
             this.toggleSubCategoryPanel();
             this.ensureCategoryVisible();
-            if (this.productListRef.el) {
-                this.productListRef.el.scrollTop = savedScrollTop;
+            const productListEL = this.productListRef();
+            if (productListEL) {
+                productListEL.scrollTop = savedScrollTop;
             }
         });
 
         onWillUnmount(() => {
             this.selfOrder.currentCategory = this.state.selectedCategory;
-            savedScrollTop = this.productListRef.el?.scrollTop || 0;
+            savedScrollTop = this.productListRef()?.scrollTop || 0;
         });
     }
 
@@ -97,7 +98,7 @@ export class ProductListPage extends Component {
                 this.toggleSubCategoryPanel();
             }
             this.ensureCategoryVisible();
-            this.productListRef.el?.scrollTo({ top: 0 });
+            this.productListRef()?.scrollTo({ top: 0 });
         } else {
             this.scrollToCategory(category.id);
         }
@@ -108,11 +109,11 @@ export class ProductListPage extends Component {
             return;
         }
 
-        scrollItemIntoViewX(
-            this.categoryListRef.el,
-            `[data-category-pill="${this.selectedCategory.id}"]`,
-            { edgePadding: 20, minRightGap: this.categoryListRef.el.offsetWidth / 3 }
-        );
+        const categoryListEl = this.categoryListRef();
+        scrollItemIntoViewX(categoryListEl, `[data-category-pill="${this.selectedCategory.id}"]`, {
+            edgePadding: 20,
+            minRightGap: categoryListEl.offsetWidth / 3,
+        });
     }
 
     isProductAvailable(product) {
@@ -165,7 +166,7 @@ export class ProductListPage extends Component {
             return;
         }
 
-        const el = this.subCategoryContainerRef.el;
+        const el = this.subCategoryContainerRef();
         const nextSubCategories = this.getSubCategories();
         // Managing this with state would hide the subcategory items before the container finishes closing,
         // causing an awkward visual transition.

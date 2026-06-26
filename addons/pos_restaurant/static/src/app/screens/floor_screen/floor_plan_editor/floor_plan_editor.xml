@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.floor_plan_editor">
-        <div t-custom-ref="container" class="o_fp_canvas w-100 h-100 overflow-auto position-relative" t-attf-style="{{this.getScrollContainerStyles()}}" t-on-click="this.onCanvasClick" >
+        <div t-ref="this.containerRef" class="o_fp_canvas w-100 h-100 overflow-auto position-relative" t-attf-style="{{this.getScrollContainerStyles()}}" t-on-click="this.onCanvasClick" >
              <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" dir="ltr" t-attf-style="{{this.getCanvasStyles()}}">
-                 <svg class="o_fp_snap_guides position-absolute w-100 h-100 top-0 start-0" t-custom-ref="snapGuides" />
+                 <svg class="o_fp_snap_guides position-absolute w-100 h-100 top-0 start-0" t-ref="this.snapGuidesRef" />
                  <Handles floorElement="this.floorPlanStore.selectedElement" canvasRef="this.canvasRef" onStartResize="this.startResize" onStartMove="this.startDrag" onStartRotate="this.startRotate"
                           onEdit="this.onEdit" actions="this.handlesActions" actionMenuPosition="this.state.actionMenuPosition" />
                  <t t-foreach="this.floorPlanStore.getFloorDecorElements()" t-as="shape" t-key="shape.uuid">
@@ -14,7 +14,7 @@
                  </t>
               </div>
 
-             <div t-custom-ref="actionMenu" class="o_fp_action_menu">
+             <div t-ref="this.actionMenuRef" class="o_fp_action_menu">
                 <button class="btn btn-secondary o_edit" title="Properties" t-if="this.selectedElement?.isEditable()" t-att-class="{'active':this.floorPlanStore.elementEditMode}" t-on-click="this.editSelected"><i class="fa fa-fw fa-pencil"/></button>
                 <button class="btn btn-secondary o_duplicate" title="Duplicate" t-on-click="this.duplicateSelected"><i class="fa fa-fw fa-copy"/></button>
                 <button class="btn btn-secondary o_delete" title="Delete" t-on-click="this.deleteSelected"><i class="fa fa-fw fa-trash "/></button>

@@ -133,7 +133,7 @@ export class ProductScreen extends Component {
         });
 
         useSortable({
-            ref: useRef("productsRoot"),
+            ref: useRef("productsRoot"), // TODO-PARP: ?
             elements: ".product-sortable",
             cursor: "move",
             tolerance: 10,

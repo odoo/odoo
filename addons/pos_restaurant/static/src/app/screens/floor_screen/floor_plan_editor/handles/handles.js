@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillPatch, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillPatch, proxy, signal } from "@odoo/owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 import { computeRotationHandlePosition } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/utils";
 const HANDLE_OFFSET = 5;
@@ -19,11 +18,11 @@ export class Handles extends Component {
     };
 
     get el() {
-        return this.root.el;
+        return this.handleRef();
     }
 
     setup() {
-        this.root = useRef("handles");
+        this.handleRef = signal.ref();
         this.startResize = this.startResize.bind(this);
 
         this.state = proxy({

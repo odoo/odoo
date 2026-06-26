@@ -1,5 +1,5 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
@@ -39,11 +39,11 @@ export class ComboPage extends Component {
         });
         this.onAttributeSelection = this.onAttributeSelection.bind(this);
 
-        this.productNameRef = useRef("productName");
-        this.scrollContainerRef = useRef("scrollContainer");
+        this.productNameRef = signal.ref();
+        this.scrollContainerRef = signal.ref();
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
         useStickyTitleObserver(
-            "productName",
+            this.productNameRef,
             (isSticky) => (this.state.showStickyTitle = isSticky)
         );
     }
@@ -82,7 +82,7 @@ export class ComboPage extends Component {
         return shouldShowMissingDetails(
             product,
             this.state.selectedValues,
-            this.scrollContainerRef
+            this.scrollContainerRef()
         );
     }
 
@@ -425,7 +425,7 @@ export class ComboPage extends Component {
         setTimeout(() => {
             const el = window.document.getElementById("k-combo-scroll-target");
             if (el) {
-                this.scrollContainerRef.el?.scrollTo({ top: el.offsetTop - 20 });
+                this.scrollContainerRef()?.scrollTo({ top: el.offsetTop - 20 });
             }
         }, 1);
     }
