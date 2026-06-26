@@ -60,7 +60,7 @@
             <record id="tax_report_line_l10n_at_tva_sale_report_title" model="account.report.line">
                 <field name="name">4. VAT Computation (U1/U30)</field>
                 <field name="name@de">4. Berechnung der Umsatzsteuer (U1/U30)</field>
-                <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance)</field>
+                <field name="aggregation_formula">(AT_022_tax.balance + AT_124_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_125_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance)</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_line_l10n_at_tva_line_4_1" model="account.report.line">
@@ -222,7 +222,7 @@
                     <record id="tax_report_line_at_base_title_umsatz_base_4_14_19" model="account.report.line">
                         <field name="name">Taxable base</field>
                         <field name="name@de">Bemessungsgrundlage</field>
-                        <field name="aggregation_formula">AT_022_base.balance + AT_029_base.balance + AT_006_base.balance + AT_037_base.balance + AT_052_base.balance + AT_007_base.balance</field>
+                        <field name="aggregation_formula">AT_022_base.balance + AT_124_base.balance + AT_029_base.balance + AT_006_base.balance + AT_037_base.balance + AT_052_base.balance + AT_007_base.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_14_base" model="account.report.line">
                                 <field name="name">4.14 20% Standard rate [022]</field>
@@ -233,6 +233,17 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">KZ 022 Bemessungsgrundlage</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_l10n_at_tva_line_4_15_0_base" model="account.report.line">
+                                <field name="name">4.15.0 4.9% Reduced rate [124]</field>
+                                <field name="code">AT_124_base</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_l10n_at_tva_line_4_15_0_base_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">KZ 124 Bemessungsgrundlage</field>
                                     </record>
                                 </field>
                             </record>
@@ -301,7 +312,7 @@
                     <record id="tax_report_line_at_tax_title_4_14_19" model="account.report.line">
                         <field name="name">VAT</field>
                         <field name="name@de">Umsatzsteuer</field>
-                        <field name="aggregation_formula">AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance</field>
+                        <field name="aggregation_formula">AT_022_tax.balance + AT_124_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_14_tax" model="account.report.line">
                                 <field name="name">4.14 20% Standard rate</field>
@@ -312,6 +323,17 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">KZ 022 Umsatzsteuer</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_l10n_at_tva_line_4_15_0_tax" model="account.report.line">
+                                <field name="name">4.15.0 4.9% Reduced rate</field>
+                                <field name="code">AT_124_tax</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_l10n_at_tva_line_4_15_0_tax_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">KZ 124 Umsatzsteuer</field>
                                     </record>
                                 </field>
                             </record>
@@ -475,12 +497,12 @@
                     </record>
                     <record id="tax_report_line_l10n_at_tva_sale_04_report_title" model="account.report.line">
                         <field name="name">Of which taxable with</field> <!-- TODO: -->
-                        <field name="aggregation_formula">AT_072_base.balance + AT_073_base.balance + AT_008_base.balance + AT_088_base.balance</field>
+                        <field name="aggregation_formula">AT_072_base.balance + AT_125_base.balance + AT_073_base.balance + AT_008_base.balance + AT_088_base.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_line_at_base_title_umsatz_base_4_28_31" model="account.report.line">
                                 <field name="name">Taxable base</field>
                                 <field name="name@de">Bemessungsgrundlage</field>
-                                <field name="aggregation_formula">AT_072_base.balance + AT_073_base.balance + AT_008_base.balance + AT_088_base.balance</field>
+                                <field name="aggregation_formula">AT_072_base.balance + AT_125_base.balance + AT_073_base.balance + AT_008_base.balance + AT_088_base.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_28_base" model="account.report.line">
                                         <field name="name">4.28 20% Standard rate [072]</field>
@@ -491,6 +513,17 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">KZ 072 Bemessungsgrundlage</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_l10n_at_tva_line_4_29_0_base" model="account.report.line">
+                                        <field name="name">4.29.0 4.9% Reduced rate [125]</field>
+                                        <field name="code">AT_125_base</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_l10n_at_tva_line_4_29_0_base_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">KZ 125 Bemessungsgrundlage</field>
                                             </record>
                                         </field>
                                     </record>
@@ -535,7 +568,7 @@
                             <record id="tax_report_line_at_tax_title_4_28_31" model="account.report.line">
                                 <field name="name">VAT</field>
                                 <field name="name@de">Umsatzsteuer</field>
-                                <field name="aggregation_formula">AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance</field>
+                                <field name="aggregation_formula">AT_072_tax.balance + AT_125_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_l10n_at_tva_line_4_28_tax" model="account.report.line">
                                         <field name="name">4.28 20% Standard rate</field>
@@ -546,6 +579,17 @@
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">KZ 072 Umsatzsteuer</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_report_line_l10n_at_tva_line_4_29_0_tax" model="account.report.line">
+                                        <field name="name">4.29.0 4.9% Reduced rate</field>
+                                        <field name="code">AT_125_tax</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line_l10n_at_tva_line_4_29_0_tax_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">KZ 125 Umsatzsteuer</field>
                                             </record>
                                         </field>
                                     </record>
@@ -802,7 +846,7 @@
             <record id="tax_report_line_l10n_at_tva_line_7" model="account.report.line">
                 <field name="name">7. Prepayment/debit (-) or credit/surplus (+) [095]</field>
                 <field name="name@de">7. Zahllast (-) bzw. Gutschrift/Überschuss (+) [095]</field>
-                <field name="aggregation_formula">(AT_022_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance + AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance) + AT_090.balance</field>
+                <field name="aggregation_formula">(AT_022_tax.balance + AT_124_tax.balance + AT_029_tax.balance + AT_006_tax.balance + AT_037_tax.balance + AT_052_tax.balance + AT_007_tax.balance + AT_056.balance + AT_057.balance + AT_048.balance + AT_044.balance + AT_032.balance + AT_072_tax.balance + AT_125_tax.balance + AT_073_tax.balance + AT_008_tax.balance + AT_088_tax.balance + AT_060.balance + AT_061.balance + AT_083.balance + AT_065.balance + AT_066.balance + AT_082.balance + AT_087.balance + AT_089.balance + AT_064.balance + AT_062.balance + AT_063.balance + AT_067.balance) + AT_090.balance</field>
                 <field name="hierarchy_level">0</field>
             </record>
         </field>
