@@ -304,8 +304,8 @@ class HrAttendance(models.Model):
 
             domain_list.append(Domain.AND([
                 Domain('employee_id', '=', employee.id),
-                Domain('date', '<=', date_to),
-                Domain('date', '>=', date_from),
+                Domain('check_in', '<=', datetime.combine(date_to, datetime.max.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)),
+                Domain('check_out', '>=', datetime.combine(date_from, datetime.min.time()).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)),
             ]))
         if not domain_list:
             return Domain.FALSE
