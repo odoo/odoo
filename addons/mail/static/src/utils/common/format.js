@@ -175,7 +175,6 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             placeholder,
             text,
         });
-        body = htmlReplace(body, text, placeholder);
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}!`;
@@ -194,7 +193,9 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             placeholder,
             text,
         });
-        body = htmlReplace(body, text, placeholder);
+    }
+    for (const mention of mentions.sort((m1, m2) => m2.text.length - m1.text.length)) {
+        body = htmlReplace(body, mention.text, mention.placeholder);
     }
     for (const special of specialMentions) {
         body = htmlReplace(
