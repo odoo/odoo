@@ -13,7 +13,7 @@ export const locationSelectorDialogProps = {
     deliveryMethodId: t.number().optional(),
     countryId: t.number().optional(),
     zipCode: t.string(),
-    selectedLocationId: t.string().optional(false),
+    selectedLocationId: t.string().optional("false"),
     save: t.function(),
     close: t.function(), // This is the close from the env of the Dialog Component
 };

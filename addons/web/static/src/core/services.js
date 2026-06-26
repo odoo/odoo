@@ -1,4 +1,4 @@
-import { Plugin, Resource, types as t } from "@odoo/owl";
+import { Plugin, Resource, t } from "@odoo/owl";
 
 /**
  * Main resources for global plugins (aka 'services').

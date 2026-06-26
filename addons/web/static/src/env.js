@@ -1,15 +1,9 @@
-import { App, EventBus, t } from "@odoo/owl";
-import { SERVICES_METADATA } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { getTemplate } from "@web/core/templates";
-import { appTranslateFn } from "@web/core/l10n/translation";
-import { session } from "@web/session";
+import { App, EventBus } from "@odoo/owl";
 import { isMacOS } from "@web/core/browser/feature_detection";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { services } from "@web/core/services";
-
-// -----------------------------------------------------------------------------
-// Types
-// -----------------------------------------------------------------------------
+import { getTemplate } from "@web/core/templates";
+import { session } from "@web/session";
 
 /**
  * @typedef {{
@@ -20,10 +14,6 @@ import { services } from "@web/core/services";
  * }} OdooEnv
  */
 
-// -----------------------------------------------------------------------------
-// makeEnv
-// -----------------------------------------------------------------------------
-
 /**
  * Return a value Odoo Env object
  *
@@ -31,144 +21,14 @@ import { services } from "@web/core/services";
  */
 export function makeEnv() {
     const bus = new EventBus();
-    const prom = new Promise((resolve) => {
-        bus.addEventListener("SERVICES-LOADED", resolve, { once: true });
-    });
     return {
         bus,
-        isReady: prom,
         services: {},
         debug: odoo.debug,
         get isSmall() {
             throw new Error("UI service not initialized!");
         },
     };
-}
-
-// -----------------------------------------------------------------------------
-// Service Launcher
-// -----------------------------------------------------------------------------
-
-const serviceRegistry = registry.category("services");
-
-serviceRegistry.addValidation(
-    t.object({
-        start: t.function(),
-        dependencies: t.array(t.string()).optional(),
-        async: t.or([t.literal(true), t.array(t.string())]).optional(),
-    })
-);
-
-let startServicesPromise = null;
-
-/**
- * Start all services registered in the service registry, while making sure
- * each service dependencies are properly fulfilled.
- *
- * @param {OdooEnv} env
- * @returns {Promise<void>}
- */
-export async function startServices(env, app) {
-    // we start all plugins first (in particular the localization plugin)
-    await app.pluginManager.ready;
-    const toStart = new Map();
-    serviceRegistry.addEventListener("UPDATE", async (ev) => {
-        // Wait for all synchronous code so that if new services that depend on
-        // one another are added to the registry, they're all present before we
-        // start them regardless of the order they're added to the registry.
-        await Promise.resolve();
-        const { operation, key: name, value: service } = ev.detail;
-        if (operation === "delete") {
-            // We hardly see why it would be usefull to remove a service.
-            // Furthermore we could encounter problems with dependencies.
-            // Keep it simple!
-            return;
-        }
-        if (toStart.size) {
-            const namedService = Object.assign(Object.create(service), { name });
-            toStart.set(name, namedService);
-        } else {
-            await _startServices(env, toStart, app);
-        }
-    });
-    await _startServices(env, toStart, app);
-}
-
-async function _startServices(env, toStart, app) {
-    if (startServicesPromise) {
-        return startServicesPromise.then(() => _startServices(env, toStart, app));
-    }
-    const services = env.services;
-    for (const [name, service] of serviceRegistry.getEntries()) {
-        if (!(name in services)) {
-            const namedService = Object.assign(Object.create(service), { name });
-            toStart.set(name, namedService);
-        }
-    }
-
-    // start as many services in parallel as possible
-    async function start() {
-        let service = null;
-        const proms = [];
-        app.pluginManager.run(() => {
-            while ((service = findNext())) {
-                const name = service.name;
-                toStart.delete(name);
-                const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
-                const dependencies = Object.fromEntries(entries);
-                if (name in services) {
-                    continue;
-                }
-                const value = service.start(env, dependencies);
-                if ("async" in service) {
-                    SERVICES_METADATA[name] = service.async;
-                }
-                proms.push(
-                    Promise.resolve(value).then((val) => {
-                        services[name] = val || null;
-                    })
-                );
-            }
-        });
-        await Promise.all(proms);
-        if (proms.length) {
-            return start();
-        }
-    }
-    startServicesPromise = start().finally(() => {
-        startServicesPromise = null;
-    });
-    await startServicesPromise;
-    env.bus.trigger("SERVICES-LOADED");
-    if (toStart.size) {
-        const missingDeps = new Set();
-        for (const service of toStart.values()) {
-            for (const dependency of service.dependencies) {
-                if (!(dependency in services) && !toStart.has(dependency)) {
-                    missingDeps.add(dependency);
-                }
-            }
-        }
-        const depNames = [...missingDeps].join(", ");
-        throw new Error(
-            `Some services could not be started: ${[
-                ...toStart.keys(),
-            ]}. Missing dependencies: ${depNames}`
-        );
-    }
-
-    function findNext() {
-        for (const s of toStart.values()) {
-            if (s.dependencies) {
-                if (s.dependencies.every((d) => d in services)) {
-                    return s;
-                }
-            } else {
-                return s;
-            }
-        }
-        return null;
-    }
 }
 
 export const customDirectives = {
@@ -225,29 +85,21 @@ export const globalValues = {
  *  containing a (partial) config for the app.
  */
 export async function mountComponent(component, target, appConfig = {}) {
-    let { env } = appConfig;
-    const isRoot = !env;
-    if (isRoot) {
-        env = makeEnv();
-    }
+    const env = makeEnv();
     const app = new App({
+        customDirectives,
+        dev: env.debug || session.test_mode,
         env,
         getTemplate,
-        dev: env.debug || session.test_mode,
-        name: component.constructor.name,
+        globalValues,
+        name: appConfig.name || component.constructor.name,
+        plugins: services,
         translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,
-        customDirectives,
-        plugins: services,
-        globalValues,
         ...appConfig,
     });
-    if (isRoot) {
-        await startServices(env, app);
-    }
-    const root = await app.createRoot(component, { ...appConfig, env }).mount(target);
-    if (isRoot) {
-        odoo.__WOWL_DEBUG__ = { root };
-    }
-    return app;
+    await app.pluginManager.ready;
+    const root = await app.createRoot(component, { ...appConfig }).mount(target);
+    odoo.__WOWL_DEBUG__ = { root };
+    return { env, app, root };
 }
