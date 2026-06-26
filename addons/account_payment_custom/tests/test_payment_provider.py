@@ -35,10 +35,15 @@ class TestPaymentProvider(AccountPaymentCustomCommon):
 
     def test_pay_on_invoice_provider_not_available_on_invoice(self):
         available_providers = self.pay_on_invoice_provider._find_available_providers(
-            is_invoice=True
+            company_id=self.company_id,
+            partner_id=self.partner.id,
+            amount=self.amount,
+            is_invoice=True,
         )
         self.assertNotIn(self.pay_on_invoice_provider, available_providers)
 
     def test_pay_on_invoice_provider_available_on_sale_order(self):
-        available_providers = self.pay_on_invoice_provider._find_available_providers()
+        available_providers = self.pay_on_invoice_provider._find_available_providers(
+            company_id=self.company_id, partner_id=self.partner.id, amount=self.amount,
+        )
         self.assertIn(self.pay_on_invoice_provider, available_providers)
