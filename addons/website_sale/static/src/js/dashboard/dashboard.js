@@ -12,8 +12,6 @@ export const CARD_FILTERS_MAPPING = {
 export const DEFAULT_FILTERS = ['from_website', 'order_confirmed'];
 
 export class Dashboard extends SaleDashboard {
-    static template = 'sale.Dashboard';
-
     get cardFiltersMapping() {
         return CARD_FILTERS_MAPPING;
     }
@@ -22,14 +20,16 @@ export class Dashboard extends SaleDashboard {
         return DEFAULT_FILTERS;
     }
 
-    setup() {
-        super.setup();
-        this.dashboardCards = [
+    get dashboardCards() {
+        return [
             { key: 'to_fulfill', label: _t("To Fulfill"), title: _t("Orders to Fulfill") },
             { key: 'to_confirm', label: _t("To Confirm"), title: _t("Orders to Confirm") },
             { key: 'to_invoice', label: _t("To Invoice"), title: _t("Orders to Invoice") },
         ];
-        this.dashboardPeriodCards = [
+    }
+
+    get dashboardPeriodCards() {
+        return [
             { key: 'visitors', title: _t("Visitors"), monetary: false },
             { key: 'orders', title: _t("Orders"), monetary: false },
             { key: 'sales', title: _t("Sales"), monetary: true },
@@ -40,10 +40,8 @@ export class Dashboard extends SaleDashboard {
         return true;
     }
 
-    handleCardClick(ev) {
-        if (this.state.dashboardData[ev.currentTarget.getAttribute('card_name')] > 0) {
-            super.handleCardClick(ev);
-        }
+    isCardDisabled(cardName) {
+        return this.state.dashboardData[cardName] == 0;
     }
 
     async fetchDashboardData() {
@@ -52,19 +50,5 @@ export class Dashboard extends SaleDashboard {
             'retrieve_ecommerce_dashboard',
             [this.state.selectedDateFilter.periodDays],
         );
-    }
-
-    getDashboardCardAdditionalClass(cardName) {
-        let dashboardCardClasses = [];
-        const cardDataCount = this.state.dashboardData[cardName];
-        if (cardDataCount == 0) {
-            dashboardCardClasses.push('bg-secondary text-secondary-emphasis disabled');
-        } else {
-            dashboardCardClasses.push('o_dashboard_card_' + CARD_COLORS_MAPPING[cardName]);
-        }
-        if (this.state.selectedCard === cardName) {
-            dashboardCardClasses.push('active');
-        }
-        return dashboardCardClasses.join(' ');
     }
 }

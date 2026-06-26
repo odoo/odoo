@@ -1218,14 +1218,7 @@ class SaleOrder(models.Model):
             .search_count(visitor_previous_period_domain),
         }
 
-        for key, current_total in current_period_totals.items():
-            previous_total = previous_period_totals[key]
-            dashboard_data[key]["total"] = current_total
-            dashboard_data[key]["gain"] = (
-                round(((current_total - previous_total) / previous_total) * 100)
-                if previous_total
-                else None
-            )
+        self._fill_dashboard_gains(dashboard_data, current_period_totals, previous_period_totals)
 
         dashboard_data.update({
             "to_fulfill": self.search_count(

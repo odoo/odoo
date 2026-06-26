@@ -33,6 +33,22 @@ export class Dashboard extends Component {
         return DEFAULT_FILTERS;
     }
 
+    get dashboardCards() {
+        return [
+            { key: 'to_confirm', label: _t("To Confirm"), title: _t("Orders to Confirm")},
+            { key: 'to_fulfill', label: _t("To Fulfill"), title: _t("Orders to Fulfill")},
+            { key: 'to_invoice', label: _t("To Invoice"), title: _t("Orders to Invoice")},
+            { key: 'to_upsell', label: _t("To Upsell"), title: _t("Orders to Upsell")},
+        ];
+    }
+
+    get dashboardPeriodCards() {
+        return [
+            { key: 'orders', title: _t("Sales Orders"), monetary: false },
+            { key: 'sales_amount', title: _t("Sales Revenue"), monetary: true },
+        ];
+    }
+
     setup() {
         this.state = proxy({
             dashboardData: {},
@@ -40,17 +56,6 @@ export class Dashboard extends Component {
             selectedCard: '',
         });
         this.orm = useService('orm');
-        this.dashboardCards = [
-            { key: 'to_confirm', label: _t("To Confirm"), title: _t("Orders to Confirm")},
-            { key: 'to_fulfill', label: _t("To Fulfill"), title: _t("Orders to Fulfill")},
-            { key: 'to_invoice', label: _t("To Invoice"), title: _t("Orders to Invoice")},
-            { key: 'to_upsell', label: _t("To Upsell"), title: _t("Orders to Upsell")},
-        ];
-
-        this.dashboardPeriodCards = [
-            { key: 'orders', title: _t("Sales Orders"), monetary: false },
-            { key: 'sales_amount', title: _t("Sales Revenue"), monetary: true },
-        ];
 
         useBus(this.env.searchModel, 'update', () => {
             for (const [cardName, filters] of Object.entries(this.cardFiltersMapping)) {
@@ -86,8 +91,15 @@ export class Dashboard extends Component {
         return this.state.dashboardData[card.key] > 0;
     }
 
+    isCardDisabled(cardName) {
+        return false;
+    }
+
     handleCardClick(ev) {
         const cardName = ev.currentTarget.getAttribute('card_name');
+        if (this.isCardDisabled(cardName)) {
+            return;
+        }
         if (this.state.selectedCard === cardName) {
             this.setFilters(this.defaultFilters);
         } else {
@@ -130,7 +142,11 @@ export class Dashboard extends Component {
 
     getDashboardCardAdditionalClass(cardName) {
         let dashboardCardClasses = [];
-        dashboardCardClasses.push('o_dashboard_card_' + CARD_COLORS_MAPPING[cardName]);
+        if (this.isCardDisabled(cardName)) {
+            dashboardCardClasses.push('bg-secondary text-secondary-emphasis disabled');
+        } else {
+            dashboardCardClasses.push('o_dashboard_card_' + CARD_COLORS_MAPPING[cardName]);
+        }
         if (this.state.selectedCard === cardName) {
             dashboardCardClasses.push('active');
         }

@@ -2854,18 +2854,7 @@ class SaleOrder(models.Model):
         current_totals = self._get_sale_period_totals(period_days, confirmed_domain)
         previous_totals = self._get_sale_period_totals(period_days, confirmed_domain, previous=True)
 
-        for key in current_totals:
-            current_total = current_totals[key]
-            previous_total = previous_totals[key]
-            dashboard_data[key]["total"] = current_total
-            dashboard_data[key]["gain"] = (
-                float_round(
-                    ((current_total - previous_total) / previous_total) * 100,
-                    precision_rounding=0.01,
-                )
-                if previous_total
-                else None
-            )
+        self._fill_dashboard_gains(dashboard_data, current_totals, previous_totals)
 
         dashboard_data.update({
             "to_upsell": self.search_count(
@@ -2879,6 +2868,25 @@ class SaleOrder(models.Model):
         })
 
         return dashboard_data
+
+    def _fill_dashboard_gains(self, dashboard_data, current_totals, previous_totals):
+        """Fill dashboard_data period entries with totals and gain percentages.
+
+        :param dict dashboard_data: The dashboard dict to update in place.
+        :param dict current_totals: Totals for the current period, keyed by metric name.
+        :param dict previous_totals: Totals for the previous period, keyed by metric name.
+        """
+        for key, current_total in current_totals.items():
+            previous_total = previous_totals[key]
+            dashboard_data[key]["total"] = current_total
+            dashboard_data[key]["gain"] = (
+                float_round(
+                    ((current_total - previous_total) / previous_total) * 100,
+                    precision_rounding=0.01,
+                )
+                if previous_total
+                else None
+            )
 
     def _get_period_domain(self, field, period_days, previous=False):  # noqa: PLR6301
         """Build a domain to filter records for a given time period.
