@@ -519,13 +519,12 @@ class HrTimeRule(models.Model):
         return result
 
     def _get_record_interval_local(self, record):
-        """Return (start_local, stop_local) for a time record in the employee's tz.
-
-        Works for any model that has employee_id, date_from, date_to.
-        """
+        """Return (start_local, stop_local) for a time record in the employee's tz."""
         tz = ZoneInfo(record.employee_id.sudo()._get_tz())
-        start = record.date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        stop = record.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        start_field = record._time_rule_span_start_field
+        end_field = record._time_rule_span_end_field
+        start = record[start_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        stop = record[end_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         return start, stop
 
     def _get_pp_frozenset(self):
@@ -625,13 +624,15 @@ class HrTimeRule(models.Model):
         if not applicable_rules:
             return excess, deficit
         work_intervals_by_calendar = applicable_rules._build_work_intervals_by_calendar(employees, start_dt, end_dt)
-        min_date = min(r.date_from for r in records).date()
-        max_date = max(r.date_to for r in records).date()
+        start_field = records._time_rule_span_start_field
+        end_field = records._time_rule_span_end_field
+        min_date = min(r[start_field] for r in records).date()
+        max_date = max(r[end_field] for r in records).date()
 
         # pipeline: (start, stop, current_wet, pp, source, classifying_rule)
         # classifying_rule=None means the interval is still in its original state
         pipeline_by_emp = defaultdict(list)
-        for record in records.sorted('date_from'):
+        for record in records.sorted(start_field):
             start_local, stop_local = self._get_record_interval_local(record)
             pipeline_by_emp[record.employee_id].append(
                 (start_local, stop_local, record.work_entry_type_id, frozenset(), record, None)
@@ -639,7 +640,7 @@ class HrTimeRule(models.Model):
 
         for rule in applicable_rules:
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
-            rule_window_by_emp = rule._build_rule_day_intervals(min_date, max_date, employees, work_intervals)
+            rule_window_by_emp = rule._build_rule_day_intervals(start_dt, end_dt, employees, work_intervals)
             condition_wets = rule.condition_work_entry_type_ids
             has_threshold = bool(rule.calendar_source or rule.expected_hours)
 
