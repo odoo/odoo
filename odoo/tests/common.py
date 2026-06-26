@@ -1422,6 +1422,11 @@ class TransactionCase(BaseCase):
             self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
         self.addCleanup(self.savepoint.rollback)
+        if ba := self.registry.get('base.automation'):
+            # Cleanup the patches made by base.automation iff they were some created in the test
+            # Must be declared after the rollback, to let the cleanup be execute before it.
+            mock_register = self.startPatcher(patch.object(ba, '_register_hook', wraps=ba._register_hook, autospec=True))
+            self.addCleanup(lambda: mock_register.called and self.env.transaction.will_change_registry())
 
         # To keep tests isolated, add a CacheLayer.
         # - L1: cursor cache
