@@ -52,7 +52,7 @@ test("No duplicated chat bubbles", async () => {
     await insertText("input[placeholder='Search a conversation']", "John");
     await contains(".o_command_name", { count: 3 });
     await click(".o_command_name:text('John')");
-    await contains(".o-mail-ChatWindow:text('John')");
+    await contains(".o-mail-ChatWindow-displayName:text('John')");
     await contains(
         ".o-mail-ChatWindow .o-mail-Thread-empty:has(:text('This is the start of your direct chat with John'))"
     );
@@ -124,7 +124,7 @@ test("Ordering of chat bubbles is consistent and seems logical.", async () => {
     await contains(".o-mail-ChatBubble[name='Demo']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-ChatBubble[name='3']");
-    await contains(".o-mail-ChatWindow:text('3')");
+    await contains(".o-mail-ChatWindow-displayName:text('3')");
     await contains(":nth-child(7 of .o-mail-ChatBubble)[name='Demo']");
     await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-ChatBubble[name='Demo']", { count: 0 });
@@ -576,7 +576,7 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:text('John')");
     await waitStoreFetch("/discuss/channel/messages"); // ensure messages are loaded before doing message post
-    await contains(".o-mail-ChatWindow:text('John')");
+    await contains(".o-mail-ChatWindow-displayName:text('John')");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]); // FIXME: click fold doesn't focusout/blur the composer, thus marks as read
     await click(".o-mail-ChatWindow-header [title='Fold']");
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -610,7 +610,7 @@ test("Open chat window from command palette with chat hub compact", async () => 
     await triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await click(".o-mail-DiscussCommand:text('John')");
-    await contains(".o-mail-ChatWindow:text('John')");
+    await contains(".o-mail-ChatWindow-displayName:text('John')");
 });
 
 test("Close chat window from bubble while bubble preview is displayed", async () => {

@@ -1315,7 +1315,7 @@ test("keyboard navigation", async () => {
     triggerHotkey("ArrowUp");
     await contains(".o-mail-NotificationItem:last.o-active", { name: "Mitchell Admin" });
     triggerHotkey("Enter");
-    await contains(".o-mail-ChatWindow:text('Mitchell Admin')");
+    await contains(".o-mail-ChatWindow-displayName:text('Mitchell Admin')");
 });
 
 test("keyboard navigation with quick search", async () => {
@@ -1440,4 +1440,4 @@ test("preserve message link formatting in messaging menu", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(`.o-mail-NotificationItem-text a[href="https://odoo.com/"]`);
-})
+});
