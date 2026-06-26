@@ -355,6 +355,9 @@ def update_device_fingerprint(session: Session, request: Request, fingerprint: s
     elif consteq(session.setdefault('_device_fingerprint', fingerprint), fingerprint):
         device['trusted'] = True
         session.is_dirty = True
+    else:
+        _logger.warning("Untrusted device for session %s (uid=%s): %s %s",
+            session.sid[:8], session.uid, device['ip_address'], device['user_agent'])
     return device['trusted']
 
 
