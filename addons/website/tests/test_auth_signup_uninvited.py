@@ -16,5 +16,6 @@ class TestAuthSignupUninvited(common.TransactionCase):
 class TestAuthFormsWarning(HttpCase):
 
     def test_auth_forms_warning(self):
+        self.env['website'].search([]).auth_signup_uninvited = 'b2c'
         self.start_tour('/web/login', 'auth_login_warning', login='admin')
         self.start_tour('/web/signup', 'auth_signup_warning', login='admin')
