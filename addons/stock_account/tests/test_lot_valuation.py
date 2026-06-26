@@ -680,3 +680,36 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot2.standard_price, 10)
         # product's standard price should be 4150 / 55 = 75.45
         self.assertAlmostEqual(self.product.standard_price, 75.45, places=2)
+
+    def test_fifo_remaining_qty_by_lot(self):
+        """
+        Test that for lot-valuated products, each receipt's remaining_qty must
+        reflect only its own lot's on-hand stock.
+        Receive 10unit of lot1 + 10units of lot2, then deliver 2units from lot1
+        and 4units from lot2.
+        Each receipt must show what is still available for that lot:
+        - lot1 receipt: 10 - 2 = 8
+        - lot2 receipt: 10 - 4 = 6
+        """
+        self.product.categ_id = self.category_fifo
+        in_move_lot1 = self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1])
+        in_move_lot2 = self._make_in_move(self.product, 10, 7, lot_ids=[self.lot2])
+        self._make_out_move(self.product, 2, lot_ids=[self.lot1])
+        self._make_out_move(self.product, 4, lot_ids=[self.lot2])
+
+        self.assertEqual(in_move_lot1.remaining_qty, 8)
+        self.assertEqual(in_move_lot2.remaining_qty, 6)
+
+    def test_remaining_qty_lot_tracked_not_lot_valuated(self):
+        """Ensure remaining_qty is computed at the product level for lot-tracked,
+        and non-lot-valuated products"""
+        self.product.categ_id = self.category_fifo
+        self.product.lot_valuated = False
+
+        in_move_lot1 = self._make_in_move(self.product, 1, 5, lot_ids=[self.lot1])
+        in_move_lot2 = self._make_in_move(self.product, 1, 5, lot_ids=[self.lot2])
+        self._make_out_move(self.product, 1, lot_ids=[self.lot2])
+
+        self.assertEqual(self.product.qty_available, 1)
+        self.assertEqual(in_move_lot1.remaining_qty, 0)
+        self.assertEqual(in_move_lot2.remaining_qty, 1)
