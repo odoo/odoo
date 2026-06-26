@@ -570,6 +570,62 @@ class AccountChartTemplate(models.AbstractModel):
                      of accounts. It is a mapping {model: {xml_id: values}}.
         :type data: dict[str, dict[(str, int), dict]]
         """
+        missing_account_xmlid_cache = {
+            'account_by_code': {},
+            'ensured_xmlids': set(),
+        }
+
+        def ensure_missing_account_xmlid(xmlid):
+            """Try to recover missing local account xmlids from the current chart template."""
+            if (
+                '.' in xmlid
+                or xmlid in missing_account_xmlid_cache['ensured_xmlids']
+                or not self.env.company.chart_template
+            ):
+                return False
+
+            missing_account_xmlid_cache['ensured_xmlids'].add(xmlid)
+            if self.ref(xmlid, raise_if_not_found=False):
+                return True
+
+            if 'template_data' not in missing_account_xmlid_cache:
+                missing_account_xmlid_cache['template_data'] = self._get_chart_template_data(
+                    self.env.company.chart_template
+                )
+
+            template_data = missing_account_xmlid_cache['template_data']
+            if not (account_values := template_data.get('account.account', {}).get(xmlid)):
+                return False
+
+            account_code = account_values['code']
+            account_by_code = missing_account_xmlid_cache['account_by_code']
+            if account_code not in account_by_code:
+                if 'company_accounts' not in missing_account_xmlid_cache:
+                    Account = self.env['account.account']
+                    missing_account_xmlid_cache['company_accounts'] = Account.with_context(active_test=False).search([
+                        *Account._check_company_domain(self.env.company),
+                    ], order='id')
+                code_digits = int(template_data.get('template_data', {}).get('code_digits', 6))
+                normalized_code = f'{account_code:<0{code_digits}}'
+                accounts = missing_account_xmlid_cache['company_accounts'].filtered(
+                    lambda account: re.match(f'^{re.escape(account_code)}0*$', account.code)
+                )
+                account_by_code[account_code] = accounts.sorted(
+                    key=lambda account: account.code != normalized_code
+                )[:1]
+
+            account = account_by_code[account_code]
+            if account:
+                self.env['ir.model.data']._update_xmlids([{
+                    'xml_id': self.company_xmlid(xmlid),
+                    'record': account,
+                    'noupdate': True,
+                }])
+                return True
+
+            self._load_data({'account.account': {xmlid: deepcopy(account_values)}})
+            return bool(self.ref(xmlid, raise_if_not_found=False))
+
         def deref_values(values, model):
             """Replace xml_id references by database ids in all provided values.
 
@@ -591,6 +647,10 @@ class AccountChartTemplate(models.AbstractModel):
                             # Try a fallback on the company when reloading/loading on a branch
                             values[fname] = self.env.company[fname] or self.env.company.root_id[fname] or False
                         else:
+                            if ensure_missing_account_xmlid(value):
+                                values[fname] = self.ref(value, raise_if_not_found=False).id or False
+                                if values[fname]:
+                                    continue
                             _logger.warning("Failed when trying to recover %s for field=%s", value, field)
                             failed_fields.append(fname)
                             values[fname] = False
