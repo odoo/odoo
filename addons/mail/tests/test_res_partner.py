@@ -552,3 +552,34 @@ class TestPartner(MailCommon):
         all_msg = p2_msg_ids_init + p1_msg_ids_init + p1_msg1
         self.assertEqual(len(p2.message_ids), len(all_msg) + 1, 'Should have original messages + a log')
         self.assertTrue(all(msg in p2.message_ids for msg in all_msg))
+
+    @users('admin')
+    @mute_logger('odoo.addons.base.partner.merge', 'odoo.tests')
+    def test_partner_merge_wizards_unique(self):
+        """
+        p3 has p1 and p2 as followers.
+        When the merge is performed and p1 is replaced by p2, p2 will be duplicated,
+        triggering the follower uniqueness constraint.
+        Therefore, the merge should remove the duplicated follower
+        and keep only one pointing to p3.
+        However, in p4, the follower p1 should not be removed, but replaced by p2.
+        """
+        Partner = self.env['res.partner']
+        p1 = Partner.create({'name': 'Test 1', 'email': 'test1@test.example.com'})
+        p2 = Partner.create({'name': 'Test 2', 'email': 'test2@test.example.com'})
+        p3 = Partner.create({'name': 'Test 3', 'email': 'test3@test.example.com'})
+        p4 = Partner.create({'name': 'Test 4', 'email': 'test4@test.example.com'})
+        p3.message_subscribe(partner_ids=(p1 + p2).ids)
+        p4.message_subscribe(partner_ids=p1.ids)
+        MergeForm = Form(self.env['base.partner.merge.automatic.wizard'].with_context(
+            active_model='res.partner',
+            active_ids=(p1 + p2).ids
+        ))
+        MergeForm.dst_partner_id = p2
+        merge_form = MergeForm.save()
+        merge_form.action_merge()
+        self.assertFalse(p1.exists())
+        self.assertTrue(p2.exists())
+        self.assertIn(p2, p3.message_partner_ids)
+        # check that p1 follower has been replaced by p2, not removed
+        self.assertIn(p2, p4.message_partner_ids)
