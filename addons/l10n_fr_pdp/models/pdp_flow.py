@@ -349,7 +349,7 @@ class PdpFlow(models.Model):
         payload_doc = {
             'flow_number': 10,
             'filename': self.payload_id.name,
-            'ubl': self.payload_id.raw,
+            'ubl': self.payload_id.raw.to_base64(),
             'external_ref': self._get_tracking_id(),
         }
 
