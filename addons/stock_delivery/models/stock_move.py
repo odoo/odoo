@@ -110,6 +110,8 @@ class StockMoveLine(models.Model):
 
     def _post_put_in_pack_hook(self, package):
         weight = self.env.context.get('weight')
+        if not weight:
+            weight = package._get_weight(self.picking_id[:1].id).get(package, 0.0)
         if weight:
             package.shipping_weight = weight
         return super()._post_put_in_pack_hook(package)
