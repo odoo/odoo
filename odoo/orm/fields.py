@@ -1601,6 +1601,7 @@ class Field[T]:
     # Cache management methods
     #
 
+    @typing.final
     def _get_cache(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
         """ Return the field's cache, i.e., a mutable mapping from record id to
         a cache value.  The cache may be environment-specific.  This mapping is
@@ -1610,12 +1611,10 @@ class Field[T]:
         instance for a given environment, unless the transaction was entirely
         invalidated.
         """
-        try:
-            return env._field_cache_memo[self]
-        except KeyError:
-            field_cache = self._get_cache_impl(env)
-            env._field_cache_memo[self] = field_cache
-            return field_cache
+        field_cache = env._field_cache_memo.get(self)
+        if field_cache is None:
+            env._field_cache_memo[self] = field_cache = self._get_cache_impl(env)
+        return field_cache
 
     def _get_cache_impl(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
         """ Implementation of :meth:`_get_cache`.  This method may provide a
@@ -1737,12 +1736,16 @@ class Field[T]:
             value = self.convert_to_cache(False, record, validate=False)
             return self.convert_to_record(value, record)
 
-        if self.compute and self.store:
+        if self.compute and self.store and env.transaction.tocompute.get(self):
             # process pending computations
             self.recompute(record)
 
+        try:
+            field_cache = env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache(env)
+
         record_id = record._ids[0]
-        field_cache = self._get_cache(env)
         try:
             value = field_cache[record_id]
             # convert to record may also throw a KeyError if the value is not
