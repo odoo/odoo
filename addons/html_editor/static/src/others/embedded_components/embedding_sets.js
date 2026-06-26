@@ -1,5 +1,4 @@
 import { fileEmbedding } from "@html_editor/others/embedded_components/backend/file/file";
-import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
 import { readonlyFileEmbedding } from "@html_editor/others/embedded_components/core/file/readonly_file";
 import {
     readonlyTableOfContentEmbedding,
@@ -16,7 +15,6 @@ export const MAIN_EMBEDDINGS = [
     tableOfContentEmbedding,
     toggleBlockEmbedding,
     videoEmbedding,
-    captionEmbedding,
     syntaxHighlightingEmbedding,
 ];
 
@@ -25,6 +23,5 @@ export const READONLY_MAIN_EMBEDDINGS = [
     readonlyTableOfContentEmbedding,
     toggleBlockEmbedding,
     readonlyVideoEmbedding,
-    captionEmbedding,
     readonlySyntaxHighlightingEmbedding,
 ];
