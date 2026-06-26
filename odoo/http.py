@@ -470,12 +470,14 @@ def serialize_exception(exception, *, message=None, arguments=None):
     name = type(exception).__name__
     module = type(exception).__module__
 
+    debug = ''.join(traceback.format_exception(exception)) if config['dev_mode'] else ''
+
     return {
         'name': f'{module}.{name}' if module else name,
         'message': exception_to_unicode(exception) if message is None else message,
         'arguments': exception.args if arguments is None else arguments,
         'context': getattr(exception, 'context', {}),
-        'debug': ''.join(traceback.format_exception(exception)),
+        'debug': debug,
     }
 
 
