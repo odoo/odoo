@@ -2214,13 +2214,41 @@ export class PosStore extends WithLazyGetterTrap {
         const dataChanges = data.changes?.data;
         if (dataChanges && dataChanges.some((c) => c.group)) {
             const groupedData = dataChanges.reduce((acc, c) => {
-                const { name = "", index = -1 } = c.group || {};
+                const { name = "", index = Infinity } = c.group || {};
                 if (!acc[name]) {
                     acc[name] = { name, index, data: [] };
                 }
                 acc[name].data.push(c);
                 return acc;
             }, {});
+
+            // When a combo's children are spread across multiple category groups,
+            // duplicate the combo parent line in each group where it is missing.
+            const comboParents = {};
+            for (const change of dataChanges) {
+                if (change.isCombo) {
+                    comboParents[change.uuid] = change;
+                }
+            }
+            for (const group of Object.values(groupedData)) {
+                const groupUuids = new Set(group.data.map((d) => d.uuid));
+                const addedParents = new Set();
+                for (let i = 0; i < group.data.length; i++) {
+                    const line = group.data[i];
+                    const parentUuid = line.combo_parent_uuid;
+                    if (
+                        parentUuid &&
+                        !groupUuids.has(parentUuid) &&
+                        comboParents[parentUuid] &&
+                        !addedParents.has(parentUuid)
+                    ) {
+                        addedParents.add(parentUuid);
+                        group.data.splice(i, 0, { ...comboParents[parentUuid] });
+                        i++; // skip the just-inserted parent
+                    }
+                }
+            }
+
             data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
         }
         return data;

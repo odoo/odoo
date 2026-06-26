@@ -171,6 +171,22 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
 
 export const receiptLineGrouper = {
     getGroup(orderLine) {
-        // To be overridden
+        if (orderLine.config?.iface_group_by_categ) {
+            const categs = orderLine.product_id?.pos_categ_ids;
+            if (categs?.length) {
+                let minSeq = Infinity;
+                let minCateg = null;
+                for (const categ of categs) {
+                    const seq = categ.sequence ?? 0;
+                    if (!minCateg || seq < minSeq || (seq === minSeq && categ.id < minCateg.id)) {
+                        minSeq = seq;
+                        minCateg = categ;
+                    }
+                }
+                if (minCateg) {
+                    return { index: minSeq, name: minCateg.name };
+                }
+            }
+        }
     },
 };

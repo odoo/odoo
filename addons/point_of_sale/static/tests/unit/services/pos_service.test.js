@@ -5,6 +5,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { imageUrl } from "@web/core/utils/urls";
 import { prepareRoundingVals } from "../accounting/utils";
+import { receiptLineGrouper } from "@point_of_sale/app/models/utils/order_change";
 const { DateTime } = luxon;
 
 definePosModels();
@@ -703,5 +704,67 @@ describe("pos_store.js", () => {
             expect(order.lines[1].price_subtotal).toEqual(6);
             expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
         });
+    });
+
+    test("getOrderlines grouped by category when iface_group_by_categ is enabled", async () => {
+        const store = await setupPosEnv();
+
+        // Demo data used:
+        // Category 1 (id=1, seq=1) -> TEST (tmpl id=5)
+        // Category 2 (id=2, seq=2) -> TEST 2 (tmpl id=6), Wood chair (tmpl id=8)
+        // Burger    (id=4, seq=3) -> Bacon burger (tmpl id=12)
+        // Food      (id=3, seq=4) -> Club sandwich (tmpl id=14)
+        // No category             -> Accounting Test Product 1 (tmpl id=15)
+        const prodCat1 = store.models["product.template"].get(5); // Category 1, seq 1
+        const prodCat2A = store.models["product.template"].get(6); // Category 2, seq 2
+        const prodCat2B = store.models["product.template"].get(8); // Category 2, seq 2
+        const prodBurger = store.models["product.template"].get(12); // Burger, seq 3
+        const prodFood = store.models["product.template"].get(14); // Food, seq 4
+        const prodNoCat = store.models["product.template"].get(15); // No category
+
+        // Add in scrambled order: Cat2 products are intentionally separated
+        const order = store.addNewOrder();
+        await store.addLineToOrder({ product_tmpl_id: prodFood, qty: 1 }, order); // Food seq=4
+        await store.addLineToOrder({ product_tmpl_id: prodCat2A, qty: 1 }, order); // Cat2 seq=2
+        await store.addLineToOrder({ product_tmpl_id: prodCat1, qty: 1 }, order); // Cat1 seq=1
+        await store.addLineToOrder({ product_tmpl_id: prodNoCat, qty: 1 }, order); // No category
+        await store.addLineToOrder({ product_tmpl_id: prodBurger, qty: 1 }, order); // Burger seq=3
+        await store.addLineToOrder({ product_tmpl_id: prodCat2B, qty: 1 }, order); // Cat2 seq=2
+
+        // 1. Grouping disabled: lines in order of addition
+        store.config.iface_group_by_categ = false;
+        let lines = order.getOrderlines();
+        expect(lines.length).toBe(6);
+        expect(lines[0].product_id.product_tmpl_id.id).toBe(14); // Food
+        expect(lines[1].product_id.product_tmpl_id.id).toBe(6); // Cat2A
+        expect(lines[2].product_id.product_tmpl_id.id).toBe(5); // Cat1
+        expect(lines[3].product_id.product_tmpl_id.id).toBe(15); // No category
+        expect(lines[4].product_id.product_tmpl_id.id).toBe(12); // Burger
+        expect(lines[5].product_id.product_tmpl_id.id).toBe(8); // Cat2B
+
+        // 2. Grouping enabled: sorted by category sequence, same-category products grouped
+        store.config.iface_group_by_categ = true;
+        lines = order.getOrderlines();
+        expect(lines.length).toBe(6);
+        expect(lines[0].product_id.product_tmpl_id.id).toBe(5); // Cat1 seq=1
+        // Cat2 products (seq=2) are grouped together, in their original addition order
+        expect(lines[1].product_id.product_tmpl_id.id).toBe(6); // Cat2A seq=2
+        expect(lines[2].product_id.product_tmpl_id.id).toBe(8); // Cat2B seq=2
+        expect(lines[3].product_id.product_tmpl_id.id).toBe(12); // Burger seq=3
+        expect(lines[4].product_id.product_tmpl_id.id).toBe(14); // Food seq=4
+        expect(lines[5].product_id.product_tmpl_id.id).toBe(15); // No category (Infinity)
+
+        // 3. receiptLineGrouper returns correct group info
+        const groupCat1 = receiptLineGrouper.getGroup(lines[0]);
+        expect(groupCat1).toEqual({ index: 1, name: "Category 1" });
+
+        // Both Cat2 products return the same group
+        const groupCat2A = receiptLineGrouper.getGroup(lines[1]);
+        const groupCat2B = receiptLineGrouper.getGroup(lines[2]);
+        expect(groupCat2A).toEqual({ index: 2, name: "Category 2" });
+        expect(groupCat2B).toEqual(groupCat2A);
+
+        const groupNoCat = receiptLineGrouper.getGroup(lines[5]);
+        expect(groupNoCat).toBe(undefined);
     });
 });

@@ -4,6 +4,7 @@ import { computeComboItems } from "./utils/compute_combo_items";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
+import { receiptLineGrouper } from "./utils/order_change";
 
 const { DateTime } = luxon;
 
@@ -252,6 +253,7 @@ export class PosOrder extends PosOrderAccounting {
                     note: line.getNote(),
                     quantity: line.getQuantity(),
                     customer_note: line.getCustomerNote(),
+                    group: receiptLineGrouper.getGroup(line),
                 };
             }
             line.setHasChange(false);
@@ -717,9 +719,61 @@ export class PosOrder extends PosOrderAccounting {
         return this.isPaid() && this._isValidEmptyOrder() && !this.isCustomerRequired;
     }
 
-    // NOTE: Overrided in pos_loyalty to put loyalty rewards at this end of array.
+    getLineCategoryInfo(line) {
+        const categs = line.product_id?.pos_categ_ids;
+        if (!categs?.length) {
+            return { sequence: Infinity, id: Infinity };
+        }
+        let minSeq = Infinity;
+        let minId = Infinity;
+        for (const categ of categs) {
+            const seq = categ.sequence ?? 0;
+            if (seq < minSeq || (seq === minSeq && categ.id < minId)) {
+                minSeq = seq;
+                minId = categ.id;
+            }
+        }
+        return { sequence: minSeq, id: minId };
+    }
+
+    // NOTE: Overrided in pos_loyalty to put loyalty rewards at the end of array.
     getOrderlines() {
-        return this.lines;
+        if (!this.config?.iface_group_by_categ) {
+            return this.lines;
+        }
+        const sortKeyMap = new Map(
+            this.lines.map((line) => [line, this.getLineCategoryInfo(line)])
+        );
+        // For each combo group, propagate the minimum sort key to all members
+        // so the combo sorts as a unit at its earliest-sequence category.
+        for (const line of this.lines) {
+            if (!line.combo_line_ids?.length) {
+                continue;
+            }
+            let minKey = sortKeyMap.get(line);
+            for (const child of line.combo_line_ids) {
+                const childKey = sortKeyMap.get(child);
+                if (
+                    childKey &&
+                    (childKey.sequence < minKey.sequence ||
+                        (childKey.sequence === minKey.sequence && childKey.id < minKey.id))
+                ) {
+                    minKey = childKey;
+                }
+            }
+            sortKeyMap.set(line, minKey);
+            for (const child of line.combo_line_ids) {
+                sortKeyMap.set(child, minKey);
+            }
+        }
+        return [...this.lines].sort((a, b) => {
+            const infoA = sortKeyMap.get(a);
+            const infoB = sortKeyMap.get(b);
+            if (infoA.sequence !== infoB.sequence) {
+                return infoA.sequence - infoB.sequence;
+            }
+            return infoA.id - infoB.id;
+        });
     }
 
     serializeForORM(opts = {}) {
