@@ -20,6 +20,12 @@ class ZatcaMixin(models.AbstractModel):
         for record in self:
             record.l10n_sa_is_test = all(record.l10n_sa_edi_log_ids.mapped('is_test'))
 
+    @api.depends('l10n_sa_edi_state')
+    def _compute_qr_code_str(self):
+        rejected = self.filtered(lambda r: r.l10n_sa_edi_state == 'rejected')
+        rejected.l10n_sa_qr_code_str = False
+        super(ZatcaMixin, self - rejected)._compute_qr_code_str()
+
     def _l10n_sa_get_alerts(self):
         return {}
 

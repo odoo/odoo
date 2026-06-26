@@ -62,4 +62,8 @@ patch(PosOrder.prototype, {
         }
         return false;
     },
+
+    get l10n_sa_alerts() {
+        return this.account_move?._l10n_sa_alerts || [];
+    },
 });

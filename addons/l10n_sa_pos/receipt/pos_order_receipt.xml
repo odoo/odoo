@@ -3,7 +3,7 @@
     <data>
         <template id="l10n_sa_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
             <div name="logo" position="after">
-                <div class="text-center mt-1 mb-3" t-if="conditions.get('code_sa')">
+                <div class="text-center mt-1 mb-3" t-if="conditions.get('code_sa') and not conditions.get('l10n_sa_not_legal')">
                     <img t-att-src="image['sa_qr_code']" alt="QR Code" class="w-75 sa-qr-code" />
                 </div>
             </div>
