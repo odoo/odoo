@@ -432,7 +432,14 @@ class TestUi(HttpCaseWithWebsiteUser):
             'name': 'bg_test.png',
             'mimetype': 'image/png',
         })
+        last_view_before = self.env['ir.ui.view'].search([], order='id DESC', limit=1)
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_style_edition', login='admin')
+        last_view_after = self.env['ir.ui.view'].search([], order='id DESC', limit=1)
+        self.assertEqual(
+            last_view_before.id,
+            last_view_after.id,
+            "Editing website style shouldn't create new views",
+        )
 
     def test_09_website_edit_link_popover(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_link_popover', login='admin', timeout=180)
