@@ -583,6 +583,25 @@ class TestProfiling(TransactionCase):
         p.json()  # check we can call it
         self.assertEqual(p.collectors[0].entries[0]['query'], 'SELECT 1')
 
+    def test_profiler_proxy_ends_on_enter_error(self):
+        class FailingContextManager:
+            def __enter__(self):
+                raise RuntimeError("enter failed")
+
+            def __exit__(self, exc_type, exc_value, traceback):
+                pass
+
+        self.enterContext(self.registry_test_mode())
+        self.startClassPatcher(patch('odoo.sql_db.db_connect', return_value=self.registry))
+
+        p = Profiler(collectors=['sql'], db=self.env.cr.dbname, description='failed enter profile')
+        with self.assertRaises(RuntimeError):
+            with p._get_cm_proxy(FailingContextManager()):
+                pass
+
+        self.assertTrue(p.done)
+        self.assertTrue(p.profile_id)
+
 
 def deep_call(func, depth):
     """ Call the given function at the given call depth. """
