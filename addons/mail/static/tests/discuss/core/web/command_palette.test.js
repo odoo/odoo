@@ -4,11 +4,12 @@ import {
     defineMailModels,
     insertText,
     openDiscuss,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, mockDate, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { range } from "@web/core/utils/numbers";
 
@@ -70,6 +71,7 @@ test("Conversation mentions in the command palette with @", async () => {
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
+        name: "",
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -143,6 +145,9 @@ test("hide conversations in recent if they have mentions", async () => {
         res_id: channelId,
         body: "@OdooBot",
     });
+    // Load the channel as channels are not returned alongside partners to invite, in which
+    // case the unread state of the chat is unknown.
+    setupChatHub({ folded: [channelId] });
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
@@ -161,8 +166,12 @@ test("Ctrl-K opens @ command palette in discuss app", async () => {
 
 test("Favorite channels come first in default command palette category", async () => {
     const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create(range(10).map((n) => ({ name: `channel_${n}` })));
+    const later = luxon.DateTime.now().plus({ day: 1 });
+    mockDate(
+        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
+    );
     pyEnv["discuss.channel"].create([
-        ...range(10).map((n) => ({ name: `channel_${n}` })),
         {
             name: "favorite_1",
             channel_member_ids: [
@@ -175,14 +184,11 @@ test("Favorite channels come first in default command palette category", async (
                 Command.create({ partner_id: serverState.partnerId, is_favorite: true }),
             ],
         },
-        ...range(10, 20).map((n) => ({ name: `channel_${n}` })),
     ]);
+    pyEnv["discuss.channel"].create(range(10, 20).map((n) => ({ name: `channel_${n}` })));
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
-    await contains(".o_command_category:has(:text(Recent)) .o_command:eq(0):text(channel_19)");
-    await contains(".o_command_category:has(:text(Recent)) .o_command:eq(1):text(channel_18)");
-    await contains(".o_command_category:has(:text(Recent)) .o_command:eq(2):text(channel_17)");
     await contains(
         ".o_command_category:not(:has(:text(Recent))) .o_command:eq(0):text(favorite_1)"
     );

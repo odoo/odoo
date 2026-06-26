@@ -93,7 +93,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - search_fetch discuss_channel
-    #   1: search_count discuss_channel_member (_add_has_unpinned_channels_to_store)
+    #   1: search_count discuss_channel_member (store_has_hidden_channels)
     #   33: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
@@ -679,7 +679,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_user(self.users[1], also_livechat=True),
                 self._res_for_user(self.user_root),
             ),
-            "Store": {"has_unpinned_channels": False},
+            "Store": {"has_hidden_channels": False},
             "hr.employee": [
                 self._res_for_employee(self.users[0].employee_ids[0]),
                 self._res_for_employee(self.users[2].employee_ids[0]),

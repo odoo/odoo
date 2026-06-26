@@ -34,6 +34,7 @@ class TestUi(HttpCaseWithUserDemo):
                 .with_user(bob)
                 ._create_group(
                     users_to=john,
+                    name="Meeting, Jan 1",
                     default_display_mode="video_full_screen",
                 )
             )

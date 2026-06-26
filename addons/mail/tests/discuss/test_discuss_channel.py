@@ -1194,3 +1194,33 @@ class TestChannelInternals(MailCommon, HttpCase):
                 },
             },
         )
+
+    def test_search_nameless_group_by_member_name(self):
+        john = mail_new_test_user(self.env, groups="base.group_user", login="john")
+        bob = mail_new_test_user(self.env, groups="base.group_user", login="bob")
+        group_chat = self.env["discuss.channel"].create({"name": "", "channel_type": "group"})
+        group_chat._add_members(users=john | bob, post_joined_message=False)
+        self.authenticate(john.login, john.login)
+        result_john = self.make_jsonrpc_request("/discuss/search", {"term": "John"})
+        result_bob = self.make_jsonrpc_request("/discuss/search", {"term": "Bob"})
+        result_other = self.make_jsonrpc_request("/discuss/search", {"term": "Unrelated"})
+        found_ids_john = [c["id"] for c in result_john.get("discuss.channel", [])]
+        found_ids_bob = [c["id"] for c in result_bob.get("discuss.channel", [])]
+        found_ids_other = [c["id"] for c in result_other.get("discuss.channel", [])]
+        self.assertIn(group_chat.id, found_ids_john)
+        self.assertIn(group_chat.id, found_ids_bob)
+        self.assertNotIn(group_chat.id, found_ids_other)
+
+    def test_search_favorite_first(self):
+        john = mail_new_test_user(self.env, groups="base.group_user", login="john")
+        regular = self.env["discuss.channel"].create({"name": "test_regular"})
+        favorite = self.env["discuss.channel"].create({"name": "test_favorite"})
+        regular._add_members(users=john, post_joined_message=False)
+        favorite._add_members(users=john, post_joined_message=False)
+        favorite.channel_member_ids.filtered(
+            lambda m: m.partner_id == john.partner_id
+        ).is_favorite = True
+        self.authenticate(john.login, john.login)
+        result = self.make_jsonrpc_request("/discuss/search", {"term": "test"})
+        channel_ids = [c["id"] for c in result.get("discuss.channel", [])]
+        self.assertEqual(channel_ids[0], favorite.id, "Favorite channel should come first")
