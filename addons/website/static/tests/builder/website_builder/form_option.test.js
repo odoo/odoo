@@ -1414,3 +1414,29 @@ test("Changing field type removes data-fill-with attribute", async () => {
     await contains(".o_popover [data-action-value='cc']").click();
     expect(":iframe input[name='cc']").not.toHaveAttribute("data-fill-with");
 });
+
+test("incomplete field requirements are discarded on save", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    onRpc("formbuilder_whitelist", () => true);
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect(args[1]).not.toInclude("data-requirement-comparator");
+        expect(args[1]).not.toInclude("data-requirement-condition");
+        return true;
+    });
+    await setupWebsiteBuilder(`
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div class="s_website_form_field" data-requirement-comparator="greater">
+                    <input class="s_website_form_input" type="number"/>
+                </div>
+                <div class="s_website_form_field"
+                    data-requirement-comparator="between" data-requirement-condition="10">
+                    <input class="s_website_form_input" type="number"/>
+                </div>
+            </form>
+        </section>
+    `);
+
+    queryOne(":iframe .s_website_form").classList.add("o_dirty");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+});
