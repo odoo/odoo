@@ -43,6 +43,10 @@
                         <input class="form-check-input ms-2 shadow-sm me-1" type="radio" t-att-checked="this.props.channel.self_member_id?.custom_notifications === notif.label"/>
                     </button>
                 </t>
+                <t t-if="this.notification.permission === 'prompt'">
+                    <hr class="solid o-mx-2_5 mt-1 mb-2"/>
+                    <button class="btn w-100 border-0 py-2 opacity-75 opacity-100-hover" t-on-click="() => this.notification.requestPermission()">Receive push notifications</button>
+                </t>
             </t>
             <t t-else="">
                 <span t-if="!this.env[this.DROPDOWN_NESTING]" class="p-2 pb-0 d-flex smaller fw-bold text-muted">Mute Conversation</span>

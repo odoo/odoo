@@ -250,6 +250,7 @@
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
         <t t-set="show_portal_card" t-value="force_show or entry.should_show_portal_card()"/>
+        <t t-set="show_counter_as_badge" t-value="False"/>
         <div t-att-data-id="entry.id"
             t-att-data-show-in-portal="'true' if entry.show_in_portal else 'false'"
             t-att-data-hidden-by-business-rule="'1' if not show_portal_card and not entry.placeholder_count else None"
@@ -265,13 +266,14 @@
                 <div t-att-class="'alert-link' if bg_color else ''">
                     <div t-attf-class="fs-5 lh-1 #{'d-flex gap-2 align-items-center' if placeholder_count or count else ''}">
                     <t t-out="count"/>
-                        <span t-if="entry.placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="entry.placeholder_count"/>
+                        <span t-if="entry.placeholder_count and not force_show and not show_counter_as_badge" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="entry.placeholder_count"/>
                         <h5 class="mb-0" t-field="entry.name"/>
                     </div>
                     <div class="opacity-75">
                         <p class="mt-1 mb-0" t-field="entry.description"/>
                     </div>
                 </div>
+                <span t-if="show_counter_as_badge" class="bg-danger badge rounded-pill align-self-center" t-att-data-placeholder_count="entry.placeholder_count"/>
             </a>
         </div>
     </template>

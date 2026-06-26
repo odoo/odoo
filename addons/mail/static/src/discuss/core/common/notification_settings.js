@@ -30,6 +30,7 @@ export class NotificationSettings extends Component {
         });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
+        this.notification = useService("mail.notification.permission");
         this.DROPDOWN_NESTING = DROPDOWN_NESTING;
         this.muteConversationDropdownState = useDropdownState();
         this.muteConversationHover = useHover(["mute-button", "mute-menu"], {

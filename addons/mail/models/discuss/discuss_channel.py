@@ -812,6 +812,14 @@ class DiscussChannel(models.Model):
             return self.env._("joined the channel")
         return self.env._("invited %s to the channel", member._get_member_html_link())
 
+    def _get_invite_urls_by_emails(self, emails):
+        """Return {email: invitation_url} for every address to invite.
+        Override to customise the URL per recipient in a single batch query."""
+        return {
+            email: f"{self.invitation_url}?email_token={hash_sign(self.env(su=True), "mail.invite_email", email)}"
+            for email in emails
+        }
+
     def invite_by_email(self, emails):
         """
         Send channel invitation emails to a list of email addresses. Existing members'
@@ -850,6 +858,7 @@ class DiscussChannel(models.Model):
             "strong_start": Markup("<strong>"),
             "strong_end": Markup("</strong>"),
         }
+        invite_urls = self._get_invite_urls_by_emails(eligible_emails)
         to_create = []
         for addr in eligible_emails:
             body = self.env["ir.qweb"]._render(
@@ -857,7 +866,7 @@ class DiscussChannel(models.Model):
                 {
                     "base_url": self.env["ir.config_parameter"].get_base_url(),
                     "channel": self,
-                    "email_token": hash_sign(self.env(su=True), "mail.invite_email", addr),
+                    "invitation_url": invite_urls[addr],
                     "mail_body": mail_body,
                     "user": self.env.user,
                 },
