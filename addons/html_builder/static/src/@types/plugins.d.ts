@@ -27,7 +27,7 @@ declare module "plugins" {
     import { background_shape_target_providers } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
     import { is_movable_selector } from "@html_builder/core/move_plugin";
-    import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
+    import { content_editable_selectors, content_not_editable_selectors, force_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
     import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
@@ -130,6 +130,7 @@ declare module "plugins" {
         container_title: container_title;
         content_editable_selectors: content_editable_selectors;
         content_not_editable_selectors: content_not_editable_selectors;
+        force_not_editable_selectors: force_not_editable_selectors;
         dropzone_selector: dropzone_selector;
         elements_to_options_title_components: elements_to_options_title_components;
         fontCssVariables: fontCssVariables;
