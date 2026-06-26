@@ -97,6 +97,7 @@ function registerServiceWorker() {
     // Register the service worker for the POS
     const urlsToCache = JSON.parse(odoo.urls_to_cache);
     urlsToCache.push("/web/static/lib/zxing-library/zxing-library.js");
+    urlsToCache.push("/pos/receipt-template");
 
     navigator.serviceWorker?.register("/pos/service-worker.js").then((registration) => {
         const worker = registration.installing || registration.waiting || registration.active;

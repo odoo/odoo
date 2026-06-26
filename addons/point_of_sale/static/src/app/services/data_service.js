@@ -43,9 +43,7 @@ export class PosData {
             unsyncData: [],
         });
 
-        if (!navigator.onLine) {
-            await this.checkConnectivity();
-        }
+        await this.checkConnectivity();
 
         this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
@@ -94,7 +92,8 @@ export class PosData {
     }
 
     async fetchReceiptTemplate() {
-        const data = await this.orm.call("pos.order", "get_receipt_template_for_pos_frontend");
+        const response = await fetch("/pos/receipt-template");
+        const data = await response.json();
         for (const [name, string] of data) {
             registerPythonTemplate(name, "", string);
         }

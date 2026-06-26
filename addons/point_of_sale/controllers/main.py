@@ -15,6 +15,11 @@ _logger = logging.getLogger(__name__)
 
 class PosController(PortalAccount):
 
+    @http.route(['/pos/receipt-template'], type='http', auth='user')
+    def pos_receipt_template(self):
+        templates = request.env['pos.order'].get_receipt_template_for_pos_frontend()
+        return request.make_json_response(templates)
+
     @http.route('/pos/receipt/<order_id>', type='http', auth='user')
     def pos_receipt_download(self, order_id=None, company_id=None):
         pos_order = request.env['pos.order'].with_company(company_id).browse(int(order_id))
