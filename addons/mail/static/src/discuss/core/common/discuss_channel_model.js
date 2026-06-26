@@ -1,22 +1,21 @@
 import { MessagePinDialog } from "@mail/core/common/message_pin_dialog";
 import { fields, Record } from "@mail/model/export";
-
-/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
-
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { rpc } from "@web/core/network/rpc";
 import {
     compareDatetime,
     effectWithCleanup,
     nearestGreaterThanOrEqual,
 } from "@mail/utils/common/misc";
+
+import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
+import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -237,16 +236,6 @@ export class DiscussChannel extends Record {
         inverse: "channel_ids",
     });
     get displayName() {
-        if (this.default_display_mode === "video_full_screen" && this.create_date && !this.name) {
-            const localizedDatetime = this.store.self?.tz
-                ? this.create_date.setZone(this.store.self?.tz)
-                : this.create_date.toLocal();
-            const formatDate = localizedDatetime.toLocaleString(
-                { month: "short", day: "numeric" },
-                { locale: user.lang }
-            );
-            return _t("Meeting, %(date)s", { date: formatDate });
-        }
         if (this.channel_type === "chat" && this.correspondent) {
             return this.correspondent.name;
         }
@@ -777,7 +766,7 @@ export class DiscussChannel extends Record {
      */
     async unpinChannel({ notify = true, undos = new Map() } = {}) {
         undos.set(this, []);
-        this.store.has_unpinned_channels = true;
+        this.store.has_hidden_channels = true;
         // Unpin sub-channels first to prevent onPinStateUpdated of parent from removing
         // isLocallyPinned from them before their values are saved for undo.
         for (const subThread of this.sub_channel_ids) {

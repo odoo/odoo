@@ -137,7 +137,7 @@ export class DiscussCommandPalette {
     }
 
     async fetch() {
-        await this.store.channels.fetch(); // FIXME: needed to search group chats without explicit name
+        await this.store.hasHiddenChannelsFetcher.fetch();
         await this.store.searchConversations(this.cleanedTerm);
     }
 
@@ -288,7 +288,7 @@ commandProviderRegistry.add("find_or_start_conversation", {
             if (palette.cleanedTerm) {
                 palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
             }
-            if (palette.store.has_unpinned_channels) {
+            if (palette.store.has_hidden_channels) {
                 palette.commands.push(palette.makeDiscussCommand(VIEW_HIDDEN));
             }
         }

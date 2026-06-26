@@ -22,6 +22,8 @@ import { getOrigin } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
 
+const { DateTime } = luxon;
+
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
  */
@@ -332,8 +334,16 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
+        const localizedDatetime = this.store.self?.tz
+            ? DateTime.now().setZone(this.store.self?.tz)
+            : DateTime.now().toLocal();
+        const formatDate = localizedDatetime.toLocaleString(
+            { month: "short", day: "numeric" },
+            { locale: user.lang }
+        );
         /** @type {import("models").DiscussChannel} */
         const channel = await this.createGroupChat({
+            name: _t("Meeting, %(date)s", { date: formatDate }),
             default_display_mode: "video_full_screen",
             users_to: [this.self_user.id],
         });

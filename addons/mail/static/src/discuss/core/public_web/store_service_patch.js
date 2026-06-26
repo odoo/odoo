@@ -9,6 +9,7 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         this.channels = this.makeCachedFetchData("channels_as_member");
+        this.hasHiddenChannelsFetcher = this.makeCachedFetchData("has_hidden_channels");
         this.fetchSsearchConversationsSequential = useSequential();
     },
     /** @param {string} searchValue */

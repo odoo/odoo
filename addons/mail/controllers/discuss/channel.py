@@ -15,24 +15,6 @@ from odoo.addons.mail.tools.store_handler import store_handler
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
-    @classmethod
-    def _add_has_unpinned_channels_to_store(self, store: Store):
-        # sudo: discuss.channel.member: sudo for performance. Checking existence of unpinned
-        # channels is acceptable, even if the channel is no longer accessible to the user.
-        store.add_global_values(
-            has_unpinned_channels=request.env["discuss.channel.member"]
-            .sudo()
-            .search_count(
-                [
-                    ("is_self", "=", True),
-                    ("is_pinned", "=", False),
-                    ("channel_id.active", "=", True),
-                ],
-                limit=1,
-            )
-            > 0,
-        )
-
     def _process_request_loop(self, store: Store, fetch_params):
         """Override to add discuss channel specific features."""
         # aggregate of channels to return, to batch them in a single query when all the fetch params
@@ -57,6 +39,24 @@ class DiscussChannelWebclientController(WebclientController):
         request.update_context(channels=request.env.context["channels"] | channels)
         super().store_init_messaging(store)
 
+    @store_handler("has_hidden_channels", audience="everyone")
+    def store_has_hidden_channels(self, store: Store):
+        # sudo: discuss.channel.member: sudo for performance. Checking existence of hidden
+        # channels is acceptable, even if the channel is no longer accessible to the user.
+        store.add_global_values(
+            has_hidden_channels=request.env["discuss.channel.member"]
+            .sudo()
+            .search_count(
+                [
+                    ("is_self", "=", True),
+                    ("is_pinned", "=", False),
+                    ("channel_id.active", "=", True),
+                ],
+                limit=1,
+            )
+            > 0,
+        )
+
     @store_handler("channels_as_member", audience="everyone")
     def store_channels_as_member(self, store: Store):
         channels = request.env["discuss.channel"].search_fetch(
@@ -66,7 +66,7 @@ class DiscussChannelWebclientController(WebclientController):
             channels=request.env.context["channels"] | channels,
             add_channels_last_message=True,
         )
-        self._add_has_unpinned_channels_to_store(store)
+        self.store_has_hidden_channels(store)
 
     @store_handler("discuss.channel", audience="everyone")
     def store_add_discuss_channel_to_context(self, store: Store, ids=(), with_last_message=False):
@@ -124,7 +124,7 @@ class DiscussChannelWebclientController(WebclientController):
             [("channel_id", "=", channel_id), ("is_self", "=", True)],
         ):
             member.unpin_dt = False if pinned else fields.Datetime.now()
-        self._add_has_unpinned_channels_to_store(store)
+        self.store_has_hidden_channels(store)
 
     @store_handler("/discuss/get_or_create_chat", audience="everyone", readonly=False)
     def store_get_or_create_chat(self, store: Store, partners_to):
@@ -134,7 +134,7 @@ class DiscussChannelWebclientController(WebclientController):
             store.resolve_data_request(
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
-            self._add_has_unpinned_channels_to_store(store)
+            self.store_has_hidden_channels(store)
 
     @store_handler("/discuss/create_channel", audience="everyone", readonly=False)
     def store_create_channel(self, store: Store, name, group_id, is_readonly):

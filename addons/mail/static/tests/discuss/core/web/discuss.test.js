@@ -52,6 +52,7 @@ test("can create a new channel", async () => {
     await click("input[placeholder='Search']");
     await insertText(".o_command_palette_search input[placeholder='Search conversations']", "abc");
     await expect.waitForSteps([
+        "store fetch: has_hidden_channels",
         `/discuss/search - {"term":""}`,
         `/discuss/search - {"term":"abc"}`,
     ]);
@@ -152,7 +153,11 @@ test("can make a DM chat", async () => {
             ],
         ],
         {
-            stepsBefore: [`/discuss/search - {"term":""}`, `/discuss/search - {"term":"mario"}`],
+            stepsBefore: [
+                "store fetch: has_hidden_channels",
+                '/discuss/search - {"term":""}',
+                '/discuss/search - {"term":"mario"}',
+            ],
         }
     );
 });

@@ -817,11 +817,24 @@ async function search(request) {
     const ResPartner = this.env["res.partner"];
 
     const store = new Store();
+    /** @type {import("mock_models").DiscussChannelMember} */
+    const DiscussChannelMember = this.env["discuss.channel.member"];
     const base_domain = [
         ["name", "ilike", term],
         ["channel_type", "!=", "chat"],
     ];
-    const priority_conditions = [[["is_member", "=", true], ...base_domain], base_domain];
+    const currentPartnerId = this.env.user?.partner_id;
+    const favoriteChannelIds = currentPartnerId
+        ? DiscussChannelMember._filter([
+              ["partner_id", "=", currentPartnerId],
+              ["is_favorite", "=", true],
+          ]).map((m) => m.channel_id)
+        : [];
+    const priority_conditions = [
+        [["id", "in", favoriteChannelIds], ...base_domain],
+        [["is_member", "=", true], ...base_domain],
+        base_domain,
+    ];
     const channelIds = new Set();
     let remaining_limit;
     for (const domain of priority_conditions) {
@@ -839,6 +852,11 @@ async function search(request) {
         }
     }
     store.add(DiscussChannel.browse(channelIds), "_store_channel_fields");
+    const channelMemberIds = DiscussChannelMember.search([
+        ["channel_id", "in", [...channelIds]],
+        ["is_self", "=", true],
+    ]);
+    store.add(DiscussChannelMember.browse(channelMemberIds), (res) => res.attr("is_favorite"));
     ResPartner._search_for_channel_invite(store, term, undefined, limit);
     return store.as_dict();
 }
@@ -915,6 +933,18 @@ function _resolve_messages(store, fetch_params, { extraKwargs = {}, filter = () 
     return res.messages;
 }
 function _process_request_for_all(store, name, params, context = {}) {
+    function add_has_hidden_channels_to_store() {
+        store.add_global_values({
+            has_hidden_channels:
+                DiscussChannelMember.search_count(
+                    [
+                        ["is_self", "=", true],
+                        ["is_pinned", "=", false],
+                    ],
+                    makeKwArgs({ limit: 1 })
+                ) > 0,
+        });
+    }
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").DiscussChannelMember} */
@@ -967,6 +997,9 @@ function _process_request_for_all(store, name, params, context = {}) {
             store
         );
     }
+    if (name === "has_hidden_channels") {
+        add_has_hidden_channels_to_store();
+    }
     if (name === "channels_as_member") {
         const channels = DiscussChannel._get_channels_as_member();
         // is_self is computed per current persona; the mock only computes it at create/write time
@@ -1003,16 +1036,7 @@ function _process_request_for_all(store, name, params, context = {}) {
             ),
             ["is_favorite"]
         );
-        store.add_global_values({
-            has_unpinned_channels:
-                DiscussChannelMember.search_count(
-                    [
-                        ["is_self", "=", true],
-                        ["is_pinned", "=", false],
-                    ],
-                    makeKwArgs({ limit: 1 })
-                ) > 0,
-        });
+        add_has_hidden_channels_to_store();
     }
     if (name === "mail.thread") {
         store.add(this.env[params.thread_model].browse(params.thread_id), "_store_thread_fields", {
@@ -1116,16 +1140,7 @@ function _process_request_for_all(store, name, params, context = {}) {
             ["is_self", "=", true],
         ]);
         DiscussChannelMember._channel_pin(memberIds, params.pinned);
-        store.add_global_values({
-            has_unpinned_channels:
-                DiscussChannelMember.search_count(
-                    [
-                        ["is_self", "=", true],
-                        ["is_pinned", "=", false],
-                    ],
-                    makeKwArgs({ limit: 1 })
-                ) > 0,
-        });
+        add_has_hidden_channels_to_store();
     }
     if (name === "/discuss/get_or_create_chat") {
         const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
