@@ -203,6 +203,7 @@ class MrpUnbuild(models.Model):
         if any(consume_move.product_id.tracking in ['lot', 'serial'] and not self.mo_id for consume_move in consume_moves):
             raise UserError(error_message)
 
+        finished_moves.move_line_ids.unlink()
         for finished_move in finished_moves:
             if finished_move.uom_id.compare(finished_move.product_uom_qty, finished_move.quantity) > 0:
                 finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
