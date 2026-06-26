@@ -37,16 +37,29 @@ class IrDefault(models.Model):
             except Exception:  # noqa: BLE001
                 raise ValidationError(_("Invalid value in Default Value field. Expected type '%s' for '%s.%s'.", record.field_id.ttype, model_name, record.field_id.name))
 
+    def _check_accessible_field_id(self):
+        # using current environment as function is called after checking
+        # permissions on the record
+        if self.env.su:
+            return
+        for record in self:
+            if field := record.field_id:
+                model = self.env[field.model]
+                model.check_field_access_rights('write', [field.name])
+
     @api.model_create_multi
     def create(self, vals_list):
         self.env.registry.clear_cache()
-        return super(IrDefault, self).create(vals_list)
+        new_defaults = super().create(vals_list)
+        new_defaults._check_accessible_field_id()
+        return new_defaults
 
     def write(self, vals):
         if self:
             self.env.registry.clear_cache()
         new_default = super().write(vals)
         self.check_access_rule('write')
+        self._check_accessible_field_id()
         return new_default
 
     def unlink(self):
