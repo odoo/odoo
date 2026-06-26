@@ -22,7 +22,7 @@ class StockQuantityHistory(models.TransientModel):
         if product_id:
             domain &= Domain('id', '=', product_id)
         elif product_tmpl_id:
-            domain = Domain('product_tmpl_id', '=', product_tmpl_id)
+            domain &= Domain('product_tmpl_id', '=', product_tmpl_id)
         # We pass `to_date` in the context so that `qty_available` will be computed across
         # moves until date.
         action = {
