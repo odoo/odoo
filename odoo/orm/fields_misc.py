@@ -27,7 +27,7 @@ class Boolean(Field[bool]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         return bool(value)
 
     def convert_to_export(self, value, record):
@@ -67,7 +67,7 @@ class Json(Field):
         """ Return a copy of the value """
         return False if value is None else copy.deepcopy(value)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         if not value:
             return None
         return json.loads(json.dumps(value, ensure_ascii=False, default=json_default))

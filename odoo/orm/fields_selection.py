@@ -226,7 +226,7 @@ class Selection(Field[str | typing.Literal[False]]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return self.convert_to_cache(value, record, validate=validate)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         if value is False or value is None:
             return None
         if self.validate and validate and self._selection is not None and str(value) not in self._selection:

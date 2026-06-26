@@ -108,12 +108,12 @@ class BaseString(Field[str | typing.Literal[False]]):
             return PsycopgJson(value) if value else None
         return super().get_column_update(record)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         if value is None or value is False:
             return None
 
         if self.translate and isinstance(value, dict):
-            lang = record.env.lang or 'en_US'
+            lang = records.env.lang or 'en_US'
             value = value.get(lang, value.get('en_US', next(iter(value.values()))))
 
         value = value.decode() if isinstance(value, bytes) else str(value)

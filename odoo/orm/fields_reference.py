@@ -24,15 +24,15 @@ class Reference(Selection):
     def convert_to_column(self, value, record, values=None, validate=True):
         return Field.convert_to_column(self, value, record, values, validate)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # cache format: str ("model,id") or None
         if isinstance(value, BaseModel):
-            if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
+            if not validate or (value._name in self.get_values(records.env) and len(value) <= 1):
                 return "%s,%s" % (value._name, value.id) if value else None
         elif isinstance(value, str):
             res_model, res_id = value.split(',')
-            if not validate or res_model in self.get_values(record.env):
-                if record.env[res_model].browse(int(res_id)).exists():
+            if not validate or res_model in self.get_values(records.env):
+                if records.env[res_model].browse(int(res_id)).exists():
                     return value
                 else:
                     return None
@@ -76,11 +76,11 @@ class Many2oneReference(Integer):
 
     _description_model_field = property(attrgetter('model_field'))
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # cache format: id or None
         if isinstance(value, BaseModel):
             value = value._ids[0] if value._ids else None
-        return super().convert_to_cache(value, record, validate)
+        return super().convert_to_cache(value, records, validate)
 
     def _update_inverses(self, records: BaseModel, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
