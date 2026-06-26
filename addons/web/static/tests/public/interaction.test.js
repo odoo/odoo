@@ -10,7 +10,7 @@ import {
     queryOne,
 } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
 import { patchDynamicContent } from "@web/public/utils";
@@ -1728,6 +1728,64 @@ describe("t-att and t-out", () => {
         core.stopInteractions();
         expect("span:last").toHaveAttribute("data-animal", "colibri");
         expect("span:first").toHaveAttribute("data-animal", "owlet");
+    });
+
+    test("t-att-... works with value property", async () => {
+        class Test extends Interaction {
+            static selector = "div";
+            dynamicContent = {
+                input: { "t-att-value": () => this.value },
+                button: { "t-on-click": () => (this.value = "clicked") },
+            };
+            setup() {
+                this.value = "setup";
+            }
+        }
+        await startInteraction(
+            Test,
+            `
+            <div>
+                <input/>
+                <button/>
+            </div>
+            `
+        );
+        expect("input").toHaveValue("setup");
+
+        await contains("input").edit("changed");
+        expect("input").toHaveValue("changed");
+
+        await click("button");
+        expect("input").toHaveValue("clicked");
+    });
+
+    test("t-att-... works with checked property", async () => {
+        class Test extends Interaction {
+            static selector = "div";
+            dynamicContent = {
+                input: { "t-att-checked": () => this.checked },
+                button: { "t-on-click": () => (this.checked = true) },
+            };
+            setup() {
+                this.checked = true;
+            }
+        }
+        await startInteraction(
+            Test,
+            `
+            <div>
+                <input type="checkbox"/>
+                <button/>
+            </div>
+            `
+        );
+        expect("input").toBeChecked();
+
+        await contains("input").click();
+        expect("input").not.toBeChecked();
+
+        await click("button");
+        expect("input").toBeChecked();
     });
 
     test("can do a simple t-out", async () => {
