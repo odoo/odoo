@@ -12,7 +12,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, edit, expect, mockDate, press, test } from "@odoo/hoot";
+import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
 
 import { Command } from "@web/../tests/web_test_helpers";
 
@@ -77,15 +77,14 @@ test("bus subscription updated when joining locally pinned thread", async () => 
 test("bus subscription is refreshed when channel is joined", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    await expect.waitForSteps(["subscribe"]);
     await openDiscuss();
-    await expect.waitForSteps([]);
+    await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
+    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     await click("input[placeholder='Search']");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
@@ -97,15 +96,14 @@ test("bus subscription is refreshed when channel is joined", async () => {
 test("bus subscription is refreshed when channel is left", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    await expect.waitForSteps(["subscribe"]);
     await openDiscuss();
-    await expect.waitForSteps([]);
+    await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
+    onWebsocketEvent("subscribe", () => expect.step("subscribe"));
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await expect.waitForSteps(["subscribe"]);
