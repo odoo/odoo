@@ -15,7 +15,7 @@ from odoo import fields, Command
 
 
 @tagged('post_install', '-at_install')
-class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
+class TestAccountJournal(AccountTestInvoicingCommon, HttpCase, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -252,6 +252,37 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             res = _unsubscribe(valid_token, journal_id=journal.id + 1)
             self.assertEqual(res.status_code, 403)
             self.assertEqual(journal.incoming_einvoice_notification_email, email)
+
+    def test_journal_notifications_exclude_sender_and_salesperson(self):
+        salesperson_user = new_test_user(
+            self.env,
+            login='salesperson_user',
+            name='Salesperson',
+            email='salesperson@example.com',
+            groups='account.group_account_invoice',
+        )
+        subscriber_email = 'external_subscriber@example.com'
+        user_email = 'accountman@test.com'
+        journal = self.company_data['default_journal_sale']
+        journal.incoming_einvoice_notification_email = f"{salesperson_user.email}, {subscriber_email}, {user_email}"
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_user_id': salesperson_user.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'Test product layout line',
+                'price_unit': 100.0,
+            })]
+        })
+        invoice.action_post()
+        with self.mock_mail_gateway():
+            journal._notify_invoice_subscribers(invoice)
+
+        sent_emails_to = [mail['msg_to'] for mail in self.emails]
+        self.assertIn(subscriber_email, sent_emails_to)
+        self.assertNotIn(salesperson_user.email, sent_emails_to)
+        self.assertNotIn(user_email, sent_emails_to)
 
 
 @tagged('post_install', '-at_install', 'mail_alias')
