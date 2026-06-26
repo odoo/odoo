@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_work_entry.DomainCountField">
+        <t t-if="this.state.isValid === null and this.state.recordCount === null">
+            <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading"/>
+        </t>
+        <t t-elif="this.state.isValid">
+            <button class="btn btn-sm btn-link p-0" type="button" t-on-click.stop="this.onButtonClick">
+                <i class="oi oi-arrow-right me-1"/>
+                <t t-out="this.state.recordCount"/>
+                <t t-if="this.state.hasLimitedCount">+</t> employee(s)
+            </button>
+        </t>
+        <t t-else="">
+            <span class="text-warning" role="alert">
+                <i class="fa fa-exclamation-triangle"/> Invalid domain
+            </span>
+        </t>
+    </t>
+
+</templates>

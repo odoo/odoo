@@ -13,18 +13,6 @@
         </field>
     </record>
 
-    <!-- work_entry_type_id on the attendance form (worked-hours group) -->
-    <record id="view_attendance_form_inherit_holidays" model="ir.ui.view">
-        <field name="name">hr.attendance.form.holidays</field>
-        <field name="model">hr.attendance</field>
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
-        <field name="arch" type="xml">
-            <field name="worked_hours" position="after">
-                <field name="work_entry_type_id" string="Type" options="{'no_create': True}"/>
-            </field>
-        </field>
-    </record>
-
     <!-- filters: output attendances vs. source attendances -->
     <record id="view_attendance_search_inherit_holidays" model="ir.ui.view">
         <field name="name">hr.attendance.search.holidays</field>

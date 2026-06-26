@@ -73,6 +73,7 @@ class HrLeave(models.Model):
     _mail_post_access = 'read'
 
     _time_rule_source_field = 'source_leave_id'
+    _time_rule_output_field = 'output_leave_ids'
     _time_rule_span_start_field = 'date_from'
     _time_rule_span_end_field = 'date_to'
 
@@ -1488,8 +1489,6 @@ class HrLeave(models.Model):
             })
         if self.env.context.get('leave_fast_create'):
             holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
-        if not self.env.context.get('skip_time_rules'):
-            holidays._trigger_time_rules()
         if zero_duration_employees:
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
@@ -1557,11 +1556,6 @@ class HrLeave(models.Model):
             for holiday in self:
                 if employee_id:
                     holiday.add_follower(employee_id)
-
-        trigger_fields = {'employee_id', 'date_from', 'date_to', 'work_entry_type_id', 'state'}
-        if not self.env.context.get('skip_time_rules') and trigger_fields.intersection(values):
-            self._trigger_time_rules()
-
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -1582,142 +1576,22 @@ class HrLeave(models.Model):
                 raise UserError(error_message % {'state': state_description_values.get(holiday.state)})
 
     def unlink(self):
-        # capture affected info before records are deleted, for the post-deletion recompute
-        if not self.env.context.get('skip_time_rules'):
-            source_leaves = self.filtered(lambda l: not l.is_time_rule_output)
-            affected = [(l.employee_id, l.date_from, l.date_to) for l in source_leaves if l.date_from and l.date_to]
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         res = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
-        if not self.env.context.get('skip_time_rules') and affected:
-            self._trigger_time_rules_for_affected(affected)
         return res
 
-    @api.model
-    def _cron_process_day_undertime_rules(self):
-        """Daily cron: process day-based time rules for yesterday's validated leaves."""
-        yesterday = date.today() - timedelta(days=1)
-        start = datetime.combine(yesterday, time.min)
-        end = datetime.combine(yesterday, time.max)
-        sources = self.sudo().search([
-            ('date_to', '<=', end),
-            ('date_to', '>=', start),
-            ('state', '=', 'validate'),
-            ('time_rule_id', '=', False),
-        ])
-        if not sources:
-            return
-        affected = [(l.employee_id, l.date_from, l.date_to) for l in sources]
-        self._process_time_rules_for(affected, rule_period='day', rule_operator='less_than')
+    def _apply_record_output(self, rules, excess, deficit):
+        rules._apply_leave_output(excess, deficit)
 
-    @api.model
-    def _cron_process_week_time_rules(self):
-        """Weekly cron: process week-based time rules for the Mon-Sun that just ended."""
-        today = date.today()
-        week_end = today - timedelta(days=1)
-        week_start = week_end - timedelta(days=6)
-        start = datetime.combine(week_start, time.min)
-        end = datetime.combine(week_end, time.max)
-        sources = self.sudo().search([
-            ('date_to', '<=', end),
-            ('date_to', '>=', start),
-            ('state', '=', 'validate'),
-            ('time_rule_id', '=', False),
-        ])
-        if not sources:
-            return
-        affected = [(l.employee_id, l.date_from, l.date_to) for l in sources]
-        self._process_time_rules_for(affected, rule_period='week')
+    def _get_source_extra_fields_domain(self):
+        return [
+            ('is_time_rule_output', '=', False),
+            ('state', '=', 'validated'),
+        ]
 
-    def _process_time_rules(self):
-        """Recompute time rule outputs for employees/dates affected by self."""
-        source = self.filtered(lambda l: not l.is_time_rule_output and l.date_from and l.date_to)
-        if not source:
-            return
-        affected = [(l.employee_id, l.date_from, l.date_to) for l in source]
-        self._process_time_rules_for(affected)
-
-    def _trigger_time_rules(self):
-        """Apply the full day/week, past/current, exceed/undertime split for validated source leaves."""
-        validated = self.filtered(lambda l: l.state == 'validate' and not l.is_time_rule_output and l.date_from and l.date_to)
-        if not validated:
-            return
-        self._trigger_time_rules_for_affected([(l.employee_id, l.date_from, l.date_to) for l in validated])
-
-    def _trigger_time_rules_for_affected(self, affected):
-        """Apply day/week, past/current, exceed/undertime split for (employee, date_from, date_to) tuples."""
-        if not affected:
-            return
-        today = fields.Date.today()
-        latest_monday = today - timedelta(days=today.weekday())
-
-        def to_date(dt):
-            return dt.date() if hasattr(dt, 'date') else dt
-
-        past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
-        today = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
-        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_monday]
-        self._process_time_rules_for(past_day, rule_period='day')
-        self._process_time_rules_for(today, rule_period='day', rule_operator='exceed')
-        self._process_time_rules_for(past_week, rule_period='week')
-
-    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None):
-        """Recompute time rule outputs for the given (employee, date_from, date_to) tuples.
-        """
-        if not affected:
-            return
-
-        rules = self.env['hr.time.rule'].sudo().search([
-            '|', ('company_id', '=', False),
-            ('company_id', 'in', self.env.companies.ids),
-            ('active', '=', True),
-        ])
-        if not rules:
-            return
-
-        if rule_operator:
-            rules = rules.filtered(lambda r: r.threshold_operator == rule_operator)
-
-        if rule_period == 'day':
-            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
-            week_rules = rules.browse()
-        elif rule_period == 'week':
-            day_rules = rules.browse()
-            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
-        else:
-            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
-            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
-
-        if not day_rules and not week_rules:
-            return
-
-        day_rules_ranges = defaultdict(lambda: [None, None])
-        for employee, date_from, date_to in affected:
-            df = date_from.date() if hasattr(date_from, 'date') else date_from
-            dt = date_to.date() if hasattr(date_to, 'date') else date_to
-            r = day_rules_ranges[employee]
-            r[0] = df if r[0] is None else min(r[0], df)
-            r[1] = dt if r[1] is None else max(r[1], dt)
-
-        weekly_starts = {int(r.week_start or '0') for r in week_rules}
-        week_rules_ranges = {}
-        if weekly_starts:
-            for employee, (df, dt) in day_rules_ranges.items():
-                wdf, wdt = df, dt
-                for ws in weekly_starts:
-                    wdf = min(wdf, wdf - relativedelta(days=(wdf.weekday() - ws) % 7))
-                    wdt = max(wdt, wdt + relativedelta(days=(ws - 1 - wdt.weekday()) % 7))
-                week_rules_ranges[employee] = (wdf, wdt)
-
-        day_excess, day_deficit = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
-        week_excess, week_deficit = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
-
-        merged_excess = self._merge_rule_outputs(day_excess, week_excess)
-        merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
-        (day_rules | week_rules)._apply_leave_output(merged_excess, merged_deficit)
-
-    def _get_source_records_for_time_rules(self, employees, start_dt, end_dt):
-        return self._get_source_leaves_for_time_rules(employees, start_dt, end_dt)
+    def _get_write_source_extra_source_fields(self):
+        return {'work_entry_type_id', 'state'}
 
     def _collect_auto_ctx(self):
         return dict(
@@ -1736,35 +1610,12 @@ class HrLeave(models.Model):
             'active': True,
             'date_to': original_end,
             'request_date_to': original_end.date(),
-            'date_from': source.date_from,
+            'date_from': source.date_from,  # TODO MEPE what the point of this line ? :/
         })
 
     def _after_source_restore(self, modified_sources, auto_ctx):
         if modified_sources:
             modified_sources.with_context(**auto_ctx)._create_resource_leave()
-
-    def _merge_rule_outputs(self, a, b):
-        merged = defaultdict(lambda: defaultdict(list))
-        for outputs in (a, b):
-            for emp, by_leave in outputs.items():
-                for lv, items in by_leave.items():
-                    merged[emp][lv].extend(items)
-        return merged
-
-    def _get_source_leaves_for_time_rules(self, employees, start_dt, end_dt):
-        """Return validated source leaves for the given employees and date range.
-
-        Called from _process_time_rules_for after weekly scope expansion.
-        Override to filter or pre-process source leaves before time rule evaluation.
-        """
-        return self.env['hr.leave'].sudo().with_context(active_test=False).search([
-            ('time_rule_id', '=', False),
-            ('source_leave_id', '=', False),
-            ('employee_id', 'in', employees.ids),
-            ('date_from', '<=', end_dt.replace(tzinfo=None)),
-            ('date_to', '>=', start_dt.replace(tzinfo=None)),
-            ('state', '=', 'validate'),
-        ])
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

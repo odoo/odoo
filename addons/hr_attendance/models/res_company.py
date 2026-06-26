@@ -37,7 +37,7 @@ class ResCompany(models.Model):
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Attendance Work Entry Type",
-        domain=[('requires_allocation', '=', False), ('count_as', '=', 'working_time')],
+        domain=[('count_as', '=', 'working_time')],
         store=True,
         compute='_compute_attendance_work_entry_type_id',
         groups="hr.group_hr_user",
@@ -67,7 +67,6 @@ class ResCompany(models.Model):
         country_codes = self.mapped('country_id.code')
         country_types = self.env['hr.work.entry.type'].search([
             ('count_as', '=', 'working_time'),
-            ('requires_allocation', '=', False),
             ('code', '=', 'WORK100'),
             ('country_code', 'in', country_codes),
         ])

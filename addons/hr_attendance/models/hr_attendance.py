@@ -28,6 +28,7 @@ class HrAttendance(models.Model):
     _inherit = ["mail.thread", "hr.time.rule.source.mixin"]
 
     _time_rule_source_field = 'source_attendance_id'
+    _time_rule_output_field = 'overtime_attendance_ids'
     _time_rule_span_start_field = 'check_in'
     _time_rule_span_end_field = 'check_out'
 
@@ -86,7 +87,7 @@ class HrAttendance(models.Model):
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
     work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type', string="Work Entry Type", index=True,
+        'hr.work.entry.type', string="Time Type", index=True,
         default=lambda self: self.env.company.attendance_work_entry_type_id,
     )
 
@@ -274,41 +275,13 @@ class HrAttendance(models.Model):
                         datetime=format_datetime(self.env, last_before_check_out.check_in, dt_format=False),
                     ))
 
-    @api.model
-    def _get_day_start_and_day(self, employee, dt):  # TODO probably no longer need by the end
-        # Returns a tuple containing the datetime in naive UTC of the employee's start of the day
-        # and the date it was for that employee
-        if not dt.tzinfo:
-            employee_tz = employee._get_tz(dt)[employee.id]
-            date_employee_tz = dt.replace(tzinfo=UTC).astimezone(ZoneInfo(employee_tz))
-        else:
-            date_employee_tz = dt
-        start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)
-        return (start_day_employee_tz.astimezone(UTC).replace(tzinfo=None), start_day_employee_tz.date())
-
-    def _get_week_date_range(self):
-        assert self
-        dates = self.mapped('date')
-        date_start, date_end = min(dates), max(dates)
-        date_start = date_start - relativedelta(days=date_start.weekday())
-        date_end = date_end + relativedelta(days=6 - date_end.weekday())
-        return date_start, date_end
-
     def write(self, vals):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
-        result = super().write(vals)
-        if not self.env.context.get('skip_time_rules') and any(
-            f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'state')
-        ):
-            self._trigger_time_rules(from_write=True)
-        return result
-
-    def unlink(self):
-        return super().unlink()
+        return super().write(vals)
 
     def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))
@@ -643,20 +616,6 @@ class HrAttendance(models.Model):
                     'This attendance was automatically checked out based on company specific time configuration.',
                 ))
 
-    def _get_localized_times(self):
-        self.ensure_one()
-        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz)
-        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        return localized_start, localized_end
-
-    def _get_dates(self):
-        result = {}
-        for attendance in self:
-            localized_start, localized_end = attendance._get_localized_times()
-            result[attendance] = list(rrule(DAILY, dtstart=localized_start.date(), until=localized_end.date()))
-        return result
-
     def _get_break_duration_within_period(self, start, stop):
         attendances = self.filtered(lambda attendance: attendance.check_out and attendance.break_duration)
         if not attendances:
@@ -675,36 +634,6 @@ class HrAttendance(models.Model):
             ) * attendance.break_duration
         return break_duration
 
-    def _get_attendance_by_periods_by_employee(self):
-        attendance_by_employee_by_day = defaultdict(lambda: defaultdict(lambda: Intervals([], keep_distinct=True)))
-        attendance_by_employee_by_week = defaultdict(lambda: defaultdict(lambda: Intervals([], keep_distinct=True)))
-
-        for attendance in self.sorted('check_in'):
-            employee = attendance.employee_id
-            check_in, check_out = attendance._get_localized_times()
-            for day in rrule(dtstart=check_in.date(), until=check_out.date(), freq=DAILY):
-                week_date = day + relativedelta(days=6 - day.weekday())
-
-                start_datetime = datetime.combine(day, time.min)
-                stop_datetime_for_day = datetime.combine(day, time.max)
-                day_interval = Intervals([(start_datetime, stop_datetime_for_day, self.env['resource.calendar'])])
-
-                stop_datetime_for_week = datetime.combine(week_date, time.max)
-                week_interval = Intervals([(start_datetime, stop_datetime_for_week, self.env['resource.calendar'])])
-
-                attendance_interval = Intervals([(check_in, check_out, attendance)])
-                intersected_day_interval = attendance_interval & day_interval
-                intersected_week_interval = attendance_interval & week_interval
-                if intersected_day_interval:
-                    attendance_by_employee_by_day[employee][day] |= intersected_day_interval
-                if intersected_week_interval:
-                    attendance_by_employee_by_week[employee][week_date] |= intersected_week_interval
-
-        return {
-            'day': attendance_by_employee_by_day,
-            'week': attendance_by_employee_by_week
-        }
-
     def init(self):
         super().init()
         self.env.cr.execute("""
@@ -712,147 +641,17 @@ class HrAttendance(models.Model):
             ON hr_attendance (check_in, check_out, employee_id);
         """)
 
-    @api.model
-    def _cron_process_day_undertime_rules(self):
-        """Daily cron: process day-based time rules for yesterday's validated attendances."""
-        yesterday = date.today() - timedelta(days=1)
-        start = datetime.combine(yesterday, time.min)
-        end = datetime.combine(yesterday, time.max)
-        sources = self.sudo().with_context(active_test=False).search([
-            ('check_out', '<=', end),
-            ('check_out', '>=', start),
-            ('state', '=', 'validated'),
+    def _apply_record_output(self, rules, excess, deficit):
+        rules._apply_attendance_output(excess, deficit)
+
+    def _get_source_extra_fields_domain(self):
+        return [
             ('is_time_rule_output', '=', False),
-            ('source_attendance_id', '=', False),
-        ])
-        if not sources:
-            return
-        affected = [(a.employee_id, a.check_in, a.check_out) for a in sources]
-        self._process_time_rules_for(affected, rule_period='day', rule_operator='less_than')
-
-    @api.model
-    def _cron_process_week_time_rules(self):
-        """Weekly cron: process week-based time rules for the Mon-Sun that just ended.
-
-        Schedule this cron to run every Monday; it will process the previous week.
-        """
-        today = date.today()
-        week_end = today - timedelta(days=1)
-        week_start = week_end - timedelta(days=6)
-        start = datetime.combine(week_start, time.min)
-        end = datetime.combine(week_end, time.max)
-        sources = self.sudo().with_context(active_test=False).search([
-            ('check_out', '<=', end),
-            ('check_out', '>=', start),
             ('state', '=', 'validated'),
-            ('is_time_rule_output', '=', False),
-            ('source_attendance_id', '=', False),
-        ])
-        if not sources:
-            return
-        affected = [(a.employee_id, a.check_in, a.check_out) for a in sources]
-        self._process_time_rules_for(affected, rule_period='week')
+        ]
 
-    def _trigger_time_rules(self, from_write=False):
-        """Apply the full day/week, past/current, exceed/undertime split for validated source attendances."""
-        ctx = {'source_bounds_from_write': True} if from_write else {}
-        today = date.today()
-        validated = self.filtered(lambda a: a.state == 'validated')
-        validated.filtered(
-            lambda a: a.check_out and a.check_out.date() < today
-        ).with_context(**ctx)._process_time_rules(rule_period='day')
-
-        validated.filtered(
-            lambda a: a.check_out and a.check_out.date() >= today
-        ).with_context(**ctx)._process_time_rules(rule_period='day', rule_operator='exceed')
-
-        latest_monday = today - timedelta(days=today.weekday())
-        validated.filtered(
-            lambda a: a.check_out and a.check_out.date() < latest_monday
-        ).with_context(**ctx)._process_time_rules(rule_period='week')
-
-    def _process_time_rules(self, rule_period=None, rule_operator=None):
-        """Recompute time rule output attendances for employees/dates affected by self."""
-        source = self.filtered(lambda a: not a.is_time_rule_output and a.check_in and a.check_out)
-        if not source:
-            return
-        affected = [(a.employee_id, a.check_in, a.check_out) for a in source]
-        self._process_time_rules_for(affected, rule_period, rule_operator)
-
-    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None):
-        if not affected:
-            return
-
-        rules = self.env['hr.time.rule'].sudo().search([
-            '|', ('company_id', '=', False),
-            ('company_id', 'in', self.env.companies.ids),
-            ('active', '=', True),
-        ])
-        if not rules:
-            return
-
-        if rule_operator:
-            rules = rules.filtered(lambda r: r.threshold_operator == rule_operator)
-
-        if rule_period == 'day':
-            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
-            week_rules = rules.browse()
-        elif rule_period == 'week':
-            day_rules = rules.browse()
-            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
-        else:
-            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
-            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
-
-        if not day_rules and not week_rules:
-            return
-
-        day_rules_ranges = defaultdict(lambda: [None, None])
-        for employee, check_in, check_out in affected:
-            df = check_in.date() if hasattr(check_in, 'date') else check_in
-            dt = check_out.date() if hasattr(check_out, 'date') else check_out
-            r = day_rules_ranges[employee]
-            r[0] = df if r[0] is None else min(r[0], df)
-            r[1] = dt if r[1] is None else max(r[1], dt)
-
-        weekly_starts = {int(r.week_start or '0') for r in week_rules}
-        week_rules_ranges = {}
-        if weekly_starts:
-            for employee, (df, dt) in day_rules_ranges.items():
-                wdf, wdt = df, dt
-                for ws in weekly_starts:
-                    wdf = min(wdf, wdf - timedelta(days=(wdf.weekday() - ws) % 7))
-                    wdt = max(wdt, wdt + timedelta(days=(ws - 1 - wdt.weekday()) % 7))
-                week_rules_ranges[employee] = (wdf, wdt)
-
-        day_excess, day_deficit = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
-        week_excess, week_deficit = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
-
-        merged_excess = self._merge_rule_outputs(day_excess, week_excess)
-        merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
-        (day_rules | week_rules)._apply_attendance_output(merged_excess, merged_deficit)
-
-    def _get_source_records_for_time_rules(self, employees, start_dt, end_dt):
-        return self._get_source_attendances_for_time_rules(employees, start_dt, end_dt)
-
-    def _merge_rule_outputs(self, a, b):
-        merged = defaultdict(lambda: defaultdict(list))
-        for outputs in (a, b):
-            for emp, by_att in outputs.items():
-                for att, items in by_att.items():
-                    merged[emp][att].extend(items)
-        return merged
-
-    def _get_source_attendances_for_time_rules(self, employees, start_dt, end_dt):
-        return self.env['hr.attendance'].sudo().with_context(active_test=False).search([
-            ('is_time_rule_output', '=', False),
-            ('source_attendance_id', '=', False),
-            ('state', '=', 'validated'),
-            ('employee_id', 'in', employees.ids),
-            ('check_in', '<=', end_dt.replace(tzinfo=None)),
-            ('check_out', '>=', start_dt.replace(tzinfo=None)),
-            ('check_out', '!=', False),
-        ])
+    def _get_write_source_extra_source_fields(self):
+        return {'work_entry_type_id', 'state'}
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -867,10 +666,7 @@ class HrAttendance(models.Model):
                         employee = self.env['hr.employee'].browse(vals['employee_id'])
                         company = employee.company_id or company
                     vals['state'] = 'draft' if company.attendance_validation == 'manual_validation' else 'validated'
-        res = super().create(vals_list)
-        if not self.env.context.get('skip_time_rules'):
-            res._trigger_time_rules()
-        return res
+        return super().create(vals_list)
 
     def action_validate(self):
         self.write({'state': 'validated'})
@@ -892,18 +688,7 @@ class HrAttendance(models.Model):
             original_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
             if not src.active or original_co != src.check_out:
                 src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
-        today = date.today()
-        latest_monday = today - timedelta(days=today.weekday())
-        affected = [(a.employee_id, a.check_in, a.check_out) for a in to_cleanup]
-        past_day = [(e, ci, co) for e, ci, co in affected if co.date() < today]
-        past_week = [(e, ci, co) for e, ci, co in affected if co.date() < latest_monday]
-        self._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
-        self._process_time_rules_for(affected, rule_period='day', rule_operator='exceed')
-        self._process_time_rules_for(past_week, rule_period='week')
+        self._trigger_time_rules_for_affected([(a.employee_id, a.check_in, a.check_out) for a in to_cleanup])
 
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_output_attendances(self):
-        self.sudo().mapped('overtime_attendance_ids').with_context(skip_time_rules=True).unlink()
