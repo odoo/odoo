@@ -288,7 +288,7 @@ export function generateSpecialMentionElement(label) {
 function generateMentionsLinks(body, { partners = [], roles = [], specialMentions = [], thread }) {
     const mentions = [];
     for (const partner of partners) {
-        const placeholder = `@-mention-partner-${partner.id}`;
+        const placeholder = `@-mention-partner-${partner.id}!`;
         const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
         mentions.push({
             link: generatePartnerMentionElement(partner, { thread }),
