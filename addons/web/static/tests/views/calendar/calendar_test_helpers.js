@@ -4,9 +4,7 @@ import { EventBus } from "@odoo/owl";
 import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
 
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { createElement } from "@web/core/utils/xml";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
-import { Field } from "@web/views/fields/field";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 export const DEFAULT_DATE = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
@@ -161,6 +159,7 @@ export const FAKE_FIELDS = {
     type: { string: "Type", type: "integer" },
     event_type_id: { string: "Event Type", type: "many2one", relation: "event_type" },
     color: { string: "Color", type: "integer", related: "event_type_id.color" },
+    display_name: { string: "Display Name", type: "char" },
 };
 
 export const FAKE_MODEL = {
@@ -190,35 +189,10 @@ export const FAKE_MODEL = {
     hasAllDaySlot: true,
     hasEditDialog: false,
     quickCreate: false,
-    popoverFieldNodes: {
-        name: Field.parseFieldNode(
-            createElement("field", { name: "name" }),
-            { event: { fields: FAKE_FIELDS } },
-            "event",
-            "calendar"
-        ),
-        description: Field.parseFieldNode(
-            createElement("field", { name: "description" , class: "text-wrap"}),
-            { event: { fields: FAKE_FIELDS } },
-            "event",
-            "calendar"
-        ),
-    },
-    activeFields: {
-        name: {
-            context: "{}",
-            invisible: false,
-            readonly: false,
-            required: false,
-            onChange: false,
-        },
-        description: {
-            context: "{}",
-            invisible: false,
-            readonly: false,
-            required: false,
-            onChange: false,
-        },
+    meta: {
+        popover: { fields: [], templates: {} },
+        fields: FAKE_FIELDS,
+        resModel: "event",
     },
     rangeEnd: DEFAULT_DATE.endOf("month"),
     rangeStart: DEFAULT_DATE.startOf("month"),
@@ -642,7 +616,7 @@ export async function resizeEventToTime(eventId, dateTime) {
  * @param {string} date
  * @returns {Promise<void>}
  */
-export async function resizeEventToDate(eventId, date, fromStart=false) {
+export async function resizeEventToDate(eventId, date, fromStart = false) {
     const eventEl = findEvent(eventId);
     const slot = findAllDaySlot(date);
 
@@ -652,7 +626,9 @@ export async function resizeEventToDate(eventId, date, fromStart=false) {
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", { root: eventEl });
+    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", {
+        root: eventEl,
+    });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
 
     instantScrollTo(slot);

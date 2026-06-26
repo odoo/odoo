@@ -106,9 +106,9 @@ test(`Day: check event`, async () => {
 test.tags("desktop");
 test(`Day: click on event`, async () => {
     mockService("popover", () => ({
-        add(target, component, { record }) {
+        add(target, component, { resId }) {
             expect.step("popover");
-            expect(record.id).toBe(1);
+            expect(resId).toBe(1);
             return () => {};
         },
     }));

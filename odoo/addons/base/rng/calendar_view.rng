@@ -32,6 +32,7 @@
             <rng:optional><rng:attribute name="schedule"/></rng:optional>
             <rng:optional><rng:attribute name="show_date_picker"/></rng:optional>
             <rng:optional><rng:attribute name="month_overflow"/></rng:optional>
+            <rng:optional><rng:attribute name="card_id"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="mode">
                     <rng:choice>
@@ -45,6 +46,13 @@
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
+            <rng:optional>
+                <rng:element name="templates">
+                    <rng:oneOrMore>
+                        <rng:ref name="any"/>
+                    </rng:oneOrMore>
+                </rng:element>
+            </rng:optional>
         </rng:element>
     </rng:define>
     <rng:start>
