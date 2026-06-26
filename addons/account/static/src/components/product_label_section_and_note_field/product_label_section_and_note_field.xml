@@ -3,6 +3,7 @@
 
     <t t-name="account.ProductLabelSectionAndNoteField">
         <div class="o_field_product_label_section_and_note_cell">
+<<<<<<< f755e2112bbc0f1e2cbe460de381d9c0f543ef72
             <t t-if="isNote()">
                 <textarea
                     class="o_input d-print-none border-0 fst-italic"
@@ -26,6 +27,157 @@
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
                 />
+||||||| 177002c0aca95de2de6458bb65bedf5c74541ac0
+            <t t-if="props.readonly">
+                <t t-if="!isSectionOrNote">
+                    <t t-if="!isProductClickable">
+                        <span t-if="productName" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between w-100">
+                            <span class="text-truncate">
+                                <t t-out="productName"/>
+                            </span>
+                        </span>
+                        <span t-if="!productName and (columnIsProductAndLabel.value and !label)" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between text-muted">
+                            <span class="text-truncate">Search a product</span>
+                        </span>
+                        <t t-if="columnIsProductAndLabel.value and label">
+                            <textarea
+                                class="o_input d-print-none border-0 fst-italic"
+                                rows="1"
+                                type="text"
+                                t-att-class="sectionAndNoteClasses"
+                                t-att-value="label"
+                                t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                                t-ref="labelNodeRef"
+                            />
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <a t-if="(columnIsProductAndLabel.value and value) or (!columnIsProductAndLabel.value and (productName or (!productName and !label)))"
+                            class="d-flex align-items-center justify-content-between"
+                            t-attf-class="o_form_uri #{classFromDecoration}"
+                            t-att-href="value ? `/odoo/${urlRelation}/${value[0]}` : '/'"
+                            t-on-click.prevent="onClick"
+                        >
+                            <span t-ref="productNodeRef" class="w-100">
+                                <span t-esc="productName" class="text-truncate"/>
+                            </span>
+                        </a>
+                        <textarea t-if="(columnIsProductAndLabel.value and label) or (!columnIsProductAndLabel.value and !productName and label)"
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            readonly="1"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="props.isSection">
+                        <input
+                            class="o_input text-wrap border-0 fst-italic"
+                            placeholder="Enter a description"
+                            t-att-readonly="sectionAndNoteIsReadonly"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                    <t t-else="">
+                        <textarea
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            t-att-readonly="sectionAndNoteIsReadonly"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+=======
+            <t t-if="props.readonly">
+                <t t-if="!isSectionOrNote">
+                    <t t-if="!isProductClickable">
+                        <span t-if="productName" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between w-100">
+                            <span class="text-truncate">
+                                <t t-out="productName"/>
+                            </span>
+                        </span>
+                        <span t-if="!productName and (columnIsProductAndLabel.value and !label)" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between text-muted">
+                            <span class="text-truncate">Search a product</span>
+                        </span>
+                        <t t-if="columnIsProductAndLabel.value and label">
+                            <textarea
+                                class="o_input d-print-none border-0 fst-italic"
+                                rows="1"
+                                type="text"
+                                t-att-class="sectionAndNoteClasses"
+                                t-att-value="label"
+                                t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                                t-ref="labelNodeRef"
+                            />
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <a t-if="(columnIsProductAndLabel.value and value) or (!columnIsProductAndLabel.value and (productName or (!productName and !label)))"
+                            class="d-flex align-items-center justify-content-between"
+                            t-attf-class="o_form_uri #{classFromDecoration}"
+                            t-att-href="value ? `/odoo/${urlRelation}/${value[0]}` : '/'"
+                            t-on-click.prevent="onClick"
+                        >
+                            <span t-ref="productNodeRef" class="w-100">
+                                <span t-esc="productName" class="text-truncate"/>
+                            </span>
+                        </a>
+                        <textarea t-if="(columnIsProductAndLabel.value and label) or (!columnIsProductAndLabel.value and !productName and label)"
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            t-att-readonly="sectionAndNoteIsReadonly"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="props.isSection">
+                        <input
+                            class="o_input text-wrap border-0 fst-italic"
+                            placeholder="Enter a description"
+                            t-att-readonly="sectionAndNoteIsReadonly"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                    <t t-else="">
+                        <textarea
+                            class="o_input d-print-none border-0 fst-italic"
+                            placeholder="Enter a description"
+                            t-att-readonly="sectionAndNoteIsReadonly"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t>
+                </t>
+>>>>>>> 6242a460ed37325097d5d763df7d6e26ba016fae
             </t>
             <t t-else="">
                 <div class="d-flex align-items-center gap-1">
