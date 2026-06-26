@@ -375,3 +375,6 @@ class ProductProduct(models.Model):
     def _apply_taxes_to_price(self, *args, **kwargs):
         self.ensure_one()
         return self.product_tmpl_id._apply_taxes_to_price(*args, product=self, **kwargs)
+
+    def _get_free_qty(self, **_kwargs):
+        return self.qty_available - self.outgoing_qty

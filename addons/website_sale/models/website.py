@@ -1186,7 +1186,7 @@ class Website(models.Model):
         """
         return json_scriptsafe.dumps(self._prepare_ecommerce_store_markup_data(), indent=2)
 
-    def _get_product_available_qty(self, product, **_kwargs):
+    def _get_product_available_qty(self, product, **kwargs):
         """Give the available quantity of a given product.
 
         :param product: product.product record
@@ -1194,4 +1194,4 @@ class Website(models.Model):
         :return: available quantity
         :rtype: float
         """
-        return product.qty_available - product.outgoing_qty
+        return product._get_free_qty(**kwargs)
