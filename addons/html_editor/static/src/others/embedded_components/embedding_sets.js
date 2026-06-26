@@ -10,6 +10,7 @@ import { videoEmbedding } from "@html_editor/others/embedded_components/backend/
 import { readonlyVideoEmbedding } from "@html_editor/others/embedded_components/core/video/readonly_video";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { readonlySyntaxHighlightingEmbedding } from "./core/syntax_highlighting/readonly_syntax_highlighting";
+import { whiteboardEmbedding } from "./core/whiteboard/whiteboard";
 
 export const MAIN_EMBEDDINGS = [
     fileEmbedding,
@@ -18,6 +19,7 @@ export const MAIN_EMBEDDINGS = [
     videoEmbedding,
     captionEmbedding,
     syntaxHighlightingEmbedding,
+    whiteboardEmbedding,
 ];
 
 export const READONLY_MAIN_EMBEDDINGS = [
@@ -27,4 +29,5 @@ export const READONLY_MAIN_EMBEDDINGS = [
     readonlyVideoEmbedding,
     captionEmbedding,
     readonlySyntaxHighlightingEmbedding,
+    whiteboardEmbedding,
 ];

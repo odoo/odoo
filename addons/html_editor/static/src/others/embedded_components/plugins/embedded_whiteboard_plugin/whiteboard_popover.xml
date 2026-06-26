@@ -1,0 +1,34 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="html_editor.whiteboardPopover">
+        <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="this.onKeydown" role="dialog" aria-modal="true" aria-label="Whiteboard Popover">
+            <div class="container-fluid d-flex vertical-center p-2">
+                <div class="col p-2">
+                    <div class="text-start mb-1">
+                        <small class="text-muted">Accepts
+                            <b><i title="https://miro.com/app/board/.../?share_link_id=...">Miro</i></b>,
+                            <b><i title="https://docs.google.com/drawings/...">Google Docs</i></b>,
+                            <b><i title="https://www.figma.com/design/...?node-id=...">Figma</i></b> and
+                            <b><i title="https://www.canva.com/design/...">Canva</i></b> diagrams
+                        </small>
+                    </div>
+                    <div class="input-group mb-1">
+                        <label for="o_whiteboard_url" class="o_we_input_label">
+                            <span class="fa fa-link"></span>
+                        </label>
+                        <input id="o_whiteboard_url" t-ref="this.urlRef" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" title="Whiteboard public URL" placeholder="Paste your URL"
+                            t-on-keydown="this.onKeydownEnter"
+                            t-on-change="this.onChange"
+                            t-on-input="this.onInput"
+                        />
+                        <button t-att-disabled="!this.state.canBeApplied" class="o_we_apply_link btn btn-sm btn-primary mx-1" t-on-click="this.onClickApply">Apply</button>
+                    </div>
+                    <div t-if="this.state.error" class="alert alert-danger" role="alert">
+                        This URL is not supported.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
