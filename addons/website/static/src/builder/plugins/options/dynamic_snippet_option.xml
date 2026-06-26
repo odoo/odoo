@@ -23,7 +23,7 @@
         />
     </BuilderRow>
     <!-- Multi record & common options -->
-    <BuilderRow id="this.section_title" label.translate="Section Title" t-if="!isSingleMode">
+    <BuilderRow id="section_title" label.translate="Section Title" t-if="!isSingleMode">
         <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
             <t t-set="left">Left</t>
             <t t-set="right">Right</t>
@@ -42,14 +42,14 @@
             />
         </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderRow id="this.filter_opt_row" label.translate="Filter" t-if="!!this.dynamicOptionParams.showFilterOption()">
+    <BuilderRow id="filter_opt_row" label.translate="Filter" t-if="!!this.dynamicOptionParams.showFilterOption()">
         <BuilderSelect action="'dynamicFilter'" preview="false" id="'filter_opt'">
             <t t-foreach="dynamicFilters" t-as="filter" t-key="filter.id">
                 <BuilderSelectItem actionParam="filter" t-out="filter.name" title="filter.help || ''"/>
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow id="this.template_opt_row" label.translate="Template" t-if="!this.modelNameFilter and filteredTemplates.length > 1">
+    <BuilderRow id="template_opt_row" label.translate="Template" t-if="!this.modelNameFilter and filteredTemplates.length > 1">
         <BuilderSelect action="'dynamicSnippetTemplate'" preview="false" id="'template_opt'">
             <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
                 <t t-if="template.thumb">
@@ -69,7 +69,7 @@
             <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderRow id="this.number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId or isSingleMode">
+    <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId or isSingleMode">
         <BuilderSelect action="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
             <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
                 <BuilderSelectItem actionParam="value" t-out="value"/>

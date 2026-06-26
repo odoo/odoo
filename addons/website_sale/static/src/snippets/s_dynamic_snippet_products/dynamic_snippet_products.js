@@ -6,11 +6,10 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
 
     setup() {
         super.setup();
-        this.el.classList.add('o_carousel_multi_items'); // force default single mode
-        this.templateKey = (
-            this.el.dataset.orientation === 'grid'
-            ? 'website_sale.s_dynamic_snippet.grid.layout' : this.templateKey
-        );
+        this.el.classList.add("o_carousel_multi_items"); // force default single mode
+        if (this.el.classList.contains("s_dynamic_snippet_products_grid")) {
+            this.templateKey = "website_sale.s_dynamic_snippet.grid.layout";
+        }
     }
 
     /**
@@ -114,8 +113,8 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
         const dataset = this.el.dataset;
         return Object.assign(super.getQWebRenderOptions(...arguments), {
             gridColumns: parseInt(dataset.gridColumns) || 4,
-            gridGap: dataset.gridGap || '1rem',
-            mobileColumns: parseInt(dataset.mobileColumns) || 1,
+            gridGap: dataset.gridGap || "1rem",
+            mobileColumns: parseInt(dataset.mobileColumns) || 2,
         });
     }
 

@@ -661,6 +661,13 @@
             t-image-preview="/website/static/src/img/snippets_previews/s_donation_preview.png"/>
         <t t-install="website_sale" string="Products Carousel" group="catalog"
             t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_products_preview.webp"/>
+        <!-- TODO: Ask design team for grid preview image -->
+        <t
+            string="Products Grid"
+            t-install="website_sale"
+            t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_products_preview.webp"
+            group="catalog"
+        />
     </xpath>
     <xpath expr="//snippets[@id='snippet_content']" position="inside">
         <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>

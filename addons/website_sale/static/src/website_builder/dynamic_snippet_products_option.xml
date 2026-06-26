@@ -7,59 +7,9 @@
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="attributes">
         <attribute name="t-if">filteredTemplates.length &gt; 1</attribute>
     </xpath>
-    <BuilderRow id="this.section_title" position="after">
-        <BuilderRow label.translate="Orientation" t-if="!isSingleMode">
-            <BuilderButtonGroup dataAttributeAction="'orientation'">
-                <BuilderButton dataAttributeActionValue="'carousel'" id="'orientation_carousel'">
-                    <img src="/website_sale/static/src/img/snippet_options/image-width-100.svg"/>
-                </BuilderButton>
-                <BuilderButton dataAttributeActionValue="'grid'" id="'orientation_grid'">
-                    <i class="oi oi-apps"/>
-                </BuilderButton>
-            </BuilderButtonGroup>
-        </BuilderRow>
-        <BuilderRow
-            label.translate="Desktop"
-            t-if="!isSingleMode and this.isActiveItem('orientation_grid')"
-            level="1"
-        >
-            <BuilderSelect action="'gridColumns'" id="'o_wsale_grid_columns'">
-                <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
-                <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
-                <BuilderSelectItem actionValue="4">4 Columns</BuilderSelectItem>
-                <BuilderSelectItem actionValue="5">5 Columns</BuilderSelectItem>
-                <BuilderSelectItem actionValue="6">6 Columns</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow
-            label.translate="Mobile"
-            t-if="!isSingleMode and this.isActiveItem('orientation_grid')"
-            level="1"
-        >
-            <BuilderSelect action="'mobileColumns'" id="'o_wsale_mobile_columns'">
-                <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
-                <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-    </BuilderRow>
-    <BuilderRow id="this.arrow_position_opt" position="replace"/>
-    <BuilderRow id="this.style_opt" position="attributes">
-        <attribute name="t-if">
-            !isSingleMode and this.isActiveItem('orientation_carousel')
-        </attribute>
-    </BuilderRow>
-    <BuilderRow id="this.color_opt" position="attributes">
-        <attribute name="t-if">
-            !isSingleMode and this.isActiveItem('orientation_carousel')
-        </attribute>
-    </BuilderRow>
-    <BuilderRow id="this.speed_opt" position="attributes">
-        <attribute name="t-if">
-            !isSingleMode and this.isActiveItem('orientation_carousel')
-        </attribute>
-    </BuilderRow>
-    <BuilderRow id="this.scroll_opt" position="replace"/>
-    <BuilderRow id="this.filter_opt_row" position="before">
+    <BuilderRow id="arrow_position_opt" position="replace"/>
+    <BuilderRow id="scroll_opt" position="replace"/>
+    <BuilderRow id="filter_opt_row" position="before">
         <ProductsDesignPanel
             label.translate="Cards Design"
             recordName="'shop_opt_products_design_classes'"
@@ -67,7 +17,7 @@
             showSecondaryImage="true"
         />
     </BuilderRow>
-    <BuilderRow id="this.filter_opt_row" position="after">
+    <BuilderRow id="filter_opt_row" position="after">
         <BuilderRow
             label.translate="Category"
             t-if="!this.domState.isAlternative and !isSingleMode"
@@ -115,5 +65,39 @@
             />
         </BuilderRow>
     </BuilderRow>
+</t>
+
+<t
+    t-name="website_sale.DynamicSnippetProductsGridOption"
+    t-inherit="website_sale.DynamicSnippetProductsOption"
+>
+    <BuilderRow id="section_title" position="after">
+        <BuilderRow
+            label.translate="Desktop"
+            t-if="!isSingleMode"
+            level="1"
+        >
+            <BuilderSelect action="'gridColumns'" id="'o_wsale_grid_columns'">
+                <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="4">4 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="5">5 Columns</BuilderSelectItem>
+                <BuilderSelectItem actionValue="6">6 Columns</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            label.translate="Mobile"
+            t-if="!isSingleMode"
+            level="1"
+        >
+            <BuilderSelect action="'mobileColumns'" id="'o_wsale_mobile_columns'">
+                <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
+                <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderRow>
+    <BuilderRow id="style_opt" position="replace"/>
+    <BuilderRow id="color_opt" position="replace"/>
+    <BuilderRow id="speed_opt" position="replace"/>
 </t>
 </templates>

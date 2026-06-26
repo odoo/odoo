@@ -6,7 +6,7 @@ import { getContextualFilterDomain } from "./dynamic_snippet_products_option";
 
 export class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
-    static dependencies = ["dynamicSnippetCarouselOption"];
+    static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
     static shared = ["fetchCategories", "getModelNameFilter"];
     modelNameFilter = "product.product";
     resources = {
@@ -25,10 +25,19 @@ export class DynamicSnippetProductsOptionPlugin extends Plugin {
         if (snippetEl.matches(".s_dynamic_snippet_products")) {
             for (const [optionName, value] of [
                 ["productCategoryId", "all"],
-                ["orientation", "carousel"],
                 ["splitVariants", true],
             ]) {
                 setDatasetIfUndefined(snippetEl, optionName, value);
+            }
+            if (snippetEl.matches(".s_dynamic_snippet_products_grid")) {
+                setDatasetIfUndefined(snippetEl, "gridColumns", "4");
+                setDatasetIfUndefined(snippetEl, "mobileColumns", "2");
+                await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+                    snippetEl,
+                    this.modelNameFilter,
+                    getContextualFilterDomain(this.editable)
+                );
+                return;
             }
             await this.dependencies.dynamicSnippetCarouselOption.setOptionsDefaultValues(
                 snippetEl,

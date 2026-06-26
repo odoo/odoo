@@ -82,7 +82,8 @@
     </xpath>
 
     <xpath expr="//device_visibility_option" position="after">
-        <dynamic_snippet_products_option selector=".s_dynamic_snippet_products"/>
+        <dynamic_snippet_products_option selector=".s_dynamic_snippet_products:not(.s_dynamic_snippet_products_grid)"/>
+        <dynamic_snippet_products_grid_option selector=".s_dynamic_snippet_products_grid"/>
         <dynamic_snippet_category_option
             selector="section.s_dynamic_snippet_category"
             groups='["website.group_website_designer"]'/>
