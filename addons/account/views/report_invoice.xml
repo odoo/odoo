@@ -2,6 +2,7 @@
 <odoo>
     <data>
         <template id="report_invoice_document">
+            <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="layout_document_title">
                 <t t-if="not proforma">
                     <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
@@ -113,7 +114,6 @@
                 information_block="information_block"
                 lang="lang"
                 address="address">
-                <t t-set="o" t-value="o.with_context(lang=lang)" /> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
                 <div class="clearfix invoice_main">
                     <div class="page mb-4">
                         <div class="oe_structure"></div>
