@@ -2491,7 +2491,7 @@ export class PosStore extends WithLazyGetterTrap {
         try {
             const result = await this.data.call("pos.preset", "get_available_slots", [preset.id]);
             const localUsage = this.orderUsageUTCtoLocal(result.usage_utc);
-            preset.computeAvailabilities(localUsage);
+            preset.computeAvailabilities(localUsage, result.time_off);
         } catch {
             // Compute locally if the server is not reachable
             preset.computeAvailabilities();

@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -58,7 +59,7 @@ export class PosPreset extends Base {
         );
     }
 
-    computeAvailabilities(usages = {}) {
+    computeAvailabilities(usages = {}, timeOff = []) {
         this.generateSlots();
 
         const allSlots = Object.values(this.uiState.availabilities).reduce(
@@ -70,6 +71,25 @@ export class PosPreset extends Base {
             const usage = usages[datetime];
             slot.order_ids = new Set([...slot.order_ids, ...(usage || [])]);
             slot.isFull = slot.order_ids.size >= this.slots_per_interval;
+        }
+
+        for (const off of timeOff) {
+            const offStart = deserializeDateTime(off.date_from);
+            const offEnd = deserializeDateTime(off.date_to);
+
+            for (const slot of Object.values(allSlots)) {
+                if (slot.isFull) {
+                    continue;
+                }
+
+                const dateEnd = slot.datetime.plus({ minutes: this.interval_time });
+                const startBetween = slot.datetime >= offStart && slot.datetime < offEnd;
+                const endBetween = dateEnd > offStart && dateEnd <= offEnd;
+
+                if (startBetween || endBetween) {
+                    slot.isFull = true;
+                }
+            }
         }
 
         return this.uiState.availabilities;

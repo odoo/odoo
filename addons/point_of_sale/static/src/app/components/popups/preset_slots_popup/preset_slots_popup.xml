@@ -19,19 +19,23 @@
                     <div class="d-flex w-100 flex-wrap gap-2 mt-2">
                         <button class="btn flex-grow-1"
                             t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate"
+                            t-if="Object.values(preset.availabilities[sqlDate]).some(s => !s.isFull)"
                             t-attf-class="{{ state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
                             t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
                             t-on-click="() => state.selectedDate = sqlDate"
                             t-esc="formatDate(sqlDate)" />
                     </div>
-                    <hr/>
+                    <div t-if="!Object.keys(preset.availabilities).some(sqlDate => Object.values(preset.availabilities[sqlDate]).some(s => !s.isFull))" class="alert alert-warning mt-3" role="alert">
+                        No slot available for the next 8 days
+                    </div>
+                    <hr t-if="Object.keys(preset.availabilities).some(sqlDate => Object.values(preset.availabilities[sqlDate]).some(s => !s.isFull))"/>
                     <div class="w-100 mt-3">
                         <div t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate" class="row">
                             <t t-set="slotByPeriod" t-value="Object.entries(this.getSlotsForDate(preset, sqlDate))"/>
                             <div t-foreach="slotByPeriod"
                                 t-as="entries"
                                 t-key="entries[0]"
-                                t-att-class="{'d-none': state.selectedDate !== sqlDate}"
+                                t-att-class="{'d-none': state.selectedDate !== sqlDate || Object.values(preset.availabilities[sqlDate]).every(s => s.isFull)}"
                                 t-attf-class="{{`col-${12 / slotByPeriod.length}`}}">
                                 <span class="fs-6" t-esc="this.getPeriodName(entries[0])" />
                                 <div class="d-flex flex-wrap gap-1">
@@ -40,6 +44,7 @@
                                         t-key="slot_index"
                                         class="btn preset-slot-button"
                                         t-attf-class="{{getSlotColor(slot, preset)}}"
+                                        t-att-disabled="slot.isFull"
                                         t-on-click="() => this.confirm(slot, preset)">
                                             <span t-esc="slot.datetime.toFormat('HH:mm')" />
                                     </button>
