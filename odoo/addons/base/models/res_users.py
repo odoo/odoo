@@ -532,8 +532,24 @@ class ResUsers(models.Model):
                         _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
                     )
 
+<<<<<<< 3911d7a43947d7da043897c4e403f3720543dc6c
     @api.constrains('group_ids')
     def _check_disjoint_groups(self):
+||||||| 41384ca98aadfa223fbd51d575a51240a157ace2
+
+    @api.constrains('groups_id')
+    def _check_one_user_type(self):
+=======
+    @api.constrains('email', 'share')
+    def _check_email(self):
+        for user in self:
+            if user.share and len(tools.email_normalize_all(user.email)) > 1:
+                raise ValidationError(_('The user cannot have more than one email address.'))
+
+
+    @api.constrains('groups_id')
+    def _check_one_user_type(self):
+>>>>>>> 5ceaea31d13db331acead54b51a4653d060173ee
         """We check that no users are both portal and users (same with public).
            This could typically happen because of implied groups.
         """

@@ -281,6 +281,7 @@ class TestUsers(UsersCommonCase):
 
         self.assertEqual(user.context_get()['lang'], 'en_US')
 
+<<<<<<< 3911d7a43947d7da043897c4e403f3720543dc6c
     def test_user_self_update(self):
         """ Check that the user has access to write his phone. """
         test_user = self.env['res.users'].create({'name': 'John Smith', 'login': 'jsmith'})
@@ -304,6 +305,44 @@ class TestUsers(UsersCommonCase):
 
 @tagged('post_install', '-at_install', 'groups')
 class TestUsers2(UsersCommonCase):
+||||||| 41384ca98aadfa223fbd51d575a51240a157ace2
+@tagged('post_install', '-at_install')
+class TestUsers2(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_employee = cls.env['res.users'].create({
+            'name': 'employee',
+            'login': 'employee',
+            'groups_id': cls.env.ref('base.group_user'),
+            'tz': 'UTC',
+        })
+=======
+    def test_non_internal_user_multiple_emails(self):
+        multiple_emails = 'user1@example.com, user2@example.com'
+
+        portal_user = new_test_user(self.env, 'portal_user', groups='base.group_portal')
+        public_user = new_test_user(self.env, 'public_user', groups='base.group_public')
+        for user in portal_user | public_user:
+            with self.subTest(user=user.login), self.assertRaises(ValidationError):
+                user.email = multiple_emails
+
+        internal_user = new_test_user(self.env, 'internal_user', email=multiple_emails)
+        with self.assertRaises(ValidationError):
+            internal_user.groups_id = self.env.ref('base.group_portal')
+
+@tagged('post_install', '-at_install')
+class TestUsers2(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_employee = cls.env['res.users'].create({
+            'name': 'employee',
+            'login': 'employee',
+            'groups_id': cls.env.ref('base.group_user'),
+            'tz': 'UTC',
+        })
+>>>>>>> 5ceaea31d13db331acead54b51a4653d060173ee
 
     def test_change_user_login(self):
         """ Check that partner email is updated when changing user's login """
