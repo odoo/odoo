@@ -2435,7 +2435,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (state write)',
             'working_hours_mode': 'day',
-            'threshold_operatortest_day_and_week_cron_independence': 'exceed',
+            'threshold_operator': 'exceed',
             'expected_hours': 4,
             'work_entry_type_id': self.out_type.id,
             'condition_work_entry_type_ids': [self.src_type.id],

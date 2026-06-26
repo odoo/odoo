@@ -578,7 +578,12 @@ class HrTimeRule(models.Model):
                     gap = _trim_hours_from_start(gap, extra_outside)
                 return {}, {last_source: [(s, e, self, pp) for s, e, _ in gap]}
             else:
-                return {}, {last_source: [(stop - timedelta(hours=deficit_amount), stop, self, pp)]}
+                gap_iv = period_window - total_worked
+                gap = list(gap_iv)
+                trim = sum_intervals(gap_iv) - deficit_amount
+                if trim > 0:
+                    gap = _trim_hours_from_start(gap, trim)
+                return {}, {last_source: [(s, e, self, pp) for s, e, _ in gap]}
 
         tolerance = self.employer_tolerance if self.calendar_source else 0
         if float_compare(excess_amount, tolerance, 5) != 1:
@@ -625,9 +630,6 @@ class HrTimeRule(models.Model):
             return excess, deficit
         work_intervals_by_calendar = applicable_rules._build_work_intervals_by_calendar(employees, start_dt, end_dt)
         start_field = records._time_rule_span_start_field
-        end_field = records._time_rule_span_end_field
-        min_date = min(r[start_field] for r in records).date()
-        max_date = max(r[end_field] for r in records).date()
 
         # pipeline: (start, stop, current_wet, pp, source, classifying_rule)
         # classifying_rule=None means the interval is still in its original state
@@ -648,7 +650,7 @@ class HrTimeRule(models.Model):
                 emp_pipeline = pipeline_by_emp[employee]
                 rule_window = rule_window_by_emp[employee]
 
-                # split pipeline into intervals whose current WET matches the rule condition
+                # filter by condition time type
                 matching = [iv for iv in emp_pipeline if iv[2] in condition_wets]
                 non_matching = [iv for iv in emp_pipeline if iv[2] not in condition_wets]
                 if not matching:
