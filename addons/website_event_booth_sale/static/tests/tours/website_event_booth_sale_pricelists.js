@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
     },
     wsTourUtils.goToCheckout(),
     ...getPriceListChecksSteps({
-        pricelistName: "EUR Without Discount Included",
+        pricelistName: "EUR",
         eventName: "Test Event Booths",
         price: "99.00",
         priceSelected: "99",
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         priceBeforeDiscount: "110.00",
     }),
     ...getPriceListChecksSteps({
-        pricelistName: "EX Without Discount Included",
+        pricelistName: "EX",
         eventName: "Test Event Booths",
         price: "990.00",
         priceSelected: "990",
