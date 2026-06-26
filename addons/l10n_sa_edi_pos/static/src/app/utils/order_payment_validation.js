@@ -21,11 +21,11 @@ patch(OrderPaymentValidation.prototype, {
         // expect for cases like deposit and settlement
         // Skip if invoice is not mandatory(Ex: settlement)
         // Skips entirely if journal is not onboarded or electronic invoicing is not selected
-        if (
-            this.order.isInvoiceMandatoryForSA() &&
-            this.order.finalized &&
-            ["rejected", "error", "unknown"].includes(this.order.l10n_sa_invoice_edi_state)
-        ) {
+        if (!(this.order.isInvoiceMandatoryForSA() && this.order.finalized)) {
+            return;
+        }
+
+        if (["rejected", "error", "unknown"].includes(this.order.l10n_sa_invoice_edi_state)) {
             const orderError = _t(
                 "%s by going to Backend > Orders > Invoice",
                 this.order.pos_reference
@@ -45,6 +45,13 @@ patch(OrderPaymentValidation.prototype, {
             this.pos.dialog.add(ConfirmationDialog, {
                 title: _t("ZATCA Validation Error"),
                 body: message,
+            });
+        }
+        const alerts = this.order.l10n_sa_alerts;
+        if (alerts.length) {
+            this.pos.dialog.add(ConfirmationDialog, {
+                title: _t("ZATCA Validation Error"),
+                body: alerts.map((a) => "- " + a.message).join("\n"),
             });
         }
     },

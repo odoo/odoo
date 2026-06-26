@@ -12,4 +12,6 @@ class PosOrderReceipt(models.AbstractModel):
         data['conditions']['l10n_sa_not_legal'] = not self.l10n_sa_invoice_qr_code_str or self.l10n_sa_invoice_edi_state not in ("accepted", "warning")
         if not data['conditions']['l10n_sa_not_legal']:
             data['image']['sa_qr_code'] = self._order_receipt_generate_qr_code(self.l10n_sa_invoice_qr_code_str)
+        else:
+            data['image'].pop('sa_qr_code', None)
         return data
