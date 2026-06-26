@@ -1020,3 +1020,37 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         )
         self.assertEqual(results['value']['tax_totals']['amount_untaxed'], 2000.0)
         self.assertEqual(results['value']['tax_totals']['amount_total'], 2600.0)
+
+    def test_negative_zero_tax_totals(self):
+        """There should not be any negative zeroes on the invoice pdf"""
+        tax_15 = self.env['account.tax'].create({'name': '15% Tax', 'amount_type': 'percent', 'amount': 15.0})
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100.0,
+            'taxes_id': [(6, 0, tax_15.ids)],
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, tax_15.ids)],
+                }),
+                Command.create({
+                    'name': 'Downpayment 1',
+                    'price_unit': -100.0 / 1.15,
+                    'tax_ids': [(6, 0, tax_15.ids)],
+                }),
+                Command.create({
+                    'name': 'Downpayment 2',
+                    'price_unit': -15.0 / 1.15,
+                    'tax_ids': [(6, 0, tax_15.ids)],
+                }),
+            ]
+        })
+        formatted_amount_total = move.tax_totals['formatted_amount_total']
+        formatted_amount_untaxed = move.tax_totals['formatted_amount_untaxed']
+        self.assertNotIn('-0', formatted_amount_total)
+        self.assertNotIn('-0', formatted_amount_untaxed)
