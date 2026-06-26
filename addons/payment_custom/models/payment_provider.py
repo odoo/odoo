@@ -3,7 +3,6 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_custom import const
 
 
@@ -87,24 +86,6 @@ class PaymentProvider(models.Model):
                 )
 
     # === SETUP METHODS === #
-
-    def _find_available_providers(
-        self, company_id, partner_id, amount, *, move_id=None, report=None, **kwargs
-    ):
-        """Override of `payment` to exclude pay_on_invoice providers on invoice documents."""
-        providers = super()._find_available_providers(
-            company_id, partner_id, amount, report=report, **kwargs
-        )
-        if move_id:
-            unfiltered_providers = providers
-            providers = providers.filtered(lambda p: p.custom_mode != "pay_on_invoice")
-            payment_utils.add_to_report(
-                report,
-                unfiltered_providers - providers,
-                available=False,
-                reason=const.REPORT_REASONS_MAPPING["pay_on_invoice_excluded_on_invoices"],
-            )
-        return providers
 
     @api.model
     def _get_provider_domain(self, provider_code, *, custom_mode="", **kwargs):
