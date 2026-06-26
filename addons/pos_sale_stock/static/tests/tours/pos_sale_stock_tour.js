@@ -180,3 +180,18 @@ registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_cancelled_sale_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({ productName: "Product A", price: "10.00" }),
+            Order.hasLine({ productName: "Product B", price: "20.00" }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+        ].flat(),
+});
