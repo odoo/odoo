@@ -400,6 +400,9 @@ class Cursor(_CursorProtocol):
             delay = real_time() - start
             if _logger.isEnabledFor(logging.DEBUG):
                 _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
+            # optional hooks for performance and tracing analysis
+            for update_query_endtime_function in update_query_endtime_functions:
+                update_query_endtime_function(delay)
 
         # simple query count is always computed
         self.sql_log_count += 1
@@ -409,10 +412,6 @@ class Cursor(_CursorProtocol):
             current_thread.query_count += 1
         if hasattr(current_thread, 'query_time'):
             current_thread.query_time += delay
-
-        # optional hooks for performance and tracing analysis
-        for update_query_endtime_function in update_query_endtime_functions:
-            update_query_endtime_function(delay)
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG):
