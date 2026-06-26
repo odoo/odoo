@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from markupsafe import Markup
 
 from odoo import models, _
 from odoo.exceptions import UserError
@@ -10,6 +11,7 @@ class CalendarEvent(models.Model):
 
     def _do_sms_reminder(self, alarms):
         """ Send an SMS text reminder to attendees that haven't declined the event """
+        log_message_bodies = {}
         for event in self:
             declined_partners = event.attendee_ids.filtered_domain([('state', '=', 'declined')]).partner_id
             for alarm in alarms:
@@ -24,6 +26,9 @@ class CalendarEvent(models.Model):
                     partner_ids=partners.ids,
                     put_in_queue=False
                 )
+                if partners:
+                    log_message_bodies[event.id] = _('The %s reminder was sent to:', Markup('<i>%s</i>') % alarm.name) + self.env['calendar.attendee']._generate_notified_attendees_html_list(partners.attendee_id)
+        self._message_log_batch(bodies=log_message_bodies)
 
     def action_send_sms(self):
         if not self.partner_ids:
