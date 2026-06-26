@@ -19,15 +19,10 @@ class TestMenusAdmin(odoo.tests.HttpCase):
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # mock odoofin requests
-        mocked_endpoints = (
-            'proxy/v1/get_dashboard_institutions',
-            'proxy/v2/get_dashboard_institutions',
-        )
-
-        if any(endpoint in r.url for endpoint in mocked_endpoints):
+        if 'proxy/v2/get_dashboard_institutions' in r.url:
             r = Response()
             r.status_code = 200
-            r.json = lambda: {'result': {}}
+            r.json = list
             return r
         return super()._request_handler(s, r, **kw)
 
@@ -90,8 +85,19 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
             })
         self.browser_js("/odoo", "odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere(undefined, true);", "odoo.isReady === true", login="admin", timeout=120, success_signal="clickbot test succeeded")
 
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestMenusDemoLight(HttpCaseWithUserDemo):
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        # mock odoofin requests
+        if 'proxy/v2/get_dashboard_institutions' in r.url:
+            r = Response()
+            r.status_code = 200
+            r.json = list
+            return r
+        return super()._request_handler(s, r, **kw)
 
     def test_01_click_apps_menus_as_demo(self):
         # Disable onboarding tours to remove warnings
