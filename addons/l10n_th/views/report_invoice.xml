@@ -16,6 +16,13 @@
         </t>
     </template>
 
+    <template id="company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//li[.//span[@t-field='company.country_id.vat_label']]" position="inside">
+            <span t-out="company.partner_id.l10n_th_branch_name" 
+                  t-if="company.partner_id.l10n_th_branch_name and company.account_fiscal_country_id.code == 'TH'"/>
+        </xpath>
+    </template>
+
     <template id="report_commercial_invoice">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
