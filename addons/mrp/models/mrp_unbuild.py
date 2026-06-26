@@ -179,7 +179,6 @@ class MrpUnbuild(models.Model):
         produce_moves._action_confirm()
         produce_moves.quantity = 0
 
-        # Collect component lots already restored by previous unbuilds on the same MO
         previously_unbuilt_lots = (self.mo_id.unbuild_ids - self).produce_line_ids.filtered(lambda ml: ml.product_id != self.product_id and ml.product_id.tracking == 'serial').lot_ids
 
         finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
@@ -196,6 +195,9 @@ class MrpUnbuild(models.Model):
             raise UserError(error_message)
 
         for finished_move in finished_moves:
+            if self.lot_id:
+                wrong_lines = finished_move.move_line_ids.filtered(lambda ml: ml.lot_id != self.lot_id)
+                wrong_lines.unlink()
             if finished_move.uom_id.compare(finished_move.product_uom_qty, finished_move.quantity) > 0:
                 finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
                 self.env['stock.move.line'].create(finished_move_line_vals)
