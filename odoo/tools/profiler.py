@@ -633,8 +633,8 @@ class Profiler:
             if self.log:
                 _logger.info(self.summary())
 
-    def _get_cm_proxy(self):
-        return Nested(self)
+    def _get_cm_proxy(self, context_manager=None):
+        return Nested(self, context_manager)
 
     def _add_file_lines(self, stack):
         for index, frame in enumerate(stack):
@@ -719,7 +719,11 @@ class Nested:
 
     def __enter__(self):
         self._profiler__.__enter__()
-        return self.context_manager.__enter__()
+        try:
+            return self.context_manager.__enter__()
+        except BaseException:
+            self._profiler__.__exit__(*sys.exc_info())
+            raise
 
     def __exit__(self, exc_type, exc_value, traceback):
         try:
