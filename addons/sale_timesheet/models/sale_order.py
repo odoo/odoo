@@ -310,7 +310,11 @@ class SaleOrderLine(models.Model):
         """
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
-        refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
+        refund_account_moves = self.order_id.invoice_ids.filtered(
+            lambda am: am.state == 'posted'
+            and am.move_type == 'out_refund'
+            and am.invoice_line_ids.filtered(lambda l: l.quantity).sale_line_ids & lines_by_timesheet
+        ).reversed_entry_id
         timesheet_domain = [
             '|',
             ('timesheet_invoice_id', '=', False),
@@ -328,7 +332,7 @@ class SaleOrderLine(models.Model):
         for line in lines_by_timesheet:
             qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
-                line.qty_to_invoice = qty_to_invoice
+                line.qty_to_invoice = min(qty_to_invoice, line.qty_delivered - line.qty_invoiced)
             else:
                 prev_inv_status = line.invoice_status
                 line.qty_to_invoice = qty_to_invoice
