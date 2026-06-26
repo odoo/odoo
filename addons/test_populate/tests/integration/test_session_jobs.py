@@ -1,5 +1,11 @@
+from unittest.mock import patch
+
 from odoo.addons.populate import start_populate
 from odoo.addons.populate.models.job import MAX_RECORD_COMMIT_SIZE
+from odoo.addons.populate.utils.profiling import (
+    get_profile_description,
+    get_profile_session_name,
+)
 from odoo.addons.test_populate.tests.common import PopulateTestCase
 
 
@@ -596,6 +602,107 @@ class TestWriteJobRecordCount(PopulateTestCase):
         expected = existing_count + 10 + 15
         self.assertEqual(write_job.record_count, expected,
                          "Write job without ref should sum existing records + all preceding unreferenced creates")
+
+
+class TestProfilerIntegration(PopulateTestCase):
+
+    def setUp(self):
+        super().setUp()
+        # Profiler saves rows through its own db_connect(). Route that cursor
+        # through the test registry so rows stay inside TestCursor savepoints.
+        self.startPatcher(patch('odoo.sql_db.db_connect', return_value=self.registry))
+
+    def _profiles_for_session(self, session):
+        return self.env['ir.profile'].search([
+            ('session', '=like', f'%{get_profile_session_name(session)}'),
+        ], order='name')
+
+    def test_populate_without_profile_does_not_create_profile_rows(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Unprofiled Populate Test',
+            'definition_json': [{
+                'name': 'test_populate.product',
+                'count': 1,
+                'fields': {
+                    'name': {'eval': '"Unprofiled"'},
+                },
+            }],
+        })
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+
+        start_populate(session)
+
+        self.assertFalse(self._profiles_for_session(session))
+
+    def test_populate_with_profile_creates_profile_per_executable_job(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Profiled Populate Test',
+            'definition_json': [
+                {
+                    'name': 'test_populate.product',
+                    'ref': 'profiled_products',
+                    'count': 2,
+                    'fields': {
+                        'name': {'eval': '"Profiled"'},
+                    },
+                },
+                {
+                    'name': 'test_populate.product',
+                    'type': 'write',
+                    'ref': 'profiled_products',
+                    'fields': {
+                        'description': {'eval': '"Updated by profiled write"'},
+                    },
+                },
+            ],
+        })
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+
+        start_populate(session, profile=True)
+
+        profiles = self._profiles_for_session(session)
+        self.assertEqual(len(profiles), len(session.job_ids))
+        self.assertCountEqual(
+            profiles.mapped('name'),
+            [get_profile_description(job) for job in session.job_ids],
+        )
+
+        profile_sessions = set(profiles.mapped('session'))
+        self.assertEqual(len(profile_sessions), 1)
+        self.assertTrue(
+            profile_sessions.pop().endswith(
+                get_profile_session_name(session),
+            ),
+        )
+
+    def test_populate_with_profile_ignores_planner_jobs_and_profiles_subjobs(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Profiled Split Populate Test',
+            'definition_json': [{
+                'name': 'test_populate.product',
+                'count': MAX_RECORD_COMMIT_SIZE + 1,
+                'fields': {
+                    'name': {'eval': '"Profiled Split"'},
+                },
+            }],
+        })
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+            'worker_count': 1,
+        })
+        job = session.job_ids.ensure_one()
+        # Split parent jobs only coordinate subjobs; they must not get their own profile row.
+        self.assertFalse(job.is_executable)
+
+        start_populate(session, profile=True)
+
+        profiles = self._profiles_for_session(session)
+        self.assertEqual(len(profiles), len(job.child_ids))
+        self.assertCountEqual(
+            profiles.mapped('name'),
+            [get_profile_description(subjob) for subjob in job.child_ids],
+        )
+        self.assertNotIn(get_profile_description(job), profiles.mapped('name'))
 
 
 class TestSubjobs(PopulateTestCase):

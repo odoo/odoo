@@ -3,6 +3,7 @@ from . import (
     expression,
     loading,
     orm,
+    profiling,
     seed,
     xml,
 )

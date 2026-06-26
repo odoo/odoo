@@ -31,10 +31,11 @@ from odoo.exceptions import ConcurrencyError, LockError, UserError, ValidationEr
 from odoo.fields import Domain
 from odoo.http.retrying import retrying
 from odoo.modules.registry import Registry
-from odoo.tools import SQL, config, str2bool
+from odoo.tools import SQL, config, profiler, str2bool
 
+from ..utils.profiling import POPULATE_PROFILE_SESSION_KEY, get_profile_session_name
 from ..utils.seed import derive_seed_from
-from .job import execution_scope
+from .job import get_execution_scope
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -88,6 +89,14 @@ class Session(models.Model):
     @property
     def is_parallel(self) -> bool:
         return self.worker_count > 1
+
+    @property
+    def is_profiling(self) -> bool:
+        return POPULATE_PROFILE_SESSION_KEY in self.env.context
+
+    @property
+    def profile_session_name(self) -> str | None:
+        return self.env.context.get(POPULATE_PROFILE_SESSION_KEY)
 
     @property
     def pending_jobs(self):
@@ -360,7 +369,7 @@ class ParallelExecutor(JobExecutor):
             assert job.exists()
 
             if job.context:
-                job = job.with_context(job.context)
+                job = job.with_context(**job.context)
 
             self._execute_with_retry(job)
 
@@ -396,7 +405,7 @@ class ParallelExecutor(JobExecutor):
         """
         for job in jobs:
             if job.child_ids and job.parallel:
-                with execution_scope(job):
+                with get_execution_scope(job):
                     context = dict(job.env.context)
                     json.dumps(context)  # safety
                     futures = {
@@ -426,7 +435,7 @@ class ParallelExecutor(JobExecutor):
                 self._execute_with_retry(job)
 
 
-def start_populate(session: Session):
+def start_populate(session: Session, *, profile: bool = False):
     """Execute a single populate session.
 
     This function is intentionally kept outside the ``populate.session`` model
@@ -436,6 +445,7 @@ def start_populate(session: Session):
     If the session was previously interrupted, only pending jobs are executed.
 
     :param session: Singleton ``populate.session`` to run.
+    :param profile: Whether to save profiler entries for this invocation.
     """
 
     # We do not allow starting multiple sessions at once
@@ -447,6 +457,10 @@ def start_populate(session: Session):
         ))
 
     assert session.job_ids, "A created session should have jobs instantiated"
+
+    if profile:
+        profile_session = profiler.make_session(get_profile_session_name(session))
+        session = session.with_context(**{POPULATE_PROFILE_SESSION_KEY: profile_session})
 
     try:
         with populate_session_lock(session):
