@@ -337,7 +337,7 @@ class Many2one(_Relational):
     def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # cache format: id or None
         if type(value) is int or type(value) is NewId:
             id_ = value
@@ -350,13 +350,13 @@ class Many2one(_Relational):
             id_ = value[0] if value else None
         elif isinstance(value, dict):
             # return a new record (with the given field 'id' as origin)
-            comodel = record.env[self.comodel_name]
+            comodel = records.env[self.comodel_name]
             origin = comodel.browse(value.get('id'))
             id_ = comodel.new(value, origin=origin).id
         else:
             id_ = None
 
-        if self.delegate and record and not any(record._ids):
+        if self.delegate and records and not any(records._ids):
             # if all records are new, then so is the parent
             id_ = id_ and NewId(id_)
 
@@ -631,18 +631,21 @@ class _RelationalMulti(_Relational):
             return
         super()._update_cache(records, cache_value, dirty)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # cache format: tuple(ids)
         if isinstance(value, BaseModel):
             if validate and value._name != self.comodel_name:
                 raise ValueError("Wrong value for %s: %s" % (self, value))
             ids = value._ids
-            if record and not record.id:
+            if records and not any(records._ids):
                 # x2many field value of new record is new records
                 ids = tuple(it and NewId(it) for it in ids)
             return ids
 
         elif isinstance(value, (list, tuple)):
+            if len(records) > 1:
+                raise ValueError("Wrong value for %s with %d records: %r" % (self, len(records), value))
+            record = records
             # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
             # if record is new, the field's value is new records

@@ -132,7 +132,7 @@ class Properties(Field):
         value = self.convert_to_cache(value, record, validate=validate)
         return json.dumps(value)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # any format -> cache format {name: value} or None
         if not value:
             return None
@@ -1086,7 +1086,7 @@ class PropertiesDefinition(Field):
 
         return json.dumps(record._convert_to_cache_properties_definition(value))
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         # any format -> cache format (list of dicts or None)
         if not value:
             return None
@@ -1105,9 +1105,9 @@ class PropertiesDefinition(Field):
         if validate:
             Properties._remove_display_name(value, value_key='default')
 
-            self._validate_properties_definition(value, record.env)
+            self._validate_properties_definition(value, records.env)
 
-        return record._convert_to_column_properties_definition(value)
+        return records._convert_to_column_properties_definition(value)
 
     def convert_to_record(self, value, record):
         # cache format -> record format (list of dicts)

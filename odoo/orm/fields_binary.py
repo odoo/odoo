@@ -80,7 +80,7 @@ class Binary(Field[BinaryValue]):
                 raise UserError(record.env._("Only admins can upload SVG files."))
         return psycopg2.Binary(value)
 
-    def convert_to_cache(self, value, record, validate=True) -> BinaryValue | None:
+    def convert_to_cache(self, value, records, validate=True) -> BinaryValue | None:
         if not value:
             return None
         if isinstance(value, BinaryValue):

@@ -1086,7 +1086,7 @@ class Field[T]:
             value = field_cache[record_id]
         return self.convert_to_column_insert(value, record, validate=False)
 
-    def convert_to_cache(self, value, record, validate=True):
+    def convert_to_cache(self, value, records, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an
         assignment, or have the format of methods :meth:`BaseModel.read` or
         :meth:`BaseModel.write`. If the value represents a recordset, it should
