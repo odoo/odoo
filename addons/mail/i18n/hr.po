@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-06-13 18:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-2/mail/"
@@ -1692,8 +1692,9 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) već je povezan s %(alias_model_name)"
-"s (%(matching_id)s) i koristi ga %(parent_name)s %(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) već je povezan s %"
+"(alias_model_name)s (%(matching_id)s) i koristi ga %(parent_name)s %"
+"(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1703,8 +1704,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"Alias %(matching_name)s (%(current_id)s) već je povezan s %(alias_model_name)"
-"s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) već je povezan s %"
+"(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -2792,8 +2793,8 @@ msgid ""
 "(e.g. ::hello) to use in your messages."
 msgstr ""
 "Unaprijed spremljeni odgovor koji će automatski biti zamijenjen dužim "
-"sadržajem u Vašim porukama. Upišite '::' praćeno nazivom Vašeg prečaca (npr. "
-"::hello) za korištenje u porukama."
+"sadržajem u Vašim porukama. Upišite '::' praćeno nazivom Vašeg prečaca "
+"(npr. ::hello) za korištenje u porukama."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -9707,8 +9708,8 @@ msgid ""
 msgstr ""
 "Opcionalni jezik prijevoda (ISO kod) koji se odabire pri slanju e-pošte. Ako "
 "nije postavljeno, koristit će se glavni jezik partnera. Ovo obično treba "
-"biti izraz rezerviranog mjesta koji daje odgovarajući jezik, npr. {{ "
-"object.partner_id.lang }}."
+"biti izraz rezerviranog mjesta koji daje odgovarajući jezik, npr. "
+"{{ object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -13116,10 +13117,10 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Doljnja poruka ne može biti prihvaćena od strane adrese %(alias_display_name)"
-"s.\n"
-"                 Samo %(contact_description)s imaju dozvolu za kontakt.<br />"
-"<br />\n"
+"Doljnja poruka ne može biti prihvaćena od strane adrese %"
+"(alias_display_name)s.\n"
+"                 Samo %(contact_description)s imaju dozvolu za kontakt.<br /"
+"><br />\n"
 "                 Molimo osigurajte da koristite ispravnu adresu ili nas "
 "kontaktirajte na %(default_email)s."
 
@@ -13132,8 +13133,8 @@ msgid ""
 "(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Doljnja poruka ne može biti prihvaćena od strane adrese %(alias_display_name)"
-"s.\n"
+"Doljnja poruka ne može biti prihvaćena od strane adrese %"
+"(alias_display_name)s.\n"
 "Molimo pokušajte kasnije ili kontaktirajte %(company_name)s."
 
 #. module: mail
@@ -13994,8 +13995,8 @@ msgstr ""
 "Vrsta radnje poslužitelja. Dostupne su sljedeće vrijednosti:\n"
 "- 'Ažuriraj zapis': ažurira vrijednosti zapisa\n"
 "- 'Kreiraj aktivnost': kreira aktivnost (Discuss)\n"
-"- 'Pošalji e-poštu': objavljuje poruku, bilješku ili šalje e-poštu (Discuss)"
-"\n"
+"- 'Pošalji e-poštu': objavljuje poruku, bilješku ili šalje e-poštu "
+"(Discuss)\n"
 "- 'Pošalji SMS': šalje SMS, bilježi ih na dokumentima (SMS)- 'Dodaj/ukloni "
 "pratitelje': dodaje ili uklanja pratitelje sa zapisa (Discuss)\n"
 "- 'Kreiraj zapis': kreira novi zapis s novim vrijednostima\n"
@@ -15355,6 +15356,12 @@ msgstr "Možete razgovarati samo s partnerima koji imaju posvećenog korisnika."
 #, fuzzy
 msgid "You can still turn off your %s anytime."
 msgstr "I dalje možete isključiti %s u bilo kojem trenutku."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias_domain.py:0
+msgid "You cannot assign an empty domain name."
+msgstr ""
 
 #. module: mail
 #. odoo-python

@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:32+0000\n"
-"PO-Revision-Date: 2026-01-16 06:57+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-23 14:43+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-2/"
 "pos_restaurant/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -65,7 +65,12 @@ msgid ""
 "sauce"
 msgstr ""
 "200 g irsk Black Angus-bøf, karamelliserede løg med paprika, hakket "
-"icebergsalat, røde løg, grillet bacon, tomatsauce, pickles og barbecuesauce."
+"icebergsalat, røde løg, grillet bacon, tomatsauce, pickles og barbecuesauce"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
+msgid "<br/>Guest"
+msgstr ""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
@@ -481,7 +486,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -530,7 +535,7 @@ msgstr "Redigér ordrenavn"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr "Redigér oversigt"
+msgstr "Redigér plantegning"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -707,7 +712,6 @@ msgstr "Grillede grøntsager"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 msgid "Guest"
 msgstr "Gæst"
 
@@ -1051,7 +1055,7 @@ msgid ""
 msgstr ""
 "Luk og validér venligst følgende åbne kassesession, før du ændrer dette "
 "rum.\n"
-"Åben session: %s"
+"Åben session: %(session_names)s"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_category
@@ -1404,18 +1408,18 @@ msgstr "Skift rumoversigt"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/utils/printer/generate_printer_data.js:0
+msgid "T %s"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
 msgid "Table"
 msgstr "Bord"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/printer/generate_printer_data.js:0
-msgid "Table %s"
-msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1468,7 +1472,7 @@ msgstr "Bordnummeret som vist på rumoversigten"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
 msgid "The parent table if this table is part of a group of tables"
-msgstr "Det overordnede bord, hvis dette bord indgår i en bordgruppe."
+msgstr "Det overordnede bord, hvis dette bord indgår i en bordgruppe"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_side

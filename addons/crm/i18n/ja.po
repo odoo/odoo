@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-05-16 17:02+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/crm/"
@@ -234,7 +234,8 @@ msgstr "<span class=\"o_stat_text\">案件</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> at </span>"
-msgstr "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> : </span>"
+msgstr ""
+"<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> : </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -249,8 +250,8 @@ msgid ""
 "a maximum of </span>"
 msgstr ""
 "<span> 今月割り当てられたリード</span>\n"
-"                            <span invisible=\"not show_assignment_max\"> 最"
-"大</span>"
+"                            <span invisible=\"not show_assignment_max\"> 最大"
+"</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -281,8 +282,8 @@ msgstr ""
 "<span>優先度とフィルタに基づいて定期的にリードを割り当てる</span><br/>\n"
 "                                <span invisible=\"not "
 "crm_use_auto_assignment\">\n"
-"                                    全販売チームは、特に指定がない限り"
-"デフォルトで この設定を使用します\n"
+"                                    全販売チームは、特に指定がない限りデフォ"
+"ルトで この設定を使用します\n"
 "                                </span>"
 
 #. module: crm
@@ -312,8 +313,8 @@ msgid ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example."
-"com</t>\n"
+"    <br/>Email: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -329,16 +330,16 @@ msgstr ""
 "うこそ。\n"
 "当社のサービスにご興味をお持ちいただき、誠にありがとうございます。ご登録が完"
 "了いたしましたので、<t t-out=\"object.company_id.name or ''\">My Company "
-"(San Francisco)</t>のサービスをぜひお試しください。 私は、<t t-out=\"object."
-"user_id.name or ''\">Marc Demo</t> と申します。Odooを最大限にご活用いただける"
-"ようサポートさせていただきます。つきましては、近日中に簡単なデモをご案内させ"
-"ていただきたいのですが、いかがでしょうか?<br/>\n"
+"(San Francisco)</t>のサービスをぜひお試しください。 私は、<t t-"
+"out=\"object.user_id.name or ''\">Marc Demo</t> と申します。Odooを最大限にご"
+"活用いただけるようサポートさせていただきます。つきましては、近日中に簡単なデ"
+"モをご案内させていただきたいのですが、いかがでしょうか?<br/>\n"
 "何かございましたら、お気軽にお問い合わせください。<br/><br/>\n"
 "よろしくおねがいいたします。<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>メール: <t t-out=\"object.user_id.email or ''\">mark."
-"brown23@example.com</t>\n"
+"    <br/>メール: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>電話: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -2718,12 +2719,6 @@ msgid "No Subject"
 msgstr "件名なし"
 
 #. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
-msgid "No activities scheduled"
-msgstr ""
-
-#. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid ""
@@ -3990,8 +3985,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
-"%(creation_source)s によって作成されたこの新規リードは、自動的にチームリー"
-"ダ%(user_name)sに割り当てられました"
+"%(creation_source)s によって作成されたこの新規リードは、自動的にチームリーダ%"
+"(user_name)sに割り当てられました"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4389,6 +4384,12 @@ msgstr "このステージに案件を進めるための要件は何ですか?"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
 msgstr "何が問題だったのか？"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
+msgid "Without activities scheduled"
+msgstr ""
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4

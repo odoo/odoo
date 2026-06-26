@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-01-15 23:10+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/crm/"
@@ -308,8 +308,8 @@ msgid ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example."
-"com</t>\n"
+"    <br/>Email: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -2532,8 +2532,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
-"Domeniul de atribuire a membrului pentru utilizatorul %(user)s și echipa "
-"%(team)s este formatat incorect"
+"Domeniul de atribuire a membrului pentru utilizatorul %(user)s și echipa %"
+"(team)s este formatat incorect"
 
 #. module: crm
 #. odoo-python
@@ -2707,12 +2707,6 @@ msgstr "Nicio întâlnire"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No Subject"
 msgstr "Fără subiect"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
-msgid "No activities scheduled"
-msgstr ""
 
 #. module: crm
 #. odoo-python
@@ -4409,6 +4403,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
 msgstr "Ce nu a mers bine?"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
+msgid "Without activities scheduled"
+msgstr ""
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4

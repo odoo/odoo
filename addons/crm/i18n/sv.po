@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-04-11 14:20+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/crm/"
@@ -314,8 +314,8 @@ msgid ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example."
-"com</t>\n"
+"    <br/>Email: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -2537,8 +2537,8 @@ msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
 msgstr ""
-"Medlemmens föredragna tilldelningsdomän för användare %(user)s och team "
-"%(team)s är felaktigt formaterad"
+"Medlemmens föredragna tilldelningsdomän för användare %(user)s och team %"
+"(team)s är felaktigt formaterad"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_partnership
@@ -2703,12 +2703,6 @@ msgstr "Inget möte"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No Subject"
 msgstr "Inget ämne"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
-msgid "No activities scheduled"
-msgstr ""
 
 #. module: crm
 #. odoo-python
@@ -4230,8 +4224,8 @@ msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
 msgstr ""
-"Använd förlustorsaker för att rapportera varför möjligheter går förlorade (t."
-"ex. \"prisdump hos konkurrenter\")."
+"Använd förlustorsaker för att rapportera varför möjligheter går förlorade "
+"(t.ex. \"prisdump hos konkurrenter\")."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -4282,8 +4276,8 @@ msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
 msgstr ""
-"Använd knappen <i>Ny</i> eller skicka ett e-postmeddelande till "
-"%(email_link)s för att testa e-postgatewayen."
+"Använd knappen <i>Ny</i> eller skicka ett e-postmeddelande till %"
+"(email_link)s för att testa e-postgatewayen."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
@@ -4395,6 +4389,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
 msgstr "Vad var det som gick fel?"
+
+#. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
+msgid "Without activities scheduled"
+msgstr ""
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4

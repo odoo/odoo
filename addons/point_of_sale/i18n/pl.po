@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:35+0000\n"
-"PO-Revision-Date: 2026-05-23 17:32+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 15:17+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/pl/>\n"
@@ -54,7 +54,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -625,12 +625,6 @@ msgid "A payment with this uuid already exists"
 msgstr "Płatność z tym identyfikatorem uuid już istnieje"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
-msgstr "W tle nadal przetwarzane jest żądanie. Proszę czekać."
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid ""
 "A session is a period of time, usually one day, during which you sell "
@@ -1149,7 +1143,7 @@ msgid ""
 "Allows to know if all the total cost of the order lines have already been "
 "computed"
 msgstr ""
-"Pozwala dowiedzieć się, czy wszystkie całkowite koszty poazycji zamówienia "
+"Pozwala dowiedzieć się, czy wszystkie całkowite koszty pozycji zamówienia "
 "zostały już obliczone."
 
 #. module: point_of_sale
@@ -3640,7 +3634,7 @@ msgid ""
 "Do you want to stop the snooze early and make the product available again "
 "immediately?"
 msgstr ""
-"Czy chcesz wcześniej zakończyć pauzę i natychmiast ponownie udostępnić "
+"Czy chcesz wcześniej wyłączyć pauzę i natychmiast ponownie udostępnić "
 "produkt?"
 
 #. module: point_of_sale
@@ -4283,6 +4277,11 @@ msgid "Has Refundable Lines"
 msgstr "Posiada pozycje zwrotne"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__has_stock_reports_to_print
+msgid "Has Stock Reports To Print"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Header"
 msgstr "Nagłówek"
@@ -4835,7 +4834,7 @@ msgstr "Sprzedaż dodatkowa"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
 msgid "Is Using Company Currency"
-msgstr "Czy używana jest waluta firmowa?"
+msgstr "Czy używa waluty firmowej?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -4944,7 +4943,7 @@ msgstr "Pozycja zapisu"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Journal Items"
-msgstr "Pozycje zapisów"
+msgstr "Pozycje dziennika"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6753,7 +6752,7 @@ msgstr "Linia zamówienia PoS z konfiguracji #%s"
 #. module: point_of_sale
 #: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
 msgid "POS: Product Snooze cleanup"
-msgstr "PoS: Czyszczenie pauzy produktu"
+msgstr "PoS: Czyszczenie funkcji \"uśpienia\" produktu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7377,7 +7376,7 @@ msgstr "Drukarka punktu sprzedaży"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_product_template_snooze
 msgid "Point of Sale Product Snooze"
-msgstr "Pauza produktu punktu sprzedaży"
+msgstr "Dezaktywacja produktu punktu sprzedaży"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -7867,6 +7866,12 @@ msgstr "Rachunek pro forma"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Proceed Anyway"
 msgstr "Kontynuuj mimo to"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -8834,7 +8839,7 @@ msgstr "Wybrane atrybuty"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Selected date cannot be in the past."
-msgstr ""
+msgstr "Wybrana data nie może być w przeszłości."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -9223,7 +9228,7 @@ msgstr "Mała półka"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Snooze"
-msgstr "Pauza"
+msgstr "Uśpij"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
@@ -9410,7 +9415,7 @@ msgstr "Zatrzymaj skaner kodów kreskowych"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Stop Snooze"
-msgstr "Zakończ pauzę"
+msgstr "Zatrzymaj uśpienie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -10569,6 +10574,8 @@ msgstr ""
 msgid ""
 "This order is currently syncing, please wait a moment before loading it."
 msgstr ""
+"To zamówienie jest aktualnie synchronizowane, poczekaj chwilę przed "
+"załadowaniem go."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11180,7 +11187,7 @@ msgstr "Zatwierdź"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Validation Error"
-msgstr ""
+msgstr "Błąd weryfikacji"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11413,7 +11420,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "You are trying to add a snoozed product. Would you like to continue?"
-msgstr ""
+msgstr "Próbujesz dodać wstrzymany produkt. Czy chcesz kontynuować?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12109,6 +12116,9 @@ msgstr "o wartości"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "A request is still being processed in the background. Please wait."
+#~ msgstr "W tle nadal przetwarzane jest żądanie. Proszę czekać."
 
 #~ msgid "Select Date:"
 #~ msgstr "Wybierz datę:"

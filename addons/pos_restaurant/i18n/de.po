@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 19:32+0000\n"
-"PO-Revision-Date: 2026-06-13 18:47+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-23 09:28+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "pos_restaurant/de/>\n"
@@ -70,6 +70,11 @@ msgstr ""
 "200 g irisches Black-Angus-Rindfleisch, karamellisierte Zwiebeln mit "
 "Paprika, Eisbergsalat, rote Zwiebeln, gegrillter Speck, Tomatensauce, "
 "Essiggurken, Barbecue-Sauce"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
+msgid "<br/>Guest"
+msgstr "<br/>Gast"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
@@ -712,7 +717,6 @@ msgstr "Gegrilltes Gemüse"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
 msgid "Guest"
 msgstr "Gast"
 
@@ -1410,18 +1414,18 @@ msgstr "Raumansicht wechseln"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/utils/printer/generate_printer_data.js:0
+msgid "T %s"
+msgstr "T %s"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
 msgid "Table"
 msgstr "Tisch"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/printer/generate_printer_data.js:0
-msgid "Table %s"
-msgstr "Tisch %s"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1719,6 +1723,9 @@ msgstr "Artikel"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr "ausgewählte(s) Produkt(e)"
+
+#~ msgid "Table %s"
+#~ msgstr "Tisch %s"
 
 #~ msgid " and $1"
 #~ msgstr " und $1"
