@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_online_payment
+# * pos_online_payment
 #
 # Translators:
 # Wil Odoo, 2025
 # Kira Petersen, 2025
 #
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-06-23 12:56+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
+"pos_online_payment/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -34,7 +37,7 @@ msgstr "<strong>Fejl:</strong> Der opstod et problem under betalingsprocessen."
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 msgid "A POS config cannot have more than one online payment method."
-msgstr "En POS-konfiguration kan ikke have mere end én online betalingsmetode."
+msgstr "En POS-konfiguration kan ikke have mere end én online betalingsform."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -46,8 +49,7 @@ msgstr "Der skal angives en betalingsmulighed."
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A validation payment cannot be used for a Point of Sale online payment."
-msgstr ""
-"En valideringsbetaling kan ikke bruges til en Point of Sale online betaling."
+msgstr "En valideringsbetaling kan ikke bruges til en POS-onlinebetaling."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -62,9 +64,9 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
-"Alle betalingsudbydere, der er konfigureret til en onlinebetalingsmetode, "
-"skal bruge samme valuta som salgsjournalen eller virksomhedens valuta, hvis "
-"den ikke er angivet, i POS-konfigurationen."
+"Alle betalingsudbydere, der er konfigureret til en onlinebetalingsform, skal "
+"bruge samme valuta som salgsjournalen eller virksomhedens valuta, hvis den "
+"ikke er angivet i POS-konfigurationen."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -85,13 +87,14 @@ msgstr "Beløb:"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr "Annuller betaling"
+msgstr "Annullér betaling"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr "Kan ikke oprette en POS online betaling uden en regnskabsbetaling."
+msgstr ""
+"Det er ikke muligt at oprette en POS-onlinebetaling uden en bogført betaling."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -100,14 +103,14 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
-"Kan ikke oprette en POS-betaling med en ikke-online betalingsmetode og en "
-"online regnskabsbetaling."
+"Kan ikke oprette en POS-betaling med en betalingsform, der ikke er online, "
+"og en bogført betaling online."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot edit a POS online payment essential data."
-msgstr "Kan ikke redigere væsentlige data for POS onlinebetaling."
+msgstr "Kan ikke redigere væsentlige data for POS-onlinebetaling."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -116,7 +119,7 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
-"Kunne ikke oprette en online betalingsmetode (company_id=%(company_id)d, "
+"Kunne ikke oprette en online betalingsform (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
@@ -128,7 +131,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
@@ -150,13 +153,13 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payment"
-msgstr "Ugyldig online betaling"
+msgstr "Ugyldig onlinebetaling"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payments"
-msgstr "Ugyldige online betalinger"
+msgstr "Ugyldige onlinebetalinger"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -179,23 +182,23 @@ msgstr "Online"
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
 msgid "Online Payment"
-msgstr "Online betaling"
+msgstr "Onlinebetaling"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr "Online betalingsmetode"
+msgstr "Online betalingsform"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
 msgid "Online accounting payment"
-msgstr "Online regnskabsbetaling"
+msgstr "Bogført betaling online"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payment unavailable"
-msgstr "Online betaling ikke tilgængelig"
+msgstr "Onlinebetaling ikke tilgængelig"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -206,29 +209,29 @@ msgstr "Onlinebetalinger kan ikke have et negativt beløb (%s: %s)."
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order ID"
-msgstr "Ordre ID"
+msgstr "Ordre-ID"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Order ID:"
-msgstr "Ordre ID:"
+msgstr "Ordre-ID:"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order Reference"
-msgstr "Ordre reference"
+msgstr "Ordrereference"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
-msgstr "Ordre reference:"
+msgstr "Ordrereference:"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Order saving issue"
-msgstr "Problem med ordrebesparelse"
+msgstr "Problem med at gemme ordre"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -239,7 +242,7 @@ msgstr "Problem med ordrebesparelse"
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
 msgid "POS Order"
-msgstr "POS ordre"
+msgstr "POS-ordre"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -259,27 +262,27 @@ msgstr "Betalinger"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "POS konfiguration"
+msgstr "POS-konfiguration"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "POS ordrer"
+msgstr "POS-ordrer"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Point of Sale betalingsmetoder"
+msgstr "POS-betalingsformer"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Point of Sale betalinger"
+msgstr "POS-betalinger"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_session
 msgid "Point of Sale Session"
-msgstr "PoS session"
+msgstr "POS-session"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -290,7 +293,7 @@ msgstr "Gennemført af"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
-msgstr "QR-kode til at betale"
+msgstr "QR-kode til betaling"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -314,7 +317,7 @@ msgstr "Serverfejl"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "The %s already has one online payment."
-msgstr ""
+msgstr "De %s har allerede foretaget en onlinebetaling."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -329,24 +332,24 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
-"POS-onlinebetalingen (tx.id=%d) kunne ikke gemmes korrekt, fordi "
-"onlinebetalingsmetoden ikke kunne findes"
+"POS-onlinebetalingen (tx.id=%d) kunne ikke gemmes korrekt, fordi den online "
+"betalingsform ikke kunne findes"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The POS session is not opened."
-msgstr "POS-sessionen er ikke åbnet."
+msgstr "Kassesessionen er ikke åbnet."
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr "Point of Sale-ordren knyttet til betalingstransaktionen"
+msgstr "POS-ordren knyttet til betalingstransaktionen"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr "Point of Sale-ordren knyttet til denne betaling"
+msgstr "POS-ordren knyttet til denne betaling"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -382,7 +385,7 @@ msgstr "Ordren er blevet annulleret."
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The order has not been saved correctly on the server."
-msgstr "Ordren er ikke blevet gemt korrekt på serveren."
+msgstr "Ordren blev ikke gemt korrekt på serveren."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -402,14 +405,14 @@ msgstr "Betalingsudbyderen er ugyldig."
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
-"Betalingen skal enten være direkte, med omdirigering eller foretaget med en "
+"Betalingen skal enten være direkte, med omdirigering eller foretaget med et "
 "token."
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment token is invalid."
-msgstr "Betalingstokenen er ugyldigt."
+msgstr "Betalingstokenet er ugyldigt."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -421,7 +424,7 @@ msgstr "Betalingstransaktionen (%d) har et negativt beløb."
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The provided order or access token is invalid."
-msgstr "Den angivne ordre eller adgangstoken er ugyldig."
+msgstr "Den angivne ordre eller adgangstoken er ugyldig(t)."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -442,14 +445,14 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
-"Det samlede beløb for resterende onlinebetalinger, der skal udføres (%s) "
+"Det samlede beløb for resterende onlinebetalinger, der skal udføres (%s), "
 "svarer ikke til det resterende ubetalte beløb for ordren (%s)."
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "There are online payments that were missing in your view."
-msgstr "Der er online betalinger, der manglede i din visning."
+msgstr "Onlinebetalinger mangler i din visning."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -458,7 +461,7 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
 msgstr ""
-"Der er et problem med serveren. Ordren kan ikke gemmes og online betaling er "
+"Der er et problem med serveren. Ordren kan ikke gemmes, og onlinebetaling er "
 "derfor ikke mulig."
 
 #. module: pos_online_payment
@@ -468,9 +471,9 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
-"Der er et problem med serveren. Ordre online betalingsstatus kan ikke "
-"hentes. Er du sikker på, at der ikke er nogen online betaling for denne "
-"ordre ?"
+"Der er et problem med serveren. Status for ordrens onlinebetaling kan ikke "
+"hentes. Er du sikker på, at der ikke er foretaget en onlinebetaling for "
+"denne ordre?"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -478,8 +481,7 @@ msgstr ""
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
 msgstr ""
-"Der er ingen online betalingsmetode konfigureret til denne Point of Sale "
-"ordre."
+"Der er ikke konfigureret nogen online betalingsform til denne POS-ordre."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -490,7 +492,7 @@ msgstr "Der er intet at betale for denne ordre."
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "There is nothing to pay."
-msgstr "Der er intet at betale."
+msgstr "Der er ikke noget at betale."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -504,9 +506,9 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
-"For at bruge en online betalingsmetode i en POS-konfiguration skal den have "
-"mindst én offentliggjort betalingsudbyder, der understøtter valutaen for den "
-"POS-konfiguration."
+"For at bruge en online betalingsform i en POS-konfiguration, skal der være "
+"mindst én offentliggjort betalingsudbyder, som understøtter konfigurationens "
+"valuta."
 
 #. module: pos_online_payment
 #. odoo-python
@@ -533,7 +535,7 @@ msgstr "Type"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Updated online payments"
-msgstr "Opdaterede online betalinger"
+msgstr "Opdaterede onlinebetalinger"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
@@ -541,7 +543,7 @@ msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
 msgstr ""
-"Brug denne betalingsmetode til onlinebetalinger (betalinger foretaget på en "
+"Brug denne betalingsform til onlinebetalinger (betalinger foretaget på en "
 "hjemmeside med online betalingsudbydere)"
 
 #. module: pos_online_payment
@@ -563,4 +565,4 @@ msgstr "betalingsudbyder"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
-msgstr "at tillade online betalinger."
+msgstr "til tilladelse af onlinebetalinger."

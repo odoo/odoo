@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
 "PO-Revision-Date: 2026-04-25 10:02+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -52,14 +52,14 @@ msgid "(Un)Group lines by tax"
 msgstr "按稅種將資料行分組/取消分組"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">FROM</span>"
-msgstr "<span class=\"text-muted\">由</span>"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">TO</span>"
-msgstr "<span class=\"text-muted\">至</span>"
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Preview\n"
+"                    </span>"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -980,6 +980,7 @@ msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
 msgstr "稅項「%(tax_name)s」無效： %(error_message)s"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
 msgstr "稅務編號"
@@ -1023,6 +1024,15 @@ msgstr "Peppol 端點無效。預期格式為：0239843188"
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
 msgstr "Peppol 端點無效。預期格式為：73282932000074"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid ""
+"The Unit of Measure '%(uom)s' (from unit code '%(code)s') was ignored on the "
+"line for product '%(product)s' because it is not compatible with the "
+"product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1093,6 +1103,14 @@ msgstr "發票已轉換為貸記單，並且數量已恢復。"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "The prepaid amount of %s corresponds to the withholding tax applied."
 msgstr "預繳金額 %s 是對應所套用的預扣稅。"
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"This is a visual representation of the xml content.<br/>\n"
+"                    <strong style=\"color: #495057;\">It is not an official "
+"document.</strong>"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1193,11 +1211,6 @@ msgid "Vatican VAT"
 msgstr "梵蒂岡增值稅"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "Vendor Bill"
-msgstr "供應商賬單"
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
@@ -1265,6 +1278,15 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "<span class=\"text-muted\">FROM</span>"
+#~ msgstr "<span class=\"text-muted\">由</span>"
+
+#~ msgid "<span class=\"text-muted\">TO</span>"
+#~ msgstr "<span class=\"text-muted\">至</span>"
+
+#~ msgid "Vendor Bill"
+#~ msgstr "供應商賬單"
 
 #~ msgid "EN 16931"
 #~ msgstr "EN 16931"
