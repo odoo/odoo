@@ -209,6 +209,10 @@ class ResCompany(models.Model):
             if company.peppol_purchase_journal_id and company.peppol_purchase_journal_id.type != 'purchase':
                 raise ValidationError(_("A purchase journal must be used to receive Peppol documents."))
 
+    def _peppol_allows_document_reception(self):
+        self.ensure_one()
+        return True
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
