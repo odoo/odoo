@@ -1,5 +1,4 @@
 from freezegun import freeze_time
-from requests import PreparedRequest, Response, Session
 from unittest.mock import patch
 
 from odoo import Command
@@ -128,28 +127,6 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         with patch('odoo.addons.l10n_dk.models.res_partner.ResPartner._get_nemhandel_verification_state', return_value='valid'), \
              patch.object(cls.env.registry['account_edi_proxy_client.user'], '_call_nemhandel_proxy', return_value={}):
             wizard.action_send_and_print()
-
-    @classmethod
-    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
-        response = Response()
-        response.status_code = 200
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0184%3A12345674'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier>'
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp.nemhandel.dk/iso6523-actorid-upis%3A%3A0184%3A12345674/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A5798009811639'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0088:5798009811639</id:ParticipantIdentifier>
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp.nemhandel.dk/iso6523-actorid-upis%3A%3A0208%3A5798009811639/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A5798009811512'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0088:5798009811512</id:ParticipantIdentifier>
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp.nemhandel.dk/iso6523-actorid-upis%3A%3A0088%3A5798009811512/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-
-        return super()._request_handler(s, r, **kw)
 
     #########
     # EXPORT
