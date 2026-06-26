@@ -444,6 +444,44 @@ class TestPosStockFlow(CommonPosStockTest):
             ])
         ))
 
+    def test_order_existing_lot_gs1_nomenclature(self):
+        """An existing lot whose name is also a valid GS1 barcode (e.g. "10156":
+        AI "10" -> Batch/Lot) must still be found when the order is validated,
+        instead of being recreated and raising a duplicate lot error.
+        """
+        if not self.env['ir.module.module'].search_count([('name', '=', 'stock_barcode'), ('state', '=', 'installed')]):
+            self.skipTest("stock_barcode is not installed")
+        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.env.company.nomenclature_id = gs1_nomenclature
+        self.pos_config_usd.picking_type_id.write({
+            'use_create_lots': True,
+            'use_existing_lots': True,
+        })
+        product = self.ten_dollars_with_10_incl.product_variant_id
+        product.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+
+        order_data = {
+            'line_data': [{
+                'product_id': product.id,
+                'pack_lot_ids': [Command.create({'lot_name': '10156'})],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ],
+        }
+        order1, _ = self.create_backend_pos_order(order_data)
+        lot = order1.picking_ids.move_line_ids.lot_id
+        self.assertEqual(lot.name, '10156')
+
+        order2, _ = self.create_backend_pos_order(order_data)
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+        self.assertEqual(order2.state, 'done')
+        self.assertEqual(order2.picking_ids.move_line_ids.lot_id, lot)
+
     def test_reordering_rules_triggered_closing_pos(self):
         if self.env['ir.module.module']._get('purchase').state != 'installed':
             self.skipTest("Purchase module is required for this test to run")
