@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="my_partner_address_form" model="ir.ui.view">
+        <field name="name">my.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="street" placeholder="House/Lot No., Floor, Building Name" class="o_address_street"/>
+                    <field name="street2" placeholder="No., Street Name, District" class="o_address_street"/>
+                    <field name="zip" placeholder="Postcode" class="o_address_zip"/>
+                    <field name="city" placeholder="City/Locality" class="o_address_city"/>
+                    <field name="state_id" placeholder="State" class="o_address_state"
+                           options='{"no_open": True, "no_quick_create": True}'
+                           context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country"
+                           options='{"no_open": True, "no_create": True}'/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="base.my" model="res.country">
+        <field name="address_view_id" ref="my_partner_address_form" />
+        <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(state_name)s\n%(country_name)s'"/>
+    </record>
+</odoo>
