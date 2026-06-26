@@ -1297,8 +1297,10 @@ class HrLeave(models.Model):
             return
         today = fields.Date.today()
         latest_monday = today - timedelta(days=today.weekday())
+
         def to_date(dt):
             return dt.date() if hasattr(dt, 'date') else dt
+
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
         today = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
         past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_monday]
