@@ -95,6 +95,31 @@ class TestPacking(TestPackingCommon):
 
         self.assertEqual(picking_ship.shipping_weight, 17)  # 2.4 * 5 + 5
 
+    def test_put_in_pack_sets_shipping_weight_without_wizard(self):
+        """ Putting products in a pack outside the put in pack wizard (e.g. from the
+        Barcode app, where the wizard is bypassed) must still set the package shipping
+        weight, so the carrier reads a positive weight.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 5.0)
+        picking_ship = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': self.test_carrier.id,
+            'move_ids': [Command.create({
+                'product_id': self.product_aw.id,
+                'product_uom_qty': 5,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        picking_ship.action_confirm()
+        # Providing the package details directly bypasses the put in pack wizard, so the
+        # hook runs without a 'weight' in context, as happens in wizard-less flows.
+        picking_ship.action_put_in_pack(package_name='Package bypassing wizard')
+        package = picking_ship.move_line_ids.result_package_id
+        self.assertEqual(package.shipping_weight, 12.0)  # 2.4 * 5
+
     def test_pack_in_pack_weight_wizard(self):
         """ Check that de default weight is correctly set by default when using the 'stock.put.in.pack' wizard on packages.
         """
