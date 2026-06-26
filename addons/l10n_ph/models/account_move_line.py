@@ -1,9 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-from odoo import api, fields, models
-from odoo.fields import Command
+from odoo import _, api, fields, models
 from odoo.tools import float_is_zero, frozendict
 
 
@@ -16,17 +13,14 @@ class AccountMoveLine(models.Model):
         check_company=True,
         readonly=True,
     )
-    l10n_ph_discount_privilege_previous_tax_ids = fields.Many2many(
+    l10n_ph_original_tax_ids = fields.Many2many(
         "account.tax",
-        relation="account_move_line_l10n_ph_prev_tax_rel",
-        column1="move_line_id",
-        column2="tax_id",
-        string="Discount Privilege Previous Taxes",
+        relation="account_move_line_l10n_ph_original_tax_rel",
+        string="Original Taxes (pre-privilege)",
         readonly=True,
     )
     l10n_ph_discount_privilege_previous_discount = fields.Float(
-        string="Discount Privilege Previous Discount (%)",
-        digits="Discount",
+        string="Previous Discount (pre-privilege)",
         readonly=True,
     )
     l10n_ph_regular_discount_amount = fields.Monetary(
@@ -41,73 +35,180 @@ class AccountMoveLine(models.Model):
         compute="_compute_l10n_ph_discount_amounts",
         readonly=True,
     )
+    l10n_ph_original_price_unit = fields.Float(
+        string="Original Price Unit (pre-divisor)",
+        digits="Product Price",
+        readonly=True,
+    )
 
-    # --- Helpers for privilege application/removal ---
+    # --- price_unit adjustment when document_tax_mode changes ---
 
-    def _l10n_ph_get_source_taxes_and_price_unit(self):
-        self.ensure_one()
-        if self.l10n_ph_discount_privilege_previous_tax_ids:
-            return self.l10n_ph_discount_privilege_previous_tax_ids, self.price_unit
-        return self.tax_ids, self.price_unit
+    def _compute_totals(self):
+        # Ensure price_unit reflects the current document_tax_mode for
+        # FP-privileged lines, so _compute_totals uses the correct base price.
+        # Without this, changing document_tax_mode on a privileged invoice
+        # would compute subtotal/total from the stale divisor-adjusted price.
+        for line in self:
+            if (
+                line.l10n_ph_discount_privilege_id
+                and line.l10n_ph_discount_privilege_id.fiscal_position_id
+                and line.l10n_ph_original_tax_ids
+            ):
+                base_price = line.l10n_ph_original_price_unit or line.price_unit
+                divisor = line._l10n_ph_get_privilege_divisor()
+                if divisor > 1.0:
+                    line.update(
+                        {"price_unit": line.currency_id.round(base_price / divisor)},
+                    )
+                else:
+                    line.update({"price_unit": base_price})
+        super()._compute_totals()
 
-    def _l10n_ph_prepare_privilege_removal_vals(self):
-        self.ensure_one()
-        vals = {
-            "l10n_ph_discount_privilege_id": False,
-            "discount": self.l10n_ph_discount_privilege_previous_discount,
-            "l10n_ph_discount_privilege_previous_discount": 0.0,
-            "l10n_ph_discount_privilege_previous_tax_ids": [Command.clear()],
-        }
-        if self.l10n_ph_discount_privilege_previous_tax_ids:
-            vals["tax_ids"] = [
-                Command.set(self.l10n_ph_discount_privilege_previous_tax_ids.ids),
-            ]
-        return vals
+    # --- Computed taxes with privilege FP ---
 
-    def _l10n_ph_get_vat_inclusive_divisor(self, taxes):
-        self.ensure_one()
-        included_taxes = taxes.flatten_taxes_hierarchy().filtered(
-            lambda t: (
-                t.amount > 0
-                and t.amount_type in ("percent", "division")
-                and t._is_price_included(self.document_tax_mode)
+    @api.depends("product_id", "l10n_ph_discount_privilege_id")
+    def _compute_tax_ids(self):
+        ph_privileged = self.filtered(
+            lambda line: (
+                line.move_id
+                and line.move_id.country_code == "PH"
+                and line.l10n_ph_discount_privilege_id
             ),
         )
-        if included_taxes:
-            return 1.0 + sum(included_taxes.mapped("amount")) / 100.0
-        return 1.0
+        # Base compute for non-privileged lines first, so the standard
+        # product/account tax logic runs before we override.
+        super(AccountMoveLine, self - ph_privileged)._compute_tax_ids()
+        # Restore originals and clear pre-privilege state on non-privileged PH lines.
+        # Undo the price_unit divisor and restore the original tax_ids (which
+        # were saved before the privilege FP mapping was applied), so that the
+        # line returns to its exact pre-privilege tax configuration even when
+        # the product/account defaults differ from the original taxes.
+        for line in self - ph_privileged:
+            orig_taxes = line.l10n_ph_original_tax_ids
+            if orig_taxes:
+                divisor = line._l10n_ph_get_vat_inclusive_divisor(
+                    orig_taxes,
+                    document_tax_mode=line.document_tax_mode,
+                )
+                if divisor > 1.0:
+                    line.price_unit = line.currency_id.round(line.price_unit * divisor)
+                line.tax_ids = orig_taxes
+                line.update({"l10n_ph_original_tax_ids": False})
+                line.l10n_ph_original_price_unit = 0.0
+                line.l10n_ph_discount_privilege_previous_discount = 0.0
+        # Handle privileged lines: save originals on first FP apply, map through FP,
+        # or restore originals for non-FP privileges.
+        for line in ph_privileged:
+            if (
+                line.display_type
+                in (
+                    "line_section",
+                    "line_subsection",
+                    "line_note",
+                    "payment_term",
+                    "cogs",
+                )
+                or line.is_imported
+            ):
+                continue
+            fpos = line.l10n_ph_discount_privilege_id.sudo().fiscal_position_id
+            if fpos:
+                # Save original taxes on first privilege application.
+                # For wizard-applied privileges, this is a no-op because the
+                # wizard already stored l10n_ph_original_tax_ids in the write
+                # vals (avoiding recursion from reading tax_ids during compute).
+                first_apply = not line.l10n_ph_original_tax_ids
+                if first_apply and line.tax_ids:
+                    line.update({"l10n_ph_original_tax_ids": line.tax_ids})
+                if first_apply:
+                    divisor = line._l10n_ph_get_privilege_divisor()
+                    if divisor > 1.0:
+                        line.update(
+                            {
+                                "l10n_ph_original_price_unit": line.price_unit,
+                                "price_unit": line.currency_id.round(
+                                    line.price_unit / divisor,
+                                ),
+                            },
+                        )
+                source_taxes = line.l10n_ph_original_tax_ids or line.tax_ids
+                if source_taxes:
+                    mapped_taxes = line.env["account.tax"]
+                    for tax in source_taxes:
+                        mapped = fpos.map_tax(tax)
+                        mapped_taxes |= mapped or tax
+                    line.tax_ids = mapped_taxes
+            elif line.l10n_ph_original_tax_ids:
+                line.tax_ids = line.l10n_ph_original_tax_ids
+                line.update({"l10n_ph_original_tax_ids": False})
 
-    def _l10n_ph_get_discount_base_amount(self, source_taxes, privilege=None):
-        """Get the base amount on which the special discount percentage is applied.
+    # --- Discount allocation ---
 
-        For VAT-exempt privileges (20% SC/PWD with group/0% tax), the base is the
-        price_unit adjusted for VAT-inclusive source taxes (i.e., the VAT-exclusive amount).
+    @api.depends(
+        "l10n_ph_discount_privilege_id",
+        "l10n_ph_discount_privilege_id.account_id",
+        "l10n_ph_discount_privilege_id.fiscal_position_id",
+    )
+    def _compute_discount_allocation_needed(self):
+        super()._compute_discount_allocation_needed()
+        for line in self:
+            if line.display_type != "product" or not line.l10n_ph_discount_privilege_id:
+                continue
+            privilege = line.l10n_ph_discount_privilege_id.sudo()
+            account = privilege.account_id
+            if not account or line.account_id == account:
+                line.discount_allocation_needed = False
+                continue
+            if privilege.fiscal_position_id:
+                # price_unit is already adjusted by _compute_price_unit
+                base = line.quantity * line.price_unit * line.discount / 100.0
+            else:
+                base = line._l10n_ph_compute_vat_incl_total() * line.discount / 100.0
+            amount_currency = line.currency_id.round(line.move_id.direction_sign * base)
+            if not amount_currency:
+                line.discount_allocation_needed = False
+                continue
+            amount = line.company_currency_id.round(
+                amount_currency / line.currency_rate,
+            )
+            line.discount_allocation_needed = [
+                (
+                    frozendict(
+                        {
+                            "move_id": line.move_id.id,
+                            "account_id": line.account_id.id,
+                            "currency_rate": line.currency_rate,
+                        },
+                    ),
+                    frozendict(
+                        {
+                            "display_type": "discount",
+                            "name": _("SC/PWD Discount"),
+                            "amount_currency": amount_currency,
+                            "balance": amount,
+                        },
+                    ),
+                ),
+                (
+                    frozendict(
+                        {
+                            "move_id": line.move_id.id,
+                            "account_id": account.id,
+                            "currency_rate": line.currency_rate,
+                        },
+                    ),
+                    frozendict(
+                        {
+                            "display_type": "discount",
+                            "name": _("SC/PWD Discount"),
+                            "amount_currency": -amount_currency,
+                            "balance": -amount,
+                        },
+                    ),
+                ),
+            ]
 
-        For VAT-able privileges (5% SC with positive-rate price_include tax), the base
-        is the total amount including VAT from the source taxes.
-        """
-        self.ensure_one()
-        tax = privilege.sudo().tax_id if privilege else None
-        if tax and tax.amount_type != "group" and tax.amount > 0 and tax._is_price_included(self.document_tax_mode):
-            # VAT-able privilege: base is total including VAT
-            base = self.price_unit * self.quantity
-            for src_tax in source_taxes.flatten_taxes_hierarchy():
-                if src_tax.amount > 0 and src_tax.amount_type == "percent" and not src_tax._is_price_included(self.document_tax_mode):
-                    base *= (1 + src_tax.amount / 100)
-            return base
-        divisor = self._l10n_ph_get_vat_inclusive_divisor(source_taxes)
-        return self.price_unit * self.quantity / divisor
-
-    def _l10n_ph_get_special_discount_amount(self, privilege=None):
-        self.ensure_one()
-        privilege = privilege or self.l10n_ph_discount_privilege_id
-        if not privilege:
-            return 0.0
-        source_taxes, _ = self._l10n_ph_get_source_taxes_and_price_unit()
-        base = self._l10n_ph_get_discount_base_amount(source_taxes, privilege)
-        return base * (privilege.sudo().discount_amount / 100.0)
-
-    # --- Computed fields ---
+    # --- Discount amounts ---
 
     @api.depends(
         "quantity",
@@ -119,7 +220,7 @@ class AccountMoveLine(models.Model):
         "document_tax_mode",
         "l10n_ph_discount_privilege_id",
         "l10n_ph_discount_privilege_id.discount_amount",
-        "l10n_ph_discount_privilege_previous_tax_ids",
+        "l10n_ph_discount_privilege_id.fiscal_position_id",
     )
     def _compute_l10n_ph_discount_amounts(self):
         for line in self:
@@ -128,21 +229,27 @@ class AccountMoveLine(models.Model):
                 line.l10n_ph_special_discount_amount = 0.0
                 continue
 
-            line.l10n_ph_special_discount_amount = (
-                line._l10n_ph_get_special_discount_amount()
-            )
-
             if line.l10n_ph_discount_privilege_id:
+                privilege = line.l10n_ph_discount_privilege_id.sudo()
+                if privilege.fiscal_position_id:
+                    line.l10n_ph_special_discount_amount = (
+                        line.price_unit * line.quantity * line.discount / 100.0
+                    )
+                else:
+                    total_vat_incl = line._l10n_ph_compute_vat_incl_total()
+                    line.l10n_ph_special_discount_amount = (
+                        total_vat_incl * line.discount / 100.0
+                    )
                 line.l10n_ph_regular_discount_amount = 0.0
-                continue
-
-            line.l10n_ph_regular_discount_amount = (
-                line._l10n_ph_compute_regular_discount_amount()
-            )
+            else:
+                line.l10n_ph_special_discount_amount = 0.0
+                line.l10n_ph_regular_discount_amount = (
+                    line._l10n_ph_compute_regular_discount_amount()
+                )
 
     def _l10n_ph_compute_regular_discount_amount(self):
         self.ensure_one()
-        source_taxes, _ = self._l10n_ph_get_source_taxes_and_price_unit()
+        source_taxes = self.tax_ids
         divisor = self._l10n_ph_get_vat_inclusive_divisor(source_taxes)
         if self.discount:
             return (self.price_unit * self.quantity * self.discount / 100.0) / divisor
@@ -150,6 +257,38 @@ class AccountMoveLine(models.Model):
         if reference_price > self.price_unit:
             return (self.quantity * (reference_price - self.price_unit)) / divisor
         return 0.0
+
+    def _l10n_ph_get_privilege_divisor(self):
+        self.ensure_one()
+        privilege = self.l10n_ph_discount_privilege_id
+        if not privilege or not privilege.fiscal_position_id:
+            return 1.0
+        # Ensure _compute_tax_ids has populated l10n_ph_original_tax_ids
+        # before we decide which taxes to use for the divisor.
+        # Reading self.tax_ids triggers _compute_tax_ids (which depends on
+        # it) so that the first_apply block stores the original taxes before
+        # FP mapping. Without this, we might read already-mapped taxes and
+        # compute a wrong divisor for newly-created FP-based privileged lines.
+        if not self.l10n_ph_original_tax_ids:
+            self.tax_ids
+        source_taxes = self.l10n_ph_original_tax_ids or self.tax_ids
+        return self._l10n_ph_get_vat_inclusive_divisor(
+            source_taxes,
+            document_tax_mode=self.document_tax_mode,
+        )
+
+    def _l10n_ph_get_vat_inclusive_divisor(self, taxes, document_tax_mode=None):
+        self.ensure_one()
+        included_taxes = taxes.flatten_taxes_hierarchy().filtered(
+            lambda t: (
+                t.amount > 0
+                and t.amount_type in ("percent", "division")
+                and t._is_price_included(document_tax_mode)
+            ),
+        )
+        if included_taxes:
+            return 1.0 + sum(included_taxes.mapped("amount")) / 100.0
+        return 1.0
 
     def _l10n_ph_get_discount_reference_unit_price(self):
         self.ensure_one()
@@ -172,107 +311,44 @@ class AccountMoveLine(models.Model):
             return self.product_id.lst_price
         return self.price_unit
 
-    # --- Discount allocation override ---
+    # --- Preview helper for wizard ---
 
-    @api.depends(
-        "account_id",
-        "company_id",
-        "discount",
-        "price_unit",
-        "quantity",
-        "currency_rate",
-        "analytic_distribution",
-        "document_tax_mode",
-        "l10n_ph_discount_privilege_id",
-        "l10n_ph_discount_privilege_id.account_id",
-    )
-    def _compute_discount_allocation_needed(self):
-        super()._compute_discount_allocation_needed()
-
-        privileged_lines = self.move_id.line_ids.filtered(
-            lambda line_item: (
-                line_item.display_type == "product"
-                and line_item.l10n_ph_discount_privilege_id
-            ),
+    def _l10n_ph_compute_vat_incl_total(self):
+        total = self.price_unit * self.quantity
+        divisor = self._l10n_ph_get_vat_inclusive_divisor(
+            self.tax_ids,
+            document_tax_mode=self.document_tax_mode,
         )
-        if not privileged_lines:
-            return
+        if divisor > 1.0:
+            return total
+        for tax in self.tax_ids.flatten_taxes_hierarchy():
+            if (
+                tax.amount > 0
+                and tax.amount_type in ("percent", "division")
+                and not tax._is_price_included(self.document_tax_mode)
+            ):
+                total *= 1.0 + tax.amount / 100.0
+        return total
 
-        # Re-compute discount allocation for privileged lines using the privilege's account.
-        # price_unit is always the original user-entered price (never mutated by privilege).
-        line2discounted_amount = {}
-        for line in privileged_lines:
-            privilege_account = line.l10n_ph_discount_privilege_id.account_id
-            source_taxes = (
-                line.l10n_ph_discount_privilege_previous_tax_ids
-                or line.tax_ids
+    def _l10n_ph_get_preview_discount_amount(self, privilege):
+        self.ensure_one()
+        if not privilege:
+            return 0.0
+        if privilege == self.l10n_ph_discount_privilege_id:
+            return self.l10n_ph_special_discount_amount
+        if privilege.fiscal_position_id:
+            # Preview needs to account for the divisor adjustment that the
+            # wizard's action_confirm will apply to price_unit.
+            divisor = self._l10n_ph_get_vat_inclusive_divisor(
+                self.tax_ids,
+                document_tax_mode=self.document_tax_mode,
             )
-            base = line._l10n_ph_get_discount_base_amount(
-                source_taxes, line.l10n_ph_discount_privilege_id,
+            base_price = (
+                self.currency_id.round(self.price_unit / divisor)
+                if divisor > 1.0
+                else self.price_unit
             )
-            amount_currency = line.currency_id.round(
-                line.move_id.direction_sign * base * line.discount / 100,
-            )
-            if not amount_currency or line.account_id == privilege_account:
-                continue
-            amount = line.company_currency_id.round(
-                amount_currency / line.currency_rate,
-            )
-            line2discounted_amount[line] = [
-                (line.account_id, amount_currency, amount),
-                (privilege_account, -amount_currency, -amount),
-            ]
-
-        distribution_totals = defaultdict(lambda: defaultdict(float))
-        for line, discounted_amounts in line2discounted_amount.items():
-            for account, _amount_currency, amount in discounted_amounts:
-                key = frozendict(
-                    {
-                        "move_id": line.move_id.id,
-                        "account_id": account.id,
-                        "currency_rate": line.currency_rate,
-                    },
-                )
-                for analytic_account_id in line.analytic_distribution or {}:
-                    distribution_totals[key][analytic_account_id] += amount
-
-        for line in self.filtered("l10n_ph_discount_privilege_id"):
-            if line not in line2discounted_amount:
-                line.discount_allocation_needed = False
-                continue
-
-            discount_allocation_needed = {}
-            for account, amount_currency, amount in line2discounted_amount[line]:
-                key = frozendict(
-                    {
-                        "move_id": line.move_id.id,
-                        "account_id": account.id,
-                        "currency_rate": line.currency_rate,
-                    },
-                )
-                dist = distribution_totals[key]
-                total = sum(dist.values()) or 1
-                key_needed = (
-                    frozendict(
-                        {
-                            "move_id": line.move_id._origin.id,
-                            "account_id": account._origin.id,
-                            "currency_rate": line.currency_rate,
-                        },
-                    )
-                    if not line.move_id.id
-                    else key
-                )
-                discount_allocation_needed[key_needed] = frozendict(
-                    {
-                        "display_type": "discount",
-                        "name": self.env._("Discount"),
-                        "amount_currency": amount_currency,
-                        "balance": amount,
-                        "analytic_distribution": {
-                            acct_id: 100 * value / total
-                            for acct_id, value in dist.items()
-                        },
-                    },
-                )
-            line.discount_allocation_needed = list(discount_allocation_needed.items())
+            return base_price * self.quantity * privilege.discount_amount / 100.0
+        return (
+            self._l10n_ph_compute_vat_incl_total() * privilege.discount_amount / 100.0
+        )

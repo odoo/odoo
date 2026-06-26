@@ -16,11 +16,13 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super().set_values()
         group = self.env.ref("l10n_ph.group_l10n_ph_discount_privilege")
-        users = self.env["res.users"].search([
-            "|",
-            ("company_id", "=", self.company_id.id),
-            ("company_ids", "in", self.company_id.id),
-        ])
+        users = self.env["res.users"].search(
+            [
+                "|",
+                ("company_id", "=", self.company_id.id),
+                ("company_ids", "in", self.company_id.id),
+            ],
+        )
         if self.l10n_ph_enable_discount_privilege:
             users_not_in_group = users.filtered(lambda u: group not in u.group_ids)
             if users_not_in_group:

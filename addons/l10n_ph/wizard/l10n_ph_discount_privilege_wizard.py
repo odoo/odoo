@@ -6,7 +6,7 @@ from odoo.fields import Command
 
 
 class L10nPhDiscountPrivilegeWizard(models.TransientModel):
-    _name = "l10n_ph.discount_privilege.wizard"
+    _name = "l10n_ph.discount.privilege.wizard"
     _description = "Discount Privilege Wizard"
 
     move_id = fields.Many2one("account.move", required=True)
@@ -43,7 +43,7 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
         compute="_compute_available_filters",
     )
     line_ids = fields.One2many(
-        "l10n_ph.discount_privilege.wizard.line",
+        "l10n_ph.discount.privilege.wizard.line",
         "wizard_id",
         string="Invoice Lines",
     )
@@ -54,7 +54,11 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
             if "line_ids" not in vals and vals.get("move_id"):
                 move = self.env["account.move"].browse(vals["move_id"])
                 vals["line_ids"] = [
-                    Command.create({"invoice_line_id": line.id})
+                    Command.create(
+                        {
+                            "invoice_line_id": line.id,
+                        },
+                    )
                     for line in move.invoice_line_ids
                     if line.display_type == "product"
                 ]
@@ -64,7 +68,6 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
         return wizards
 
     def _line_matches_scope(self, invoice_line):
-        """Check whether an invoice line is in scope for the current wizard settings."""
         self.ensure_one()
         if self.apply_on == "all":
             return True
@@ -84,7 +87,6 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
         return invoice_line.l10n_ph_discount_privilege_id
 
     def _recompute_line_previews(self):
-        """Recompute preview values on all wizard lines based on current scope."""
         self.ensure_one()
         updates = []
         for line in self.line_ids:
@@ -98,11 +100,11 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
                 "discount": privilege.discount_amount if privilege else 0.0,
             }
             if not privilege:
-                vals["discounted_amount"] = 0.0
+                vals["discount_amount"] = 0.0
             elif privilege == inv.l10n_ph_discount_privilege_id:
-                vals["discounted_amount"] = inv.l10n_ph_special_discount_amount
+                vals["discount_amount"] = inv.l10n_ph_special_discount_amount
             else:
-                vals["discounted_amount"] = inv._l10n_ph_get_special_discount_amount(
+                vals["discount_amount"] = inv._l10n_ph_get_preview_discount_amount(
                     privilege=privilege,
                 )
             updates.append(Command.update(line.id, vals))
@@ -137,31 +139,47 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
         self._check_scope_inputs()
 
         privilege = self.privilege_id
-        for inv_line in self.line_ids.invoice_line_id:
+        for wiz_line in self.line_ids:
+            inv_line = wiz_line.invoice_line_id
             if not self._line_matches_scope(inv_line):
                 continue
             vals = {
                 "l10n_ph_discount_privilege_id": privilege.id,
                 "discount": privilege.discount_amount,
             }
-            # Save original state only on first application
+            # Save pre-privilege state on first application.
+            # We capture tax_ids and apply the divisor here (before write
+            # invalidates caches) to avoid recursion in _compute_tax_ids.
             if not inv_line.l10n_ph_discount_privilege_id:
-                vals["l10n_ph_discount_privilege_previous_tax_ids"] = [
-                    Command.set(inv_line.tax_ids.ids),
-                ]
                 vals["l10n_ph_discount_privilege_previous_discount"] = inv_line.discount
-            if privilege.tax_id:
-                vals["tax_ids"] = [Command.set(privilege.tax_id.ids)]
-            vals["price_unit"] = inv_line.price_unit
+                if privilege.fiscal_position_id and inv_line.tax_ids:
+                    vals["l10n_ph_original_tax_ids"] = [
+                        Command.set(inv_line.tax_ids.ids),
+                    ]
+                    vals["l10n_ph_original_price_unit"] = inv_line.price_unit
+                    divisor = inv_line._l10n_ph_get_vat_inclusive_divisor(
+                        inv_line.tax_ids,
+                        document_tax_mode=inv_line.document_tax_mode,
+                    )
+                    if divisor > 1.0:
+                        vals["price_unit"] = inv_line.currency_id.round(
+                            inv_line.price_unit / divisor,
+                        )
             inv_line.write(vals)
         return {"type": "ir.actions.act_window_close"}
 
     def action_remove_all(self):
         self.ensure_one()
         self._check_can_modify("removed")
-        for line in self.move_id.invoice_line_ids:
-            if line.display_type == "product":
-                line.write(line._l10n_ph_prepare_privilege_removal_vals())
+        for wiz_line in self.line_ids:
+            inv_line = wiz_line.invoice_line_id
+            prev_discount = inv_line.l10n_ph_discount_privilege_previous_discount
+            inv_line.write(
+                {
+                    "l10n_ph_discount_privilege_id": False,
+                    "discount": prev_discount or 0.0,
+                },
+            )
         return {"type": "ir.actions.act_window_close"}
 
     @api.depends(
@@ -184,12 +202,6 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
 
     @api.onchange("category_ids", "product_ids")
     def _onchange_scope_filters(self):
-        """Recompute wizard line previews when scope filters change.
-
-        Many2many-through-Many2one @api.depends paths don't reliably trigger
-        onchange recomputation for non-stored fields on transient One2many lines.
-        We handle it explicitly here instead.
-        """
         self._recompute_line_previews()
 
     @api.onchange("privilege_id")
@@ -208,11 +220,11 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
 
 
 class L10nPhDiscountPrivilegeWizardLine(models.TransientModel):
-    _name = "l10n_ph.discount_privilege.wizard.line"
+    _name = "l10n_ph.discount.privilege.wizard.line"
     _description = "Discount Privilege Wizard Line"
 
     wizard_id = fields.Many2one(
-        "l10n_ph.discount_privilege.wizard",
+        "l10n_ph.discount.privilege.wizard",
         required=True,
         ondelete="cascade",
     )
@@ -232,7 +244,7 @@ class L10nPhDiscountPrivilegeWizardLine(models.TransientModel):
         string="Discount Applied (%)",
         digits="Discount",
     )
-    discounted_amount = fields.Monetary(
+    discount_amount = fields.Monetary(
         string="Discounted Amount",
         currency_field="currency_id",
     )
@@ -241,14 +253,19 @@ class L10nPhDiscountPrivilegeWizardLine(models.TransientModel):
         self.ensure_one()
         if not self.invoice_line_id.l10n_ph_discount_privilege_id:
             return False
-        self.invoice_line_id.write(
-            self.invoice_line_id._l10n_ph_prepare_privilege_removal_vals(),
+        inv_line = self.invoice_line_id
+        prev_discount = inv_line.l10n_ph_discount_privilege_previous_discount
+        inv_line.write(
+            {
+                "l10n_ph_discount_privilege_id": False,
+                "discount": prev_discount or 0.0,
+            },
         )
         self.wizard_id._recompute_line_previews()
         return {
             "type": "ir.actions.act_window",
             "name": "Discount Privilege",
-            "res_model": "l10n_ph.discount_privilege.wizard",
+            "res_model": "l10n_ph.discount.privilege.wizard",
             "res_id": self.wizard_id.id,
             "view_mode": "form",
             "target": "new",

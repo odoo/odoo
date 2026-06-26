@@ -27,20 +27,13 @@
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='discount']" position="after">
                 <field name="l10n_ph_regular_discount_amount" readonly="1" optional="hide"
-                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"/>
+                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"
+                       column_invisible="parent.country_code != 'PH'"/>
                 <field name="l10n_ph_special_discount_amount" readonly="1" optional="hide"
-                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"/>
+                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"
+                       column_invisible="parent.country_code != 'PH'"/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='discount']" position="attributes">
-                <attribute name="readonly">parent.state != 'draft' or l10n_ph_discount_privilege_id</attribute>
-            </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/form//field[@name='discount']" position="after">
-                <field name="l10n_ph_regular_discount_amount" readonly="1"
-                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"/>
-                <field name="l10n_ph_special_discount_amount" readonly="1"
-                       groups="l10n_ph.group_l10n_ph_discount_privilege,account.group_account_invoice,account.group_account_basic"/>
-            </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']/form//field[@name='discount']" position="attributes">
                 <attribute name="readonly">parent.state != 'draft' or l10n_ph_discount_privilege_id</attribute>
             </xpath>
         </field>

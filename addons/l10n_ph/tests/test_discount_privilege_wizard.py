@@ -14,14 +14,33 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         super().setUpClass()
         discount_group = cls.env.ref("l10n_ph.group_l10n_ph_discount_privilege")
         cls.env.user.write({"group_ids": [Command.link(discount_group.id)]})
-        cls.base_tax = cls._create_tax("12% VAT", 12)
+
+        ChartTemplate = cls.env["account.chart.template"].with_company(
+            cls.company_data["company"],
+        )
+        cls.tax_sale_12 = ChartTemplate.ref("l10n_ph_tax_sale_12")
+        cls.tax_sale_0_exempt = ChartTemplate.ref("l10n_ph_tax_sale_0_exempt")
+        cls.tax_sale_0_exempt_sc_pwd = ChartTemplate.ref(
+            "l10n_ph_tax_sale_0_exempt_sc_pwd",
+        )
+        cls.fpos_sc_pwd = ChartTemplate.ref(
+            "l10n_ph_fiscal_position_discount_privileges",
+        )
+        cls.base_tax = cls.tax_sale_12
+
         cls.tax_incl = cls._create_tax(
             "12% VAT INCL",
             12,
             amount_type="division",
             price_include_override="tax_included",
         )
-        cls.privilege_tax = cls._create_tax("VAT Exempt", 0)
+        # Make the 0% exempt tax recognize our custom tax_incl as an original tax
+        # so the FP's tax_map maps tax_incl → 0% exempt for SC/PWD privileged lines.
+        cls.tax_sale_0_exempt_sc_pwd.write(
+            {
+                "original_tax_ids": [Command.link(cls.tax_incl.id)],
+            },
+        )
         cls.special_discount_account = cls.company_data["default_account_revenue"].copy(
             {
                 "name": "Discount Privilege Account",
@@ -34,7 +53,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
                 {
                     "name": "Senior Citizen",
                     "discount_amount": 20.0,
-                    "tax_id": cls.privilege_tax.id,
+                    "fiscal_position_id": cls.fpos_sc_pwd.id,
                     "account_id": cls.special_discount_account.id,
                 },
             )
@@ -57,7 +76,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
                 {
                     "name": "PWD Category Scoped",
                     "discount_amount": 20.0,
-                    "tax_id": cls.privilege_tax.id,
+                    "fiscal_position_id": cls.fpos_sc_pwd.id,
                     "account_id": cls.special_discount_account.id,
                     "applied_to_category_ids": [Command.set([])],
                 },
@@ -121,9 +140,8 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         )
 
     def _create_wizard(self, invoice, **vals):
-        return (
-            self.env["l10n_ph.discount_privilege.wizard"]
-            .create({"move_id": invoice.id, **vals})
+        return self.env["l10n_ph.discount.privilege.wizard"].create(
+            {"move_id": invoice.id, **vals},
         )
 
     def _assert_discount_allocation(self, invoice, line, amount):
@@ -165,7 +183,8 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         # line_a matches Category A → privilege applied; line_b does not → unchanged
         line_a, line_b = invoice.invoice_line_ids.sorted("sequence")
         self.assertEqual(line_a.discount, 20.0)
-        self.assertEqual(line_a.tax_ids, self.privilege.tax_id)
+        # tax_ids are mapped by the privilege's FP (12% → SC/PWD 0% exempt)
+        self.assertEqual(line_a.tax_ids, self.tax_sale_0_exempt_sc_pwd)
         self.assertEqual(line_a.l10n_ph_discount_privilege_id, self.privilege)
         self.assertAlmostEqual(line_a.price_subtotal, 80.0)
         self.assertAlmostEqual(line_a.price_total, 80.0)
@@ -173,8 +192,20 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertEqual(line_b.discount, 0.0)
         self.assertEqual(line_b.tax_ids, self.base_tax)
         self.assertAlmostEqual(invoice.amount_total, 304.0)
-        # Two discount-allocation lines: debit revenue, credit privilege discount account
-        self._assert_discount_allocation(invoice, line_a, 20.0)
+
+    def test_apply_creates_discount_allocation_entries(self):
+        """Applying a SC/PWD privilege creates discount-allocation journal entries
+        (debit revenue account, credit privilege discount account)."""
+        invoice = self._create_invoice(
+            self._line_vals(name="Line A", product=self.product_a, price_unit=100.0),
+        )
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+        self._assert_discount_allocation(invoice, invoice.invoice_line_ids, 20.0)
 
     def test_open_wizard_action_returns_correct_action(self):
         """Opening the SC/PWD wizard from an invoice pre-creates a wizard with the
@@ -184,9 +215,9 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         )
 
         action = invoice.action_open_discount_privilege_wizard()
-        self.assertEqual(action["res_model"], "l10n_ph.discount_privilege.wizard")
+        self.assertEqual(action["res_model"], "l10n_ph.discount.privilege.wizard")
         self.assertIn("res_id", action)
-        wizard = self.env["l10n_ph.discount_privilege.wizard"].browse(action["res_id"])
+        wizard = self.env["l10n_ph.discount.privilege.wizard"].browse(action["res_id"])
         self.assertTrue(wizard.exists())
         self.assertEqual(wizard.move_id, invoice)
         self.assertEqual(wizard.line_ids.invoice_line_id, invoice.invoice_line_ids)
@@ -200,19 +231,27 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
                 "country_id": self.env.ref("base.us").id,
             },
         )
-        privilege = self.env["l10n_ph.discount.privilege"].sudo().create(
-            {
-                "name": "PH Only",
-                "discount_amount": 10.0,
-                "account_id": self.special_discount_account.id,
-            },
+        privilege = (
+            self.env["l10n_ph.discount.privilege"]
+            .sudo()
+            .create(
+                {
+                    "name": "PH Only",
+                    "discount_amount": 10.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
         )
 
-        self.assertTrue(self.env["l10n_ph.discount.privilege"].search([("id", "=", privilege.id)]))
+        self.assertTrue(
+            self.env["l10n_ph.discount.privilege"].search([("id", "=", privilege.id)]),
+        )
         self.assertFalse(
-            self.env["l10n_ph.discount.privilege"].with_context(
+            self.env["l10n_ph.discount.privilege"]
+            .with_context(
                 allowed_company_ids=other_company.ids,
-            ).search(
+            )
+            .search(
                 [("id", "=", privilege.id)],
             ),
         )
@@ -227,18 +266,25 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
                 "email": "invoice.user@example.com",
                 "company_id": self.company_data["company"].id,
                 "company_ids": [Command.set(self.company_data["company"].ids)],
-                "group_ids": [Command.link(self.env.ref("account.group_account_invoice").id)],
+                "group_ids": [
+                    Command.link(self.env.ref("account.group_account_invoice").id),
+                ],
             },
         )
 
         invoice = self._create_invoice(
             self._line_vals(name="Line A", product=self.product_a, price_unit=100.0),
         )
-        wizard = self.env["l10n_ph.discount_privilege.wizard"].with_user(invoice_user).with_context(
-            active_id=invoice.id,
-            active_ids=[invoice.id],
-            active_model="account.move",
-        ).create({"move_id": invoice.id})
+        wizard = (
+            self.env["l10n_ph.discount.privilege.wizard"]
+            .with_user(invoice_user)
+            .with_context(
+                active_id=invoice.id,
+                active_ids=[invoice.id],
+                active_model="account.move",
+            )
+            .create({"move_id": invoice.id})
+        )
         self.assertEqual(wizard.move_id, invoice)
 
         with self.assertRaises(Exception):
@@ -269,7 +315,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         line_a, line_b = wizard.line_ids.sorted("id")
         self.assertTrue(line_a.has_discount_privilege)
         self.assertEqual(line_a.discount, 20.0)
-        self.assertAlmostEqual(line_a.discounted_amount, 20.0)
+        self.assertAlmostEqual(line_a.discount_amount, 20.0)
         self.assertFalse(line_b.has_discount_privilege)
 
         # Preview-only mode: invoice lines are untouched until explicit confirmation.
@@ -302,7 +348,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
 
     def test_remove_line_discount_does_not_require_privilege(self):
         """Per-line SC/PWD privilege removal works even when no privilege is
-        selected in the wizard"""
+        selected in the wizard; discount stays as-is (no state restoration)."""
         invoice = self._create_invoice(
             self._line_vals(
                 name="Line A",
@@ -323,7 +369,33 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertFalse(invoice.invoice_line_ids.l10n_ph_discount_privilege_id)
 
         # Closing without a privilege selected should succeed (no-op close)
-        self.assertEqual(wizard.action_confirm(), {"type": "ir.actions.act_window_close"})
+        self.assertEqual(
+            wizard.action_confirm(),
+            {"type": "ir.actions.act_window_close"},
+        )
+
+    def test_remove_line_restores_previous_discount(self):
+        """Per-line SC/PWD removal restores the pre-privilege discount from stored state."""
+        invoice = self._create_invoice(
+            self._line_vals(
+                name="Line A",
+                product=self.product_a,
+                price_unit=100.0,
+                discount=10.0,
+            ),
+        )
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+        self.assertEqual(invoice.invoice_line_ids.discount, 20.0)
+
+        wizard2 = self._create_wizard(invoice)
+        wizard2.line_ids.action_remove_line_discount()
+        self.assertFalse(invoice.invoice_line_ids.l10n_ph_discount_privilege_id)
+        self.assertEqual(invoice.invoice_line_ids.discount, 10.0)
 
     def test_apply_requires_category_when_scope_is_product_category(self):
         """Applying privilege with 'product_category' scope but no category selected raises UserError."""
@@ -370,7 +442,43 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertEqual(line.l10n_ph_discount_privilege_id, self.privilege_without_tax)
         self.assertAlmostEqual(line.price_subtotal, 80.0)
         self.assertAlmostEqual(line.price_total, 89.6)
-        self._assert_discount_allocation(invoice, line, 20.0)
+        # 100 * 1.12 * 0.20 = 22.4 (discount on VAT-inclusive total)
+        self._assert_discount_allocation(invoice, line, 22.4)
+
+    def test_apply_non_fp_privilege_on_tax_inclusive_line(self):
+        """A non-FP privilege on a tax-inclusive line preserves the original tax
+        and computes the discount on the full price_unit (no divisor)."""
+        privilege = (
+            self.env["l10n_ph.discount.privilege"]
+            .sudo()
+            .create(
+                {
+                    "name": "SC 20% No FP (tax-incl)",
+                    "discount_amount": 20.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
+        )
+        invoice = self._create_invoice(
+            self._line_vals(
+                name="Line A",
+                product=self.product_a,
+                price_unit=500.0,
+                tax=self.tax_incl,
+            ),
+        )
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+
+        line = invoice.invoice_line_ids
+        self.assertEqual(line.discount, 20.0)
+        self.assertEqual(line.tax_ids, self.tax_incl)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 100.0, places=2)
+        self._assert_discount_allocation(invoice, line, 100.0)
 
     def test_apply_privilege_clears_regular_discount(self):
         """Applying a SC/PWD privilege zeroes out any pre-existing regular (pricelist) discount;
@@ -410,10 +518,11 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         line = invoice.invoice_line_ids
         self.assertEqual(line.discount, 20.0)
         self.assertAlmostEqual(line.l10n_ph_regular_discount_amount, 0.0)
-        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 20.0)
+        # 100 * 1.12 * 0.20 = 22.4 (discount on VAT-inclusive total)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 22.4)
         self.assertAlmostEqual(line.price_subtotal, 80.0)
         self.assertAlmostEqual(line.price_total, 89.6)
-        self._assert_discount_allocation(invoice, line, 20.0)
+        self._assert_discount_allocation(invoice, line, 22.4)
 
     def test_remove_all_restores_original_taxes(self):
         """Bulk-removing SC/PWD privileges restores each line's original taxes and
@@ -428,7 +537,11 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
             apply_on="all",
         )
         wizard.action_confirm()
-        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.privilege.tax_id)
+        # tax_ids are mapped by the privilege's FP (12% → SC/PWD 0% exempt)
+        self.assertEqual(
+            invoice.invoice_line_ids.tax_ids,
+            self.tax_sale_0_exempt_sc_pwd,
+        )
         self.assertTrue(
             invoice.line_ids.filtered(
                 lambda line_item: line_item.display_type == "discount",
@@ -436,11 +549,8 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         )
 
         wizard.action_remove_all()
-        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.base_tax)
+        self.assertEqual(invoice.invoice_line_ids.tax_ids, self.tax_sale_12)
         self.assertFalse(invoice.invoice_line_ids.l10n_ph_discount_privilege_id)
-        self.assertFalse(
-            invoice.invoice_line_ids.l10n_ph_discount_privilege_previous_tax_ids,
-        )
         self.assertFalse(
             invoice.line_ids.filtered(
                 lambda line_item: line_item.display_type == "discount",
@@ -470,15 +580,16 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertEqual(invoice.invoice_line_ids.discount, 20.0)
 
         wizard.action_remove_all()
+        self.assertFalse(invoice.invoice_line_ids.l10n_ph_discount_privilege_id)
         # Original 10% discount must be restored from the stored baseline
         self.assertEqual(invoice.invoice_line_ids.discount, 10.0)
 
-    def test_special_discount_amount_uses_pre_privilege_inclusive_divisor(self):
-        """When a privilege is applied to a tax-inclusive line, both the helper field
-        and the allocation entry use the VAT-exclusive amount.
+    def test_special_discount_amount_on_tax_inclusive_line(self):
+        """When a privilege is applied to a tax-inclusive line, the special
+        discount is computed on the VAT-exclusive base for FP-based privileges.
 
-        For a 700₱ tax-inclusive (12 % INCL) line with a 20 % PWD discount:
-          - VAT-exclusive amount  = 700 / 1.12 x 0.20 = 125.00
+        For a 700₱ tax-inclusive (12% INCL, divisor 1.12) line with 20% SC:
+        discount = 700 * 0.20 / 1.12 = 125.0
         """
         invoice = self._create_invoice(
             self._line_vals(
@@ -497,38 +608,120 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         wizard.action_confirm()
 
         line = invoice.invoice_line_ids
-        # 700 / 1.12 * 0.20 = 125, NOT 700 * 0.20 = 140
         self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 125.0, places=2)
+        # price_subtotal = 700/1.12 * 0.80 = 500.0
+        self.assertAlmostEqual(line.price_subtotal, 500.0, places=2)
+        self.assertAlmostEqual(line.price_total, 500.0, places=2)
+        # amount_untaxed must match price_subtotal (not the raw 700*0.80=560)
+        self.assertAlmostEqual(invoice.amount_untaxed, 500.0, places=2)
+        self.assertAlmostEqual(invoice.amount_total, 500.0, places=2)
         self._assert_discount_allocation(invoice, line, 125.0)
 
-    def test_apply_vat_excl_privilege_on_vat_excl_line(self):
-        """Applying an SC/PWD privilege on a VAT-exclusive line works with the
-        VAT-exclusive price_unit directly — no mapping needed.
-        The privilege group tax replaces the 12% VAT with 0% exempt, and the
-        discount allocation handles the expense entry."""
-        vat_exempt_child = self._create_tax(
-            "0% EXEMPT FOR SC/PWD USE (test)",
-            0,
-            type_tax_use="none",
-        )
-        privilege_group_tax = self.env["account.tax"].create(
+    def test_fp_privilege_on_standard_vat_with_document_tax_included(self):
+        """FP-based privilege on a line using the standard 12% VAT with
+        document_tax_mode='tax_included' correctly applies the divisor.
+
+        The standard PH 12% VAT (l10n_ph_tax_sale_12) has price_include=False
+        and relies on the document-level tax mode. This test covers the exact
+        real-world scenario that was broken before the document_tax_mode fix.
+
+        For a 750₱ VAT-inclusive line with 20% SC/PWD privilege:
+          price_unit  = 750 / 1.12 = 669.64  (adjusted by wizard)
+          discount    = 20%
+          discount amount = 669.64 * 0.20 = 133.93
+          subtotal    = 669.64 * 0.80 = 535.71
+        """
+        invoice = self.env["account.move"].create(
             {
-                "name": "VAT Exempt w/ SC Discount (test)",
-                "amount_type": "group",
-                "type_tax_use": "sale",
-                "children_tax_ids": [
-                    Command.set(vat_exempt_child.ids),
+                "move_type": "out_invoice",
+                "partner_id": self.partner_a.id,
+                "document_tax_mode": "tax_included",
+                "invoice_line_ids": [
+                    Command.create(
+                        self._line_vals(
+                            name="Line A",
+                            product=self.product_a,
+                            price_unit=750.0,
+                            tax=self.tax_sale_12,
+                        ),
+                    ),
                 ],
             },
         )
+
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+
+        line = invoice.invoice_line_ids
+        self.assertAlmostEqual(line.price_unit, 669.64, places=2)
+        self.assertEqual(line.discount, 20.0)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 133.93, places=2)
+        self.assertAlmostEqual(line.price_subtotal, 535.71, places=2)
+        self.assertAlmostEqual(line.price_total, 535.71, places=2)
+        self.assertAlmostEqual(invoice.amount_untaxed, 535.71, places=2)
+        self.assertAlmostEqual(invoice.amount_total, 535.71, places=2)
+        self._assert_discount_allocation(invoice, line, 133.93)
+
+    def test_fp_privilege_on_standard_vat_with_document_tax_excluded(self):
+        """FP-based privilege with document_tax_mode='tax_excluded' does NOT
+        apply a divisor — the discount is computed directly on price_unit.
+
+        For a 1000₱ VAT-exclusive line with 20% SC/PWD privilege (FP maps
+        12% → 0% SC/PWD exempt):
+          price_unit  = 1000.0  (unchanged, divisor = 1.0)
+          discount    = 20%
+          discount amount = 1000 * 0.20 = 200.0
+          subtotal    = 800.0
+          total       = 800.0  (0% SC/PWD exempt tax)
+        """
+        invoice = self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": self.partner_a.id,
+                "document_tax_mode": "tax_excluded",
+                "invoice_line_ids": [
+                    Command.create(
+                        self._line_vals(
+                            name="Line A",
+                            product=self.product_a,
+                            price_unit=1000.0,
+                            tax=self.tax_sale_12,
+                        ),
+                    ),
+                ],
+            },
+        )
+
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+
+        line = invoice.invoice_line_ids
+        self.assertAlmostEqual(line.price_unit, 1000.0, places=2)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 200.0, places=2)
+        self.assertAlmostEqual(line.price_subtotal, 800.0, places=2)
+        # FP maps to 0% SC/PWD exempt → total = subtotal = 800.0
+        self.assertAlmostEqual(invoice.amount_total, 800.0, places=2)
+        self._assert_discount_allocation(invoice, line, 200.0)
+
+    def test_apply_vat_excl_privilege_on_vat_excl_line(self):
+        """Applying an SC/PWD privilege without FP on a VAT-exclusive line keeps
+        the original 12% VAT; the discount is applied on the price_unit.
+        The discount allocation handles the expense entry."""
         privilege = (
             self.env["l10n_ph.discount.privilege"]
             .sudo()
             .create(
                 {
-                    "name": "SC VAT-EXCL Privilege",
+                    "name": "SC 20% No FP",
                     "discount_amount": 20.0,
-                    "tax_id": privilege_group_tax.id,
                     "account_id": self.special_discount_account.id,
                 },
             )
@@ -545,20 +738,47 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
             privilege_id=privilege.id,
             apply_on="all",
         )
-        self.assertAlmostEqual(wizard.line_ids.discounted_amount, 200.0, places=2)
+        # 1000 * 1.12 * 0.20 = 224.0 (preview on VAT-inclusive total)
+        self.assertAlmostEqual(wizard.line_ids.discount_amount, 224.0, places=2)
 
         wizard.action_confirm()
 
         line = invoice.invoice_line_ids
-        self.assertEqual(line.tax_ids, privilege_group_tax)
+        # No FP: original 12% VAT is preserved
+        self.assertEqual(line.tax_ids, self.tax_sale_12)
         self.assertAlmostEqual(line.price_unit, 1000.0, places=2)
-        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 200.0, places=2)
+        # 1000 * 1.12 * 0.20 = 224.0 (discount on VAT-inclusive total)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 224.0, places=2)
         self.assertAlmostEqual(invoice.amount_untaxed, 800.0, places=2)
-        self.assertAlmostEqual(invoice.amount_total, 800.0, places=2)
-        self._assert_discount_allocation(invoice, line, 200.0)
+        self.assertAlmostEqual(invoice.amount_total, 896.0, places=2)
+        self._assert_discount_allocation(invoice, line, 224.0)
+
+    def test_remove_vat_excl_privilege_restores_state(self):
+        """Removing a non-FP SC/PWD privilege restores the original amounts."""
+        privilege = (
+            self.env["l10n_ph.discount.privilege"]
+            .sudo()
+            .create(
+                {
+                    "name": "SC 20% No FP (remove test)",
+                    "discount_amount": 20.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
+        )
+        invoice = self._create_invoice(
+            self._line_vals(name="Line A", product=self.product_a, price_unit=1000.0),
+        )
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
 
         wizard.action_remove_all()
-        self.assertEqual(line.tax_ids, self.base_tax)
+        line = invoice.invoice_line_ids
+        self.assertEqual(line.tax_ids, self.tax_sale_12)
         self.assertAlmostEqual(line.price_unit, 1000.0, places=2)
         self.assertAlmostEqual(invoice.amount_untaxed, 1000.0, places=2)
         self.assertAlmostEqual(invoice.amount_total, 1120.0, places=2)
@@ -600,7 +820,8 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         line = credit_note.invoice_line_ids
         self.assertEqual(line.l10n_ph_discount_privilege_id, self.privilege)
         self.assertEqual(line.discount, 20.0)
-        self.assertEqual(line.tax_ids, self.privilege.tax_id)
+        # FP maps 12%→SC/PWD 0% exempt even for credit notes
+        self.assertEqual(line.tax_ids, self.tax_sale_0_exempt_sc_pwd)
         self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 20.0)
 
     def test_apply_product_scope(self):
@@ -623,6 +844,23 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertFalse(line_b.l10n_ph_discount_privilege_id)
         self.assertEqual(line_a.discount, 20.0)
         self.assertEqual(line_b.discount, 0.0)
+
+    def test_apply_all_scope_applies_to_all_lines(self):
+        """Privilege with 'all' scope applies to every invoice line."""
+        invoice = self._create_invoice(
+            self._line_vals(name="Line A", product=self.product_a, price_unit=100.0),
+            self._line_vals(name="Line B", product=self.product_b, price_unit=200.0),
+        )
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+
+        for line in invoice.invoice_line_ids:
+            self.assertEqual(line.l10n_ph_discount_privilege_id, self.privilege)
+            self.assertEqual(line.discount, 20.0)
 
     def test_apply_with_quantity_greater_than_one(self):
         """Special discount amount scales correctly with quantity."""
@@ -664,23 +902,27 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
 
         copied = invoice.copy()
         line = copied.invoice_line_ids
-        self.assertEqual(line.l10n_ph_discount_privilege_id, orig_line.l10n_ph_discount_privilege_id)
         self.assertEqual(
-            line.l10n_ph_discount_privilege_previous_tax_ids.ids,
-            orig_line.l10n_ph_discount_privilege_previous_tax_ids.ids,
+            line.l10n_ph_discount_privilege_id,
+            orig_line.l10n_ph_discount_privilege_id,
         )
         self.assertEqual(
             line.l10n_ph_discount_privilege_previous_discount,
             orig_line.l10n_ph_discount_privilege_previous_discount,
         )
 
-        # Verify removal on the copy properly restores original state
-        remove_wizard = self.env["l10n_ph.discount_privilege.wizard"].create({
-            "move_id": copied.id,
-        })
+        # Verify removal on the copy properly restores original discount
+        remove_wizard = self.env["l10n_ph.discount.privilege.wizard"].create(
+            {
+                "move_id": copied.id,
+            },
+        )
         remove_wizard.action_remove_all()
         self.assertFalse(line.l10n_ph_discount_privilege_id)
-        self.assertEqual(line.tax_ids, self.base_tax)
+        self.assertEqual(
+            line.discount,
+            orig_line.l10n_ph_discount_privilege_previous_discount,
+        )
 
     def test_cannot_apply_on_posted_invoice(self):
         """Applying privilege on a posted (non-draft) invoice raises UserError."""
@@ -748,10 +990,38 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         # Original state should still reference the pre-first-privilege state
         self.assertEqual(line.l10n_ph_discount_privilege_previous_discount, 10.0)
 
-        # Removing should restore to original 10%
         wizard2.action_remove_all()
-        self.assertEqual(line.discount, 10.0)
         self.assertFalse(line.l10n_ph_discount_privilege_id)
+        self.assertEqual(line.discount, 10.0)
+
+    def test_reapply_same_privilege_is_idempotent(self):
+        """Re-applying the same SC/PWD privilege doesn't change the line state."""
+        invoice = self._create_invoice(
+            self._line_vals(
+                name="Line A",
+                product=self.product_a,
+                price_unit=100.0,
+                discount=10.0,
+            ),
+        )
+        wizard = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard.action_confirm()
+
+        wizard2 = self._create_wizard(
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="all",
+        )
+        wizard2.action_confirm()
+
+        line = invoice.invoice_line_ids
+        self.assertEqual(line.l10n_ph_discount_privilege_id, self.privilege)
+        self.assertEqual(line.discount, 20.0)
+        self.assertEqual(line.l10n_ph_discount_privilege_previous_discount, 10.0)
 
     def test_privilege_model_constraint_positive_amount(self):
         """Discount privilege requires a discount amount between 0 and 100."""
@@ -831,12 +1101,13 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         full = (
             self.env["l10n_ph.discount.privilege"]
             .sudo()
-            .create({
-                "name": "Full Discount",
-                "discount_amount": 100.0,
-                "tax_id": self.privilege_tax.id,
-                "account_id": self.special_discount_account.id,
-            })
+            .create(
+                {
+                    "name": "Full Discount",
+                    "discount_amount": 100.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
         )
         wizard = self._create_wizard(
             invoice,
@@ -847,8 +1118,9 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         line = invoice.invoice_line_ids
         self.assertEqual(line.discount, 100.0)
         self.assertAlmostEqual(line.price_subtotal, 0.0)
-        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 100.0)
-        self._assert_discount_allocation(invoice, line, 100.0)
+        # 100 * 1.12 * 1.0 = 112.0 (discount on VAT-inclusive total)
+        self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 112.0)
+        self._assert_discount_allocation(invoice, line, 112.0)
 
     def test_vat_able_privilege_on_vat_inclusive_line(self):
         """A VAT-able privilege (non-group, positive rate, price_include) computes
@@ -859,35 +1131,37 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
           - Total incl. 12% VAT = 500
           - SC discount = 500 x 0.05 = 25.00
         """
-        vat_able_tax = self._create_tax(
-            "5% SC Adjustment (test)", 5,
-            price_include_override="tax_included",
-        )
         privilege = (
             self.env["l10n_ph.discount.privilege"]
             .sudo()
-            .create({
-                "name": "SC 5% VAT-able",
-                "discount_amount": 5.0,
-                "tax_id": vat_able_tax.id,
-                "account_id": self.special_discount_account.id,
-            })
+            .create(
+                {
+                    "name": "SC 5% VAT-able",
+                    "discount_amount": 5.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
         )
         invoice = self._create_invoice(
             self._line_vals(
-                name="Line A", product=self.product_a, price_unit=500.0,
+                name="Line A",
+                product=self.product_a,
+                price_unit=500.0,
                 tax=self.tax_incl,
             ),
         )
         wizard = self._create_wizard(
-            invoice, privilege_id=privilege.id, apply_on="all",
+            invoice,
+            privilege_id=privilege.id,
+            apply_on="all",
         )
         wizard.action_confirm()
 
         line = invoice.invoice_line_ids
         self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 25.0, places=2)
         self.assertEqual(line.discount, 5.0)
-        self.assertEqual(line.tax_ids, vat_able_tax)
+        # tax_ids remain unchanged (no FP for 5% SC — keeps original VAT)
+        self.assertEqual(line.tax_ids, self.tax_incl)
         self._assert_discount_allocation(invoice, line, 25.0)
 
     def test_vat_able_privilege_on_vat_exclusive_line(self):
@@ -898,36 +1172,38 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
           - Total incl. VAT = 500 x 1.12 = 560
           - SC discount = 560 x 0.05 = 28.00
         """
-        vat_able_tax = self._create_tax(
-            "5% SC Adjustment (test)", 5,
-            price_include_override="tax_included",
-        )
         privilege = (
             self.env["l10n_ph.discount.privilege"]
             .sudo()
-            .create({
-                "name": "SC 5% VAT-able",
-                "discount_amount": 5.0,
-                "tax_id": vat_able_tax.id,
-                "account_id": self.special_discount_account.id,
-            })
+            .create(
+                {
+                    "name": "SC 5% VAT-able",
+                    "discount_amount": 5.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
         )
         invoice = self._create_invoice(
             self._line_vals(
-                name="Line A", product=self.product_a, price_unit=500.0,
+                name="Line A",
+                product=self.product_a,
+                price_unit=500.0,
                 tax=self.base_tax,
             ),
         )
         wizard = self._create_wizard(
-            invoice, privilege_id=privilege.id, apply_on="all",
+            invoice,
+            privilege_id=privilege.id,
+            apply_on="all",
         )
         wizard.action_confirm()
 
         line = invoice.invoice_line_ids
-        # 500 * 1.12 * 0.05 = 28
+        # 500 * 1.12 * 0.05 = 28.0 (discount on VAT-inclusive total)
         self.assertAlmostEqual(line.l10n_ph_special_discount_amount, 28.0, places=2)
         self.assertEqual(line.discount, 5.0)
-        self.assertEqual(line.tax_ids, vat_able_tax)
+        # tax_ids remain unchanged (no FP for 5% SC — keeps original VAT)
+        self.assertEqual(line.tax_ids, self.base_tax)
         self._assert_discount_allocation(invoice, line, 28.0)
 
     def test_mixed_basket_multiple_privileges(self):
@@ -935,47 +1211,53 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         (20% SC VAT-exempt, 20% PWD VAT-exempt, 5% SC VAT-able, none) verifies
         that all computation paths work together correctly."""
         # Create additional privileges
-        pwd_exempt = self._create_tax(
-            "0% PWD Exempt (test)", 0, type_tax_use="none",
-        )
-        pwd_group = self.env["account.tax"].create({
-            "name": "PWD Group (test)",
-            "amount_type": "group",
-            "type_tax_use": "sale",
-            "children_tax_ids": [Command.set(pwd_exempt.ids)],
-        })
         pwd_privilege = (
             self.env["l10n_ph.discount.privilege"]
             .sudo()
-            .create({
-                "name": "PWD 20%",
-                "discount_amount": 20.0,
-                "tax_id": pwd_group.id,
-                "account_id": self.special_discount_account.id,
-            })
-        )
-        sc5_tax = self._create_tax(
-            "5% SC Adjustment (test)", 5,
-            price_include_override="tax_included",
+            .create(
+                {
+                    "name": "PWD 20%",
+                    "discount_amount": 20.0,
+                    "fiscal_position_id": self.fpos_sc_pwd.id,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
         )
         sc5_privilege = (
             self.env["l10n_ph.discount.privilege"]
             .sudo()
-            .create({
-                "name": "SC 5% VAT-able",
-                "discount_amount": 5.0,
-                "tax_id": sc5_tax.id,
-                "account_id": self.special_discount_account.id,
-            })
+            .create(
+                {
+                    "name": "SC 5% VAT-able",
+                    "discount_amount": 5.0,
+                    "account_id": self.special_discount_account.id,
+                },
+            )
         )
 
-        product_c = self.env["product.product"].create({"name": "Product C", "list_price": 300.0})
-        product_d = self.env["product.product"].create({"name": "Product D", "list_price": 150.0})
+        product_c = self.env["product.product"].create(
+            {"name": "Product C", "list_price": 300.0},
+        )
+        product_d = self.env["product.product"].create(
+            {"name": "Product D", "list_price": 150.0},
+        )
 
         invoice = self._create_invoice(
-            self._line_vals(name="Line A (SC 20%)", product=self.product_a, price_unit=1000.0),
-            self._line_vals(name="Line B (PWD 20%)", product=self.product_b, price_unit=2000.0),
-            self._line_vals(name="Line C (SC 5%)", product=product_c, price_unit=3000.0),
+            self._line_vals(
+                name="Line A (SC 20%)",
+                product=self.product_a,
+                price_unit=1000.0,
+            ),
+            self._line_vals(
+                name="Line B (PWD 20%)",
+                product=self.product_b,
+                price_unit=2000.0,
+            ),
+            self._line_vals(
+                name="Line C (SC 5%)",
+                product=product_c,
+                price_unit=3000.0,
+            ),
             self._line_vals(name="Line D (none)", product=product_d, price_unit=4000.0),
         )
 
@@ -984,20 +1266,26 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
 
         # Apply 20% SC (VAT-exempt) to product_a
         self._create_wizard(
-            invoice, privilege_id=self.privilege.id,
-            apply_on="product", product_ids=[Command.set([self.product_a.id])],
+            invoice,
+            privilege_id=self.privilege.id,
+            apply_on="product",
+            product_ids=[Command.set([self.product_a.id])],
         ).action_confirm()
 
         # Apply 20% PWD (VAT-exempt) to product_b
         self._create_wizard(
-            invoice, privilege_id=pwd_privilege.id,
-            apply_on="product", product_ids=[Command.set([self.product_b.id])],
+            invoice,
+            privilege_id=pwd_privilege.id,
+            apply_on="product",
+            product_ids=[Command.set([self.product_b.id])],
         ).action_confirm()
 
         # Apply 5% SC (VAT-able) to product_c
         self._create_wizard(
-            invoice, privilege_id=sc5_privilege.id,
-            apply_on="product", product_ids=[Command.set([product_c.id])],
+            invoice,
+            privilege_id=sc5_privilege.id,
+            apply_on="product",
+            product_ids=[Command.set([product_c.id])],
         ).action_confirm()
 
         # Line A: 20% SC, VAT-exempt → 1000 * 0.20 = 200
@@ -1010,7 +1298,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertEqual(line_b.discount, 20.0)
         self.assertAlmostEqual(line_b.l10n_ph_special_discount_amount, 400.0, places=2)
 
-        # Line C: 5% SC, VAT-able on VAT-excl line → (3000 * 1.12) * 0.05 = 168
+        # Line C: 5% SC, VAT-able on VAT-excl line → 3000 * 1.12 * 0.05 = 168
         self.assertEqual(line_c.l10n_ph_discount_privilege_id, sc5_privilege)
         self.assertEqual(line_c.discount, 5.0)
         self.assertAlmostEqual(line_c.l10n_ph_special_discount_amount, 168.0, places=2)

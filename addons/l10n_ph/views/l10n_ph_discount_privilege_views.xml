@@ -7,7 +7,7 @@
             <list>
                 <field name="name"/>
                 <field name="discount_amount"/>
-                <field name="tax_id"/>
+                <field name="fiscal_position_id"/>
                 <field name="account_id"/>
                 <field name="applied_to_category_ids" widget="many2many_tags" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -25,7 +25,7 @@
                         <group>
                             <field name="name"/>
                             <field name="discount_amount"/>
-                            <field name="tax_id"/>
+                            <field name="fiscal_position_id"/>
                             <field name="account_id"/>
                         </group>
                         <group>
@@ -45,4 +45,3 @@
         <field name="group_ids" eval="[Command.link(ref('l10n_ph.group_l10n_ph_discount_privilege'))]"/>
     </record>
 </odoo>
-
