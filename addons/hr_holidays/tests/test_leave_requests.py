@@ -1889,6 +1889,28 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_hour_to': 6,
             })
 
+        hourly_work_entry_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id).create({
+            'name': 'Hourly Time Off',
+            'code': 'MIDNIGHT_HOURS',
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+            'count_as': 'absence',
+        })
+        leave_hours_empty_midnight_interval = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Empty midnight interval',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': hourly_work_entry_type.id,
+            'request_date_from': time.strftime('2024-04-01'),
+            'request_date_to': time.strftime('2024-04-01'),
+            'request_hour_from': 0,
+            'request_hour_to': 0,
+        })
+        self.assertEqual(leave_hours_empty_midnight_interval.number_of_hours, 0)
+        self.assertEqual(leave_hours_empty_midnight_interval.duration_display, '0:00 hours')
+        self.assertEqual(leave_hours_empty_midnight_interval.date_from, leave_hours_empty_midnight_interval.date_to)
+
         leave_hours_day_mid_break = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'A leave that surrounds the lunch break',
             'employee_id': self.employee_emp_id,

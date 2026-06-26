@@ -472,10 +472,6 @@ class HrLeave(models.Model):
             if holiday.work_entry_type_request_unit == 'hour':
                 hour_from = holiday.request_hour_from
                 hour_to = holiday.request_hour_to
-                if not hour_from or not hour_to:
-                    computed_from, computed_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to)
-                    hour_from = hour_from or computed_from
-                    hour_to = hour_to or computed_to
 
             elif holiday.work_entry_type_request_unit == 'half_day':
                 period_map = {'am': 'morning', 'pm': 'afternoon'}
