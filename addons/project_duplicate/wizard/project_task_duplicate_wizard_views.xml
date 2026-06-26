@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_task_duplicate_wizard_form" model="ir.ui.view">
+        <field name="name">project.task.duplicate.wizard.form</field>
+        <field name="model">project.task.duplicate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Duplicate Task Detection">
+                <sheet>
+                    <div class="alert alert-info" role="alert" style="margin-bottom: 20px;">
+                        This tool identifies similar tasks in the database using vector embeddings (pgvector) computed from task names and descriptions.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="task_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="top_k" class="oe_inline"/>
+                            <field name="threshold" class="oe_inline"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Similar Tasks">
+                            <field name="line_ids" mode="list" readonly="1">
+                                <list string="Duplicate Candidates" create="0" delete="0" edit="0" no_open="1" decoration-danger="similarity &gt;= 0.75" decoration-warning="similarity &gt;= 0.50 and similarity &lt; 0.75">
+                                    <button name="action_open_task" type="object" icon="fa-external-link" title="Open Task"/>
+                                    <field name="task_id" options="{'no_open': True}"/>
+                                    <field name="project_id"/>
+                                    <field name="stage_id"/>
+                                    <field name="user_ids" widget="many2many_tags"/>
+                                    <field name="similarity" widget="percentage"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

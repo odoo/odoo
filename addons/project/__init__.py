@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import psycopg2
+from odoo.tools import mute_logger
 from . import controllers
 from . import models
 from . import report
@@ -22,6 +24,20 @@ def _project_post_init(env):
 
     # Create analytic plan fields on project model for existing plans
     env['account.analytic.plan'].search([])._sync_plan_column('project.project')
+
+    # Auto-install project_duplicate if pgvector is available
+    try:
+        with mute_logger('odoo.sql_db'), env.cr.savepoint():
+            env.cr.execute("SELECT 1 FROM pg_extension WHERE extname = 'vector'")
+            if not env.cr.fetchone():
+                env.cr.execute("CREATE EXTENSION IF NOT EXISTS vector")
+        # If vector extension is verified/created, auto-install project_duplicate
+        env['ir.module.module'].sudo().search([
+            ('name', '=', 'project_duplicate'), ('state', '=', 'uninstalled')
+        ]).button_install()
+    except psycopg2.Error:
+        pass
+
 
 def _project_uninstall_hook(env):
     """Since the m2m table for the project share wizard's `partner_ids` field is not dropped at uninstall, it is
