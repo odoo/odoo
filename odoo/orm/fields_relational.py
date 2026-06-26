@@ -49,11 +49,14 @@ class _Relational(Field[BaseModel]):
         env.su or self in env._field_access_memo or records.check_field_access(self, 'read')
 
         # multi-record case
-        if self.compute and self.store:
+        if self.compute and self.store and env.transaction.tocompute.get(self):
             self.recompute(records)
 
         # get the cache
-        field_cache = self._get_cache(env)
+        try:
+            field_cache = env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache(env)
 
         # retrieve values in cache, and fetch missing ones
         vals = []
