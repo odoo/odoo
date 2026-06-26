@@ -339,6 +339,75 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(order.state, "draft", "The order should still be in draft state.")
         self.assertEqual(len(order.payment_ids), 0, "There should be no payment line in the order.")
 
+    def test_switch_from_cash_to_online_payment(self):
+        """
+        Test that the server can switch to online payment if non-online payments lines
+        were added by mistake and the cashier wants to pay fully via online payment.
+        """
+        self.pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.set_opening_control(0, None)
+
+        product = self.letter_tray
+        order_uid = '00055-001-0002'
+        order_pos_reference = 'Order ' + order_uid
+        untax, atax = self.compute_tax(product, product.list_price)
+        order_total = untax + atax
+
+        # Simulate sync with CASH first
+        order_data = {
+            'uuid': order_uid,
+            'name': order_pos_reference,
+            'session_id': current_session.id,
+            'sequence_number': 2,
+            'state': 'draft',
+            'amount_paid': order_total,
+            'amount_return': 0,
+            'amount_tax': atax,
+            'amount_total': order_total,
+            'lines': [Command.create({
+                'product_id': product.id,
+                'qty': 1,
+                'price_unit': product.list_price,
+                'tax_ids': [(6, 0, product.taxes_id.ids)],
+                'price_subtotal': untax,
+                'price_subtotal_incl': order_total,
+            })],
+            'payment_ids': [Command.create({
+                'amount': order_total,
+                'payment_method_id': self.cash_payment_method.id,
+            })],
+        }
+
+        create_result = self.env['pos.order'].with_user(self.pos_user).sync_from_ui([order_data])
+        order_id = next(
+            r['id'] for r in create_result['pos.order']
+            if r['pos_reference'] == order_pos_reference
+        )
+        order = self.env['pos.order'].browse(order_id)
+
+        self.assertEqual(order.state, 'draft')
+        self.assertEqual(order.amount_paid, order_total)
+        self.assertEqual(order.get_amount_unpaid(), 0, "Cash should cover full order")
+
+        # Simulate the cashier removing the cash payment line and adding an online payment line
+        op_data = order.with_user(self.pos_user).get_and_set_online_payments_data(order_total)
+
+        self.assertEqual(op_data['id'], order.id)
+        self.assertNotIn('deleted', op_data)
+        self.assertEqual(
+            op_data['amount_unpaid'],
+            order_total,
+            "Server must clean non-online payments and return correct amount_unpaid",
+        )
+        self.assertEqual(order.next_online_payment_amount, order_total)
+        self.assertEqual(len(order.payment_ids), 0, "Stale cash payment must be removed")
+
+    def test_switch_from_cash_to_online_payment_tour(self):
+        """Tour: autofill cash, add online for full amount, validate, receipt."""
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_switch_from_cash_to_online_payment_tour", login="pos_user")
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests
