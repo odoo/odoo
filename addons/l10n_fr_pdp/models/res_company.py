@@ -196,6 +196,10 @@ class ResCompany(models.Model):
             'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:extended:1.0::D22B': "UN/CEFACT EN16931 French CTC Extended",
         }
 
+    def _peppol_allows_document_reception(self):
+        self.ensure_one()
+        return super()._peppol_allows_document_reception() and self.country_code != 'FR'
+
     @handle_demo
     def _l10n_fr_pdp_update_pilot_phase(self, value):
         self.ensure_one()
