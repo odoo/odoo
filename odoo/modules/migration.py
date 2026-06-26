@@ -9,6 +9,7 @@ import itertools
 import logging
 import os
 import re
+import time
 import typing
 from collections import defaultdict
 from os.path import join as opj
@@ -208,11 +209,25 @@ class MigrationManager:
 
             return parsed_installed_version < parse_version(full_version) <= current_version
 
+        t0 = time.time()
+        maxversion = None
         versions = _get_migration_versions(pkg, stage)
         for version in versions:
             if compare(version):
                 for pyfile in _get_migration_files(pkg, version, stage):
                     exec_script(self.cr, installed_version, pyfile, pkg.name, stage, version)
+                    maxversion = version
+        if maxversion is not None:
+            elapsed = time.time() - t0
+            mark = f"{pkg.name}.{stage}"
+            _logger.getChild(mark).log(
+                logging.RUNBOT if elapsed > 20 else logging.INFO,
+                "%s from %s to %s in %.3f seconds",
+                mark,
+                installed_version,
+                maxversion,
+                elapsed,
+            )
 
 
 VALID_MIGRATE_PARAMS = list(itertools.product(
