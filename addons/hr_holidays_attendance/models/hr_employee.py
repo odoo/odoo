@@ -9,8 +9,6 @@ from odoo.fields import Domain
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    attendance_based = fields.Boolean(readonly=False, related="version_id.attendance_based", inherited=True, groups="hr.group_hr_user")
-
     def _get_calendar_attendance_domain(self):
         return Domain.AND([
             super()._get_calendar_attendance_domain(),

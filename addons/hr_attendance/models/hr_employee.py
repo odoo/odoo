@@ -13,6 +13,8 @@ from odoo.tools import BinaryBytes
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
+    attendance_based = fields.Boolean(readonly=False, related="version_id.attendance_based", inherited=True, groups="hr.group_hr_user")
+
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
         string="Attendance Approver",

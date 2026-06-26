@@ -12,14 +12,6 @@ from odoo.tools.intervals import Intervals
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
-    attendance_based = fields.Boolean(
-        string="Attendance Based",
-        help="When enabled, payslips are computed from badge records rather than "
-             "the employee's work schedule. Time off is always accounted for.",
-        groups="hr.group_hr_user",
-        default=lambda self: self.env.company.sudo().attendance_based,
-    )
-
     def has_static_work_entries(self):
         return not self.attendance_based
 
@@ -87,7 +79,7 @@ class HrVersion(models.Model):
             for att in emp_atts:
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
-                # deficit outputs start at/after source check_out (unworked time); exclude from time_on
+                # deficit outputs start after source check_out (unworked time); exclude from time_on
                 if not att.source_attendance_id or att.check_in < att.source_attendance_id.check_out:
                     time_on_raw[rid].append((check_in, check_out, dummy))
                 if not version.attendance_based:

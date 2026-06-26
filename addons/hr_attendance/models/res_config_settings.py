@@ -25,6 +25,7 @@ class ResConfigSettings(models.TransientModel):
     )
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
     attendance_capture_check_in = fields.Boolean(related="company_id.attendance_capture_check_in", readonly=False)
+    attendance_based = fields.Boolean(string="Default Tracking", related='company_id.attendance_based', groups="hr.group_hr_user", readonly=False)
 
     def set_values(self):
         super().set_values()

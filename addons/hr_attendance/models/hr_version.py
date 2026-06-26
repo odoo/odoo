@@ -1,11 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class HrVersion(models.Model):
     _name = 'hr.version'
     _inherit = 'hr.version'
+
+    attendance_based = fields.Boolean(
+        string="Attendance Based",
+        help="When enabled, payslips are computed from badge records rather than "
+             "the employee's work schedule. Time off is always accounted for.",
+        groups="hr.group_hr_user",
+        default=lambda self: self.env.company.sudo().attendance_based,
+    )
 
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):

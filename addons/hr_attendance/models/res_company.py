@@ -47,6 +47,7 @@ class ResCompany(models.Model):
 
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
     attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
+    attendance_based = fields.Boolean(default=False, required=True, groups="hr.group_hr_user")
 
     _check_auto_check_out_specific_time_range = models.Constraint(
         "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",
