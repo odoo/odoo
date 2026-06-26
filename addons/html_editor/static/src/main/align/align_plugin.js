@@ -7,6 +7,7 @@ import { AlignSelector } from "./align_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { READ, withSequence } from "@html_editor/utils/resource";
+import { removeStyle } from "@html_editor/utils/dom";
 
 const alignmentItems = [
     // In RTL, left and right icons are reverted to represent start and end.
@@ -155,11 +156,15 @@ export class AlignPlugin extends Plugin {
                     }
                 }
                 if (textAlign !== modeForBlock) {
-                    block.style.setProperty("text-align", modeForBlock);
-                    // If a class overrides the inline style (e.g. with !important),
-                    // apply !important so the selected alignment takes effect.
-                    if (modeForBlock && getComputedStyle(block).textAlign !== modeForBlock) {
-                        block.style.setProperty("text-align", modeForBlock, "important");
+                    if (modeForBlock) {
+                        block.style.setProperty("text-align", modeForBlock);
+                        // If a class overrides the inline style (e.g. with !important),
+                        // apply !important so the selected alignment takes effect.
+                        if (getComputedStyle(block).textAlign !== modeForBlock) {
+                            block.style.setProperty("text-align", modeForBlock, "important");
+                        }
+                    } else {
+                        removeStyle(block, "text-align");
                     }
                     isAlignmentUpdated = true;
                 }

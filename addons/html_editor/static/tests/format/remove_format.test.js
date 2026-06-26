@@ -1078,7 +1078,7 @@ describe("Toolbar", () => {
     test("Should remove alignment from a fully selected aligned block", async () => {
         const { el } = await setupEditor('<p style="text-align: center;">[abc]</p>');
         await removeFormatClick();
-        expect(getContent(el)).toBe('<p style="">[abc]</p>');
+        expect(getContent(el)).toBe("<p>[abc]</p>");
     });
 
     test("Should remove other formats but keep alignment on a partially selected aligned block", async () => {
@@ -1092,7 +1092,7 @@ describe("Toolbar", () => {
             `<p style="text-align: right;">[test</p><p style="text-align: right;"><br>]</p>`
         );
         await removeFormatClick();
-        expect(getContent(el)).toBe(`<p style="">[test</p><p style=""><br>]</p>`);
+        expect(getContent(el)).toBe(`<p>[test</p><p><br>]</p>`);
     });
 });
 
