@@ -753,15 +753,14 @@ class MrpProduction(models.Model):
                 if mo.state == 'done':
                     allowed_states += ['assigned']
                 wh_location_ids = self.env['stock.location']._search([('id', 'child_of', mo.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
-                if self.env['stock.move'].search_count([
+                mo.show_allocation = self.env["stock.move"].search_count([
                     ('state', 'in', allowed_states),
                     ('product_qty', '>', 0),
                     ('location_id', 'in', wh_location_ids),
-                    ('raw_material_production_id', 'not in', mo.ids),
                     ('product_id', 'in', lines.product_id.ids),
                     '|', ('move_orig_ids', '=', False),
-                        ('move_orig_ids', 'in', lines.ids)], limit=1):
-                    mo.show_allocation = True
+                    ('move_orig_ids', 'in', lines.ids),
+                ], limit=1)
 
     @api.depends('product_uom_qty', 'date_start')
     def _compute_forecasted_issue(self):
@@ -3191,14 +3190,45 @@ class MrpProduction(models.Model):
             res = OrderedSet(topological_sort(self.fields_get(res, ('depends'))))
         return res
 
-    # TODO: rename the parameter from reference to references in master for improved readability
-    def _add_reference(self, reference):
+    def _add_reference(self, references):
         """ link the given references to the list of references. """
         self.ensure_one()
-        self.reference_ids = [Command.link(stock_reference.id) for stock_reference in reference]
+        self.reference_ids = [Command.link(stock_reference.id) for stock_reference in references]
 
-    # TODO: rename the parameter from reference to references in master for improved readability
-    def _remove_reference(self, reference):
+        product = self.product_id
+        needed_products = self.bom_id.bom_line_ids.product_id
+        link_parents = (references.production_ids
+             .filtered(lambda production: product in production.bom_id.bom_line_ids.product_id)
+             .mapped(lambda production: Command.link(production.production_group_id.id))
+        )
+        link_children = (references.production_ids
+             .filtered(lambda production: production.product_id in needed_products)
+             .mapped(lambda production: Command.link(production.production_group_id.id))
+        )
+
+        self.production_group_id.write({
+            "parent_ids": link_parents,
+            "child_ids": link_children,
+        })
+
+    def _remove_reference(self, references):
         """ remove the given references from the list of references. """
         self.ensure_one()
-        self.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]
+        self.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in references]
+
+        parents = self.production_group_id.parent_ids
+        children = self.production_group_id.child_ids
+
+        unlink_parents = (references.production_ids
+           .filtered(lambda production: production.production_group_id in parents)
+           .mapped(lambda production: Command.unlink(production.production_group_id.id))
+        )
+        unlink_children = (references.production_ids
+           .filtered(lambda production: production.production_group_id in children)
+           .mapped(lambda production: Command.unlink(production.production_group_id.id))
+        )
+
+        self.production_group_id.write({
+            "child_ids": unlink_children,
+            "parent_ids": unlink_parents,
+        })
