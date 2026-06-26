@@ -348,7 +348,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 errors.append(_("A tax with value '%(tax_type)s' as %(field)s is not supported.",
                                 field=tax_type_description['string'],
                                 tax_type=dict(tax_type_description['selection'])[tax_type]))
-            elif tax_type in ('no_sujeto', 'no_sujeto_loc'):
+            elif tax_type == 'no_sujeto':
                 tax_percentage = tax_detail['amount']
                 tax_amount = tax_detail['tax_amount']
                 if float_round(tax_percentage, precision_digits=2) or float_round(tax_amount, precision_digits=2):
@@ -655,6 +655,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         sign = vals['sign']
         sujeto_tax_types = self.env['account.tax']._l10n_es_get_sujeto_tax_types()
+        no_sujeto_types = ('no_sujeto', 'no_sujeto_loc')
 
         recargo_tax_details_key = {}  # dict (tax_key -> recargo_tax_key)
         for tax_details_per_record in vals['tax_details']['tax_details_per_record'].values():
@@ -701,7 +702,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
                         'tax_percentage': recargo_tax_percentage,
                         'tax_amount': recargo_tax_amount,
                     })
-            elif tax_type in ('no_sujeto', 'no_sujeto_loc'):
+            elif tax_type in no_sujeto_types:
                 calificacion_operacion = 'N2' if tax_type == 'no_sujeto_loc' else 'N1'
             else:
                 # tax_type == 'exento' (see `_check_record_values`)
@@ -749,6 +750,12 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         total_amount = sign * (vals['tax_details']['base_amount'] + vals['tax_details']['tax_amount'])
         tax_amount = sign * (vals['tax_details']['tax_amount'])
+        no_sujeto_tax_amount = sign * sum(
+            detail['tax_amount'] for detail in vals['tax_details']['tax_details'].values()
+            if detail['l10n_es_type'] in no_sujeto_types
+        )
+        total_amount -= no_sujeto_tax_amount
+        tax_amount -= no_sujeto_tax_amount
 
         render_vals = {
             'Macrodato': 'S' if abs(total_amount) >= 100000000 else None,
