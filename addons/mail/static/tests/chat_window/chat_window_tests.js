@@ -1146,7 +1146,7 @@ QUnit.test("folded chat window should hide member-list and settings buttons", as
     await contains("[title='Show Member List']");
     await contains("[title='Show Call Settings']");
 
-    await click(".o-mail-ChatWindow-header"); // click away to close the more menu
+    await click(".o-mail-Composer-input"); // click away to close the more menu
     await contains("[title='Show Member List']", { count: 0 });
 
     // Fold chat window
