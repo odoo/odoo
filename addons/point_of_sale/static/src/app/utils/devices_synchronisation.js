@@ -62,7 +62,7 @@ export default class DevicesSynchronisation {
      * @param {Object} data.static_records - Records data that need to be synchronized.
      */
     async collect(data) {
-        const { static_records, session_id, device_identifier } = data;
+        const { static_records, session_id, device_identifier, records } = data;
         const isSameDevice =
             odoo.pos_session_id != session_id || device_identifier == this.pos.device.identifier;
 
@@ -81,7 +81,7 @@ export default class DevicesSynchronisation {
             this.processStaticRecords(static_records);
         }
 
-        return await this.readDataFromServer();
+        return await this.readDataFromServer(records);
     }
 
     /**
@@ -89,9 +89,12 @@ export default class DevicesSynchronisation {
      * This method will read the data from the server to update the records in the frontend
      * and synchronize the records with other devices.
      */
-    async readDataFromServer() {
+    async readDataFromServer(recordsFromWebsocket = {}) {
         const serverOpenOrders = this.pos.getOpenOrders().filter((o) => o.isSynced);
-        const { domain, recordIds } = this.constructOrdersDomain(serverOpenOrders);
+        const { domain, recordIds } = this.constructOrdersDomain(
+            serverOpenOrders,
+            recordsFromWebsocket
+        );
         let response = {};
         try {
             response = await this.pos.data.call("pos.config", "read_config_open_orders", [
@@ -178,7 +181,7 @@ export default class DevicesSynchronisation {
      * This method will get local open orders with a server id.
      * @returns {Array} - Array of domain conditions.
      */
-    constructOrdersDomain() {
+    constructOrdersDomain(serverOpenOrders, recordsFromWebsocket = {}) {
         const dynamicModels = this.dynamicModels;
         const recordsToCheck = Array.from(dynamicModels).reduce((acc, model) => {
             acc[model] = this.models[model].filter(
@@ -191,14 +194,15 @@ export default class DevicesSynchronisation {
         const domainByModel = Object.entries(recordsToCheck).reduce((acc, [model, records]) => {
             const serverRecs = records.filter((r) => r.isSynced);
             const ids = serverRecs.map((r) => r.id);
+            const websocketIds = recordsFromWebsocket[model] || [];
             const config = this.pos.config;
             const domains = [];
 
-            if (ids.length === 0 && model !== "pos.order") {
+            if (ids.length === 0 && websocketIds.length === 0 && model !== "pos.order") {
                 return acc;
             }
 
-            recordIdsByModel[model] = ids;
+            recordIdsByModel[model] = Array.from(new Set([...ids, ...websocketIds]));
             for (const record of serverRecs) {
                 const recordDateTime = record.write_date.plus({ seconds: 1 }).toUTC();
                 const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
@@ -221,6 +225,10 @@ export default class DevicesSynchronisation {
                 }
 
                 domains.push(domain);
+            }
+
+            for (const id of websocketIds) {
+                domains.push(new Domain([["id", "=", id]]));
             }
 
             let domain = Domain.or(domains);

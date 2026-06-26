@@ -36,6 +36,11 @@ export class PosOrder extends PosOrderAccounting {
         this.setShippingDate(vals.shipping_date);
         this.state = vals.state || "draft";
 
+        // Reactively update displayed flag when state changes to cancel
+        if (this.uiState && this.state === "cancel") {
+            this.uiState.displayed = false;
+        }
+
         if (!vals.last_order_preparation_change) {
             this.last_order_preparation_change = {
                 lines: {},
