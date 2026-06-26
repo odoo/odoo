@@ -267,6 +267,25 @@ class HrLeave(models.Model):
         self.request_hour_from = min(max(self.request_hour_from, 0.0), 23.99)
         self.request_hour_to = min(max(self.request_hour_to, 0.0), 24)
 
+    def _has_custom_request_hours(self):
+        self.ensure_one()
+        calendar = self.resource_calendar_id or self.env.company.resource_calendar_id
+        if not (
+            self.work_entry_type_id.request_unit == 'hour'
+            and self.employee_id
+            and self.request_date_from
+            and self.request_date_to
+            and calendar
+        ):
+            return False
+
+        calendar_hour_from, calendar_hour_to = self._get_hour_from_to(
+            self.request_date_from, self.request_date_to)
+        return (
+            float_compare(self.request_hour_from, calendar_hour_from, precision_digits=2) != 0
+            or float_compare(self.request_hour_to, calendar_hour_to, precision_digits=2) != 0
+        )
+
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_request_hour_from_to(self):
         env_company_calendar = self.env.company.resource_calendar_id
@@ -277,14 +296,22 @@ class HrLeave(models.Model):
                 and leave.request_date_from
                 and leave.request_date_to
                 and calendar
-                and (
+            ):
+                origin = leave._origin
+                if (
+                    leave.work_entry_type_id.request_unit == 'hour'
+                    and leave != origin
+                    and origin._has_custom_request_hours()
+                ):
+                    leave.request_hour_from = origin.request_hour_from
+                    leave.request_hour_to = origin.request_hour_to
+                elif (
                     leave.work_entry_type_id.request_unit != 'hour'
                     or not leave.request_hour_from
-                )
-            ):
-                hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
-                leave.request_hour_from = hour_from
-                leave.request_hour_to = hour_to
+                ):
+                    hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
+                    leave.request_hour_from = hour_from
+                    leave.request_hour_to = hour_to
 
     @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
@@ -473,10 +500,6 @@ class HrLeave(models.Model):
             if holiday.work_entry_type_request_unit == 'hour':
                 hour_from = holiday.request_hour_from
                 hour_to = holiday.request_hour_to
-                if not hour_from or not hour_to:
-                    computed_from, computed_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to)
-                    hour_from = hour_from or computed_from
-                    hour_to = hour_to or computed_to
 
             elif holiday.work_entry_type_request_unit == 'half_day':
                 period_map = {'am': 'morning', 'pm': 'afternoon'}
@@ -1013,7 +1036,29 @@ class HrLeave(models.Model):
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
-        result = super().write(values)
+        preserve_request_hours = (
+            any(field in values for field in ('employee_id', 'request_date_from', 'request_date_to'))
+            and not any(field in values for field in ('request_hour_from', 'request_hour_to'))
+        )
+        custom_hourly_leaves = self.filtered(
+            lambda leave: leave._has_custom_request_hours()
+        ) if preserve_request_hours else self.env['hr.leave']
+        if custom_hourly_leaves:
+            result = True
+            leaves_by_request_hours = defaultdict(lambda: self.env['hr.leave'])
+            for leave in custom_hourly_leaves:
+                leaves_by_request_hours[leave.request_hour_from, leave.request_hour_to] |= leave
+            for (request_hour_from, request_hour_to), leaves in leaves_by_request_hours.items():
+                result = super(HrLeave, leaves).write({
+                    **values,
+                    'request_hour_from': request_hour_from,
+                    'request_hour_to': request_hour_to,
+                }) and result
+            remaining_leaves = self - custom_hourly_leaves
+            if remaining_leaves:
+                result = super(HrLeave, remaining_leaves).write(values) and result
+        else:
+            result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 self._check_validity()

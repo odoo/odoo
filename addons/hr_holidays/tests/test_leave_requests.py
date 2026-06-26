@@ -1933,6 +1933,66 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.assertEqual(leave_hours_multi2.duration_display, '13:00 hours')
 
+    def test_midnight_hours(self):
+        self.employee_emp.resource_calendar_id.attendance_ids.filtered(
+            lambda attendance: attendance.hour_from == 8
+        ).write({'hour_from': 0, 'hour_to': 4})
+        hourly_work_entry_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager_id).create({
+            'name': 'Hourly Time Off',
+            'code': 'MIDNIGHT_HOURS',
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+            'count_as': 'absence',
+        })
+        leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
+            'name': 'Empty midnight interval',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': hourly_work_entry_type.id,
+            'request_date_from': '2024-04-01',
+            'request_date_to': '2024-04-01',
+            'request_hour_from': 0,
+            'request_hour_to': 0,
+        })
+
+        self.assertEqual(leave.number_of_hours, 0)
+        self.assertEqual(leave.duration_display, '0:00 hours')
+        self.assertEqual(leave.date_from, leave.date_to)
+
+        with Form(leave) as leave_form:
+            leave_form.request_date_from = date(2024, 4, 8)
+            leave_form.request_date_to = date(2024, 4, 8)
+            leave_form.save()
+            self.assertEqual((leave_form.request_hour_from, leave_form.request_hour_to), (0, 0))
+            self.assertEqual(leave_form.duration_display, '0:00 hours')
+
+            leave_form.employee_id = self.employee_emp
+            leave_form.save()
+            self.assertEqual((leave_form.request_hour_from, leave_form.request_hour_to), (0, 0))
+            self.assertEqual(leave_form.duration_display, '0:00 hours')
+
+            leave_form.request_date_from = date(2024, 4, 1)
+            leave_form.request_date_to = date(2024, 4, 2)
+            leave_form.save()
+            self.assertEqual((leave_form.request_hour_from, leave_form.request_hour_to), (0, 0))
+            self.assertEqual(
+                fields.Datetime.to_datetime(leave_form.date_to)
+                - fields.Datetime.to_datetime(leave_form.date_from),
+                timedelta(days=1))
+            self.assertEqual(leave_form.duration_display, '8:00 hours')
+
+        leave.write({
+            'request_date_from': date(2024, 4, 8),
+            'request_date_to': date(2024, 4, 8),
+        })
+        self.assertEqual((leave.request_hour_from, leave.request_hour_to), (0, 0))
+        self.assertEqual(leave.duration_display, '0:00 hours')
+
+        leave.action_refuse()
+        self.assertEqual((leave.request_hour_from, leave.request_hour_to), (0, 0))
+        self.assertEqual(leave.duration_display, '0:00 hours')
+
     def test_unified_time_off_hours_scenarios_irregular_calendar(self):
 
         employee = self.employee_emp
