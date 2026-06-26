@@ -152,16 +152,11 @@ registerWebsitePreviewTour(
     ]
 );
 
-const setSlideUrl = (urlText, matchText) => [
+const setSlideUrl = (urlText) => [
     {
         content: "Enter the URL to be linked with the slide",
         trigger: "div[data-action-id='setSlideAnchorUrl'] input[title='Your URL']",
-        run: `edit ${urlText}`,
-    },
-    {
-        content: "Select the URL from autocomplete dropdown",
-        trigger: `ul.ui-autocomplete li a:contains('${matchText}')`,
-        run: "click",
+        run: `edit ${urlText} && press Tab`,
     },
 ];
 
@@ -187,7 +182,7 @@ registerWebsitePreviewTour(
             content: "Check that the 'clickable-slide' class is added to the carousel item",
             trigger: ":iframe .carousel-item.active.clickable-slide",
         },
-        ...setSlideUrl("/contactus", "/contactus-thank-you"),
+        ...setSlideUrl("/contactus-thank-you"),
         {
             content: "Check that the anchor tag is added to the carousel item",
             trigger:
@@ -226,7 +221,7 @@ registerWebsitePreviewTour(
             content: "Check that the 'Open in New Tab' option is no longer visible",
             trigger: "[data-label='Open in New Tab']:not(:visible)",
         },
-        ...setSlideUrl("/contactus", "/contactus-thank-you"),
+        ...setSlideUrl("/contactus-thank-you"),
 
         // Turn off the 'Make Slide Clickable' option
         changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
