@@ -3,6 +3,8 @@ import { CashmaticService } from "@pos_cashmatic/cashmatic_service";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
+const CENTS_PER_UNIT = 100;
+
 export class PaymentCashmatic extends PaymentInterface {
     setup() {
         super.setup(...arguments);
@@ -37,9 +39,7 @@ export class PaymentCashmatic extends PaymentInterface {
         }
 
         this.cancelling = false;
-        const amountInCents = Math.round(
-            this.paymentLine.amount * Math.pow(10, this.pos.currency.decimal_places)
-        );
+        const amountInCents = Math.round(this.paymentLine.amount * CENTS_PER_UNIT);
         const reference = this.pos.getOrder().name;
         let notDispensed;
         try {
@@ -93,7 +93,7 @@ export class PaymentCashmatic extends PaymentInterface {
     }
 
     cashmaticAmountToPosAmount(amountInCents) {
-        const amount = amountInCents / Math.pow(10, this.pos.currency.decimal_places);
+        const amount = amountInCents / CENTS_PER_UNIT;
         return this.env.utils.roundCurrency(amount);
     }
 
