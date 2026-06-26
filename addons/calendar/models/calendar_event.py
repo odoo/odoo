@@ -307,6 +307,7 @@ class CalendarEvent(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+    user_can_delete = fields.Boolean(compute='_compute_user_can_delete')
 
     @api.onchange("allday")
     def _onchange_allday(self):
@@ -373,6 +374,11 @@ class CalendarEvent(models.Model):
             if self.env.user.has_group('base.group_system') and event.privacy != 'private':
                 editor_candidates.add(self.env.user)
             event.user_can_edit = self.env.user in editor_candidates
+
+    @api.depends('partner_ids')
+    def _compute_user_can_delete(self):
+        for event in self:
+            event.user_can_delete = self.env.user == event.user_id or self.env.user.has_group('base.group_system')
 
     @api.depends('partner_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -1062,6 +1068,8 @@ class CalendarEvent(models.Model):
     def unlink(self):
         if not self:
             return super().unlink()
+
+        self = self.filtered(lambda event: event.user_can_delete)
 
         # Get concerned attendees to notify them if there is an alarm on the unlinked events,
         # as it might have changed their next event notification

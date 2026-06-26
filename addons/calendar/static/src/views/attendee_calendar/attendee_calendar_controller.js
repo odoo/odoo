@@ -84,11 +84,10 @@ export class AttendeeCalendarController extends CalendarController {
     /**
      * @override
      *
-     * If the event is deleted by the organizer, the event is deleted, otherwise it is declined.
+     * Display the mail editor to notified the attendees than the event has been deleted.
      */
     deleteRecord(record) {
         if (
-            user.partnerId === record.attendeeId &&
             user.partnerId === record.rawRecord.partner_id[0]
         ) {
             if (record.rawRecord.recurrency) {
@@ -109,11 +108,6 @@ export class AttendeeCalendarController extends CalendarController {
                     }
                 });
             }
-        } else {
-            // Decline event
-            this.orm
-                .call("calendar.attendee", "do_decline", [record.calendarAttendeeId])
-                .then(this.model.load.bind(this.model));
         }
     }
 
