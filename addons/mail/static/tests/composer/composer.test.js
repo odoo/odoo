@@ -1321,6 +1321,7 @@ test("Canned response can be inserted from the bus", async () => {
         source: "hello",
         substitution: "Hello! How are you?",
     });
+    await waitNotifications(["mail.record/insert", (payload) => payload["mail.canned.response"]]);
     await contains(".o-mail-NavigableList-item", { count: 0 });
     await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item:text('hello Hello! How are you?')");
@@ -1349,6 +1350,7 @@ test("Canned response can be updated from the bus", async () => {
     pyEnv["mail.canned.response"].write([cannedResponseId], {
         substitution: "Howdy! How are you?",
     });
+    await waitNotifications(["mail.record/insert", (payload) => payload["mail.canned.response"]]);
     await contains(".o-mail-NavigableList-item", { count: 0 });
     await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item:text('hello Howdy! How are you?')");
@@ -1383,10 +1385,7 @@ test("Canned response can be deleted from the bus", async () => {
     await insertText(".o-mail-Composer-input", "", { replace: true });
     await contains(".o-mail-NavigableList-item", { count: 0 });
     pyEnv["mail.canned.response"].unlink([cannedResponseId]);
-    await waitNotifications([
-        "mail.record/insert",
-        (payload) => payload["mail.canned.response"]
-    ]);
+    await waitNotifications(["mail.record/insert", (payload) => payload["mail.canned.response"]]);
     await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { count: 1 });
     await contains(".o-mail-NavigableList-item:has(:text('test'))");
