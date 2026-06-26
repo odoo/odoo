@@ -1794,7 +1794,7 @@ class SaleOrderLine(models.Model):
                 self.env._(
                     "Once a sales order is confirmed, you can't remove one of its lines (we need to"
                     " track if something gets invoiced or delivered).\nSet the quantity to 0"
-                    "instead."
+                    " instead."
                 )
             )
 
