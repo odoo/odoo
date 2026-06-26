@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, onWillDestroy, props, proxy, t } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, t, useEffect } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
@@ -52,12 +52,11 @@ export class SelectMany2X extends Component {
             searchResults: [],
             limit: this.props.limit,
         });
-        onWillUpdateProps(async (newProps) => {
-            if (this.searchInvalidationKey(this.props) !== this.searchInvalidationKey(newProps)) {
-                this.prevSelectedIds = undefined;
-                this.prevSearchValue = undefined;
-                this.state.searchResults = [];
-            }
+        useEffect(() => {
+            this.searchInvalidationKey(this.props);
+            this.prevSelectedIds = undefined;
+            this.prevSearchValue = undefined;
+            this.state.searchResults = [];
         });
         this.menuRef = useChildRef();
         onWillDestroy(() => this.removeListeners?.());
