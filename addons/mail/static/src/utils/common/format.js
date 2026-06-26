@@ -274,7 +274,7 @@ function generateMentionsLinks(
 ) {
     const mentions = [];
     for (const partner of partners) {
-        const placeholder = `@-mention-partner-${partner.id}`;
+        const placeholder = `@-mention-partner-${partner.id}!`;
         const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
         mentions.push({
             link: generatePartnerMentionElement(partner, thread),
@@ -283,7 +283,7 @@ function generateMentionsLinks(
         body = htmlReplace(body, text, placeholder);
     }
     for (const channel of channels) {
-        const placeholder = `#-mention-channel-${channel.id}`;
+        const placeholder = `#-mention-channel-${channel.id}!`;
         const text = `#${channel.fullNameWithParent}`;
         mentions.push({
             link: generateChannelMentionElement(channel),
