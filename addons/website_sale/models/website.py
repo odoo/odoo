@@ -298,6 +298,10 @@ class Website(models.Model):
         compute_sudo=True,
         inverse="_inverse_country_id",
     )
+    tax_display = fields.Selection(
+        selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
+        compute="_compute_tax_display",
+    )
 
     # === COMPUTE METHODS ===#
 
@@ -341,6 +345,13 @@ class Website(models.Model):
     def _compute_show_line_subtotals_tax_selection(self):
         for website in self:
             website.show_line_subtotals_tax_selection = "tax_excluded"
+
+    @api.depends("country_id", "show_line_subtotals_tax_selection")
+    def _compute_tax_display(self):
+        for website in self:
+            website.tax_display = (
+                website.country_id.tax_display or website.show_line_subtotals_tax_selection
+            )
 
     # === SELECTION METHODS ===#
 

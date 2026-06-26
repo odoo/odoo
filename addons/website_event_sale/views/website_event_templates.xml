@@ -10,7 +10,7 @@
     <xpath expr="//div[contains(@t-attf-class, 'o_wevent_registration_multi_select')]" position="inside">
         <t t-if="ticket.total_price">
             <t t-if="ticket._show_discount()">
-                <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                <del t-if="website.tax_display == 'tax_excluded'"
                      class="text-danger me-1"
                      t-field="ticket.total_price"
                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
@@ -19,7 +19,7 @@
                      t-field="ticket.total_price_incl"
                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
             </t>
-            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+            <span t-if="website.tax_display == 'tax_excluded'"
                   class="fs-6"
                   t-field="ticket.total_price_reduce"
                   t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
@@ -33,7 +33,7 @@
         <span t-else="" class="badge text-bg-success p-2 px-3">Free</span>
     </xpath>
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
-        <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('total_price_reduce')"/>
+        <t t-if="website.tax_display == 'tax_excluded'" t-set="all_prices" t-value="event.event_ticket_ids.mapped('total_price_reduce')"/>
         <t t-else="" t-set="all_prices" t-value="event.event_ticket_ids.mapped('total_price_reduce_taxinc')"/>
         <t t-set="lowest_price" t-value="min(all_prices)"/>
         <t t-set="highest_price" t-value="max(all_prices)"/>
@@ -53,7 +53,7 @@
         <div class="flex-md-grow-1 mt-1 me-2 text-end">
             <t t-if="tickets.total_price">
                 <t t-if="tickets._show_discount()">
-                    <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                    <del t-if="website.tax_display == 'tax_excluded'"
                          class="text-danger me-1"
                          t-field="tickets.total_price"
                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
@@ -62,7 +62,7 @@
                          t-field="tickets.total_price_incl"
                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 </t>
-                <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                <span t-if="website.tax_display == 'tax_excluded'"
                       class="badge text-bg-secondary fs-6"
                       t-field="tickets.total_price_reduce"
                       t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>

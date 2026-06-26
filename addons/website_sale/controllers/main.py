@@ -416,7 +416,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if search:
             post["search"] = search
 
-        tax_display = website.show_line_subtotals_tax_selection
+        tax_display = website.tax_display
         sale_tax = request.fiscal_position.map_tax(website.company_id.sudo().account_sale_tax_id)
 
         if tax_display == "tax_included" and sale_tax:

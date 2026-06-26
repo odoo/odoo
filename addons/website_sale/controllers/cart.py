@@ -481,7 +481,7 @@ class Cart(PaymentPortal):
         if not lines:
             return {}
 
-        show_tax = order.website_id.show_line_subtotals_tax_selection == "tax_included"
+        show_tax = order.website_id.tax_display == "tax_included"
         return {
             "currency_id": order.currency_id.id,
             "lines": [

@@ -803,7 +803,7 @@ class ProductTemplate(models.Model):
 
         if (
             self.type == "combo"
-            and website.show_line_subtotals_tax_selection == "tax_included"
+            and website.tax_display == "tax_included"
             and not all(
                 tax.price_include
                 for tax in self.sudo().combo_ids.combo_item_ids.product_id.taxes_id
@@ -1042,9 +1042,7 @@ class ProductTemplate(models.Model):
         )
 
         if not tax_display:
-            show_tax = (
-                website or self.env.website
-            ).show_line_subtotals_tax_selection
+            show_tax = (website or self.env.website).tax_display
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         return tax_details[tax_display]
@@ -1603,9 +1601,7 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (
-            website := self.env.website
-        ) and product_or_template.is_product_variant:
+        if (website := self.env.website) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:

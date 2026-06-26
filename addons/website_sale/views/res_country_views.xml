@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_country_form" model="ir.ui.view">
+        <field name="name">res.country.form.inherit.website_sale</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form"/>
+        <field name="arch" type="xml">
+            <group name="phone_vat_settings" position="inside">
+                <field name="tax_display"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>
