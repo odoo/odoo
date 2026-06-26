@@ -188,7 +188,13 @@ class WebSuite(QunitCommon, HOOTCommon):
     @odoo.tests.no_retry
     def test_unit_desktop(self):
         # Unit tests suite (desktop)
+<<<<<<< 16444616b70f0f967266e776143f02731c5b90eb
         self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=3000, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+||||||| c99e427737f9b8bcb84d57b0b737349e10ad65d9
+        self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=1800, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+=======
+        self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=2700, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+>>>>>>> a71a06aca45708bae6bdc6158d4844e83fd1d893
 
     @odoo.tests.no_retry
     def test_hoot(self):
