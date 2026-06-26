@@ -83,6 +83,7 @@ BTREE_INDEX_IGNORE_FIELDS = {
     'mail.message.res_id': 'mail_message_model_res_id_idx',  # usually accessed with `model` in the domain
     'mail.presence.guest_id': 'mail_presence_guest_unique',
     'mail.presence.user_id': 'mail_presence_user_unique',
+    'forum.tag.forum_id': 'forum_tag_forum_id_posts_count_idx',
     'res.users.company_id': None,  # only linted for auth_totp.wizard, not needed.
 }
 
