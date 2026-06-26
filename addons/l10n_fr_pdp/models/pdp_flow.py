@@ -227,7 +227,7 @@ class PdpFlow(models.Model):
                 flow.payload_id.unlink()
             flow.payload_id = self.env['ir.attachment'].create({
                 'name': filename,
-                'raw': BinaryBytes(payload),
+                'raw': payload,
                 'res_model': flow._name,
                 'res_id': flow.id,
                 'type': 'binary',
@@ -349,7 +349,7 @@ class PdpFlow(models.Model):
         payload_doc = {
             'flow_number': 10,
             'filename': self.payload_id.name,
-            'ubl': self.payload_id.raw,
+            'ubl': BinaryBytes(self.payload_id.raw).to_base64(),
             'external_ref': self._get_tracking_id(),
         }
 
