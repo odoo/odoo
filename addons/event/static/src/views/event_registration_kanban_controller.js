@@ -25,7 +25,6 @@ export class EventRegistrationKanbanController extends KanbanController {
             this.dialog.add(
                 EventRegistrationSummaryDialog,
                 {
-                    model: this.model,
                     registration: result
                 },
                 { onClose: () => this.model.load() }
