@@ -4968,6 +4968,13 @@ class AccountMove(models.Model):
             self.import_source_attachment_id = self._get_import_source_attachment(selected_file_data)
 
     def _extend_with_attachments(self, files_data, new=False):
+        if new:
+            # we force an early access token write to prevent edge-cases where the notification
+            # email will fail because the OCR/IAP (async) callback triggers a concurrent update on the same
+            # account move
+            self._portal_ensure_token()
+            self.flush_recordset(['access_token'])
+
         existing_lines = self.invoice_line_ids
         res = super()._extend_with_attachments(files_data, new)
 
@@ -4983,11 +4990,6 @@ class AccountMove(models.Model):
                     _logger.exception("Failed to link bill to purchase order")
 
         if new:
-            # we force an early access token write to prevent edge-cases where the notification
-            # email will fail because the OCR/IAP (async) callback triggers a concurrent update on the same
-            # account move
-            self._portal_ensure_token()
-            self.flush_recordset(['access_token'])
             try:
                 attachments = set(self.attachment_ids + self._from_files_data(files_data + self._unwrap_attachments(files_data)))
                 self.journal_id._notify_invoice_subscribers(
