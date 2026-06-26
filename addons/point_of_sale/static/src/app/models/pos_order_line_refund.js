@@ -30,12 +30,12 @@ export class PosOrderLineRefund {
         return this.models["pos.order"].find((o) => o.uuid === this.destination_order_uuid);
     }
 
-    get maxQty() {
+    get refundableQty() {
         if (!this.line) {
             return 0;
         }
 
         const line = this.line;
-        return line.qty - this.refundedQty;
+        return line.qty - line.refundedQty;
     }
 }
