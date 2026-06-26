@@ -85,42 +85,6 @@
         </div>
     </template>
 
-    <template id="website_sale.pricelist_list" name="Pricelists Dropdown">
-        <t t-set="website_sale_pricelists" t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)" />
-        <t t-set="hasPricelistDropdown" t-value="hasPricelistDropdown or (website_sale_pricelists and len(website_sale_pricelists)&gt;1)"/>
-        <t t-set="pricelist" t-value="request.pricelist"/>
-        <t t-set="pricelist_label">Pricelist</t>
-        <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
-            <a
-                role="button"
-                href="#"
-                t-attf-class="dropdown-toggle btn px-2"
-                data-bs-toggle="dropdown"
-            >
-                <small class="d-none d-md-inline opacity-75"><t t-out="pricelist_label"/>:</small>
-                <span class="d-none d-md-inline" t-out="pricelist and pricelist.name or ' - '" />
-                <span class="d-md-none"><t t-out="pricelist_label"/></span>
-            </a>
-            <div class="dropdown-menu" role="menu">
-                <t t-foreach="website_sale_pricelists" t-as="pl">
-                    <t t-set="_is_active" t-value="pricelist.id == pl.id"/>
-                    <a
-                        role="menuitem"
-                        t-att-href="'/shop/change_pricelist/%s' % pl.id"
-                        t-attf-class="dropdown-item {{_is_active and 'active'}}"
-                        t-att-aria-current="_is_active and 'true' or 'false'"
-                    >
-                        <span
-                            class="switcher_pricelist"
-                            t-att-data-pl_id="pl.id"
-                            t-out="pl.name"
-                        />
-                    </a>
-                </t>
-            </div>
-        </div>
-    </template>
-
     <template id="website_sale.products_breadcrumb" name="Products Breadcrumb">
         <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
             <li class="breadcrumb-item">
@@ -181,8 +145,6 @@
             <t t-set="opt_wsale_show_category_description" t-value="bool(category) and category.show_category_description"/>
             <t t-set="opt_wsale_category_align" t-value="bool(category) and category.align_category_content"/>
 
-            <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-
             <t t-set="show_price_filter" t-value="opt_wsale_filter_price and opt_wsale_attributes"/>
             <t
                 t-set="hasLeftColumn"
@@ -196,7 +158,6 @@
             />
 
             <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
-            <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
             <t t-set="isSortingBy" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
 
             <t
@@ -399,12 +360,6 @@
                                             t-value="hasPricelistDropdown or is_view_active('website_sale.sort') or wsale_has_filters_btn"
                                         />
                                         <div t-attf-class="{{'d-lg-none' if not show_product_controls_header else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
-                                            <t
-                                                t-if="hasPricelistDropdown"
-                                                t-call="website_sale.pricelist_list"
-                                                _classes.f="ms-auto"
-                                            >
-                                            </t>
                                             <t
                                                 t-if="is_view_active('website_sale.sort')"
                                                 t-call="website_sale.sort"
@@ -1225,14 +1180,6 @@
                 t-set="floatBar_hasSearch"
                 t-value="is_view_active('website_sale.search')"
             />
-            <t
-                t-set="website_sale_pricelists"
-                t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)"
-            />
-            <t
-                t-set="floatBar_hasPricelist"
-                t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"
-            />
             <div
                 id="o_wsale_floating_bar_rail"
                 class="o_not_editable position-absolute top-0 bottom-0 d-flex justify-content-end align-items-end p-0"
@@ -1252,7 +1199,6 @@
                         t-if="floatBar_hasSearch and (wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist)"
                         t-attf-class="align-self-stretch border-start opacity-50 {{(not floatBar_hasSort and not floatBar_hasPricelist and not wsale_has_filters_btn_lg) and 'd-lg-none'}}"
                     />
-                    <t t-if="floatBar_hasPricelist" t-call="website_sale.pricelist_list"/>
                     <t
                         t-if="floatBar_hasSort"
                         t-call="website_sale.sort"

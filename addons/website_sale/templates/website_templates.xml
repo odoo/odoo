@@ -227,15 +227,6 @@
                 </section>
             </div>
         </div>
-
-        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
-            <span class="small">
-                &amp;copy;
-                <span class="o_footer_copyright_name align-baseline">Company name</span>
-                 - <a href="#">Terms &amp; Conditions</a>
-                 - <a href="#">Privacy Policy</a>
-            </span>
-        </xpath>
     </template>
 
     <template id="website_sale.template_header_mobile" inherit_id="website.template_header_mobile">
@@ -428,6 +419,103 @@
                 class="o_line_clamp o_line_clamp_1 mb-0 small"
                 t-out="result['description_sale']"/>
         </xpath>
+    </template>
+
+    <!-- Priority must be lower than portal.footer_language_selector such that website_sale.footer_pricelist_selector_with_language_selector can move language_selector_hook before
+    portal.footer_language_selector is applied. -->
+    <template
+        id="website_sale.footer_pricelist_selector"
+        inherit_id="portal.frontend_layout"
+        name="Footer Pricelist Selector"
+        priority="10"
+    >
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <div class="d-flex align-items-center gap-2">
+                <t>$0</t>
+                <t t-set="pricelist_options" t-value="website._prepare_pricelist_selector_values()"/>
+                <t t-call="website_sale.country_selector" countries="pricelist_options['countries']"/>
+                <t t-call="website_sale.currency_selector" currencies="pricelist_options['currencies']"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.footer_pricelist_selector_with_language_selector"
+        inherit_id="website_sale.footer_pricelist_selector"
+        active="False"
+    >
+        <t id="language_selector_hook" position="replace"/>
+        <t t-call="website_sale.country_selector" position="after">
+            <t id="language_selector_hook"/>
+        </t>
+    </template>
+
+    <template id="website_sale.country_selector" name="Country Selector">
+        <t t-set="active_country" t-value="website.country_id"/>
+        <div name="country_dropup" class="dropup d-print-none">
+            <button
+                class="dropdown-toggle btn btn-secondary btn-sm border-0"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-expanded="false"
+            >
+                <span
+                    t-if="active_country.image_url"
+                    class="d-contents"
+                    t-field="active_country.image_url"
+                    t-options="{'widget': 'image_url', 'class': 'o_lang_flag me-1'}"
+                />
+                <span t-out="active_country.name"/>
+            </button>
+            <div class="dropdown-menu" role="menu">
+                <a
+                    t-foreach="countries.items()"
+                    t-as="item"
+                    t-attf-class="dropdown-item {{item[0] == active_country and 'active'}}"
+                    role="menuitem"
+                    t-att-href="item[1]._get_shop_switch_url(country_id=item[0].id)"
+                >
+                    <span
+                        t-if="item[0].image_url"
+                        class="d-contents"
+                        t-field="item[0].image_url"
+                        t-options="{'widget': 'image_url', 'class': 'o_lang_flag me-1'}"
+                    />
+                    <span t-out="item[0].name"/>
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sale.currency_selector" name="Currency Selector">
+        <t t-set="active_currency" t-value="website.currency_id"/>
+        <div
+            t-if="len(currencies) > 1"
+            name="currency_dropup"
+            class="dropup d-print-none"
+        >
+            <button
+                class="dropdown-toggle btn btn-secondary btn-sm border-0"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-expanded="true"
+            >
+                <span t-out="active_currency.symbol"/>
+            </button>
+            <div class="dropdown-menu" role="menu">
+                <a
+                    t-foreach="currencies.items()"
+                    t-as="item"
+                    t-attf-class="dropdown-item {{item[0] == active_currency and 'active'}}"
+                    role="menuitem"
+                    t-att-href="item[1]._get_shop_switch_url()"
+                >
+                    <span t-out="item[0].symbol"/>
+                </a>
+            </div>
+        </div>
     </template>
 
 </odoo>
