@@ -36,6 +36,44 @@ Toledo8217Protocol = SerialProtocol(
 )
 
 
+# Dialog 04 (Price computing) protocol.
+# Our recommended scale, the Mettler-Toledo "Ariva-S", supports this protocol on
+# both the USB and RS232 ports, it can be configured in the setup menu as protocol option 9.
+Dialog04Protocol = SerialProtocol(
+    name='Toledo Dialog 04',
+    baudrate=4800,
+    bytesize=serial.SEVENBITS,
+    stopbits=serial.STOPBITS_ONE,
+    parity=serial.PARITY_ODD,
+    timeout=1,
+    writeTimeout=1,
+    measureRegexp=rb"\x0202\x1b(\d)\x1b(\d{5})\x1b(\d{6})\x1b(\d{6})\x03",
+    statusRegexp=rb"\x0209\x1b(\d\d)\x03",
+    commandDelay=0.1,
+    measureDelay=0.1,
+    newMeasureDelay=0.1,
+    commandTerminator=b'',
+    measureCommand=b'\x04\x05',
+    emptyAnswerValid=False,
+)
+
+DIALOG_04_ERRORS = {
+    "00": "NO_ERROR",
+    "01": "GENERAL_ERROR",
+    "02": "PARITY_ERROR",
+    "10": "INVALID_RECORD",
+    "11": "INVALID_PRICE",
+    "12": "INVALID_TARE",
+    "13": "INVALID_TEXT",
+    "20": "SCALE_IN_MOTION",
+    "21": "NO_CHANGE",
+    "22": "PRICE_NOT_AVAILABLE",
+    "30": "WEIGHT_ZERO",
+    "31": "WEIGHT_NEGATIVE",
+    "32": "WEIGHT_OVERLOAD",
+}
+
+
 class ScaleDriver(SerialDriver):
     """Driver for the Toldedo 8217 serial scale."""
     _protocol = Toledo8217Protocol
@@ -145,3 +183,94 @@ class ScaleDriver(SerialDriver):
                     self.data.update({"status": "error", "result": 0})
                     return 0.0
         return self.data.get("result", 0.0)
+
+
+class DialogScaleDriver(SerialDriver):
+    _protocol = Dialog04Protocol
+    last_sent_value = 0.0
+    current_unit_price = 1.0
+
+    def __init__(self, identifier, device):
+        super().__init__(identifier, device)
+        self.device_type = "scale"
+        self.device_manufacturer = "Toledo"
+        self._actions["read_once"] = self._read_once
+        self._actions["set_price"] = self._set_price
+        self.data = {"status": "connected", "result": 0}
+
+    def _read_once(self, _):
+        """Reads the scale current weight value and pushes it to the frontend."""
+        self._read_weight()
+        self.last_sent_value = self.data["result"]
+        return self.last_sent_value
+
+    @classmethod
+    def supported(cls, device):
+        try:
+            with serial_connection(device["identifier"], cls._protocol) as connection:
+                connection.write(b"\x04\x0208\x03")
+                answer = cls._get_raw_response(connection)
+                if re.match(cls._protocol.statusRegexp, answer):
+                    return True
+        except serial.SerialTimeoutException:
+            pass
+        except Exception:
+            _logger.exception('Error while probing %s with protocol %s', device, cls._protocol.name)
+        return False
+
+    def _set_price(self, data):
+        self.current_unit_price = data["unit_price"]
+        self._send_unit_price()
+
+    def _send_unit_price(self):
+        formatted_unit_price = f"{self.current_unit_price:07.2f}".replace(".", "")
+        payload = b"\x04\x0201\x1b" + formatted_unit_price.encode() + b"\x1b\x03"
+        self._connection.write(payload)
+        self._get_raw_response(self._connection)
+
+    @staticmethod
+    def _get_raw_response(connection):
+        first_char = connection.read(1)
+        if first_char == b"\x02":
+            return first_char + connection.read_until(b"\x03")
+        return first_char
+
+    def _take_measure(self):
+        """Reads the device's weight value, and pushes that value to the frontend."""
+        with self._device_lock:
+            self._read_weight()
+            if self.data["result"] != self.last_sent_value or self.data["status"] == "error":
+                self.last_sent_value = self.data["result"]
+                event_manager.device_changed(self)
+
+    def _read_weight(self):
+        self._connection.write(self._protocol.measureCommand)
+        answer = self._get_raw_response(self._connection)
+        match = re.match(self._protocol.measureRegexp, answer)
+        if match:
+            divisor = 100 if int(match.group(1)) in {0, 1} else 1000
+            weight = float(match.group(2)) / divisor
+            unit_price = float(match.group(3)) / 100
+            total_price = float(match.group(4)) / 100
+            self.data["result"] = weight
+            self.data["total_price"] = total_price
+            self.data["status"] = "success"
+
+            _logger.info("%.3f kg x $%.2f = $%.2f", weight, unit_price, total_price)
+            self._send_unit_price()
+        else:
+            self._read_status(answer)
+
+    def _read_status(self, answer):
+        self._connection.write(b"\x04\x0208\x03")
+        answer = self._get_raw_response(self._connection)
+        status_match = re.match(self._protocol.statusRegexp, answer)
+        if status_match:
+            error = DIALOG_04_ERRORS[status_match[1].decode()]
+            if error in ["NO_CHANGE", "SCALE_IN_MOTION"]:
+                return
+            if error == "PRICE_NOT_AVAILABLE":
+                self._send_unit_price()
+            else:
+                self.data["result"] = 0
+                self.data["total_price"] = 0
