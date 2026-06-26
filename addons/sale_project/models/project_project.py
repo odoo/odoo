@@ -49,6 +49,7 @@ class ProjectProject(models.Model):
     )
     real_cost = fields.Monetary(compute='_compute_real_cost', export_string_translation=False)
     real_cost_ratio = fields.Float(compute='_compute_real_cost', export_string_translation=False)
+    sale_warning_text = fields.Text('Project Warning', compute='_compute_sale_warning_text', help='Warning for the partner as set by the user.')
 
     @api.model
     def default_get(self, fields):
@@ -91,6 +92,14 @@ class ProjectProject(models.Model):
                     not p.partner_id or p.sale_line_id.order_partner_id.commercial_partner_id != p.partner_id.commercial_partner_id
                 )
         ).update({'sale_line_id': False})
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
+    def _compute_sale_warning_text(self):
+        for project in self:
+            warning = False
+            if partner_msg := project.partner_id.sale_warn_msg:
+                warning = project.partner_id.name + ' - ' + partner_msg
+            project.sale_warning_text = warning
 
     def _get_projects_for_invoice_status(self, invoice_status):
         """ Returns a recordset of project.project that has any Sale Order which invoice_status is the same as the

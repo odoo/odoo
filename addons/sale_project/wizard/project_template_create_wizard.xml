@@ -6,6 +6,11 @@
         <field name="model">project.template.create.wizard</field>
         <field name="inherit_id" ref="project.project_project_view_form_simplified_template"/>
         <field name="arch" type="xml">
+            <xpath expr="//label[@for='name']/.." position="before">
+                <div class="alert alert-warning" role="alert" invisible="not sale_warning_text or not allow_billable">
+                    <field name="sale_warning_text" class="fw-bold"/>
+                </div>
+            </xpath>
             <field name="date_start" position="before">
                 <field
                     name="partner_id"

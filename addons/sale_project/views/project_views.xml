@@ -16,6 +16,11 @@
                 />
                 <field name="allow_billable" invisible="1"/>
             </field>
+            <xpath expr="//label[@for='name']/.." position="before">
+                <div class="alert alert-warning" role="alert" invisible="not sale_warning_text or not allow_billable">
+                    <field name="sale_warning_text" class="fw-bold"/>
+                </div>
+            </xpath>
         </field>
     </record>
 
@@ -142,10 +147,6 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project_card"/>
         <field name="arch" type="xml">
-            <xpath expr="//templates" position="before">
-                <field name="show_ratings"/>
-                <field name="allow_billable"/>
-            </xpath>
             <xpath expr="//div[@name='project_customer_rating_menu']" position="attributes">
                 <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value</attribute>
             </xpath>
