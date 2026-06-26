@@ -22,7 +22,7 @@
                 <field name="check_out" options="{}"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
                 <field name="overtime_hours" string="Worked Extra Hours" optional="show" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Extra Hours" optional="show" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Extra Hours" optional="show" widget="float_time" readonly="not id or not is_manager or overtime_status == 'refused'"/>
                 <field name="overtime_status" optional="hidden" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
                 <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
@@ -113,7 +113,7 @@
                                         name="validated_overtime_hours"
                                         style="width:5ch"
                                         widget="float_time"
-                                        readonly="1"/>
+                                        readonly="not id or not is_manager or overtime_status == 'refused'"/>
                                     <!-- TODO algin icons baseline with text -->
                                     <button
                                         class="oe_stat_button flex-shrink-0"
@@ -403,7 +403,7 @@
                 <field name="check_out" readonly="1"/>
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
                 <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
-                <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
+                <field name="validated_overtime_hours" readonly="not id or not is_manager or overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
                 <button
                     class="oe_stat_button"
                     string="Approve"
