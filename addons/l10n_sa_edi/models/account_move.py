@@ -62,6 +62,17 @@ class AccountMove(models.Model):
         invalid_scheme_partners = self.env['res.partner']
         empty_vat_partners = self.env['res.partner']
 
+        if invalid_companies := self.filtered(
+            lambda move: move.country_code == 'SA' and move.state == 'posted' and move.is_sale_document()
+        ).company_id.filtered(
+            lambda company: not company._l10n_sa_check_organization_unit()
+        ):
+            res['l10n_sa_edi_company_vat_invalid'] = {
+                'message': self.env._("The company VAT identification must contain 15 digits, with the first and last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA business rule."),
+                'level': 'danger',
+                'action_text': self.env._("View Companies"),
+                'action': invalid_companies._get_records_action(),
+            }
         edi_moves = self.filtered(lambda move: move._l10n_sa_is_phase_2_applicable())
         for move in edi_moves:
             if move.commercial_partner_id == move.company_id.partner_id.commercial_partner_id:
@@ -118,14 +129,6 @@ class AccountMove(models.Model):
                 'action': invalid_journals._get_records_action(),
             }
 
-        if invalid_companies := edi_moves.company_id.filtered(lambda company: not company._l10n_sa_check_organization_unit()):
-            res['l10n_sa_edi_company_vat_invalid'] = {
-                'message': self.env._("The company VAT identification must contain 15 digits, with the first and last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA business rule."),
-                'level': 'danger',
-                'action_text': self.env._("View Companies"),
-                'action': invalid_companies._get_records_action(),
-            }
-
         if invalid_companies := edi_moves.journal_id.company_id.sudo().filtered(lambda company: not company.l10n_sa_private_key_id):
             res['l10n_sa_edi_company_key_invalid'] = {
                 'message': self.env._("No Private Key was generated for these companies. A Private Key is mandatory in order to generate Certificate Signing Requests (CSR)."),
@@ -136,10 +139,7 @@ class AccountMove(models.Model):
 
         if invalid_scheme_partners:
             res['l10n_sa_edi_invalid_scheme_customers'] = {
-                'message': self.env._("""
-                    Please set the Identification Scheme as National ID and Identification Number as the respective
-                    number on the Customer, as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU
-                """),
+                'message': self.env._("Please set the Identification Scheme as National ID and Identification Number as the respective number on the Customer, as the Tax Exemption Reason is set either as VATEX-SA-HEA or VATEX-SA-EDU"),
                 'level': 'danger',
                 'action_text': self.env._("View Partners"),
                 'action': invalid_scheme_partners._get_records_action(),
