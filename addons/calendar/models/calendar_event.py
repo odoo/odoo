@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
-from werkzeug.urls import url_parse
+from werkzeug.urls import url_encode, url_parse
 
 from odoo import api, fields, models
 from odoo.fields import Command, Domain
@@ -134,6 +134,10 @@ class CalendarEvent(models.Model):
         return defaults
 
     @api.model
+    def _default_access_token(self):
+        return str(uuid.uuid4())
+
+    @api.model
     def _default_partners(self):
         """ When active_model is res.partner, the current partners should be attendees """
         partners = self.env.user.partner_id
@@ -174,7 +178,7 @@ class CalendarEvent(models.Model):
     location = fields.Char('Location', tracking=True)
     notes = fields.Html('Notes')  # Unlike description, internal use only
     videocall_location = fields.Char('Meeting URL', compute='_compute_videocall_location', store=True, copy=True)
-    access_token = fields.Char('Invitation Token', store=True, copy=False, index=True)
+    access_token = fields.Char('Invitation Token', default=_default_access_token, store=True, copy=False, index=True)
     videocall_source = fields.Selection([('discuss', 'Discuss'), ('custom', 'Custom')], compute='_compute_videocall_source')
     videocall_channel_id = fields.Many2one('discuss.channel', 'Discuss Channel', index="btree_not_null")
     # visibility
@@ -649,8 +653,9 @@ class CalendarEvent(models.Model):
 
     @api.model
     def get_discuss_videocall_location(self):
-        access_token = uuid.uuid4().hex
-        return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{access_token}"
+        if not self.access_token:
+            self.access_token = uuid.uuid4().hex
+        return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{self.access_token}"
 
     @api.onchange('name')
     def _onchange_name_extract_time(self):
@@ -1714,6 +1719,27 @@ class CalendarEvent(models.Model):
         if tz:
             self = self.with_context(tz=tz)
         return self._get_display_time(self.start, self.stop, self.duration, self.allday)
+
+    def _get_google_url(self):
+        """ Returns a google url for users to manually add the event to their google calendar. """
+        self.ensure_one()
+
+        if not self.allday:
+            url_date_start = fields.Datetime.from_string(self.start).strftime('%Y%m%dT%H%M%SZ')
+            url_date_stop = fields.Datetime.from_string(self.stop).strftime('%Y%m%dT%H%M%SZ')
+        else:
+            url_date_start = fields.Date.from_string(self.start_date).strftime('%Y%m%d')
+            url_date_stop = fields.Date.from_string(self.stop_date).strftime('%Y%m%d')
+        params = {
+            'action': 'TEMPLATE',
+            'text': self._get_customer_summary(),
+            'dates': f'{url_date_start}/{url_date_stop}',
+            'details': self._get_customer_description(),
+        }
+        if self.location:
+            params.update(location=self.location.replace(', ', ' '))
+
+        return 'https://www.google.com/calendar/render?' + url_encode(params)
 
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.

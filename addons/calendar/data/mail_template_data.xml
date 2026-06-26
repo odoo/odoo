@@ -110,6 +110,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object.event_id._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="object.event_id.user_id.signature">
@@ -143,7 +169,7 @@
 
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
         Date Updated
-        <img src="/calendar/static/src/img/sync.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+        <img src="/calendar/static/src/img/sync.png" style="border:0; width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-align: middle; padding-bottom: 2px;" />
     </h1>
     <p style="margin: 0;">
         <span style="display: block; margin-bottom: 8px;">Hello <t t-out="object.common_name or ''">Ready Mat</t>,</span>
@@ -239,6 +265,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object.event_id._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="organizer.signature">
@@ -259,14 +311,14 @@
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to all attendees if a reminder is set</field>
-            <field name="email_layout_xmlid">mail.mail_notification_layout</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div style="font-size: 13px; color: #374151; background-color: white;">
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
         Reminder
-        <img src="/calendar/static/src/img/bell.png" style="border:0; width: 21px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+        <img src="/calendar/static/src/img/bell.png" style="border:0; width: 16px; height: 20px; margin-left: 10px; text-decoration:none; vertical-align: middle; padding-bottom: 2px;" />
     </h1>
     <p style="margin: 0;">
         Hello <t t-out="object.common_name or ''">Gemini Furniture</t>,<br/>
@@ -349,6 +401,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object.event_id._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="object.event_id.user_id.signature">
@@ -368,7 +446,7 @@
             <field name="email_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Used to manually notify attendees</field>
-            <field name="email_layout_xmlid">mail.mail_notification_layout</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div style="font-size: 13px; color: #374151; background-color: white;">
     <t t-set="is_online" t-value="'appointment_type_id' in object and object.appointment_type_id" />
@@ -376,7 +454,7 @@
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
         Event updated
-        <img src="/calendar/static/src/img/sync.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+        <img src="/calendar/static/src/img/sync.png" style="border:0; width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-align: middle; padding-bottom: 2px;" />
     </h1>
     <p style="margin: 0;">
         <span style="display: block; margin-bottom: 8px;">Hello,</span>
@@ -450,6 +528,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="object.user_id.signature">
@@ -476,7 +580,7 @@
     <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
     <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
         Event canceled
-        <img src="/calendar/static/src/img/times-circle.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
+        <img src="/calendar/static/src/img/times-circle.png" style="border:0; width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-align: middle; padding-bottom: 2px;" />
     </h1>
     <p style="margin: 0;">
         Hello,<br/>
