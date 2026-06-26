@@ -618,6 +618,38 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         xmlid_account = self.env.ref(f'account.{self.company.id}_test_account_income_template')
         self.assertEqual(problematic_account, xmlid_account, "xmlid is not pointing to the right account")
 
+    def test_load_data_recovers_missing_account_xmlid_from_template(self):
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            data['account.account'][recovered_account_xmlid] = {
+                'name': "Recovered account",
+                'code': '991337',
+                'account_type': 'asset_current',
+            }
+            return data
+
+        recovered_account_xmlid = 'test_account_recovered_template'
+        self.company.chart_template = 'test'
+        self.env['ir.model.data'].search([
+            ('module', '=', 'account'),
+            ('name', '=', f'{self.company.id}_{recovered_account_xmlid}'),
+        ]).unlink()
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.ChartTemplate._load_data({
+                'account.tax.group': {
+                    'tax_group_with_recovered_account': {
+                        'name': "Tax group with recovered account",
+                        'tax_receivable_account_id': recovered_account_xmlid,
+                    },
+                },
+            })
+
+        tax_group = self.env.ref(f'account.{self.company.id}_tax_group_with_recovered_account')
+        recovered_account = self.env.ref(f'account.{self.company.id}_{recovered_account_xmlid}')
+        self.assertEqual(tax_group.tax_receivable_account_id, recovered_account)
+        self.assertEqual(recovered_account.code, '991337')
+
     def test_update_taxes_children_tax_ids(self):
         """ Ensures children_tax_ids are correctly generated when updating taxes with
         amount_type='group'.
