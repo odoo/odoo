@@ -279,13 +279,12 @@
                 applyTo="`input, textarea`"
             />
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('character_limit_opt')" level="true">
+        <BuilderContext t-if="this.isActiveItem('character_limit_opt')" level="true" applyTo="`input, textarea`">
             <BuilderRow label.translate="Min Characters">
                 <BuilderNumberInput
                     title.translate="The minimum number of characters required."
                     attributeAction="'minlength'"
                     max="this.domStateCurrentFieldInput.maxLength"
-                    applyTo="`input, textarea`"
                 />
             </BuilderRow>   
             <BuilderRow label.translate="Max Characters">
@@ -293,7 +292,6 @@
                     title.translate="The maximum number of characters allowed."
                     attributeAction="'maxlength'"
                     min="this.domStateCurrentFieldInput.minLength"
-                    applyTo="`input, textarea`"
                 />
             </BuilderRow>
         </BuilderContext>
@@ -305,21 +303,21 @@
             applyTo="`input[type='file']`"
         />
     </BuilderRow>
-    <BuilderContext t-if="this.isActiveItem('restrict_file_types_opt')" level="true">
+    <BuilderContext t-if="this.isActiveItem('restrict_file_types_opt')" level="true" action="'setAllowedFileTypes'" applyTo="`input[type='file']`">
         <BuilderRow label.translate="Only PDF" tooltip.translate="'.pdf files only'">
-            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/pdf'" applyTo="`input[type='file']`"/>
+            <BuilderCheckbox actionParam="'application/pdf'"/>
         </BuilderRow>
         <BuilderRow label.translate="Documents" tooltip.translate="'.doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, etc.'">
-            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/*'" applyTo="`input[type='file']`"/>
+            <BuilderCheckbox actionParam="'application/*'"/>
         </BuilderRow>
         <BuilderRow label.translate="Images" tooltip.translate="'.jpg, .jpeg, .png, .gif, .svg, .webp, etc.'">
-            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'image/*'" applyTo="`input[type='file']`"/>
+            <BuilderCheckbox actionParam="'image/*'"/>
         </BuilderRow>
         <BuilderRow label.translate="Videos" tooltip.translate="'.mov, .mpeg, .avi, .mkv, .mp4, etc.'">
-            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'video/*'" applyTo="`input[type='file']`"/>
+            <BuilderCheckbox actionParam="'video/*'"/>
         </BuilderRow>
         <BuilderRow label.translate="Audios" tooltip.translate="'.mp3, .m4a, .aac, .wav, etc.'">
-            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'audio/*'" applyTo="`input[type='file']`"/>
+            <BuilderCheckbox actionParam="'audio/*'"/>
         </BuilderRow>
     </BuilderContext>
     <BuilderRow label.translate="Requirement"

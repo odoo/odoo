@@ -1,5 +1,5 @@
-import { Component, xml } from "@odoo/owl";
-import { basicContainerBuilderComponentProps, resolveBuilderLevel, useBuilderComponent } from "../utils";
+import { Component, props, t, xml } from "@odoo/owl";
+import { resolveBuilderLevel, useBuilderComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { useSubEnv } from "@web/owl2/utils";
 
@@ -9,11 +9,23 @@ export class BuilderContext extends Component {
             <t t-call-slot="default"/>
         </BuilderComponent>
     `;
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        slots: { type: Object },
-        level: { type: Boolean, optional: true },
-    };
+
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        styleAction: t.any().optional(),
+
+        slots: t.object().optional(),
+        level: t.boolean().optional()
+    })
+
     static components = {
         BuilderComponent,
     };

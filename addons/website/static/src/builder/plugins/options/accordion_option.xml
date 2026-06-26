@@ -35,16 +35,18 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderContext level="true">
-            <BuilderRow label.translate="Active" t-if="this.isActiveItem('accordion_icons_custom_opt')">
-                <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: true }" type="'success'" preview="false">
-                    <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
-                </BuilderButton>
-            </BuilderRow>
-            <BuilderRow label.translate="Inactive" t-if="this.isActiveItem('accordion_icons_custom_opt')">
-                <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: false }" type="'success'" preview="false">
-                    <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
-                </BuilderButton>
-            </BuilderRow>
+            <BuilderContext t-if="this.isActiveItem('accordion_icons_custom_opt')" action="'defineCustomIcon'" preview="false">
+                <BuilderRow label.translate="Active">
+                    <BuilderButton actionParam="{ isActiveIcon: true }" type="'success'">
+                        <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+                    </BuilderButton>
+                </BuilderRow>
+                <BuilderRow label.translate="Inactive">
+                    <BuilderButton actionParam="{ isActiveIcon: false }" type="'success'">
+                        <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+                    </BuilderButton>
+                </BuilderRow>
+            </BuilderContext>
             <BuilderRow label.translate="Transition" t-if="this.isActiveItem('accordion_icons_custom_opt')">
                 <BuilderSelect>
                     <BuilderSelectItem title.translate="None" classAction="''">None</BuilderSelectItem>
