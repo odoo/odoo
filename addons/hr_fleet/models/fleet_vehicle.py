@@ -14,6 +14,11 @@ class FleetVehicle(models.Model):
         tracking=True,
         index='btree_not_null',
     )
+    driver_employee_version_id = fields.Many2one(
+        'hr.version',
+        compute='_compute_driver_version_id', store=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    )
 
     driver_employee_name = fields.Char(related="driver_employee_id.name")
     future_driver_employee_id = fields.Many2one(
@@ -50,6 +55,11 @@ class FleetVehicle(models.Model):
         for vehicle in self:
             employees = employees_by_partner_id_and_company_id.get((vehicle.future_driver_id, vehicle.company_id))
             vehicle.future_driver_employee_id = employees[0] if employees else False
+
+    @api.depends('driver_employee_id')
+    def _compute_driver_version_id(self):
+        for vehicle in self:
+            vehicle.driver_employee_version_id = vehicle.driver_employee_id.version_id if vehicle.driver_employee_id else False
 
     def _update_create_write_vals(self, vals):
         if 'driver_employee_id' in vals:
