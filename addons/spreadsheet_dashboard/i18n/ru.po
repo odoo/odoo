@@ -4,16 +4,16 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
-"PO-Revision-Date: 2026-01-16 05:51+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 01:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
 "spreadsheet_dashboard/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: spreadsheet_dashboard
 #. odoo-python
@@ -39,14 +39,27 @@ msgstr ""
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_model.js:0
+msgid "(Any value)"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
 msgid "(no result)"
 msgstr "(нет результата)"
 
 #. module: spreadsheet_dashboard
-#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
-msgid "Access Groups"
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_custom_favorite_item.js:0
+msgid "A name for your favorite filter is required."
 msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#, fuzzy
+msgid "Access Groups"
+msgstr "Группы доступа"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__access_token
@@ -54,10 +67,12 @@ msgid "Access Token"
 msgstr "Токен доступа"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__active
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__active
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
+#, fuzzy
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 #. module: spreadsheet_dashboard
 #: model:res.groups,name:spreadsheet_dashboard.group_dashboard_manager
@@ -65,9 +80,20 @@ msgid "Admin"
 msgstr "Администратор"
 
 #. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form
+msgid "All users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 msgid "An error occurred while loading the dashboard"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
+msgid "Archived"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -78,8 +104,9 @@ msgstr "НАЗАД"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#, fuzzy
 msgid "Choose a dashboard section..."
-msgstr ""
+msgstr "Выберите дашборд..."
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -111,6 +138,7 @@ msgstr "Копия общей панели мониторинга"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_uid
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__create_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__create_uid
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
@@ -119,24 +147,40 @@ msgstr "Создано:"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_date
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__create_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__create_date
 msgid "Created on"
 msgstr "Дата создания:"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/assets/global_filter_widget_loader.js:0
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__dashboard_id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
 #: model:res.groups.privilege,name:spreadsheet_dashboard.res_groups_privilege_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
 msgid "Dashboard"
 msgstr "Панель управления"
 
 #. module: spreadsheet_dashboard
-#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
-msgid "Dashboard Section"
+#: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_favorite_filters
+msgid "Dashboard Favorite Filter"
 msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form
+msgid "Dashboard Filters"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
+#, fuzzy
+msgid "Dashboard Section"
+msgstr "Раздел приборной панели"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
@@ -152,18 +196,26 @@ msgstr ""
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration_dashboards
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_dashboard
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_root
+#: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_technical
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_container_view_list
 msgid "Dashboards"
 msgstr "Панели управления"
 
 #. module: spreadsheet_dashboard
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
-msgid "Discard"
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__is_default
+msgid "Default Filter"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
+#, fuzzy
+msgid "Discard"
+msgstr "Отменить"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__display_name
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__display_name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__display_name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__display_name
 msgid "Display Name"
@@ -188,7 +240,19 @@ msgstr ""
 #. module: spreadsheet_dashboard
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
+msgid "Favorites"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
+#, fuzzy
 msgid "Filter"
+msgstr "Фильтр"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__name
+msgid "Filter Name"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -198,9 +262,37 @@ msgid "Filter on this value"
 msgstr ""
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/public/public_dashboard.xml:0
+msgid "Filters"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
+msgid "Filters shared with all users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
+msgid "Filters shared with myself"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_finance
 msgid "Finance"
 msgstr "Финансы"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
+msgid "Global"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/assets/global_filter_widget_loader.js:0
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__global_filters
+msgid "Global Filters"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
@@ -219,6 +311,7 @@ msgstr "HR"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__id
 msgid "ID"
@@ -226,8 +319,9 @@ msgstr "ID"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_share_view_search
+#, fuzzy
 msgid "Inactive"
-msgstr ""
+msgstr "Неактивный"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
@@ -246,6 +340,7 @@ msgstr "Опубликовано"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_uid
 msgid "Last Updated by"
@@ -253,6 +348,7 @@ msgstr "Последнее обновление:"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_date
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__write_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__write_date
 msgid "Last Updated on"
@@ -286,6 +382,17 @@ msgid "Marketing"
 msgstr "Маркетинг"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar_menu/dashboard_search_bar_menu.xml:0
+msgid "More..."
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
+msgid "My filters"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__name
@@ -306,11 +413,20 @@ msgstr "Нет доступной приборной панели"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/global_filter_widget/global_filter_widget.xml:0
+msgid "No global filters defined for this dashboard."
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
+#, fuzzy
 msgid ""
 "Only chart figures are displayed in small screens but this dashboard doesn't "
 "contain any"
 msgstr ""
+"На маленьких экранах отображаются только графики, но эта приборная панель не "
+"содержит никаких"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
@@ -326,8 +442,9 @@ msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
+#, fuzzy
 msgid "Published"
-msgstr ""
+msgstr "Опубликовано"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__published_dashboard_ids
@@ -355,20 +472,28 @@ msgstr "Поиск..."
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__dashboard_group_id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_group_id
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_search
+#, fuzzy
 msgid "Section"
-msgstr ""
+msgstr "Раздел"
 
 #. module: spreadsheet_dashboard
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_group_action_configuration_sections
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_group_menu_configuration_sections
+#, fuzzy
 msgid "Sections"
-msgstr ""
+msgstr "Секции"
 
 #. module: spreadsheet_dashboard
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
 msgid "See records"
 msgstr "Смотрите записи"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/global_filter_widget/global_filter_widget.xml:0
+msgid "Select a dashboard to edit a global filter."
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
@@ -384,7 +509,19 @@ msgstr "Услуги"
 #. module: spreadsheet_dashboard
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_share_action_configuration_share_links
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_share_menu_configuration_share_links
+#, fuzzy
 msgid "Share links"
+msgstr "Ссылки Поделиться"
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_form
+msgid "Shared with"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/public/public_dashboard.xml:0
+msgid "Show Filters"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -412,6 +549,13 @@ msgid "Spreadsheet file"
 msgstr "Файл электронной таблицы"
 
 #. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__user_ids
+msgid ""
+"The users the filter is shared with. If empty, the filter is shared with all "
+"users."
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__thumbnail
 msgid "Thumbnail"
@@ -430,14 +574,31 @@ msgid "URL"
 msgstr "URL"
 
 #. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_favorite_filters_view_search
+msgid "User"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.actions.act_window,name:spreadsheet_dashboard.actions_spreadsheet_dashboard_favorite_filters_view
+#: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration_global_filters
+msgid "User-defined Dashboard Filters"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_favorite_filters__user_ids
+msgid "Users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
 msgid "Users who have favorited this dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "Просмотр"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
@@ -471,9 +632,10 @@ msgstr "У вас нет доступа к этой приборной пане�
 #. module: spreadsheet_dashboard
 #. odoo-python
 #: code:addons/spreadsheet_dashboard/controllers/share.py:0
+#, fuzzy
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
-msgstr ""
+msgstr "У вас нет прав на экспорт данных. Обратитесь к администратору."
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_form
@@ -485,3 +647,15 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_bar/dashboard_search_bar.js:0
 msgid "for"
 msgstr "для"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_search_model.js:0
+msgid "has"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/public/public_dashboard.xml:0
+msgid "x"
+msgstr ""

@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-09-16 22:55+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-22 00:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
 "google_calendar/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: google_calendar
 #. odoo-python
@@ -83,12 +84,17 @@ msgstr ""
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/res_users_settings.py:0
+#, fuzzy
 msgid ""
 "An error occurred while generating the token. Your authorization code may be "
 "invalid or has already expired [%s]. You should check your Client ID and "
 "secret on the Google APIs plateform or try to stop and restart your calendar "
 "synchronization."
 msgstr ""
+"Під час створення токена сталася помилка. Ваш код авторизації може бути "
+"недійсним або його термін дії вже минув. [%s]. Вам слід перевірити свій "
+"Client ID та секретний ключ на платформі Google API або спробувати зупинити "
+"та перезапустити синхронізацію календаря."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -140,13 +146,14 @@ msgstr "Налаштування"
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
+#, fuzzy
 msgid "Configure"
-msgstr ""
+msgstr "Налаштувати"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Confirm"
-msgstr "Підтвердити"
+msgid "Continue"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
@@ -159,19 +166,9 @@ msgid "Created on"
 msgstr "Створено"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
-msgid "Delete from Odoo"
-msgstr "Видалити з Odoo"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
-msgid "Delete from both"
-msgstr "Видалити з обох"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
-msgid "Delete from the current Google Calendar account"
-msgstr "Видалити з поточного облікового запису Google Календаря"
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_events
+msgid "Delete synced events from Odoo"
+msgstr ""
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -181,6 +178,11 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_google_disable_auto_videocall_link
 msgid "Disable videocall generation"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
+msgid "Disconnect Google Calendar"
 msgstr ""
 
 #. module: google_calendar
@@ -204,8 +206,9 @@ msgstr "Ел. пошта"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_alarm_manager
+#, fuzzy
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Менеджер сповіщення про подію"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -224,10 +227,15 @@ msgid "Google Calendar"
 msgstr "Google Календар"
 
 #. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
 msgstr "Скинути обліковий запис Google Календаря"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_account_email
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_account_email
+msgid "Google Calendar Email"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
@@ -247,13 +255,15 @@ msgstr "Google Calendar: синхронізація"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
+#, fuzzy
 msgid "Google Meet"
-msgstr ""
+msgstr "Google Meet"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
+#, fuzzy
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Google синхронізація на паузі"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
@@ -269,8 +279,9 @@ msgstr "Google дав таке пояснення: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__guests_readonly
+#, fuzzy
 msgid "Guests Event Modification Permission"
-msgstr ""
+msgstr "Дозвіл на зміну події гостей"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__id
@@ -296,14 +307,16 @@ msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_config_settings__cal_sync_paused
+#, fuzzy
 msgid "Indicates if synchronization with Google Calendar is paused or not."
-msgstr ""
+msgstr "Вказує, чи призупинено синхронізацію з Календарем Google."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
+#, fuzzy
 msgid "It will not be synced as long at it is not updated."
-msgstr ""
+msgstr "Він не буде синхронізований, доки не буде оновлено."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
@@ -326,11 +339,6 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
-msgid "Leave them untouched"
-msgstr "Залиште його незайманим"
-
-#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
@@ -344,11 +352,6 @@ msgid "Next Sync Token"
 msgstr "Токен наступної синхронізації"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
-msgid "Next Synchronization"
-msgstr "Наступна синхронізація"
-
-#. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Notification"
@@ -356,8 +359,9 @@ msgstr "Сповіщення"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#, fuzzy
 msgid "Pause Synchronization"
-msgstr ""
+msgstr "Поставити на паузу синзронізацію"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -371,24 +375,9 @@ msgid "Reset Account"
 msgstr "Скинути обліковий запис"
 
 #. module: google_calendar
-#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
-msgid "Reset Google Calendar Account"
-msgstr "Скинути обліковий запис Google Календаря"
-
-#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
 msgstr "Синхронізувати запис з Google Календарем"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
-msgid "Synchronize all existing events"
-msgstr "Синхронізувати всі існуючі події"
-
-#. module: google_calendar
-#: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__new
-msgid "Synchronize only new events"
-msgstr "Синхронізувати лише нові події"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -403,19 +392,23 @@ msgstr ""
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
+#, fuzzy
 msgid ""
 "The following event can only be updated by the organizer according to the "
 "event permissions set on Google Calendar."
 msgstr ""
+"Наступну подію може оновити лише організатор відповідно до дозволів події, "
+"установлених у Календарі Google."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
+#, fuzzy
 msgid "The following event could not be synced with Google Calendar."
-msgstr ""
+msgstr "Наступну подію не вдалося синхронізувати з Календарем Google."
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
+#: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_events
 msgid "This will only affect events for which the user is the owner"
 msgstr "Це вплине лише на ті події, де користувач є власником"
 
@@ -433,8 +426,9 @@ msgstr "Користувач"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
+#, fuzzy
 msgid "User Settings"
-msgstr ""
+msgstr "Налаштування користувача"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
@@ -443,13 +437,14 @@ msgid "User token"
 msgstr "Токен користувача"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
-msgid "User's Existing Events"
-msgstr "Існуючі події користувача"
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
+#, fuzzy
+msgid "Videocall Source"
+msgstr "Джерело відеодзвінка"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
-msgid "Videocall Source"
+#: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
+msgid "What should happen to previously synced events?"
 msgstr ""
 
 #. module: google_calendar
@@ -464,3 +459,33 @@ msgstr "невизначений час"
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr "схоже, у вас немає дозволу змінювати цю подію в Google календарі"
+
+#~ msgid "Confirm"
+#~ msgstr "Підтвердити"
+
+#~ msgid "Delete from Odoo"
+#~ msgstr "Видалити з Odoo"
+
+#~ msgid "Delete from both"
+#~ msgstr "Видалити з обох"
+
+#~ msgid "Delete from the current Google Calendar account"
+#~ msgstr "Видалити з поточного облікового запису Google Календаря"
+
+#~ msgid "Leave them untouched"
+#~ msgstr "Залиште його незайманим"
+
+#~ msgid "Next Synchronization"
+#~ msgstr "Наступна синхронізація"
+
+#~ msgid "Reset Google Calendar Account"
+#~ msgstr "Скинути обліковий запис Google Календаря"
+
+#~ msgid "Synchronize all existing events"
+#~ msgstr "Синхронізувати всі існуючі події"
+
+#~ msgid "Synchronize only new events"
+#~ msgstr "Синхронізувати лише нові події"
+
+#~ msgid "User's Existing Events"
+#~ msgstr "Існуючі події користувача"

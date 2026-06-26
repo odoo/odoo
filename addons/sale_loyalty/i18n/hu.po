@@ -3,27 +3,40 @@
 # * sale_loyalty
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-09-29 19:47+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 02:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-master/"
 "sale_loyalty/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
 msgstr " - A következő adókat tartalmazó termékeken: %(taxes)s"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
+msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -40,14 +53,6 @@ msgstr "<strong>Hűségkártya</strong>"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
 msgstr "Egy jobb globális kedvezmény már alkalmazásra került."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-"Legalább %(amount)s %(currency)s rendelési összeg szükséges a jutalomért"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -119,8 +124,9 @@ msgstr "Létrehozva"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Elvetés"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -176,8 +182,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+#, fuzzy
 msgid "Gift Cards"
-msgstr ""
+msgstr "Ajándékkártyák"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -231,15 +238,10 @@ msgid "Issued"
 msgstr "Kibocsátva"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
-msgstr "Kibocsátva :"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Könyvelési tétel"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -256,20 +258,9 @@ msgid "Last Updated on"
 msgstr "Frissítve"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr "Hűségkártya :"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
 msgstr "Hűség kupon"
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
-msgstr "Hűség adatok"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -566,6 +557,14 @@ msgid "This promo code is already applied."
 msgstr "Ez a promóciós kód már alkalmazásra került."
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
@@ -576,12 +575,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Used"
 msgstr "Használt"
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
-msgstr "Használva :"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -611,3 +604,20 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "order_id"
 msgstr ""
+
+#~ msgid ""
+#~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+#~ msgstr ""
+#~ "Legalább %(amount)s %(currency)s rendelési összeg szükséges a jutalomért"
+
+#~ msgid "Issued :"
+#~ msgstr "Kibocsátva :"
+
+#~ msgid "Loyalty Card :"
+#~ msgstr "Hűségkártya :"
+
+#~ msgid "Loyalty Data"
+#~ msgstr "Hűség adatok"
+
+#~ msgid "Used :"
+#~ msgstr "Használva :"

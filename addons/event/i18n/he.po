@@ -26,18 +26,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-11-08 17:58+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/event/he/"
-">\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-19 03:02+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-master/event/"
+"he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -2103,6 +2103,12 @@ msgid ""
 msgstr "בחר תבנית למילוי אוטומטי של כרטיסים, דרכי תקשורת, תיאורים ושדות אחרים."
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Close"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 #: model:ir.model.fields,field_description:event.field_event_slot__color
 msgid "Color"
@@ -2208,12 +2214,6 @@ msgstr ""
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
 msgstr "איש קשר"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Continue"
-msgstr "המשך"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2423,8 +2423,8 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Edit"
-msgstr "ערוך"
+msgid "Edit Ticket"
+msgstr ""
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2442,6 +2442,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
 msgstr "הפעל סריקת ברקוד"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_ticket__entry_limit
+#: model:ir.model.fields,help:event.field_event_registration__ticket_entry_limit
+msgid ""
+"Enable multi-entry tickets\n"
+"- Set to 0 or 1 to disable.\n"
+"- Enter 2 or more to define the maximum number of allowed entries."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
@@ -2477,6 +2486,11 @@ msgstr "שעת סיום"
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
 msgstr "שפר את הארכיטקטורה העסקית ומיומנויות מקצועיות."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__entry_limit
+msgid "Entry Limit"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
@@ -3175,6 +3189,11 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__ticket_entry_limit
+msgid "Initial Entry Limit"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
 msgstr ""
@@ -3476,6 +3495,12 @@ msgid "Mail Slot"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__main_registration_id
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Main Registration"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
 msgstr ""
@@ -3612,6 +3637,14 @@ msgstr "חדש"
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 #: code:addons/event/static/src/views/event_slot/list/event_slot_list_controller.js:0
 msgid "New Slot"
+msgstr ""
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_registration.py:0
+msgid ""
+"New attendance by this attendee created at %(attendance_datetime)s, see %"
+"(attendance_link)s"
 msgstr ""
 
 #. module: event
@@ -4086,6 +4119,13 @@ msgid "Registrations started"
 msgstr "ההרשמה התחילה"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+#: model:ir.model.fields,field_description:event.field_event_registration__remaining_entries
+msgid "Remaining Entries"
+msgstr ""
+
+#. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
@@ -4512,6 +4552,13 @@ msgid "Text answer"
 msgstr "טקסט התשובה"
 
 #. module: event
+#. odoo-python
+#: code:addons/event/models/event_ticket.py:0
+msgid ""
+"The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0."
+msgstr ""
+
+#. module: event
 #: model:event.event,subtitle:event.event_1
 msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
@@ -4606,6 +4653,14 @@ msgid ""
 msgstr ""
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid ""
+"The offer may have expired or you may have reached the maximum number of "
+"entries allowed."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
 msgstr ""
@@ -4655,6 +4710,12 @@ msgstr "חייב להיות ערך מוצע או ערך טקסט."
 msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "This Card/Ticket is currently unavailable."
 msgstr ""
 
 #. module: event
@@ -4762,12 +4823,6 @@ msgid "Ticket Type"
 msgstr "סוג כרטיס"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Ticket already scanned!"
-msgstr "כרטיס כבר נסרק!"
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
 msgstr "סוג כרטיס"
@@ -4864,6 +4919,11 @@ msgstr "מסלולים וסדר יום"
 #: model:event.type,name:event.event_type_1
 msgid "Training"
 msgstr "הדרכה"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Transaction"
+msgstr ""
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
@@ -5051,18 +5111,6 @@ msgstr ""
 "לשנות את התאריכים בהם הוא נערך למקרה שמזג האוויר יכשיל אותנו."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
-msgid "Website Messages"
-msgstr "הודעות מאתר האינטרנט"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event__website_message_ids
-#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
-msgid "Website communication history"
-msgstr "היסטורית התקשרויות מאתר האינטרנט"
-
-#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__weeks
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
@@ -5104,6 +5152,15 @@ msgstr ""
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
 msgstr "אתה באמת בין הטובים ביותר."
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_registration.py:0
+msgid ""
+"You cannot cancel the last attendance of the sub-registration with id: %"
+"(registration_id)s. Please try again from the original registration of this "
+"attendee."
+msgstr ""
 
 #. module: event
 #. odoo-python
@@ -5275,3 +5332,18 @@ msgstr "מחר"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr ""
+
+#~ msgid "Continue"
+#~ msgstr "המשך"
+
+#~ msgid "Edit"
+#~ msgstr "ערוך"
+
+#~ msgid "Ticket already scanned!"
+#~ msgstr "כרטיס כבר נסרק!"
+
+#~ msgid "Website Messages"
+#~ msgstr "הודעות מאתר האינטרנט"
+
+#~ msgid "Website communication history"
+#~ msgstr "היסטורית התקשרויות מאתר האינטרנט"

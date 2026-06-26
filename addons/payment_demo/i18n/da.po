@@ -3,26 +3,28 @@
 # * payment_demo
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-14 21:20+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 17:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-master/"
 "payment_demo/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>City</b></small>"
-msgstr ""
+msgstr "<small><b>By</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -31,28 +33,33 @@ msgstr "<small><b>Land</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Name</b></small>"
-msgstr ""
+msgstr "<small><b>Navn</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Street and Number</b></small>"
-msgstr ""
+msgstr "<small><b>Gade og nummer</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Zip Code</b></small>"
-msgstr ""
+msgstr "<small><b>Postnummer</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small>Email</small>"
-msgstr ""
+msgstr "<small>E-mail</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>Betalingsoplysninger (testdata)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -61,18 +68,29 @@ msgstr "<small>Betalings status</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small>Street 2</small>"
+msgstr "<small>Gade 2</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid ""
+"<span class=\"badge rounded-pill text-bg-warning ms-1\">\n"
+"                                Test Mode\n"
+"                            </span>"
 msgstr ""
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+#, fuzzy
 msgid "Authorize"
-msgstr ""
+msgstr "Godkend"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "Belgium"
-msgstr ""
+msgstr "Belgien"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -86,8 +104,9 @@ msgstr "Annulleret"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulleret"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
@@ -130,21 +149,23 @@ msgstr "Demo"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+#, fuzzy
 msgid "Demo Express Checkout"
-msgstr ""
+msgstr "Demo af hurtig betaling"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
-msgid "Demo providers should never be enabled."
+msgid "Demo providers must never be set in live mode."
 msgstr ""
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Vis navn"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -153,17 +174,24 @@ msgid "Error"
 msgstr "Fejl"
 
 #. module: payment_demo
+#: model:payment.method,name:payment_demo.payment_method_unknown
+msgid "Express Checkout"
+msgstr ""
+
+#. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_demo
 #. odoo-javascript
 #: code:addons/payment_demo/static/src/interactions/express_checkout.js:0
+#, fuzzy
 msgid "No delivery method is available."
-msgstr ""
+msgstr "Der er ingen leveringsmetode tilgængelig."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -172,8 +200,9 @@ msgstr "Betal"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+#, fuzzy
 msgid "Pay with Demo"
-msgstr ""
+msgstr "Betal med demo"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider
@@ -208,27 +237,37 @@ msgstr "Behandlingen af betaling mislykkedes"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid "Payments made with this payment method will be <b>successful</b>."
 msgstr ""
+"Betalinger foretaget med denne betalingsform vil blive <b>gennemført</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid ""
 "Payments made with this payment method will be automatically <b>cancelled</"
 "b>."
 msgstr ""
+"Betalinger foretaget med denne betalingsform annulleres automatisk <b></b> ."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
+"Betalinger foretaget med denne betalingsform forbliver i <b>i afventende "
+"status</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid ""
 "Payments made with this payment method will simulate a processing <b>error</"
 "b>."
 msgstr ""
+"Betalinger, der foretages med denne betalingsform, simulerer en "
+"<b>behandlingsfejl</b>."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -244,23 +283,27 @@ msgstr ""
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/controllers/portal.py:0
+#, fuzzy
 msgid "Provider %s is not properly configured."
-msgstr ""
+msgstr "Udbyderen %s er ikke konfigureret korrekt."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+#, fuzzy
 msgid "Set to Error"
-msgstr ""
+msgstr "Sæt til fejl"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
+#, fuzzy
 msgid "Simulated State"
-msgstr ""
+msgstr "Simuleret tilstand"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Successful"
-msgstr ""
+msgstr "Succesfuld"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -268,19 +311,16 @@ msgid "Successful payment"
 msgstr ""
 
 #. module: payment_demo
-#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
-msgid "Test Mode"
-msgstr "Test tilstand"
-
-#. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
+#, fuzzy
 msgid "The state in which transactions created from this token should be set."
-msgstr ""
+msgstr "Den status, som transaktioner oprettet med dette token skal have."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Denne betalingsudbyders tekniske kode."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -301,5 +341,9 @@ msgstr "XXXX XXXX XXXX XXXX"
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
+#, fuzzy
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Du har valgt følgende demobetalingsstatus: %s"
+
+#~ msgid "Test Mode"
+#~ msgstr "Test tilstand"

@@ -10,23 +10,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-16 08:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 04:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-19/payment_nuvei/zh_Hant/>\n"
+"projects/odoo-master/payment_nuvei/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "%(payment_method)s requires both a first and last name."
 msgstr "%(payment_method)s 須提供姓氏及名字。"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_abitab
+msgid "Abitab"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_amex
+msgid "American Express"
+msgstr ""
 
 #. module: payment_nuvei
 #. odoo-python
@@ -37,9 +47,44 @@ msgid ""
 msgstr "處理付款時發生錯誤，請再試一次。（%(reason)s）"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_astropay
+msgid "Astropay TEF"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_banco_guayaquil
+msgid "Banco Guayaquil"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_banco_pichincha
+msgid "Banco Pichincha"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_boleto
+msgid "Boleto"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
 msgid "Code"
 msgstr "代碼"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_discover
+msgid "Discover"
+msgstr ""
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
@@ -48,15 +93,35 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_facilito
+msgid "Facilito"
+msgstr ""
+
+#. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
 msgid "ID"
 msgstr "識別號"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_nuvei_local
+msgid "Local Payments"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "商戶識別碼"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_naranja
+msgid "Naranja"
+msgstr ""
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -79,6 +144,16 @@ msgid "Nuvei Site Identifier"
 msgstr "Nuvei 網站識別碼"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_oxxopay
+msgid "Oxxo Pay"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_pse
+msgid "PSE"
+msgstr ""
+
+#. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
 msgid "Payment Provider"
 msgstr "付款服務商"
@@ -87,6 +162,11 @@ msgstr "付款服務商"
 #: model:ir.model,name:payment_nuvei.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "付款交易"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_pix
+msgid "Pix"
+msgstr ""
 
 #. module: payment_nuvei
 #. odoo-python
@@ -101,6 +181,16 @@ msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr "收到無效交易狀態 %(status)s，原因：%(reason)s。"
 
 #. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_redpagos
+msgid "Redpagos"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_spei
+msgid "SPEI"
+msgstr ""
+
+#. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Secret Key"
 msgstr "秘密金鑰"
@@ -109,6 +199,11 @@ msgstr "秘密金鑰"
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
 msgstr "網站識別碼"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_tarjeta_mercadopago
+msgid "Tarjeta MercadoPago"
+msgstr ""
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
@@ -130,3 +225,18 @@ msgstr "與商戶賬戶相關聯的網站識別碼。"
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "此付款服務商的技術代碼。"
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_unionpay
+msgid "UnionPay"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_nuvei
+#: model:payment.method,name:payment_nuvei.payment_method_webpay
+msgid "WebPay"
+msgstr ""

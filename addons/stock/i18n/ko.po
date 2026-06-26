@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-02-28 13:54+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/stock/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 04:41+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/stock/"
 "ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -596,11 +596,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on "
-"the \"Check Availability\" button to try to reserve products."
+"the \"Reserve\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                모든 품목을 예약할 수 없습니다. 품목 예약을 "
-"시도하려면 \"사용 가능 확인\" 버튼을 클릭합니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1104,6 +1101,12 @@ msgid "Add a Product"
 msgstr "품목 추가"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
+msgid "Add a description"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
@@ -1238,6 +1241,11 @@ msgstr "모든 카테고리"
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
 msgstr "전체 어린이 대상 패키지"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
+msgid "All Delivery Providers"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1760,6 +1768,11 @@ msgid "Bulk Weight"
 msgstr "벌크 중량"
 
 #. module: stock
+#: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
+msgid "Buy Odoo Enterprise now to get more providers."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
 msgstr "LOT별"
@@ -1959,12 +1972,6 @@ msgstr ""
 "데 사용되는 문자입니다."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.vpicktree
-msgid "Check Availability"
-msgstr "사용 가능 확인"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
@@ -2022,12 +2029,6 @@ msgid "Clear"
 msgstr "제거"
 
 #. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
-msgid "Click or press enter to add a description"
-msgstr "클릭하거나 엔터키를 눌러 설명을 추가합니다."
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Close"
 msgstr "닫기"
@@ -2077,100 +2078,6 @@ msgid "Compute shipping costs"
 msgstr "배송 커넥터를 사용하여 운송비를 계산합니다."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "DHL로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 DHL로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr "Easypost로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr "배송비 계산 후 Envia.com으로 배송하기"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "FedEx로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 FedEx로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Sendcloud로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Shiprocket으로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr "Starshipit로 배송비 계산 및 배송"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "UPS로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 UPS로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "USPS로 배송비를 계산 및 배송합니다."
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to "
-"install)</strong>"
-msgstr ""
-"배송비 계산 후 USPS로 발송하세요.<br/>\n"
-"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
-"요)</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr "bpost로 배송비를 계산 및 배송합니다."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
 msgstr "이동 예약을 해야 하는 경우를 계산합니다"
@@ -2186,6 +2093,11 @@ msgstr "환경설정"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
 msgstr "설정"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Configure Methods"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2682,16 +2594,6 @@ msgid "DEMO_UOM"
 msgstr "DEMO_UOM"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr "DHL 커넥터"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
-msgstr "DHL 익스프레스 배송"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Daily Demand:"
@@ -2836,11 +2738,6 @@ msgstr "이름 기본값"
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
 msgstr "OBTRETU 바코드 기본값"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Default Return Name"
-msgstr "반품명 기본값"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
@@ -3079,11 +2976,6 @@ msgstr "수요"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid "Demo Address and Name"
-msgstr "데모용 주소 및 이름"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3430,7 +3322,6 @@ msgid "Do you confirm you want to scrap"
 msgstr "폐기를 승인하시겠습니까?"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Documentation"
 msgstr "문서"
@@ -3496,11 +3387,6 @@ msgstr "Dymo 라벨"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
 msgstr "가장 빠른 입고 시기"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr "Easypost 배송"
 
 #. module: stock
 #. odoo-python
@@ -3584,11 +3470,6 @@ msgstr "창고에 저장 가능한 품목의 추적성을 확인하십시오."
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
 msgstr "설명 추가하기"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
-msgstr "Envia.com 커넥터"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__based_on
@@ -3684,15 +3565,14 @@ msgid "February"
 msgstr "2월"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "FedEx Connector"
-msgstr "FedEx 배송"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
 msgstr "필터링된 위치"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Find a Delivery Provider"
+msgstr ""
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3715,6 +3595,12 @@ msgstr "첫 번째 일련번호/로트"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
 msgstr "첫 번째 일련번호"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
+msgid "Fold"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -3951,6 +3837,12 @@ msgstr "로트 번호 생성"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
 msgstr "일련번호 생성"
@@ -3958,8 +3850,8 @@ msgstr "일련번호 생성"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Generate Serials/Lots"
-msgstr "일련번호/로트 생성"
+msgid "Generate Serials"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4423,20 +4315,16 @@ msgstr "가져오기"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Lots"
 msgstr "로트 번호 가져오기"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials"
 msgstr "일련번호 가져오기"
-
-#. module: stock
-#. odoo-javascript
-#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
-msgid "Import Serials/Lots"
-msgstr "일련번호 및 로트번호 가져오기"
 
 #. module: stock
 #. odoo-python
@@ -5955,6 +5843,12 @@ msgid "No allocation need found."
 msgstr "배정할 내용 없음"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "No backorder has been planned for undelivered demanded quantities: %s"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
 msgstr "배송할 품목이 없습니다!"
@@ -6072,12 +5966,6 @@ msgid "Notes"
 msgstr "메모"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-msgid "Nothing to check the availability for."
-msgstr "사용 가능한 재고가 없습니다."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
 msgid "November"
 msgstr "11월"
@@ -6192,6 +6080,14 @@ msgstr "LOT/일련번호 당 하나"
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
 msgstr "단위 당 하나"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid ""
+"Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
+"expected %(nbr_demanded)s %(uom)s"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6949,13 +6845,9 @@ msgid "Please create a warehouse for company %s."
 msgstr "회사 %s에 대한 창고를 만들어 주세요."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
-msgid ""
-"Please put this document inside your return parcel.<br/>\n"
-"                                Your parcel must be sent to this address:"
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Please put this document inside your return parcel.<br/>"
 msgstr ""
-"이 문서를 반품 택배 안에 동봉하여 주십시오.<br/>\n"
-"                                반품 주소:"
 
 #. module: stock
 #. odoo-javascript
@@ -7668,7 +7560,7 @@ msgid "Quants cannot be created for consumables or services."
 msgstr "소비재 또는 서비스에 대해 퀀트를 생성할 수 없습니다."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_return_slip
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "RETURN OF"
 msgstr "반품"
 
@@ -8044,6 +7936,8 @@ msgstr "예약 방법"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
 msgstr ""
 
@@ -8557,11 +8451,6 @@ msgid "Send email"
 msgstr "이메일 전송"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr "Sendcloud 배송"
-
-#. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
@@ -8742,11 +8631,6 @@ msgid "Shipping"
 msgstr "배송"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Shipping Connectors"
-msgstr "배송업체"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__move_type
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8773,11 +8657,6 @@ msgstr ""
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
 msgstr "배송: 이메일로 전송"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr "Shiprocket 배송"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -9049,11 +8928,6 @@ msgstr "%(original_picking_link)s에서 분할되었습니다."
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Starred"
 msgstr "별표"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
-msgstr "Starshipit 커넥터"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9464,11 +9338,9 @@ msgstr "기술적인 정보"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
 msgid ""
-"Technical field used to compute whether the button \"Check Availability\" "
-"should be displayed."
+"Technical field used to compute whether the button \"Reserve\" should be "
+"displayed."
 msgstr ""
-"\"가용성 확인\" 버튼을 표시해야 하는지 여부를 계산하는 데 사용되는 기술 필드"
-"입니다."
 
 #. module: stock
 #. odoo-python
@@ -9796,6 +9668,12 @@ msgstr "이 재고 이동을 생성한 재고 규칙"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "되돌리기를 할 제고 조정 항목이 없습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+msgid "There is nothing to reserve."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10329,6 +10207,11 @@ msgid "Transfer"
 msgstr "전송"
 
 #. module: stock
+#: model:mail.message.subtype,name:stock.mt_picking_state
+msgid "Transfer Status"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
 msgstr "다음으로 이동"
@@ -10437,18 +10320,6 @@ msgstr "유형"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "레코드에 있는 예외 활동의 유형입니다."
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr "UPS 배송"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "USPS Connector"
-msgstr "USPS 배송"
 
 #. module: stock
 #. odoo-javascript
@@ -10891,18 +10762,6 @@ msgstr "주의"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock
 msgid "Warnings for Stock"
 msgstr "재고에 대한 경고"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
-msgid "Website Messages"
-msgstr "웹사이트 메시지"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_lot__website_message_ids
-#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
-msgid "Website communication history"
-msgstr "웹사이트 대화 이력"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__base_weight
@@ -11483,6 +11342,11 @@ msgstr ""
 "맛있게 드세요!"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.return_label_header
+msgid "Your parcel must be sent to this address:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
@@ -11537,11 +11401,6 @@ msgstr "]<br/>분 :"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
 msgstr "barcodelookup.com"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr "bpost 배송"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
@@ -11760,6 +11619,158 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 배송 주문서 (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                All products could not be reserved. Click "
+#~ "on the \"Check Availability\" button to try to reserve products."
+#~ msgstr ""
+#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
+#~ "                                모든 품목을 예약할 수 없습니다. 품목 예약"
+#~ "을 시도하려면 \"사용 가능 확인\" 버튼을 클릭합니다."
+
+#~ msgid "Check Availability"
+#~ msgstr "사용 가능 확인"
+
+#~ msgid "Click or press enter to add a description"
+#~ msgstr "클릭하거나 엔터키를 눌러 설명을 추가합니다."
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "DHL로 배송비를 계산 및 배송합니다."
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with DHL<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "배송비 계산 후 DHL로 발송하세요.<br/>\n"
+#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
+#~ "세요)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Easypost"
+#~ msgstr "Easypost로 배송비를 계산 및 배송합니다."
+
+#~ msgid "Compute shipping costs and ship with Envia.com"
+#~ msgstr "배송비 계산 후 Envia.com으로 배송하기"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "FedEx로 배송비를 계산 및 배송합니다."
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with FedEx<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "배송비 계산 후 FedEx로 발송하세요.<br/>\n"
+#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
+#~ "세요)</strong>"
+
+#~ msgid "Compute shipping costs and ship with Sendcloud"
+#~ msgstr "Sendcloud로 배송비를 계산 및 배송합니다."
+
+#~ msgid "Compute shipping costs and ship with Shiprocket"
+#~ msgstr "Shiprocket으로 배송비를 계산 및 배송합니다."
+
+#~ msgid "Compute shipping costs and ship with Starshipit"
+#~ msgstr "Starshipit로 배송비 계산 및 배송"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "UPS로 배송비를 계산 및 배송합니다."
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with UPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "배송비 계산 후 UPS로 발송하세요.<br/>\n"
+#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
+#~ "세요)</strong>"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "USPS로 배송비를 계산 및 배송합니다."
+
+#~ msgid ""
+#~ "Compute shipping costs and ship with USPS<br/>\n"
+#~ "                                    <strong>(please go to Home&gt;Apps to "
+#~ "install)</strong>"
+#~ msgstr ""
+#~ "배송비 계산 후 USPS로 발송하세요.<br/>\n"
+#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
+#~ "세요)</strong>"
+
+#~ msgid "Compute shipping costs and ship with bpost"
+#~ msgstr "bpost로 배송비를 계산 및 배송합니다."
+
+#~ msgid "DHL Connector"
+#~ msgstr "DHL 커넥터"
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL 익스프레스 배송"
+
+#~ msgid "Default Return Name"
+#~ msgstr "반품명 기본값"
+
+#~ msgid "Demo Address and Name"
+#~ msgstr "데모용 주소 및 이름"
+
+#~ msgid "Easypost Connector"
+#~ msgstr "Easypost 배송"
+
+#~ msgid "Envia.com Connector"
+#~ msgstr "Envia.com 커넥터"
+
+#~ msgid "FedEx Connector"
+#~ msgstr "FedEx 배송"
+
+#~ msgid "Generate Serials/Lots"
+#~ msgstr "일련번호/로트 생성"
+
+#~ msgid "Import Serials/Lots"
+#~ msgstr "일련번호 및 로트번호 가져오기"
+
+#~ msgid "Nothing to check the availability for."
+#~ msgstr "사용 가능한 재고가 없습니다."
+
+#~ msgid ""
+#~ "Please put this document inside your return parcel.<br/>\n"
+#~ "                                Your parcel must be sent to this address:"
+#~ msgstr ""
+#~ "이 문서를 반품 택배 안에 동봉하여 주십시오.<br/>\n"
+#~ "                                반품 주소:"
+
+#~ msgid "Sendcloud Connector"
+#~ msgstr "Sendcloud 배송"
+
+#~ msgid "Shipping Connectors"
+#~ msgstr "배송업체"
+
+#~ msgid "Shiprocket Connector"
+#~ msgstr "Shiprocket 배송"
+
+#~ msgid "Starshipit Connector"
+#~ msgstr "Starshipit 커넥터"
+
+#~ msgid ""
+#~ "Technical field used to compute whether the button \"Check Availability\" "
+#~ "should be displayed."
+#~ msgstr ""
+#~ "\"가용성 확인\" 버튼을 표시해야 하는지 여부를 계산하는 데 사용되는 기술 필"
+#~ "드입니다."
+
+#~ msgid "UPS Connector"
+#~ msgstr "UPS 배송"
+
+#~ msgid "USPS Connector"
+#~ msgstr "USPS 배송"
+
+#~ msgid "Website Messages"
+#~ msgstr "웹사이트 메시지"
+
+#~ msgid "Website communication history"
+#~ msgstr "웹사이트 대화 이력"
+
+#~ msgid "bpost Connector"
+#~ msgstr "bpost 배송"
 
 #~ msgid "Demo Lot/SN"
 #~ msgstr "데모 로트/일련번호"

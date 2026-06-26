@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_picking_batch
+# * stock_picking_batch
 #
 # Translators:
 # Matej Mijoč, 2022
@@ -17,61 +17,73 @@
 # Martin Trigaux, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # Bole <bole@dajmi5.com>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
-"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-18 21:45+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-master/"
+"stock_picking_batch/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "%s was removed from the batch, no quantity processed"
-msgstr ""
+msgstr "%s je uklonjen iz grupe, nijedna količina nije obrađena"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
 msgid "<span class=\"col-6\">Waves</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Valovi</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
 "style=\"white-space: nowrap;\">Wave Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">Grupiranje valova</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
 "Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Grupiranje "
+"grupa</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kretanja</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Paketi</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -105,24 +117,33 @@ msgstr "<strong>ZA</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "<strong>→</strong>"
-msgstr ""
+msgstr "<strong>→</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
+#, fuzzy
 msgid ""
 "A transfer will not be automatically added to batches that will exceed this "
 "number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"Prijenos neće biti automatski dodan u grupe koje će premašiti ovaj broj "
+"stavki ako se prijenos doda.\n"
+"Ostavite ovu vrijednost kao '0' ako nema ograničenja stavki."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+#, fuzzy
 msgid ""
 "A transfer will not be automatically added to batches that will exceed this "
 "number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"Prijenos neće biti automatski dodan u grupe koje će premašiti ovaj broj "
+"prijenosa.\n"
+"Ostavite ovu vrijednost kao '0' ako nema ograničenja prijenosa."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -141,8 +162,9 @@ msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planovi aktivnosti"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -163,8 +185,9 @@ msgstr "Dodaj operacije"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+#, fuzzy
 msgid "Add pickings to"
-msgstr ""
+msgstr "Dodaj prikupljanja u"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -182,13 +205,15 @@ msgstr "Dodaj grupnoj isporuci"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
+#, fuzzy
 msgid "Add to batch"
-msgstr ""
+msgstr "Dodaj u grupu"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
+#, fuzzy
 msgid "Add to wave"
-msgstr ""
+msgstr "Dodaj u val"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -197,14 +222,16 @@ msgstr "Dodjela"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
+#, fuzzy
 msgid "Allowed Picking"
-msgstr ""
+msgstr "Dozvoljeno prikupljanje"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, fuzzy
 msgid "Assigned to %s Responsible"
-msgstr ""
+msgstr "Dodijeljeno odgovornoj osobi %s"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -213,39 +240,47 @@ msgstr "Broj priloga"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
+#, fuzzy
 msgid "Auto-confirm"
-msgstr ""
+msgstr "Automatska potvrda"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
+#, fuzzy
 msgid "Automatic Batches"
-msgstr ""
+msgstr "Automatske grupe"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+#, fuzzy
 msgid "Automatically group batches by contacts."
-msgstr ""
+msgstr "Automatski grupiraj grupe po kontaktima."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+#, fuzzy
 msgid "Automatically group batches by destination country."
-msgstr ""
+msgstr "Automatski grupiraj grupe po odredišnoj zemlji."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+#, fuzzy
 msgid "Automatically group batches by their destination location."
-msgstr ""
+msgstr "Automatski grupiraj grupe po odredišnoj lokaciji."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+#, fuzzy
 msgid "Automatically group batches by their source location."
-msgstr ""
+msgstr "Automatski grupiraj grupe po izvornoj lokaciji."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
+#, fuzzy
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
+"Kada je moguće, automatski stavi prikupljanja u grupe kada su potvrđena."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -260,18 +295,21 @@ msgstr "Količina"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid "Batch & Wave Transfers"
-msgstr ""
+msgstr "Grupni i valni prijenosi"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Batch Name"
-msgstr ""
+msgstr "Naziv grupe"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_properties_definition
+#, fuzzy
 msgid "Batch Properties"
-msgstr ""
+msgstr "Svojstva grupe"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -313,42 +351,50 @@ msgstr "Skup povezan sa ovim prenosom"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
 msgid "Batch transfers"
-msgstr ""
+msgstr "Grupni prijenosi"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Batch transfers cannot be merged with wave transfers and vice versa."
-msgstr ""
+msgstr "Grupni prijenosi ne mogu se spojiti s valnim prijenosima i obrnuto."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Batch/Wave transfers have been merged into the following transfer"
-msgstr ""
+msgstr "Grupni/valni prijenosi spojeni su u sljedeći prijenos"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Batch/Wave transfers with different operation types cannot be merged."
 msgstr ""
+"Grupni/valni prijenosi s različitim tipovima operacije ne mogu se spojiti."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Batch/Wave transfers with different states cannot be merged."
-msgstr ""
+msgstr "Grupni/valni prijenosi s različitim statusima ne mogu se spojiti."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
 msgid "Batches"
-msgstr ""
+msgstr "Skupine"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_calendar
+#, fuzzy
 msgid "Calendar View"
-msgstr ""
+msgstr "Kalendarski pogled"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -363,36 +409,36 @@ msgstr "Otkazano"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
 msgid "Cannot create wave transfers"
-msgstr ""
+msgstr "Nije moguće kreirati valne prijenose"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
+#, fuzzy
 msgid "Categories to consider when grouping waves."
-msgstr ""
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Check Availability"
-msgstr "Provjeri dostupnost"
+msgstr "Kategorije koje treba uzeti u obzir pri grupiranju valova."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Izaberi izgled naljepnica"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "Odaberite vrstu naljepnica za ispis"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
 msgid "Cluster transfers"
-msgstr ""
+msgstr "Klaster prijenosi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -414,13 +460,15 @@ msgstr "Kontakt"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
+#, fuzzy
 msgid "Count Picking Batch"
-msgstr ""
+msgstr "Broj grupnih prikupljanja"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
+#, fuzzy
 msgid "Count Picking Wave"
-msgstr ""
+msgstr "Broj valnih prikupljanja"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -439,8 +487,9 @@ msgstr "Kreirano"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__description
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__description
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
@@ -460,8 +509,9 @@ msgstr "Detaljne operacije"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_move_tree_inherited
+#, fuzzy
 msgid "Details"
-msgstr ""
+msgstr "Detalji"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
@@ -510,18 +560,21 @@ msgstr "Buduće aktivnosti"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+#, fuzzy
 msgid "Group by Destination Location"
-msgstr ""
+msgstr "Grupiraj po odredišnoj lokaciji"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+#, fuzzy
 msgid "Group by Source Location"
-msgstr ""
+msgstr "Grupiraj po izvornoj lokaciji"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Gujarat"
-msgstr ""
+msgstr "Gujarat"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
@@ -564,10 +617,13 @@ msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, fuzzy
 msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
+"Ako je omogućena značajka automatskih grupa, mora se odabrati barem jedna "
+"opcija 'Grupiraj po'."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -586,13 +642,15 @@ msgstr "Je pratitelj"
 
 #. module: stock_picking_batch
 #: model:ir.ui.menu,name:stock_picking_batch.menu_stock_jobs
+#, fuzzy
 msgid "Jobs"
-msgstr ""
+msgstr "Radna mjesta"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
@@ -616,10 +674,13 @@ msgstr "Posljednje aktivnosti"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
 msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
 msgstr ""
+"Pokrenite naloge prikupljanja po prolazu ili području i grupirajte ponovno u "
+"zoni pakiranja. Idealno za velika skladišta."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -628,58 +689,69 @@ msgstr "Redak"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
+#, fuzzy
 msgid "List of transfers associated to this batch"
-msgstr ""
+msgstr "Popis prijenosa povezanih s ovom grupom"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "Prikaz liste detaljnih operacija"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+#, fuzzy
 msgid "Location"
-msgstr ""
+msgstr "Lokacija"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Location From Name"
-msgstr ""
+msgstr "Naziv izvorne lokacije"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Location To Name"
-msgstr ""
+msgstr "Naziv odredišne lokacije"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_location_ids
+#, fuzzy
 msgid "Locations to consider when grouping waves."
-msgstr ""
+msgstr "Lokacije koje treba uzeti u obzir pri grupiranju valova."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Lot Number"
-msgstr ""
+msgstr "Broj lota"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+#, fuzzy
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Lot/Serijski broj"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
+#, fuzzy
 msgid "Maximum lines"
-msgstr ""
+msgstr "Maksimalno stavki"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+#, fuzzy
 msgid "Maximum transfers"
-msgstr ""
+msgstr "Maksimalno prijenosa"
 
 #. module: stock_picking_batch
 #: model:ir.actions.server,name:stock_picking_batch.action_merge_batch_picking
+#, fuzzy
 msgid "Merge"
-msgstr ""
+msgstr "Spoji"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -704,8 +776,9 @@ msgstr "stavke"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -714,14 +787,16 @@ msgstr "Rok za moju aktivnost"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
 msgid "My Transfers"
-msgstr ""
+msgstr "Moji prijenosi"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "Novi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -745,8 +820,9 @@ msgstr "Tip sljedeće aktivnosti"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__0
+#, fuzzy
 msgid "Normal"
-msgstr ""
+msgstr "Normalan"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
@@ -760,8 +836,9 @@ msgstr "Broj grešaka"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju aktivnost"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
@@ -791,23 +868,28 @@ msgstr "Operacije"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Package ID"
-msgstr ""
+msgstr "ID paketa"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "Packages"
-msgstr ""
+msgstr "Paketi"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
 msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
 "reduces packing time and is ideal for small products."
 msgstr ""
+"Prikupite više naloga u jednom obilasku i pripremite naloge dok prikupljate. "
+"Time se smanjuje vrijeme pakiranja i idealno je za male proizvode."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -822,13 +904,15 @@ msgstr "Vrsta dokumenta"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "Please select at least two batch/wave transfers to merge."
-msgstr ""
+msgstr "Molimo odaberite barem dva grupna/valna prijenosa za spajanje."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
 msgid "Prepare Batch"
-msgstr ""
+msgstr "Pripremi grupu"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave
@@ -836,8 +920,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_kanban
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_tree
+#, fuzzy
 msgid "Prepare Wave"
-msgstr ""
+msgstr "Pripremi val"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -851,8 +936,9 @@ msgstr "Ispiši naljepnice"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__priority
+#, fuzzy
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
@@ -862,13 +948,15 @@ msgstr "Proizvod"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Product Barcode"
-msgstr ""
+msgstr "Bar kod proizvoda"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+#, fuzzy
 msgid "Product Category"
-msgstr ""
+msgstr "Kategorija proizvoda"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move_line
@@ -877,19 +965,22 @@ msgstr "Skladišna kretanja proizvoda(stavke)"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Product Name"
-msgstr ""
+msgstr "Naziv proizvoda"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__properties
+#, fuzzy
 msgid "Properties"
-msgstr ""
+msgstr "Svojstva"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+#, fuzzy
 msgid "Put in Pack"
-msgstr ""
+msgstr "Stavi u paket"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -898,19 +989,29 @@ msgstr "Količina"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Quantity Done"
-msgstr ""
+msgstr "Obrađena količina"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__rating_ids
+#, fuzzy
 msgid "Ratings"
-msgstr ""
+msgstr "Ocjene"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
 msgid ""
 "Regroup multiple orders into one picking and consolidate at the packing zone."
+msgstr ""
+"Grupirajte više naloga u jedno prikupljanje i konsolidirajte u zoni "
+"pakiranja."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Reserve"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -928,8 +1029,9 @@ msgstr "Odgovorna osoba"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Result Package ID"
-msgstr ""
+msgstr "ID rezultirajućeg paketa"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
@@ -944,6 +1046,7 @@ msgstr "Planirani datum"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
+#, fuzzy
 msgid ""
 "Scheduled date for the transfers to be processed.\n"
 "              - If manually set then scheduled date for all transfers in "
@@ -953,46 +1056,60 @@ msgid ""
 "                but this scheduled date will not be set for all transfers in "
 "batch."
 msgstr ""
+"Zakazani datum obrade prijenosa.\n"
+"              - Ako je ručno postavljeno, zakazani datum za sve prijenose u "
+"grupi automatski će se ažurirati na ovaj datum.\n"
+"              - Ako nije ručno promijenjeno, a prijenosi se dodaju/uklanjaju/"
+"ažuriraju, to će biti njihov najraniji zakazani datum\n"
+"                no ovaj zakazani datum neće biti postavljen za sve prijenose "
+"u grupi."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
 msgid "Search Batch Transfer"
-msgstr ""
+msgstr "Pretraži grupni prijenos"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid "Select locations you want to group"
-msgstr ""
+msgstr "Odaberite lokacije koje želite grupirati"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid "Select product categories you want to group"
-msgstr ""
+msgstr "Odaberite kategorije proizvoda koje želite grupirati"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_sequence
+#, fuzzy
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvenca"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
+#, fuzzy
 msgid "Show Allocation Button"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
-msgid "Show Check Availability"
-msgstr ""
+msgstr "Prikaži gumb za raspodjelu"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+#, fuzzy
 msgid "Show Lots Text"
+msgstr "Prikaži tekst lotova"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Reserve Button"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Prikaži sve zapise čiji je sljedeći datum aktivnosti prošao"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -1001,23 +1118,32 @@ msgstr "Izvorna lokacija"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_location
+#, fuzzy
 msgid ""
 "Split transfers by defined locations, then group transfers with the same "
 "location."
 msgstr ""
+"Podijelite prijenose po definiranim lokacijama, zatim grupirajte prijenose s "
+"istom lokacijom."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
+#, fuzzy
 msgid ""
 "Split transfers by product category, then group transfers that have the same "
 "product category."
 msgstr ""
+"Podijelite prijenose po kategoriji proizvoda, zatim grupirajte prijenose "
+"koji imaju istu kategoriju proizvoda."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
+#, fuzzy
 msgid ""
 "Split transfers by product then group transfers that have the same product."
 msgstr ""
+"Podijelite prijenose po proizvodu, zatim grupirajte prijenose koji imaju "
+"isti proizvod."
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -1052,8 +1178,9 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
+#, fuzzy
 msgid "Stock Batch Transfer"
-msgstr ""
+msgstr "Grupni prijenos zaliha"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -1062,13 +1189,15 @@ msgstr "Skladišni prijenos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
+#, fuzzy
 msgid "Stock move lines"
-msgstr ""
+msgstr "Stavke kretanja zaliha"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
+#, fuzzy
 msgid "Stock moves"
-msgstr ""
+msgstr "Kretanja zaliha"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -1078,65 +1207,79 @@ msgstr "Sažetak:"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, fuzzy
 msgid "The following batch transfer has been created"
-msgstr ""
+msgstr "Sljedeći grupni prijenos je kreiran"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, fuzzy
 msgid "The following batch transfer has been updated"
-msgstr ""
+msgstr "Sljedeći grupni prijenos je ažuriran"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid ""
 "The following transfers cannot be added to batch transfer %(batch)s. Please "
 "check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
+"Sljedeći prijenosi ne mogu se dodati u grupni prijenos %(batch)s. Molimo "
+"provjerite njihove statuse i tipove operacija.\n"
+"\n"
+"Nekompatibilnosti: %(incompatible_transfers)s"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#, fuzzy
 msgid "The following wave transfer has been created"
-msgstr ""
+msgstr "Sljedeći valni prijenos je kreiran"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#, fuzzy
 msgid "The following wave transfer has been updated"
-msgstr ""
+msgstr "Sljedeći valni prijenos je ažuriran"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
 msgid "The selected operations should belong to a unique company."
-msgstr ""
+msgstr "Odabrane operacije trebaju pripadati jedinstvenoj tvrtki."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, fuzzy
 msgid "The selected pickings should belong to an unique company."
-msgstr ""
+msgstr "Odabrana prikupljanja trebaju pripadati jedinstvenoj tvrtki."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
 msgid "The selected transfers should belong to a unique company."
-msgstr ""
+msgstr "Odabrani prijenosi trebaju pripadati jedinstvenoj tvrtki."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, fuzzy
 msgid "The selected transfers should belong to the same operation type"
-msgstr ""
+msgstr "Odabrani prijenosi trebaju pripadati istom tipu operacije"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
+#, fuzzy
 msgid "This batch is a wave"
-msgstr ""
+msgstr "Ova grupa je val"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -1151,19 +1294,21 @@ msgstr "Današnje aktivnosti"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "Transfer"
 msgstr "Prijenos"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Transfer Display Name"
-msgstr ""
+msgstr "Naziv prijenosa za prikaz"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "Transfer Name"
-msgstr ""
+msgstr "Naziv prijenosa"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_stock_move_operations
@@ -1178,8 +1323,8 @@ msgstr "Prenio"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "Prijenosi"
 
@@ -1191,18 +1336,21 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, fuzzy
 msgid "Unassigned responsible from %s"
-msgstr ""
+msgstr "Uklonjena dodjela odgovorne osobe s %s"
 
 #. module: stock_picking_batch
 #: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
+#, fuzzy
 msgid "Unreserve"
-msgstr ""
+msgstr "Poništi rezervaciju"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__1
+#, fuzzy
 msgid "Urgent"
-msgstr ""
+msgstr "Hitno"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -1217,18 +1365,21 @@ msgstr "Skladište"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_location_ids
+#, fuzzy
 msgid "Wave Locations"
-msgstr ""
+msgstr "Lokacije valova"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_category_ids
+#, fuzzy
 msgid "Wave Product Categories"
-msgstr ""
+msgstr "Kategorije proizvoda valova"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
+#, fuzzy
 msgid "Wave Transfer"
-msgstr ""
+msgstr "Valni prijenos"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
@@ -1238,74 +1389,89 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
+#, fuzzy
 msgid "Wave Transfers"
-msgstr ""
+msgstr "Valni prijenosi"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+#, fuzzy
 msgid "Wave transfers"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website Messages"
-msgstr "Poruke webstranica"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website communication history"
-msgstr "Povijest komunikacije Web stranice"
+msgstr "Valni prijenosi"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+#, fuzzy
 msgid "When checked, create the batch in draft status"
-msgstr ""
+msgstr "Kada je označeno, kreiraj grupu u statusu nacrta"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "You cannot delete Done batch transfers."
-msgstr ""
+msgstr "Ne možete brisati obavljene grupne prijenose."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "You cannot merge done or cancelled batch/wave transfers."
-msgstr ""
+msgstr "Ne možete spajati obavljene ili otkazane grupne/valne prijenose."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "You have to set some pickings to batch."
-msgstr ""
+msgstr "Morate postaviti neka prikupljanja u grupu."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
+#, fuzzy
 msgid "a new batch transfer"
-msgstr ""
+msgstr "novi grupni prijenos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
+#, fuzzy
 msgid "a new wave transfer"
-msgstr ""
+msgstr "novi valni prijenos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
+#, fuzzy
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "postojeći grupni prijenos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
+#, fuzzy
 msgid "an existing wave transfer"
-msgstr ""
+msgstr "postojeći valni prijenos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_volume
+#, fuzzy
 msgid "shipping_volume"
-msgstr ""
+msgstr "shipping_volume"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
+#, fuzzy
 msgid "shipping_weight"
-msgstr ""
+msgstr "shipping_weight"
+
+#~ msgid "Check Availability"
+#~ msgstr "Provjeri dostupnost"
+
+#, fuzzy
+#~ msgid "Show Check Availability"
+#~ msgstr "Prikaži provjeru dostupnosti"
+
+#~ msgid "Website Messages"
+#~ msgstr "Poruke webstranica"
+
+#~ msgid "Website communication history"
+#~ msgstr "Povijest komunikacije Web stranice"

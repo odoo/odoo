@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
-"PO-Revision-Date: 2026-04-04 13:07+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 01:20+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
 "website_hr_recruitment/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -75,7 +75,7 @@ msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
 msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>Alle vacatures"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
@@ -378,8 +378,14 @@ msgstr "Ontdek onze producten."
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__display_name
 msgid "Display Name"
 msgstr "Weergavenaam"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
+msgid "Drag blocks here to add them on all jobs"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -496,6 +502,7 @@ msgstr "Ik waag een kans"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_website_page__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website_published_multi_mixin__id
 msgid "ID"
 msgstr "ID"
 
@@ -511,7 +518,7 @@ msgid "Industries Filter"
 msgstr "Bedrijfstakkenfilter"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "Insert a Job Description..."
 msgstr "Voeg een functieomschrijving toe..."
 
@@ -582,7 +589,7 @@ msgstr "Leid de volledige verkoopcyclus"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "LinkedIn Profile"
 msgstr "LinkedIn profiel"
 
@@ -624,6 +631,14 @@ msgid ""
 msgstr ""
 "Geen tijdverspilling in bedrijfsprocessen, echte verantwoordelijkheden en "
 "autonomie"
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/website_published_multi_mixin.py:0
+msgid ""
+"No website found for the company. Please create a website for this company "
+"to be able to open the job offer on the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
@@ -679,7 +694,7 @@ msgstr "Voordelen"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Phone Number"
 msgstr "Telefoonnummer"
 
@@ -687,18 +702,6 @@ msgstr "Telefoonnummer"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
 msgstr "Sport samen samen met collega's; <br/>de rekening is voor ons."
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Ongoing Application"
-msgstr "Potentieel duplicaat gedetecteerd: Lopende sollicitatie"
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "Potential Duplicate Detected: Refused Application"
-msgstr "Potentieel duplicaat gedetecteerd: Afgewezen sollicitatie"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
@@ -803,7 +806,7 @@ msgstr "Vacature delen"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Short Introduction"
 msgstr "Korte inleiding"
 
@@ -838,26 +841,6 @@ msgstr "Sterke analytische vaardigheden"
 #: model:website.page,name:website_hr_recruitment.thankyou
 msgid "Thank you (Recruitment)"
 msgstr ""
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following ongoing applications share an email address, phone number and/"
-"or linkedin profile with this application:"
-msgstr ""
-"De volgende lopende aanvragen hebben hetzelfde e-mailadres, telefoonnummer "
-"en/of LinkedIn-profiel als deze sollicitatie:"
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid ""
-"The following recently refused applications share an email address, phone "
-"number and/or linkedin profile with this application:"
-msgstr ""
-"De volgende recent afgewezen aanvragen hebben hetzelfde e-mailadres, "
-"telefoonnummer en/of LinkedIn-profiel als deze sollicitatie:"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
@@ -963,6 +946,11 @@ msgid "Website Absolute URL"
 msgstr "Absolute URL van de website"
 
 #. module: website_hr_recruitment
+#: model:ir.model,name:website_hr_recruitment.model_website_published_multi_mixin
+msgid "Website Published Mixin"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Website wervingsformulier"
@@ -1019,13 +1007,13 @@ msgstr "Je <b>contact</b>gegevens zijn:"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Email"
 msgstr "Je e-mail"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.edit.js:0
 msgid "Your Name"
 msgstr "Je naam"
 
@@ -1068,16 +1056,36 @@ msgid "job URL"
 msgstr "vacature-URL"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open position"
 msgstr "open positie"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "open positions"
 msgstr "open vacatures"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 msgid "scheduled"
 msgstr "gepland"
+
+#~ msgid "Potential Duplicate Detected: Ongoing Application"
+#~ msgstr "Potentieel duplicaat gedetecteerd: Lopende sollicitatie"
+
+#~ msgid "Potential Duplicate Detected: Refused Application"
+#~ msgstr "Potentieel duplicaat gedetecteerd: Afgewezen sollicitatie"
+
+#~ msgid ""
+#~ "The following ongoing applications share an email address, phone number "
+#~ "and/or linkedin profile with this application:"
+#~ msgstr ""
+#~ "De volgende lopende aanvragen hebben hetzelfde e-mailadres, "
+#~ "telefoonnummer en/of LinkedIn-profiel als deze sollicitatie:"
+
+#~ msgid ""
+#~ "The following recently refused applications share an email address, phone "
+#~ "number and/or linkedin profile with this application:"
+#~ msgstr ""
+#~ "De volgende recent afgewezen aanvragen hebben hetzelfde e-mailadres, "
+#~ "telefoonnummer en/of LinkedIn-profiel als deze sollicitatie:"

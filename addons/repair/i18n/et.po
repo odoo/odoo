@@ -24,17 +24,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2025-10-28 15:18+0000\n"
-"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/repair/"
-"et/>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 07:34+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-master/"
+"repair/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: repair
 #. odoo-python
@@ -316,11 +316,6 @@ msgid "Catalog"
 msgstr "Kataloog"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-msgid "Check availability"
-msgstr "Kontrolli laoseisu"
-
-#. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
@@ -449,6 +444,7 @@ msgstr "Üksikasjad"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__display_name
+#: model:ir.model.fields,field_description:repair.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:repair.field_product_product__display_name
 #: model:ir.model.fields,field_description:repair.field_product_template__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
@@ -520,6 +516,7 @@ msgstr "On lõpetamata liikumisi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__id
+#: model:ir.model.fields,field_description:repair.field_account_move_line__id
 #: model:ir.model.fields,field_description:repair.field_product_product__id
 #: model:ir.model.fields,field_description:repair.field_product_template__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
@@ -641,6 +638,11 @@ msgstr "Jaan Tamm"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
 msgstr ""
 
 #. module: repair
@@ -1182,6 +1184,11 @@ msgstr "Aruandlus"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Reserve"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Reserved"
 msgstr ""
 
@@ -1490,16 +1497,6 @@ msgid "Warning"
 msgstr "Hoiatus"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
-msgid "Website Messages"
-msgstr "Veebilehe sõnumid"
-
-#. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
-msgid "Website communication history"
-msgstr "Veebilehe suhtluse ajalugu"
-
-#. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__yesterday
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Yesterday"
@@ -1573,3 +1570,12 @@ msgstr "id"
 #: code:addons/repair/models/sale_order.py:0
 msgid "sale_order_id"
 msgstr "sale_order_id"
+
+#~ msgid "Check availability"
+#~ msgstr "Kontrolli laoseisu"
+
+#~ msgid "Website Messages"
+#~ msgstr "Veebilehe sõnumid"
+
+#~ msgid "Website communication history"
+#~ msgstr "Veebilehe suhtluse ajalugu"

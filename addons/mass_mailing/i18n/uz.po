@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 07:23+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
+"mass_mailing/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -135,6 +137,30 @@ msgstr "%(contact_name)s quyidagi tarqatma ro‘yxat(lar)dan obunani bekor qildi
 
 #. module: mass_mailing
 #. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s added"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s already subscribed"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s ignored (no email)"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "%(count)s opted out"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 msgid "%(imported_count)s contacts have been imported."
 msgstr ""
@@ -151,6 +177,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/models/res_company.py:0
 msgid "%(key)s is not a valid social link field name, use `write` instead."
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_contact.py:0
+msgid "%(record_name)s created from %(link)s"
 msgstr ""
 
 #. module: mass_mailing
@@ -886,6 +918,15 @@ msgstr ""
 "kafolati.</span>"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.res_partner_view_form
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"mailing_contact_ids.length != "
+"1\">Mailing Contact</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"mailing_contact_ids.length == 1\">Mailing Contacts</span>"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Open Recipient</span>"
@@ -1501,6 +1542,11 @@ msgid "Add"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
+msgid "Add (Mailing) Contacts to Mailing List"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/plugins/schedule_option_plugin.js:0
 msgid "Add Activity"
@@ -1513,14 +1559,8 @@ msgid "Add Conditions"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
-#, fuzzy
-msgid "Add Contacts to Mailing List"
-msgstr "Kontaktlarni pochta ro‘yxatiga qo‘shish"
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
-msgid "Add Contacts to a Mailing List"
+#: model:ir.actions.client,name:mass_mailing.res_partner_to_list_results_action
+msgid "Add Contacts to Mailing List results"
 msgstr ""
 
 #. module: mass_mailing
@@ -1530,22 +1570,42 @@ msgid "Add Custom Link"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
+msgid "Add Mailing Contacts to a Mailing List"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 #, fuzzy
 msgid "Add a great slogan."
 msgstr "Ajoyib shior qo‘shing."
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 #, fuzzy
 msgid "Add to List"
 msgstr "Ro‘yxatga qo‘shish"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+msgid "Add to Lists"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.res_partner_to_list_action
+msgid "Add to Mailing List"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 msgid "Add to favorite filters"
+msgstr ""
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "Added to Mailing Lists"
 msgstr ""
 
 #. module: mass_mailing
@@ -2537,7 +2597,10 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_partner
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__partner_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__contact_id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_partner__mailing_contact_id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_users__mailing_contact_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_menu
 #, fuzzy
@@ -2586,7 +2649,9 @@ msgid "Contact us"
 msgstr "Biz bilan bog‘laning"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__contact_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__partner_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_res_partner__mailing_contact_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_res_users__mailing_contact_ids
 #, fuzzy
 msgid "Contacts"
 msgstr "Kontaktlar"
@@ -4429,6 +4494,7 @@ msgstr "Pochta kontaktlarini import qilish"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_subscription.py:0
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__contact_ids
 #, fuzzy
 msgid "Mailing Contacts"
 msgstr "Pochta kontaktlari"
@@ -4453,7 +4519,6 @@ msgstr "Jo‘natish filtrlari"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__list_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -4502,6 +4567,7 @@ msgstr "Xat-xabar ro‘yxati obunalari"
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__contact_list_ids
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_mailing_list_menu
@@ -5234,6 +5300,14 @@ msgid ""
 msgstr ""
 "Bu xatlarni jo‘natganingizdan so‘ng, ular barcha pochta qutilarda katta shov-"
 "shuvga sabab bo‘ladi!"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing_contact.py:0
+msgid ""
+"Oops! You can't add more than %(count)s contacts to a Mailing List at once.\n"
+"Please reduce your selection and try again."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree
@@ -6134,11 +6208,6 @@ msgid "Select a Target Model..."
 msgstr "Maqsadli modelni tanlang..."
 
 #. module: mass_mailing
-#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
-msgid "Select a list..."
-msgstr ""
-
-#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 #, fuzzy
 msgid "Select a record"
@@ -6149,6 +6218,11 @@ msgstr "Maqsadli modelni tanlang..."
 #, fuzzy
 msgid "Select and delete blocks to remove features."
 msgstr "Xususiyatlarni olib tashlash uchun bloklarni tanlang va o‘chiring."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
+msgid "Select lists..."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -6948,6 +7022,12 @@ msgid "This"
 msgstr "Bu"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
+msgid "This action should be used with a single kind of Contacts as input."
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/options_container.xml:0
 msgid "This block is outdated."
@@ -7368,6 +7448,8 @@ msgid "Video"
 msgstr "Video"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 #: model:ir.model,name:mass_mailing.model_ir_ui_view
 msgid "View"
 msgstr ""
@@ -7450,20 +7532,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Website"
 msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__website_message_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mailing_contact__website_message_ids
-#: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-sayt bilan aloqa tarixi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
@@ -7986,6 +8054,18 @@ msgstr "✽ Makaron mahsulotlari"
 #, fuzzy
 msgid "✽  Pizzas"
 msgstr "✽ Pitsalar"
+
+#, fuzzy
+#~ msgid "Add Contacts to Mailing List"
+#~ msgstr "Kontaktlarni pochta ro‘yxatiga qo‘shish"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Veb-sayt bilan aloqa tarixi"
 
 #, fuzzy
 #~ msgid "Heading 1"

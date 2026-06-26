@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_loyalty
+# * sale_loyalty
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2024-09-26 08:56+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-18 21:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-master/"
+"sale_loyalty/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
+"19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
+"1 : 2);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -23,9 +28,22 @@ msgid " - On products with the following taxes: %(taxes)s"
 msgstr ""
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
-msgid "<span class=\"fa fa-clipboard\"/> Copy"
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
 msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
+msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+#, fuzzy
+msgid "<span class=\"fa fa-clipboard\"/> Copy"
+msgstr "Kopijuoti"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
@@ -39,17 +57,11 @@ msgid "A better global discount is already applied."
 msgstr ""
 
 #. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-
-#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Apply"
-msgstr ""
+msgstr "Taikyti"
 
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
@@ -68,20 +80,23 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+#, fuzzy
 msgid "Code:"
-msgstr ""
+msgstr "Kodas:"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__coupon_id
+#, fuzzy
 msgid "Coupon"
-msgstr ""
+msgstr "Kuponas"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__coupon_code
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+#, fuzzy
 msgid "Coupon Code"
-msgstr ""
+msgstr "Kupono kodas"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
@@ -96,27 +111,31 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Nuolaidų ir lojalumo programos"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_uid
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Sukūrė"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_date
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "Sukurta"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Atsisakyti"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -126,8 +145,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
+#, fuzzy
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "Nuolaidos ir Lojalumo programos"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
@@ -140,28 +160,33 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Rodomas pavadinimas"
 
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
+#, fuzzy
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "Įveskite akcijos ar kupono kodą"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+#, fuzzy
 msgid "Expired Date:"
-msgstr ""
+msgstr "Galiojimo data:"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+#, fuzzy
 msgid "Gift #"
-msgstr ""
+msgstr "Dovana #"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+#, fuzzy
 msgid "Gift Card Code"
-msgstr ""
+msgstr "Dovanų kortelės kodas"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
@@ -172,13 +197,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+#, fuzzy
 msgid "Gift Cards"
-msgstr ""
+msgstr "Dovanų Kortelės"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
+#, fuzzy
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "Dovanų kortelės ir e-piniginė"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_history
@@ -201,8 +228,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -227,55 +255,44 @@ msgid "Issued"
 msgstr ""
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
-msgstr ""
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Žurnalo įrašas"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_uid
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr ""
+msgstr "Paskutinį kartą atnaujino"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_date
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
+#, fuzzy
 msgid "Loyalty Coupon"
-msgstr ""
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
-msgstr ""
+msgstr "Lojalumo programos kuponas"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
+#, fuzzy
 msgid "Loyalty Program"
-msgstr ""
+msgstr "Lojalumo programa"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_reward
+#, fuzzy
 msgid "Loyalty Reward"
-msgstr ""
+msgstr "Lojalumo programos premija"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
@@ -327,8 +344,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__order_id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__order_id
+#, fuzzy
 msgid "Order"
-msgstr ""
+msgstr "Užsakymas"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -338,20 +356,23 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__order_count
+#, fuzzy
 msgid "Order Count"
-msgstr ""
+msgstr "Užsakymų skaičius"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id
+#, fuzzy
 msgid "Order Reference"
-msgstr ""
+msgstr "Užsakymo numeris"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__points
+#, fuzzy
 msgid "Points"
-msgstr ""
+msgstr "Taškai"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
@@ -362,13 +383,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+#, fuzzy
 msgid "Reward"
-msgstr ""
+msgstr "Apdovanojimas"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__reward_amount
+#, fuzzy
 msgid "Reward Amount"
-msgstr ""
+msgstr "Atlygio suma"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
@@ -377,8 +400,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+#, fuzzy
 msgid "Reward Products"
-msgstr ""
+msgstr "Atlygio produktas"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -409,18 +433,21 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
+#, fuzzy
 msgid "Sales"
-msgstr ""
+msgstr "Pardavimai"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order
+#, fuzzy
 msgid "Sales Order"
-msgstr ""
+msgstr "Pardavimo užsakymas"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_line
+#, fuzzy
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Pardavimo užsakymo eilutė"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
@@ -553,20 +580,23 @@ msgid "This promo code is already applied."
 msgstr ""
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+#, fuzzy
 msgid "Used"
-msgstr ""
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
-msgstr ""
+msgstr "Naudotas"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -584,10 +614,13 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+#, fuzzy
 msgid ""
 "You will find below your gift cards code. An email has been sent with it. "
 "You can use it starting right now."
 msgstr ""
+"Žemiau Jūs rasite dovanų kortelės kodą. Kartu su juo buvo išsiųstas "
+"el.laiškas.  Pradėti naudoti galite jau dabar"
 
 #. module: sale_loyalty
 #. odoo-python

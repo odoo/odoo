@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:48+0000\n"
-"PO-Revision-Date: 2025-09-16 21:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 01:54+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-master/"
 "website_sale_collect/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale_collect
 #. odoo-python
-#: code:addons/website_sale_collect/models/sale_order.py:0
-msgid "%(available_qty)s/%(line_qty)s available at this location"
+#: code:addons/website_sale_collect/models/sale_order_line.py:0
+msgid "%(available_quantity)g/%(desired_quantity)g available at this location."
 msgstr ""
 
 #. module: website_sale_collect
@@ -101,11 +101,13 @@ msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_method__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__display_name
 msgid "Display Name"
@@ -113,11 +115,13 @@ msgstr "Nome exibido"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_method__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order_line__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__id
 msgid "ID"
@@ -129,8 +133,15 @@ msgid "In-store Delivery Method"
 msgstr "Método de entrega na loja"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/payment_provider.py:0
+msgid "No in-store delivery methods available"
+msgstr ""
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
 msgid "Not available"
 msgstr ""
 
@@ -157,6 +168,11 @@ msgid "Pay on site"
 msgstr "Pagamento no local"
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_method
+msgid "Payment Method"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
 msgstr "Provedor de serviços de pagamento"
@@ -175,7 +191,7 @@ msgstr "Retirar na loja"
 
 #. module: website_sale_collect
 #. odoo-python
-#: code:addons/website_sale_collect/controllers/main.py:0
+#: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Please choose a store to collect your order."
 msgstr "Escolha uma loja para retirar seu pedido."
 
@@ -207,6 +223,11 @@ msgid "Sales Order"
 msgstr "Pedido de venda"
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
 msgid "Same as contact details"
@@ -231,16 +252,9 @@ msgstr "Alguns dos produtos não estão disponíveis em"
 
 #. module: website_sale_collect
 #. odoo-python
-#: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
 msgstr "Alguns produtos não estão disponíveis na loja selecionada."
-
-#. module: website_sale_collect
-#. odoo-python
-#: code:addons/website_sale_collect/controllers/main.py:0
-msgid "Sorry, we are unable to ship your order."
-msgstr "Lamentamos, mas não foi possível enviar seu pedido."
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
@@ -264,6 +278,14 @@ msgstr "O método de entrega deve ter pelo menos um armazém para ser publicado.
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "This address may require to recompute taxes."
+msgstr ""
+
+#. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid ""
+"Unfortunately, we can not deliver this order with the selected delivery "
+"method. Please update your choice and try again."
 msgstr ""
 
 #. module: website_sale_collect
@@ -302,8 +324,7 @@ msgid "Your order will be ready on %s."
 msgstr ""
 
 #. module: website_sale_collect
-#. odoo-python
-#: code:addons/website_sale_collect/models/payment_transaction.py:0
+#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
 msgid "Your order will be ready soon."
 msgstr ""
 
@@ -323,19 +344,17 @@ msgid "Your payment has been processed but is waiting for approval."
 msgstr ""
 
 #. module: website_sale_collect
-#: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
-msgid "Your payment has been processed."
-msgstr "O seu pagamento foi processado."
-
-#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "in stock"
 msgstr ""
 
-#. module: website_sale_collect
-#. odoo-python
-#: code:addons/website_sale_collect/models/payment_provider.py:0
-msgid "no in-store delivery methods available"
-msgstr "não há métodos de entrega na loja disponíveis"
+#~ msgid "Sorry, we are unable to ship your order."
+#~ msgstr "Lamentamos, mas não foi possível enviar seu pedido."
+
+#~ msgid "Your payment has been processed."
+#~ msgstr "O seu pagamento foi processado."
+
+#~ msgid "no in-store delivery methods available"
+#~ msgstr "não há métodos de entrega na loja disponíveis"

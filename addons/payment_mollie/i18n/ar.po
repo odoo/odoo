@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-10-13 12:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 23:57+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
 "payment_mollie/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -19,12 +19,37 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_mollie
 #: model_terms:ir.ui.view,arch_db:payment_mollie.payment_provider_form
 msgid "API Key"
 msgstr "مفتاح الواجهة البرمجية للتطبيق"
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_blik
+msgid "BLIK"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_bancontact
+msgid "Bancontact"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_bank_transfer
+msgid "Bank Transfer"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_belfius
+msgid "Belfius"
+msgstr ""
 
 #. module: payment_mollie
 #. odoo-python
@@ -33,9 +58,24 @@ msgid "Cancelled payment with status: %s"
 msgstr "تم إلغاء الدفع مع الحالة: %s"
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_cartes_bancaires
+msgid "Cartes Bancaires"
+msgstr ""
+
+#. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__code
 msgid "Code"
 msgstr "رمز"
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_discover
+msgid "Discover"
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__display_name
@@ -45,11 +85,41 @@ msgid "Display Name"
 msgstr "اسم العرض"
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_eps
+msgid "EPS"
+msgstr ""
+
+#. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__id
 msgid "ID"
 msgstr "المُعرف"
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_kbc_cbc
+msgid "KBC/CBC"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_klarna
+msgid "Klarna"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_mbway
+msgid "MB WAY"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_maestro
+msgid "Maestro"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_mastercard
+msgid "MasterCard"
+msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields.selection,name:payment_mollie.selection__payment_provider__code__mollie
@@ -64,6 +134,21 @@ msgstr "مفتاح الواجهة البرمجية لـ Mollie"
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_token__mollie_customer_id
 msgid "Mollie Customer ID"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_multibanco
+msgid "Multibanco"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_p24
+msgid "P24"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_paysafecard
+msgid "PaySafeCard"
 msgstr ""
 
 #. module: payment_mollie
@@ -82,9 +167,19 @@ msgid "Payment Transaction"
 msgstr "معاملة الدفع"
 
 #. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_paypal
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_mollie
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s."
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_swish
+msgid "Swish"
 msgstr ""
 
 #. module: payment_mollie
@@ -97,3 +192,29 @@ msgstr ""
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "الكود التقني لمزود الدفع هذا."
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_twint
+msgid "Twint"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_wero_brand
+msgid "Wero"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_ideal
+#: model:payment.method,name:payment_mollie.payment_method_ideal_brand
+msgid "iDEAL"
+msgstr ""
+
+#. module: payment_mollie
+#: model:payment.method,name:payment_mollie.payment_method_in3
+msgid "in3"
+msgstr ""

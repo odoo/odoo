@@ -4,27 +4,40 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-02-14 12:16+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 01:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
 "sale_loyalty/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
 msgstr " - Trên sản phẩm có các loại thuế sau: %(taxes)s"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
+msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -41,13 +54,6 @@ msgstr "<strong>Thẻ khách hàng thân thiết</strong>"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
 msgstr "Chiết khấu hấp dẫn hơn đã được áp dụng."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr "Giá trị tối thiểu %(amount)s %(currency)s nên mua để nhận phần thưởng"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -119,8 +125,9 @@ msgstr "Được tạo vào"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Huỷ bỏ"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -169,15 +176,17 @@ msgstr "Mã thẻ quà tặng"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
+#, fuzzy
 msgid "Gift Card Count"
-msgstr ""
+msgstr "Số thẻ quà tặng"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+#, fuzzy
 msgid "Gift Cards"
-msgstr ""
+msgstr "Thẻ quà tặng"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -232,15 +241,10 @@ msgid "Issued"
 msgstr "Đã phát hành"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
-msgstr "Đã phát hành:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Hạng mục bút toán"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -257,20 +261,9 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr "Thẻ khách hàng thân thiết:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
 msgstr "Phiếu giảm giá khách hàng thân thiết"
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
-msgstr "Dữ liệu khách hàng thân thiết"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -415,8 +408,9 @@ msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
+#, fuzzy
 msgid "Sale Order Customer"
-msgstr ""
+msgstr "Khách hàng của đơn bán hàng"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -569,6 +563,14 @@ msgid "This promo code is already applied."
 msgstr "Mã khuyến mãi này đã được áp dụng."
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr "Cập nhật khuyến mãi hiện tại và chọn phần thưởng mới nếu có."
@@ -577,12 +579,6 @@ msgstr "Cập nhật khuyến mãi hiện tại và chọn phần thưởng mớ
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Used"
 msgstr "Đã sử dụng"
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
-msgstr "Đã sử dụng:"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -612,3 +608,20 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "order_id"
 msgstr "order_id"
+
+#~ msgid ""
+#~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+#~ msgstr ""
+#~ "Giá trị tối thiểu %(amount)s %(currency)s nên mua để nhận phần thưởng"
+
+#~ msgid "Issued :"
+#~ msgstr "Đã phát hành:"
+
+#~ msgid "Loyalty Card :"
+#~ msgstr "Thẻ khách hàng thân thiết:"
+
+#~ msgid "Loyalty Data"
+#~ msgstr "Dữ liệu khách hàng thân thiết"
+
+#~ msgid "Used :"
+#~ msgstr "Đã sử dụng:"

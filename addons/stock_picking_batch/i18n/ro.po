@@ -10,14 +10,15 @@
 # Dorin Hongu <dhongu@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-12-02 14:51+0000\n"
-"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-18 17:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
 "stock_picking_batch/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -34,43 +35,53 @@ msgid "%s was removed from the batch, no quantity processed"
 msgstr "%s a fost eliminat din lot, nu s-a procesat nicio cantitate"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "<i class=\"fa fa-calendar text-primary me-2\" title=\"Calendar\"/>"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+#, fuzzy
 msgid "<span class=\"col-6\">Waves</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Valuri</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
 "style=\"white-space: nowrap;\">Wave Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">Grupare valuri</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+#, fuzzy
 msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
 "Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Grupare "
+"loturi</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Mișcări</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pachete</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "<strong>FROM</strong>"
-msgstr ""
+msgstr "<strong>DE LA</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -94,29 +105,39 @@ msgstr "<strong>Responsabil:</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "<strong>TO</strong>"
-msgstr ""
+msgstr "<strong>CĂTRE</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#, fuzzy
 msgid "<strong>→</strong>"
-msgstr ""
+msgstr "<strong>→</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
+#, fuzzy
 msgid ""
 "A transfer will not be automatically added to batches that will exceed this "
 "number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"Un transfer nu va fi adăugat automat la loturi care vor depăși acest număr "
+"de linii dacă transferul este adăugat.\n"
+"Lăsați această valoare '0' dacă nu există limită de linii."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+#, fuzzy
 msgid ""
 "A transfer will not be automatically added to batches that will exceed this "
 "number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"Un transfer nu va fi adăugat automat la loturi care vor depăși acest număr "
+"de transferuri.\n"
+"Lăsați această valoare '0' dacă nu există limită de transferuri."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -135,8 +156,9 @@ msgstr "Activitate Excepție Decorare"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activitate"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -370,11 +392,6 @@ msgstr "Nu se pot crea transferuri în valuri."
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
 msgid "Categories to consider when grouping waves."
 msgstr "Categorii de luat în considerare la gruparea undelor."
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Check Availability"
-msgstr "Verifică disponibilitatea"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -724,8 +741,9 @@ msgstr "Transferurile Mele"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "Nou"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
@@ -749,8 +767,9 @@ msgstr "Tip de activitate urmatoare"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__0
+#, fuzzy
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
@@ -859,8 +878,9 @@ msgstr "Tipărire Etichete"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__priority
+#, fuzzy
 msgid "Priority"
-msgstr ""
+msgstr "Prioritate"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_product
@@ -922,6 +942,11 @@ msgid ""
 msgstr ""
 "Regrupați mai multe comenzi într-o singură preluare și consolidați-le în "
 "zona de ambalare."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Reserve"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -997,14 +1022,14 @@ msgid "Show Allocation Button"
 msgstr "Afișați butonul Alocare"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
-msgid "Show Check Availability"
-msgstr "Afișare Verificare Disponibilitate"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
 msgid "Show Lots Text"
 msgstr "Afișare text loturi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Reserve Button"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -1114,12 +1139,17 @@ msgstr "Următorul transfer de loturi a fost actualizat"
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, fuzzy
 msgid ""
 "The following transfers cannot be added to batch transfer %(batch)s. Please "
 "check their states and operation types.\n"
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
+"Următoarele transferuri nu pot fi adăugate la transferul în lot %(batch)s. "
+"Vă rugăm să verificați stările și tipurile de operațiuni.\n"
+"\n"
+"Incompatibilități: %(incompatible_transfers)s"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1176,7 +1206,7 @@ msgstr "Activitățile de astăzi"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 msgid "Transfer"
 msgstr "Transfer"
 
@@ -1203,8 +1233,8 @@ msgstr "Transferat de"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_card
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_kanban
 msgid "Transfers"
 msgstr "Transferuri"
 
@@ -1226,8 +1256,9 @@ msgstr "Fără rezervă"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__priority__1
+#, fuzzy
 msgid "Urgent"
-msgstr ""
+msgstr "Urgent"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -1271,16 +1302,6 @@ msgstr "Transferuri de val"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Wave transfers"
 msgstr "Transferuri de undă"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website Messages"
-msgstr "Mesaje Website"
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
-msgid "Website communication history"
-msgstr "Istoric comunicare website"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
@@ -1334,3 +1355,15 @@ msgstr "volum_transport"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__estimated_shipping_weight
 msgid "shipping_weight"
 msgstr "greutate_transport"
+
+#~ msgid "Check Availability"
+#~ msgstr "Verifică disponibilitatea"
+
+#~ msgid "Show Check Availability"
+#~ msgstr "Afișare Verificare Disponibilitate"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mesaje Website"
+
+#~ msgid "Website communication history"
+#~ msgstr "Istoric comunicare website"

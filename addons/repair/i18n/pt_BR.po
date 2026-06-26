@@ -14,18 +14,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2026-03-17 12:34+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 19:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-2/repair/pt_BR/>\n"
+"master/repair/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: repair
 #. odoo-python
@@ -307,11 +307,6 @@ msgid "Catalog"
 msgstr "Catálogo"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-msgid "Check availability"
-msgstr "Verificar disponibilidade"
-
-#. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
 msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
@@ -440,6 +435,7 @@ msgstr "Detalhes"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__display_name
+#: model:ir.model.fields,field_description:repair.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:repair.field_product_product__display_name
 #: model:ir.model.fields,field_description:repair.field_product_template__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
@@ -512,6 +508,7 @@ msgstr "Tem movimentações não concluídas"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move__id
+#: model:ir.model.fields,field_description:repair.field_account_move_line__id
 #: model:ir.model.fields,field_description:repair.field_product_product__id
 #: model:ir.model.fields,field_description:repair.field_product_template__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
@@ -632,6 +629,11 @@ msgstr "João Silva"
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
 msgstr "Lançamento no diário"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1173,6 +1175,11 @@ msgstr "Relatórios"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Reserve"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Reserved"
 msgstr "Reservado"
 
@@ -1481,16 +1488,6 @@ msgid "Warning"
 msgstr "Aviso"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
-msgid "Website Messages"
-msgstr "Mensagens do site"
-
-#. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
-msgid "Website communication history"
-msgstr "Histórico de comunicação do site"
-
-#. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__search_date_category__yesterday
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Yesterday"
@@ -1566,3 +1563,12 @@ msgstr "id"
 #: code:addons/repair/models/sale_order.py:0
 msgid "sale_order_id"
 msgstr "sale_order_id"
+
+#~ msgid "Check availability"
+#~ msgstr "Verificar disponibilidade"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensagens do site"
+
+#~ msgid "Website communication history"
+#~ msgstr "Histórico de comunicação do site"

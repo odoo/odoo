@@ -22,22 +22,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-04-04 12:59+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 07:07+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
 "resource/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "# Work Resources"
 msgstr "# Työresurssit"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "%(duration)s hours A"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid ""
+"%(header)s\n"
+"%(issue)s"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "%(hour_from)s - %(hour_to)s (%(duration)s) A"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -47,25 +67,15 @@ msgid "%s (copy)"
 msgstr "%s (kopio)"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "2 Week's Calendar"
-msgstr "2 viikon kalenteri"
-
-#. module: resource
 #. odoo-python
 #: code:addons/resource/models/res_company.py:0
 msgid "40 hours/week"
 msgstr ""
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span class=\"ms-2\">hours/day</span>"
-msgstr "<span class=\"ms-2\">tuntia/päivä</span>"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span class=\"ms-2\">hours/week</span>"
-msgstr "<span class=\"ms-2\">tuntia/viikko</span>"
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
+msgid "<i class=\"fa fa-long-arrow-right\" title=\"to\"/>"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -74,8 +84,18 @@ msgstr "<span class=\"o_stat_text\">Vapaa-aika</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span>hours/week</span>"
-msgstr "<span>tuntia/viikko</span>"
+msgid "<span class=\"text-muted ms-2\">(</span>"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"text-muted\">/d</span><span class=\"text-muted\">)</span>"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_recurrency_until
+msgid "A recurrency should finish after the first occurence"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__count_as__absence
@@ -94,6 +114,12 @@ msgid "Afternoon"
 msgstr "Iltapäivä"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
+msgid "All events"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -102,28 +128,12 @@ msgid "Archived"
 msgstr "Arkistoitu"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
 msgid ""
-"Are you sure you want to switch to a 1-week calendar? All work entries will "
-"be lost."
+"Are you sure? This calendar is already used.\n"
+"All the attendances will be deleted for this calendar"
 msgstr ""
-"Oletko varma, että haluat siirtyä yhden viikon kalenteriin? Kaikki "
-"työmerkinnät menetetään."
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid ""
-"Are you sure you want to switch to a 2-week calendar? All work entries will "
-"be lost."
-msgstr ""
-"Oletko varma, että haluat siirtyä kahden viikon kalenteriin? Kaikki "
-"työmerkinnät menetetään."
-
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid "Attendances can't overlap."
-msgstr "Osallistujat eivät voi olla päällekkäisiä."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
@@ -144,15 +154,16 @@ msgstr ""
 "tässä kalenterissa."
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Avg"
-msgstr "Keskiarvo"
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/resource_calendar_attendance_calendar_one2many/resource_calendar_attendance_calendar_one2many_field.js:0
+msgid "Calendar One2Many"
+msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
-msgid "Calendar in 2 weeks mode"
-msgstr "Kalenteri 2 viikon tilassa"
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__calendar_type
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_type
+msgid "Calendar Type"
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -169,6 +180,18 @@ msgstr "Sulkupäivät"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
 msgstr "Yritys"
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
+msgid "Confirm the calendar type change"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
+msgid "Continue"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__count_as
@@ -202,6 +225,7 @@ msgid "Created on"
 msgstr "Luotu"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Date"
 msgstr "Päivämäärä"
@@ -215,6 +239,16 @@ msgstr "Päiväjakso"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
 msgid "Day of Week"
 msgstr "Viikonpäivä"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_type__days
+msgid "Days"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__days_per_week
+msgid "Days per Week"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
@@ -242,6 +276,18 @@ msgstr ""
 "Määrittele työaika ja aikataulu jonka voit asettaa projektin henkilöille"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
+msgid "Delete"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__display_name
 #: model:ir.model.fields,field_description:resource.field_res_users__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
@@ -251,6 +297,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
+msgid "Duration"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_based
@@ -273,11 +324,6 @@ msgid "End Date"
 msgstr "Päättymispäivä"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
-msgid "Explanation"
-msgstr "Selitys"
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__share
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
@@ -287,15 +333,14 @@ msgstr ""
 "varten."
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
-msgid "First"
-msgstr "Ensimmäinen"
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__fixed
+msgid "Fixed"
+msgstr ""
 
 #. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar_attendance.py:0
-msgid "First week"
-msgstr "Ensimmäinen viikko"
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__forever
+msgid "Forever"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -392,9 +437,32 @@ msgstr ""
 "poistamatta sitä."
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_interval
+msgid "Interval"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
 msgid "Is Full Time"
 msgstr "On kokoaikainen"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Issue on %(date)s:"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Issue on %(dayofweek)s:"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Issue:"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -435,12 +503,33 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_count
+msgid "Number of Repetitions"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__recurrency_interval
+msgid "Number of days or weeks between each occurrence."
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
 msgid ""
 "Number of hours to work on the company schedule to be considered as fulltime."
 msgstr ""
 "Yrityksen aikataulun mukainen työtuntien määrä, jotta työntekijä voidaan "
 "katsoa kokoaikaiseksi."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__times
+msgid "Occurrences"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Overlap of attendances"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -471,13 +560,38 @@ msgid "Reason"
 msgstr "Syy"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_end_type
+msgid "Recurrence End Condition"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_until
+msgid "Recurrence End Date"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency
+msgid "Recurrency"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_excluded_occurences
+msgid "Recurrency Excluded Occurences"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
+msgid "Recurrency Type"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "Liittyvä käyttäjätunnus resurssille sen oikeuksien määrittämiseksi."
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Required Full Time"
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
+msgid "Repeat every"
 msgstr ""
 
 #. module: resource
@@ -519,6 +633,11 @@ msgid "Resource's Calendar"
 msgstr "Resurssin kalenteri"
 
 #. module: resource
+#: model:ir.actions.server,name:resource.ir_cron_calendar_clean_up_ir_actions_server
+msgid "Resource: Clean up calendar attendances"
+msgstr ""
+
+#. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
 #: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_ids
@@ -550,6 +669,12 @@ msgid "Saturday"
 msgstr "Lauantai"
 
 #. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
+msgid "Save"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Schedule Total Time"
 msgstr "Aikataulun kokonaisaika"
@@ -570,15 +695,9 @@ msgid "Search Working Time"
 msgstr "Hae työaikaa"
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
-msgid "Second"
-msgstr "Sekunti"
-
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar_attendance.py:0
-msgid "Second week"
-msgstr "Toinen viikko"
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Select a company for this working scheduled"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
@@ -615,25 +734,15 @@ msgid "Sunday"
 msgstr "Sunnuntai"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Switch"
-msgstr "Vaihto"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Switch to 1-week calendar"
-msgstr ""
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Switch to 2-weeks calendar"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
+msgstr ""
+
+#. module: resource
+#: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_duration_hours
+msgid "The attendance should have a duration between 0 and 24 hours"
 msgstr ""
 
 #. module: resource
@@ -652,11 +761,13 @@ msgid ""
 msgstr ""
 
 #. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid ""
-"The current week (from %(first_day)s to %(last_day)s) corresponds to %"
-"(number)s week."
+#: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_count
+msgid "The recurrency count should be greater than 0"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_interval
+msgid "The recurrency interval should be greater than 0"
 msgstr ""
 
 #. module: resource
@@ -664,6 +775,26 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar_leaves.py:0
 msgid "The start date of the time off must be earlier than the end date."
 msgstr "Vapaan alkamispäivän on oltava aikaisempi kuin päättymispäivän."
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
+msgid "This and following events"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid ""
+"This date is excluded of the recurrency, to start a new one on this date you "
+"should create it from scratch"
+msgstr ""
+
+#. module: resource
+#. odoo-javascript
+#: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
+msgid "This event"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
@@ -694,6 +825,11 @@ msgid "Thursday"
 msgstr "Torstai"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
+msgid "Time"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 msgid "Time Off"
 msgstr "Vapaa"
@@ -717,9 +853,16 @@ msgid "Timezone"
 msgstr "Aikavyöhyke"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Total"
-msgstr "Yhteensä"
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Too Complex Calendar"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid "Total duration of attendances cannot exceed 24 hours"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
@@ -733,11 +876,21 @@ msgid "Type"
 msgstr "Tyyppi"
 
 #. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__date
+msgid "Until"
+msgstr ""
+
+#. module: resource
 #: model:ir.model,name:resource.model_res_users
 #: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
 msgstr "Käyttäjä"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__variable
+msgid "Variable"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
@@ -750,19 +903,9 @@ msgid "Wednesday"
 msgstr "Keskiviikko"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Week 1 Working Hours"
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_type__weeks
+msgid "Weeks"
 msgstr ""
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Week 2 Working Hours"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
-msgid "Week Number"
-msgstr "Viikon numero"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__count_as
@@ -787,7 +930,6 @@ msgstr "Työresurssien määrä"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
 msgstr "Työajan palkkataso"
 
@@ -814,7 +956,6 @@ msgstr "Työaika päättyy"
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
 msgstr "Työtunnit"
 
@@ -835,6 +976,7 @@ msgstr "Työaikataulut"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__count_as__working_time
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_calendar
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -844,13 +986,10 @@ msgid "Working Time"
 msgstr "Työaika"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids_1st_week
-msgid "Working Time 1st Week"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids_2nd_week
-msgid "Working Time 2nd Week"
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid ""
+"You can't have duration based and time based attendances on the same day"
 msgstr ""
 
 #. module: resource
@@ -859,21 +998,61 @@ msgstr ""
 msgid "You cannot compute the intervals without a calendar on no resource."
 msgstr ""
 
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid ""
-"You cannot define hours and duration based attendances for the same day."
-msgstr ""
+#~ msgid "2 Week's Calendar"
+#~ msgstr "2 viikon kalenteri"
 
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid "even"
-msgstr ""
+#~ msgid "<span class=\"ms-2\">hours/day</span>"
+#~ msgstr "<span class=\"ms-2\">tuntia/päivä</span>"
 
-#. module: resource
-#. odoo-python
-#: code:addons/resource/models/resource_calendar.py:0
-msgid "odd"
-msgstr ""
+#~ msgid "<span class=\"ms-2\">hours/week</span>"
+#~ msgstr "<span class=\"ms-2\">tuntia/viikko</span>"
+
+#~ msgid "<span>hours/week</span>"
+#~ msgstr "<span>tuntia/viikko</span>"
+
+#~ msgid ""
+#~ "Are you sure you want to switch to a 1-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "Oletko varma, että haluat siirtyä yhden viikon kalenteriin? Kaikki "
+#~ "työmerkinnät menetetään."
+
+#~ msgid ""
+#~ "Are you sure you want to switch to a 2-week calendar? All work entries "
+#~ "will be lost."
+#~ msgstr ""
+#~ "Oletko varma, että haluat siirtyä kahden viikon kalenteriin? Kaikki "
+#~ "työmerkinnät menetetään."
+
+#~ msgid "Attendances can't overlap."
+#~ msgstr "Osallistujat eivät voi olla päällekkäisiä."
+
+#~ msgid "Avg"
+#~ msgstr "Keskiarvo"
+
+#~ msgid "Calendar in 2 weeks mode"
+#~ msgstr "Kalenteri 2 viikon tilassa"
+
+#~ msgid "Explanation"
+#~ msgstr "Selitys"
+
+#~ msgid "First"
+#~ msgstr "Ensimmäinen"
+
+#~ msgid "First week"
+#~ msgstr "Ensimmäinen viikko"
+
+#~ msgid "Second"
+#~ msgstr "Sekunti"
+
+#~ msgid "Second week"
+#~ msgstr "Toinen viikko"
+
+#~ msgid "Switch"
+#~ msgstr "Vaihto"
+
+#~ msgid "Total"
+#~ msgstr "Yhteensä"
+
+#~ msgid "Week Number"
+#~ msgstr "Viikon numero"

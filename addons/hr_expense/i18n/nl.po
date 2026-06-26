@@ -13,17 +13,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
-"PO-Revision-Date: 2026-05-08 09:03+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-21 19:55+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
 "hr_expense/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -867,6 +867,12 @@ msgstr "Onkosten van %(employee)s"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expenses of Your Team Member"
 msgstr "Onkosten van je teamleden"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "Expenses similar to %(other_expense_name)s"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
@@ -2037,6 +2043,12 @@ msgstr ""
 "De huidige gebruiker heeft geen gekoppelde werknemer. Maak er eerst één aan."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/res_company.py:0
+msgid "The employee expense journal must be a purchase journal."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
 "The first word of the email subject did not correspond to any product code. "
@@ -2288,16 +2300,6 @@ msgid "Waiting Reimbursement"
 msgstr "In afwachting van terugbetaling"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
-msgid "Website Messages"
-msgstr "Websiteberichten"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatiegeschiedenis"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "When the cost of an expense product is different than 0, then the "
@@ -2509,5 +2511,16 @@ msgstr "gebruik OCR om gegevens uit een foto van de rekening in te vullen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "with the same category, date, amount, and employee already exists."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "met hetzelfde bewijs bestaat al."
+
+#~ msgid "Website Messages"
+#~ msgstr "Websiteberichten"
+
+#~ msgid "Website communication history"
+#~ msgstr "Website communicatiegeschiedenis"

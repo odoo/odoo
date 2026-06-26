@@ -5,14 +5,15 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-12-03 08:33+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 05:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
 "payment_demo/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -69,14 +70,23 @@ msgid "<small>Street 2</small>"
 msgstr "<small>Улица 2</small>"
 
 #. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid ""
+"<span class=\"badge rounded-pill text-bg-warning ms-1\">\n"
+"                                Test Mode\n"
+"                            </span>"
+msgstr ""
+
+#. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
 msgstr "Авторизация"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "Belgium"
-msgstr ""
+msgstr "Бельгия"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -90,8 +100,9 @@ msgstr "Отменено"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Cancelled"
-msgstr ""
+msgstr "Отменен"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
@@ -140,21 +151,27 @@ msgstr "Демонстрационная экспресс-касса"
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
-msgid "Demo providers should never be enabled."
-msgstr "Демонстрационные провайдеры никогда не должны быть включены."
+msgid "Demo providers must never be set in live mode."
+msgstr ""
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Отображаемое имя"
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Error"
 msgstr "Ошибка"
+
+#. module: payment_demo
+#: model:payment.method,name:payment_demo.payment_method_unknown
+msgid "Express Checkout"
+msgstr ""
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__id
@@ -271,18 +288,14 @@ msgstr "Моделируемое состояние"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "Successful"
-msgstr ""
+msgstr "Успешно"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "Successful payment"
 msgstr ""
-
-#. module: payment_demo
-#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
-msgid "Test Mode"
-msgstr "Тестовый режим"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
@@ -317,3 +330,9 @@ msgstr "XXXX XXXX XXXX XXXX"
 #: code:addons/payment_demo/models/payment_transaction.py:0
 msgid "You selected the following demo payment status: %s"
 msgstr "Вы выбрали следующий статус демо-платежа: %s"
+
+#~ msgid "Demo providers should never be enabled."
+#~ msgstr "Демонстрационные провайдеры никогда не должны быть включены."
+
+#~ msgid "Test Mode"
+#~ msgstr "Тестовый режим"

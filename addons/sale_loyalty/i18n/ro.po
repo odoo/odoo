@@ -3,14 +3,15 @@
 # * sale_loyalty
 #
 # Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-12-09 14:08+0000\n"
-"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 09:24+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
 "sale_loyalty/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -27,29 +28,34 @@ msgid " - On products with the following taxes: %(taxes)s"
 msgstr " - Pentru produsele cu următoarele taxe: %(taxes)s"
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
-msgid "<span class=\"fa fa-clipboard\"/> Copy"
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
 msgstr ""
 
 #. module: sale_loyalty
-#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
-msgid "<strong>Loyalty Card</strong>"
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
 msgstr ""
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+#, fuzzy
+msgid "<span class=\"fa fa-clipboard\"/> Copy"
+msgstr "<span class=\"fa fa-clipboard\"/> Copiază"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
+#, fuzzy
+msgid "<strong>Loyalty Card</strong>"
+msgstr "<strong>Card de fidelitate</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
 msgstr "O reducere globală mai avantajoasă este deja aplicată."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-"Pentru a obține recompensa, trebuie achiziționată o sumă minimă de %(sumă)s %"
-"(monedă)s."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -123,8 +129,9 @@ msgstr "Creat la"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Abandonează"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -235,15 +242,10 @@ msgid "Issued"
 msgstr "Emitere"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
-msgstr "Emitent:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Element jurnal"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -260,20 +262,9 @@ msgid "Last Updated on"
 msgstr "Ultima actualizare"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr "Card de fidelitate:"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
 msgstr "Cupoane de fidelitate"
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
-msgstr "Date de fidelitate"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -572,6 +563,14 @@ msgid "This promo code is already applied."
 msgstr "Acest cod promoțional este deja aplicat."
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
@@ -582,12 +581,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Used"
 msgstr "Utilizat"
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
-msgstr "Utilizat :"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -617,3 +610,21 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "order_id"
 msgstr "id_comandă"
+
+#~ msgid ""
+#~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+#~ msgstr ""
+#~ "Pentru a obține recompensa, trebuie achiziționată o sumă minimă de %"
+#~ "(sumă)s %(monedă)s."
+
+#~ msgid "Issued :"
+#~ msgstr "Emitent:"
+
+#~ msgid "Loyalty Card :"
+#~ msgstr "Card de fidelitate:"
+
+#~ msgid "Loyalty Data"
+#~ msgstr "Date de fidelitate"
+
+#~ msgid "Used :"
+#~ msgstr "Utilizat :"

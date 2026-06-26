@@ -15,23 +15,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-04-13 19:31+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-19 05:02+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/point_of_sale/zh_Hans/>\n"
+"projects/odoo-master/point_of_sale/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid " (Refund)"
 msgstr " （退款）"
+
+#. module: point_of_sale
+#. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+msgid " (after discount)"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+msgid " (before discount)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -381,11 +397,6 @@ msgid "<span class=\"o_stat_text\">Journal Items</span>"
 msgstr "<span class=\"o_stat_text\">日记账项目</span>"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr "<span class=\"oe_inline\"><b>跳过预览屏幕</b></span>"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
 msgid "<span class=\"text-muted\">No Categories</span>"
 msgstr ""
@@ -525,6 +536,11 @@ msgid "<strong>Opening of session note:</strong>"
 msgstr "<strong>会议说明开幕：</strong>"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
+msgid "<strong>Receipt</strong>"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "<strong>Source Invoice</strong>"
 msgstr "<strong>原始发票</strong>"
@@ -563,9 +579,21 @@ msgid "A payment with this uuid already exists"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_preset.py:0
+msgid "A percentage service fee must be between 0% and 100%."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_preset.py:0
+msgid "A service fee requires a non-negative amount."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_preset.py:0
+msgid "A service fee requires a service fee product."
 msgstr ""
 
 #. module: point_of_sale
@@ -923,6 +951,11 @@ msgid "Added %(payment_method)s with %(amount)s"
 msgstr "新增 %(payment_method)s 支付 %(amount)s"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "Additional Fee"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Additional required information:"
 msgstr "附加所需信息："
@@ -1096,6 +1129,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__amount
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__service_fee_amount
 msgid "Amount"
 msgstr "金额"
 
@@ -1580,10 +1614,9 @@ msgid "Base"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
-msgid "Basic Receipt"
-msgstr "基本收据"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__service_fee_based_on
+msgid "Based on"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1704,6 +1737,11 @@ msgid "CANCELLED"
 msgstr "已取消"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
+msgid "CANCELLED:"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_cash_move_receipt
 msgid "CASH"
 msgstr "现金"
@@ -1752,6 +1790,12 @@ msgstr "已取消"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Cannot edit orderline"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Cannot modify a service fee"
 msgstr ""
 
 #. module: point_of_sale
@@ -2508,6 +2552,11 @@ msgid "Company:"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__complete_name
+msgid "Complete Name"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
 msgid "Config Settings"
 msgstr "配置设置"
@@ -2655,6 +2704,11 @@ msgid "Consolidated Billing"
 msgstr "合并账单"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
 msgid "Contact"
 msgstr "联系人"
@@ -2669,6 +2723,7 @@ msgstr "联系信息"
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Continue"
 msgstr "继续"
 
@@ -3757,11 +3812,6 @@ msgid "Environment check"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_ip
-msgid "Epson Printer IP Address"
-msgstr "Epson打印机IP地址"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "Error! You cannot create recursive categories."
@@ -3886,6 +3936,11 @@ msgstr "应税设定用于调整特定客户的税项和科目或销售订单/�
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fiscalization"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__service_fee_type__fixed
+msgid "Fixed Price"
 msgstr ""
 
 #. module: point_of_sale
@@ -4036,6 +4091,12 @@ msgstr "产品名称"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
+msgid "Full Receipt"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Full Synchronization:"
 msgstr "完全同步："
@@ -4078,6 +4139,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Get my invoice"
 msgstr "获取我的结算"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
+msgid "Gift Receipt"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__sequence
@@ -5085,7 +5154,8 @@ msgstr "加载中... 稍安勿躁"
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__printer_ip
 msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
-"'Automatic Certificate Update' option is enabled in the printer settings."
+"'Automatic Certificate Update' option is enabled in the printer settings. It "
+"can also be the IP address of a Zebra network printer."
 msgstr ""
 
 #. module: point_of_sale
@@ -5375,6 +5445,12 @@ msgstr "模块Pos Hr"
 #: model:product.template,description_sale:point_of_sale.product_blueberry_muffin_product_template
 msgid "Moist and fluffy muffins bursting with blueberries."
 msgstr "湿润松软的松饼里盛满蓝莓。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
+msgid "More"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6138,6 +6214,11 @@ msgstr ""
 "薯条）。"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "Options"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
@@ -6253,6 +6334,16 @@ msgstr "订单明细"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order saved for later"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__service_fee_based_on__post_discount
+msgid "Order total after discount(s)"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__service_fee_based_on__pre_discount
+msgid "Order total before discount(s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -6703,6 +6794,11 @@ msgstr ""
 #: model:product.template,name:point_of_sale.product_pecan_pie_product_template
 msgid "Pecan Pie"
 msgstr "胡桃派"
+
+#. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__service_fee_type__percent
+msgid "Percent"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7382,6 +7478,7 @@ msgstr "价格"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
@@ -7392,29 +7489,9 @@ msgid "Print"
 msgstr "打印"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
-msgid "Print Basic Receipt"
-msgstr "打印基础收据"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
-msgid "Print Full Receipt"
-msgstr "打印完整收据"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
-msgid "Print Invoice"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__print_history
+msgid "Print History"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
-msgid "Print Receipt"
-msgstr "打印收据"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7427,13 +7504,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
 msgid "Print a report with all the sales of the current PoS Session"
 msgstr "打印一份包含当前 PoS营业点的所有销售额的报表"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__basic_receipt
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_basic_receipt
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Print basic ticket without prices. Can be used for gifts."
-msgstr "打印基础票务信息，不包含价格。可用于赠送。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7457,6 +7527,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Print details receipt"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__basic_receipt
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_basic_receipt
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Print gift ticket without prices. Can be used for gifts."
 msgstr ""
 
 #. module: point_of_sale
@@ -7494,6 +7571,11 @@ msgstr "打印产品类别"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer Checkbox"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_ip
+msgid "Printer IP Address"
 msgstr ""
 
 #. module: point_of_sale
@@ -7560,6 +7642,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_ticket_printer_service.js:0
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+#: code:addons/point_of_sale/static/src/app/utils/printer/zebra_printer.js:0
 msgid "Printing failed"
 msgstr "打印失败"
 
@@ -7573,6 +7656,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Proceed Anyway"
 msgstr "继续操作"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -7615,6 +7704,11 @@ msgstr "产品组合"
 #: model:ir.model,name:point_of_sale.model_product_combo_item
 msgid "Product Combo Item"
 msgstr "产品组合项目"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_category__product_count
+msgid "Product Count"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__public_description
@@ -7728,6 +7822,7 @@ msgstr "小费"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_configuration
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Products"
 msgstr "产品"
@@ -7827,6 +7922,11 @@ msgid "REFUNDED:"
 msgstr "退款："
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__consolidation_rate
+msgid "Rate"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
 msgid "Ratings"
@@ -7856,7 +7956,7 @@ msgstr "原因"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__use_type__receipt
 msgid "Receipt"
 msgstr "收货"
@@ -8557,6 +8657,7 @@ msgstr "自助发票开具"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Send"
 msgstr "发送"
 
@@ -8629,6 +8730,23 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Served by"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__service_fee
+#: model:product.template,name:point_of_sale.product_product_service_fee_product_template
+msgid "Service Fee"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__service_fee_product_id
+msgid "Service Fee Product"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Service fees cannot be modified from the order."
 msgstr ""
 
 #. module: point_of_sale
@@ -8880,10 +8998,10 @@ msgid "Signature:"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
-msgid "Skip Preview Screen"
-msgstr "跳过预览屏幕"
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
+msgid "Simplified Receipt"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9215,6 +9333,7 @@ msgstr "净重:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_tax
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Tax"
 msgstr "税项"
 
@@ -9652,6 +9771,7 @@ msgstr "如果未选择客户或客户未配置销售价格表（如有），则
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+#: code:addons/point_of_sale/static/src/app/utils/printer/zebra_printer.js:0
 msgid "The printer is not reachable."
 msgstr ""
 
@@ -9681,14 +9801,6 @@ msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
 msgstr "币别对订单日期适用币别汇率的比率"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
-msgid ""
-"The receipt screen will be skipped if the receipt can be printed "
-"automatically."
-msgstr "如果自动打印收据，选择打印界面会跳过。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_auto
@@ -10076,6 +10188,13 @@ msgstr "此订单已付款。您不能将其设置为草稿或进行编辑。"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"This order is currently syncing, please wait a moment before loading it."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid ""
@@ -10303,8 +10422,15 @@ msgstr "要退回产品，您需要在 POS %s 中打开一个营业点"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/utils.js:0
 msgid "Today"
 msgstr "今天"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/utils.js:0
+msgid "Tomorrow"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10457,6 +10583,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__type
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__service_fee_type
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__use_type
 msgid "Type"
 msgstr "类型"
@@ -10761,7 +10888,9 @@ msgid "Wall Shelf Unit"
 msgstr "墙架单元"
 
 #. module: point_of_sale
+#. odoo-javascript
 #. odoo-python
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Warning"
@@ -10791,18 +10920,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__custom_website_placeholder
 msgid "Website Link"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_order__website_message_ids
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10895,6 +11012,11 @@ msgid "X"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
+msgid "X Report"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Yes"
@@ -10914,6 +11036,12 @@ msgstr "您目前处于离线状态。重新加载页面可能会导致丢失未
 msgid ""
 "You are not allowed to change the rounding configuration while a pos session "
 "using it is already opened."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "You are trying to add a snoozed product. Would you like to continue?"
 msgstr ""
 
 #. module: point_of_sale
@@ -11221,8 +11349,18 @@ msgid "Z"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
+msgid "Z Report"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "ZIP"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__paper_size__label
+msgid "Zebra (>=2.75in)"
 msgstr ""
 
 #. module: point_of_sale
@@ -11478,6 +11616,11 @@ msgid "note"
 msgstr "笔记"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
+msgid "on"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
@@ -11564,6 +11707,41 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
+#~ msgstr "<span class=\"oe_inline\"><b>跳过预览屏幕</b></span>"
+
+#~ msgid "Basic Receipt"
+#~ msgstr "基本收据"
+
+#~ msgid "Epson Printer IP Address"
+#~ msgstr "Epson打印机IP地址"
+
+#~ msgid "Print Basic Receipt"
+#~ msgstr "打印基础收据"
+
+#~ msgid "Print Full Receipt"
+#~ msgstr "打印完整收据"
+
+#~ msgid "Print Receipt"
+#~ msgstr "打印收据"
+
+#~ msgid "Print basic ticket without prices. Can be used for gifts."
+#~ msgstr "打印基础票务信息，不包含价格。可用于赠送。"
+
+#~ msgid "Skip Preview Screen"
+#~ msgstr "跳过预览屏幕"
+
+#~ msgid ""
+#~ "The receipt screen will be skipped if the receipt can be printed "
+#~ "automatically."
+#~ msgstr "如果自动打印收据，选择打印界面会跳过。"
+
+#~ msgid "Website Messages"
+#~ msgstr "网站消息"
+
+#~ msgid "Website communication history"
+#~ msgstr "网站沟通记录"
 
 #~ msgid "Info"
 #~ msgstr "信息"

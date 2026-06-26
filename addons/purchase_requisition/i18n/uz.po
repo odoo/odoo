@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-10-08 18:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-19 07:05+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
+"purchase_requisition/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -53,6 +55,23 @@ msgstr "<strong>Aloqa:</strong><br/>"
 #, fuzzy
 msgid "<strong>Reference:</strong><br/>"
 msgstr "<strong>Ma'lumotnoma:</strong><br/>"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "A note"
+msgstr ""
+
+#. module: purchase_requisition
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid "A product is required on purchase agreement lines."
+msgstr ""
+
+#. module: purchase_requisition
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid "A section or note line cannot have a product."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -96,6 +115,21 @@ msgid "Activity Type Icon"
 msgstr "Faoliyat turi belgisi"
 
 #. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Add a note"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Add a product"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Add a section"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
@@ -122,6 +156,13 @@ msgstr "Shartnoma amal qilish muddati"
 #, fuzzy
 msgid "Agreement Validity:"
 msgstr "Shartnoma amal qilish muddati:"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_subtotal
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Amount"
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -251,6 +292,7 @@ msgstr "Yaratilgan sana"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__currency_id
 #, fuzzy
 msgid "Currency"
 msgstr "Valyuta"
@@ -284,6 +326,11 @@ msgstr "Tavsif"
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nom"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_type
+msgid "Display Type"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
@@ -433,6 +480,11 @@ msgid "Late Activities"
 msgstr "Kechikkan faoliyatlar"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__name
+msgid "Line Description"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 #, fuzzy
 msgid "Message Delivery error"
@@ -518,6 +570,12 @@ msgid "Next Activity Type"
 msgstr "Keyingi faoliyat turi"
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Note"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
 #, fuzzy
 msgid "Number of Actions"
@@ -565,6 +623,11 @@ msgstr "Buyurtma sanasi"
 #, fuzzy
 msgid "Orders"
 msgstr "Buyurtmalar"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__parent_id
+msgid "Parent Section Line"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
@@ -741,6 +804,21 @@ msgid "Search Purchase Agreements"
 msgstr "Xarid shartomalarini qidirish"
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_section
+msgid "Section"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Section Name"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Section title"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__sequence
 msgid "Sequence"
 msgstr ""
@@ -785,6 +863,21 @@ msgstr ""
 "faoliyatlar."
 
 #. module: purchase_requisition
+#: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_subsection
+msgid "Subsection"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Subsection Name"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
+msgid "Subsection title"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 #, fuzzy
 msgid "Supplier Info"
@@ -795,6 +888,11 @@ msgstr "Ta'minotchi ma'lumoti"
 #, fuzzy
 msgid "Supplier Pricelist"
 msgstr "Yetkazib beruvchi narxlar ro‘yxati"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__display_type
+msgid "Technical field for UX purpose."
+msgstr ""
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -875,18 +973,6 @@ msgid "Warning for %s"
 msgstr "%s uchun ogohlantirish"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Veb-sayt xabarlari"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Veb-sayt aloqa tarixi"
-
-#. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, fuzzy
@@ -904,6 +990,14 @@ msgid ""
 msgstr ""
 "Loyiha bo‘lmagan xarid kelishuvining Shartnoma turi yoki Kompaniyasini "
 "o‘zgartira olmaysiz."
+
+#. module: purchase_requisition
+#. odoo-python
+#: code:addons/purchase_requisition/models/purchase_requisition.py:0
+msgid ""
+"You cannot change the type of a purchase agreement line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
@@ -948,3 +1042,11 @@ msgstr ""
 #, fuzzy
 msgid "e.g. PO0025"
 msgstr "masalan, PO0025"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Veb-sayt xabarlari"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Veb-sayt aloqa tarixi"

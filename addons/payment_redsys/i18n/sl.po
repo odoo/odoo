@@ -1,20 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_redsys
+# * payment_redsys
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-11 13:59+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:39+0000\n"
+"PO-Revision-Date: 2026-06-21 18:27+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-master/"
+"payment_redsys/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_amex
+msgid "American Express"
+msgstr ""
 
 #. module: payment_redsys
 #. odoo-python
@@ -25,20 +34,48 @@ msgid ""
 msgstr ""
 
 #. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_bizum
+msgid "Bizum"
+msgstr ""
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__code
+#, fuzzy
 msgid "Code"
+msgstr "Oznaka"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_diners
+msgid "Diners Club International"
 msgstr ""
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazani naziv"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
+msgstr "ID"
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_jcb
+msgid "JCB"
+msgstr ""
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_mastercard
+msgid "MasterCard"
 msgstr ""
 
 #. module: payment_redsys
@@ -53,18 +90,21 @@ msgstr ""
 
 #. module: payment_redsys
 #: model:ir.model,name:payment_redsys.model_payment_provider
+#, fuzzy
 msgid "Payment Provider"
-msgstr ""
+msgstr "Ponudnik plačil"
 
 #. module: payment_redsys
 #: model:ir.model,name:payment_redsys.model_payment_transaction
+#, fuzzy
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Plačilna transakcija"
 
 #. module: payment_redsys
 #: model:ir.model.fields.selection,name:payment_redsys.selection__payment_provider__code__redsys
+#, fuzzy
 msgid "Redsys"
-msgstr ""
+msgstr "Redsys"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__redsys_merchant_code
@@ -83,8 +123,9 @@ msgstr ""
 
 #. module: payment_redsys
 #: model_terms:ir.ui.view,arch_db:payment_redsys.payment_provider_form
+#, fuzzy
 msgid "Secret Key"
-msgstr ""
+msgstr "Skrivni ključ"
 
 #. module: payment_redsys
 #: model:ir.model.fields,help:payment_redsys.field_payment_provider__code
@@ -92,7 +133,17 @@ msgid "The technical code of this payment provider."
 msgstr ""
 
 #. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_unionpay
+msgid "UnionPay"
+msgstr ""
+
+#. module: payment_redsys
 #. odoo-python
 #: code:addons/payment_redsys/models/payment_transaction.py:0
 msgid "Unknown status code: %s"
+msgstr ""
+
+#. module: payment_redsys
+#: model:payment.method,name:payment_redsys.payment_method_visa
+msgid "VISA"
 msgstr ""

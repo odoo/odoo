@@ -11,17 +11,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:38+0000\n"
-"PO-Revision-Date: 2025-09-16 02:31+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 20:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-master/"
 "payment_paypal/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -51,7 +51,7 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Email"
 msgstr "Email"
 
@@ -59,11 +59,6 @@ msgstr "Email"
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Generate your webhook"
 msgstr "Tạo webhook của bạn"
-
-#. module: payment_paypal
-#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
-msgid "How to configure your paypal account?"
-msgstr "Làm thế nào để cấu hình tài khoản PayPal của bạn?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
@@ -109,6 +104,11 @@ msgid "PayPal Client Secret"
 msgstr "Mã bí mật của máy khách PayPal"
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "PayPal Email"
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
 msgstr "Loại giao dịch PayPal"
@@ -133,6 +133,11 @@ msgstr "Giao dịch thanh toán"
 #: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr "Xử lý thanh toán không thành công"
+
+#. module: payment_paypal
+#: model:payment.method,name:payment_paypal.payment_method_paypal
+msgid "Paypal"
+msgstr ""
 
 #. module: payment_paypal
 #. odoo-python
@@ -185,3 +190,6 @@ msgstr "ID Webhook"
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "You must have an HTTPS connection to generate a webhook."
 msgstr "Bạn phải có kết nối HTTPS để tạo webhook."
+
+#~ msgid "How to configure your paypal account?"
+#~ msgstr "Làm thế nào để cấu hình tài khoản PayPal của bạn?"

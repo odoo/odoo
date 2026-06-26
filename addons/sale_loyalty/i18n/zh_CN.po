@@ -3,27 +3,40 @@
 # * sale_loyalty
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2025-09-16 15:35+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-21 13:13+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-19/sale_loyalty/zh_Hans/>\n"
+"projects/odoo-master/sale_loyalty/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
 msgstr " - 产品含有如下税项: %(taxes)s"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Issued"
+msgstr ""
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "%(points_name)s Used"
+msgstr ""
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -40,13 +53,6 @@ msgstr "<strong>会员卡</strong>"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
 msgstr "更好的全局折扣已经应用"
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr "应至少采购 %(amount)s %(currency)s 以获得奖励"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -118,8 +124,9 @@ msgstr "创建日期"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "丢弃"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -168,15 +175,17 @@ msgstr "礼品卡代码"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
+#, fuzzy
 msgid "Gift Card Count"
-msgstr ""
+msgstr "礼品卡计数"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+#, fuzzy
 msgid "Gift Cards"
-msgstr ""
+msgstr "礼品卡"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -230,15 +239,10 @@ msgid "Issued"
 msgstr "已充值"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Issued :"
-msgstr "已发出 :"
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "日记账项目"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -255,20 +259,9 @@ msgid "Last Updated on"
 msgstr "上次更新日期"
 
 #. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Loyalty Card :"
-msgstr "会员卡："
-
-#. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
 msgstr "会员优惠"
-
-#. module: sale_loyalty
-#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
-msgid "Loyalty Data"
-msgstr "忠诚度数据"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -386,8 +379,9 @@ msgstr "奖励产品"
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid "Rewards Available"
-msgstr ""
+msgstr "可用奖励"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -407,8 +401,9 @@ msgstr "销售订单优惠券积分-追踪销售订单如何影响优惠券的�
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
+#, fuzzy
 msgid "Sale Order Customer"
-msgstr ""
+msgstr "销售订单客户"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -479,8 +474,9 @@ msgstr "销售订单，生成优惠券"
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid "There are available rewards not added to this order."
-msgstr ""
+msgstr "有可用奖励未加入此订单中。"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -558,6 +554,14 @@ msgid "This promo code is already applied."
 msgstr "该促销代码已使用。"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr "更新当前的促销项目，并选择新的奖励（如适用）。"
@@ -566,12 +570,6 @@ msgstr "更新当前的促销项目，并选择新的奖励（如适用）。"
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Used"
 msgstr "已使用"
-
-#. module: sale_loyalty
-#. odoo-javascript
-#: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
-msgid "Used :"
-msgstr "已使用 :"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -599,5 +597,22 @@ msgstr ""
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
+#, fuzzy
 msgid "order_id"
-msgstr ""
+msgstr "order_id"
+
+#~ msgid ""
+#~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+#~ msgstr "应至少采购 %(amount)s %(currency)s 以获得奖励"
+
+#~ msgid "Issued :"
+#~ msgstr "已发出 :"
+
+#~ msgid "Loyalty Card :"
+#~ msgstr "会员卡："
+
+#~ msgid "Loyalty Data"
+#~ msgstr "忠诚度数据"
+
+#~ msgid "Used :"
+#~ msgstr "已使用 :"

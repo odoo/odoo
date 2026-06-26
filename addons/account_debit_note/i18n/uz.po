@@ -14,15 +14,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 08:15+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-master/"
+"account_debit_note/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"debit_origin_move_type != "
+"'out_invoice'\">Invoice</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'in_invoice'\">Vendor Bill</span>"
+msgstr ""
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -31,10 +42,40 @@ msgid "<span class=\"o_stat_text\">Debit Notes</span>"
 msgstr "<span class=\"o_stat_text\">Debet qaydnomalari</span>"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Debit Note Date</strong>"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "<strong>Invoice Date</strong>"
+msgstr ""
+
+#. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 #, fuzzy
 msgid "Add Debit Note wizard"
 msgstr "Debet qaydnomasi qo‘shish ustasi"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Cancelled Proforma Invoice"
+msgstr ""
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -78,6 +119,7 @@ msgid "Created on"
 msgstr "Yaratilgan sana"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -104,6 +146,12 @@ msgid "Debit Notes"
 msgstr "Debet qaydnomalari"
 
 #. module: account_debit_note
+#: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_move_type
+#: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_move_type
+msgid "Debit Origin Move Type"
+msgstr ""
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
 #, fuzzy
 msgid "Dedicated Debit Note Sequence"
@@ -116,6 +164,26 @@ msgstr "Maxsus debet qaydnomalari ketma-ketligi"
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatilgan nom"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Invoice"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Draft Proforma Invoice"
+msgstr ""
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
@@ -143,6 +211,17 @@ msgstr ""
 "Agar har bir satr uchun tuzatishlar kiritishingiz kerak bo‘lsa, ularni "
 "nusxalash qo‘l kelishi mumkin.  Biz kredit qaydnomalaridan debet "
 "qaydnomalari uchun ularni nusxalamaymiz"
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Invoice"
+msgstr ""
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+msgid "Invoices"
+msgstr ""
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -201,6 +280,16 @@ msgid "Original Invoice Debited"
 msgstr "Asl hisob-faktura debetlandi"
 
 #. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Debit Note"
+msgstr ""
+
+#. module: account_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
+msgid "Proforma Invoice"
+msgstr ""
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 #, fuzzy
 msgid "Reason"
@@ -224,17 +313,16 @@ msgid "The debit notes created for this invoice"
 msgstr "Bu hisob-faktura uchun yaratilgan debet qaydnomalari"
 
 #. module: account_debit_note
-#. odoo-python
-#: code:addons/account_debit_note/models/account_move.py:0
-#, fuzzy
-msgid "This debit note was created from: %s"
-msgstr "Bu debet qaydnomasi quyidagidan yaratildi: %s"
-
-#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 #, fuzzy
 msgid "Use Specific Journal"
 msgstr "Maxsus jurnaldan foydalanish"
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/models/account_move.py:0
+msgid "Vendor Bills"
+msgstr ""
 
 #. module: account_debit_note
 #. odoo-python
@@ -266,9 +354,10 @@ msgstr ""
 "Allaqachon debet qaydnomasiga bog‘langan hisob-faktura uchun debet "
 "qaydnomasini yarata olmaysiz"
 
-#. module: account_debit_note
-#. odoo-python
-#: code:addons/account_debit_note/models/account_move.py:0
 #, fuzzy
-msgid "debit_origin_id"
-msgstr "debit_origin_id"
+#~ msgid "This debit note was created from: %s"
+#~ msgstr "Bu debet qaydnomasi quyidagidan yaratildi: %s"
+
+#, fuzzy
+#~ msgid "debit_origin_id"
+#~ msgstr "debit_origin_id"
