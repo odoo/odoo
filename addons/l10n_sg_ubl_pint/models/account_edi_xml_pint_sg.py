@@ -65,6 +65,45 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
         super()._ubl_add_customization_id_node(vals)
         vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@sg-1'
 
+    def _ubl_add_buyer_reference_node(self, vals):
+        # OVERRIDES account.edi.ubl_pint
+        invoice = vals['invoice']
+        vals['document_node']['cbc:BuyerReference'] = {'_text': invoice.ref}
+
+    def _ubl_add_order_reference_node(self, vals):
+        # OVERRIDES account.edi.xml.ubl_bis3
+        # Not calling super() to bypass the generic implementation.
+        vals['document_node']['cac:OrderReference'] = {
+            'cbc:ID': {'_text': None},
+            'cbc:SalesOrderID': {'_text': None},
+        }
+
+        invoice = vals.get('invoice')
+        if 'sale_line_ids' not in self.env['account.move.line']._fields:
+            return
+        sale_orders = invoice.line_ids.sale_line_ids.order_id
+        if len(sale_orders) != 1:
+            return
+
+        vals['document_node']['cac:OrderReference'] = {
+            'cbc:ID': {'_text': 'l10n_sg_peppol_order_id' in sale_orders and sale_orders.l10n_sg_peppol_order_id or 'NA'},
+            'cbc:SalesOrderID': {'_text': sale_orders.name},
+        }
+
+    def _ubl_add_invoice_line_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_invoice_line_node(vals)
+        line = vals['line_vals']['base_line']['record']
+        line_item_ref = (
+            ('l10n_sg_b2g_invoice_line_no' in line and line.l10n_sg_b2g_invoice_line_no)
+            or ('l10n_sg_ubl_line_item_ref' in line and line.l10n_sg_ubl_line_item_ref)
+            or None
+        )
+        if line_item_ref:
+            vals['line_node']['cac:OrderLineReference'] = {
+                'cbc:LineID': {'_text': line_item_ref},
+            }
+
     def _export_invoice_constraints_new(self, invoice, vals):
         # EXTENDS account_edi_ubl_cii
         constraints = super()._export_invoice_constraints(invoice, vals)
