@@ -7,27 +7,27 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-25 13:24+0000\n"
+"PO-Revision-Date: 2026-06-23 17:33+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-2/"
 "payment_paypal/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Client ID"
-msgstr "Kunde ID"
+msgstr "Kunde-ID"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -43,13 +43,13 @@ msgstr "Kode"
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "Could not generate a new access token."
-msgstr ""
+msgstr "Kunne ikke generere et nyt adgangstoken."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
@@ -59,12 +59,12 @@ msgstr "E-mail"
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Generér din webhook"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
-msgstr "Hvordan du konfigurerer din Paypal konto?"
+msgstr "Hvordan du skal konfigurere din Paypal-konto?"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
@@ -76,13 +76,13 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/payment_paypal/controllers/main.py:0
 msgid "Invalid response format, can't normalize."
-msgstr ""
+msgstr "Ugyldigt svarformat, kan ikke normaliseres."
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "Manglende værdi for txn_id (%(txn_id)s) eller txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
@@ -92,32 +92,32 @@ msgstr "PayPal"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
 msgid "PayPal Access Token"
-msgstr ""
+msgstr "PayPal-adgangstoken"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
 msgid "PayPal Access Token Expiry"
-msgstr ""
+msgstr "PayPal-adgangstoken udløber"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
 msgid "PayPal Client ID"
-msgstr ""
+msgstr "PayPal-kunde-ID"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
 msgid "PayPal Client Secret"
-msgstr ""
+msgstr "PayPal-klienthemmelighed"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "PayPal-transaktionstype"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
 msgid "PayPal Webhook ID"
-msgstr ""
+msgstr "PayPal-webhook-ID"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
@@ -133,40 +133,42 @@ msgstr "Betalingstransaktion"
 #. odoo-javascript
 #: code:addons/payment_paypal/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
-msgstr "Behandlingen af betaling mislykkedes"
+msgstr "Betalingen kunne ikke gennemføres"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Modtagne data med ugyldig betalingsstatus: %s"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Kunden forlod betalingssiden."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
 msgid "The moment at which the access token becomes invalid."
-msgstr ""
+msgstr "Det øjeblik, hvor adgangstokenet bliver ugyldigt."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Den offentlige erhvervsmail, der udelukkende bruges til at identificere "
+"PayPal-kontoen"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
 msgid "The short-lived token used to access Paypal APIs"
-msgstr ""
+msgstr "Det kortvarige token, der bruges til at få adgang til Paypal-API'er"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Den tekniske kode for denne betalingsudbyder."
 
 #. module: payment_paypal
 #. odoo-python
@@ -177,10 +179,10 @@ msgstr ""
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "Webhook ID"
-msgstr ""
+msgstr "Webhook-ID"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "You must have an HTTPS connection to generate a webhook."
-msgstr ""
+msgstr "Du skal have en HTTPS-forbindelse for at generere en webhook."

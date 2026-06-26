@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-03-14 12:52+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-22 14:47+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/crm/"
 "it/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -278,8 +278,8 @@ msgid ""
 "default.\n"
 "                                </span>"
 msgstr ""
-"<span>Assegna periodicamente i lead in base alle priorità e ai filtri.</span>"
-"<br/>\n"
+"<span>Assegna periodicamente i lead in base alle priorità e ai filtri.</"
+"span><br/>\n"
 "                               <span invisible=\"not "
 "crm_use_auto_assignment\"> \n"
 "                                    Tutti i team di vendita utilizzeranno "
@@ -313,8 +313,8 @@ msgid ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example."
-"com</t>\n"
+"    <br/>Email: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "</t>\n"
 "<t t-else=\"\">\n"
@@ -337,8 +337,8 @@ msgstr ""
 "Best,<br/>\n"
 "<t t-if=\"object.user_id\">\n"
 "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>E-mail: <t t-out=\"object.user_id.email or ''\">mark."
-"brown23@example.com</t>\n"
+"    <br/>E-mail: <t t-out=\"object.user_id.email or "
+"''\">mark.brown23@example.com</t>\n"
 "    <br/>Telefono: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
 "t>\n"
 "</t>\n"
@@ -2572,8 +2572,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
-"Il dominio di assegnazione dei membri per l'utente %(user)s e la squadra "
-"%(team)s non è formattato correttamente"
+"Il dominio di assegnazione dei membri per l'utente %(user)s e la squadra %"
+"(team)s non è formattato correttamente"
 
 #. module: crm
 #. odoo-python
@@ -2747,12 +2747,6 @@ msgstr "Nessuna riunione"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No Subject"
 msgstr "Nessun oggetto"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
-msgid "No activities scheduled"
-msgstr "Nessuna attività in programma"
 
 #. module: crm
 #. odoo-python
@@ -4446,6 +4440,12 @@ msgid "What went wrong?"
 msgstr "Cosa è andato storto?"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
+msgid "Without activities scheduled"
+msgstr "Senza attività in programma"
+
+#. module: crm
 #: model:crm.stage,name:crm.stage_lead4
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__won
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__won_status__won
@@ -4727,3 +4727,6 @@ msgstr "indirizzo e-mail valido"
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr "numero di telefono valido"
+
+#~ msgid "No activities scheduled"
+#~ msgstr "Nessuna attività in programma"
