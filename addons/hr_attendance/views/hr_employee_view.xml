@@ -13,6 +13,9 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">110</field>
         <field name="arch" type="xml">
+            <field name="resource_calendar_id" position="after">
+                <field name="attendance_based"/>
+            </field>
             <button name="action_open_versions" position="before">
                 <field name="attendance_state" invisible="1"/>
                 <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>

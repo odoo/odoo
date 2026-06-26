@@ -26,6 +26,7 @@ actions(Check in/Check out) performed by them.
         'views/res_config_settings_views.xml',
         'views/hr_attendance_kiosk_templates.xml',
         'views/hr_version_views.xml',
+        'views/hr_contract_template_views.xml',
         'security/ir.access.csv',
     ],
     'demo': [

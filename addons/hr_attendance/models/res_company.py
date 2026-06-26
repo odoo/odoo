@@ -48,6 +48,7 @@ class ResCompany(models.Model):
         string="Break Management on Checkout",
         help="If enabled, employees can record their total break duration after checking out.",
     )
+    attendance_based = fields.Boolean(default=False, required=True, groups="hr.group_hr_user")
 
     _check_auto_check_out_specific_time_range = models.Constraint(
         "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",
