@@ -1093,12 +1093,14 @@ Please change the quantity done or the rounding precision in your settings.""",
         vals_list = []
         loc_dest = self.env['stock.location'].browse(default_vals['location_dest_id'])
         product = self.env['product.product'].browse(default_vals['product_id'])
-        for lot, qty in zip(lot_names, lot_qties):
+        move_line_locations = self.env['stock.location'].browse(default_vals['move_line_location_ids'])
+        for lot, qty, loc in zip(lot_names, lot_qties, move_line_locations):
             if not lot.get('quantity'):
                 lot['quantity'] = qty
             putaway_loc_dest = loc_dest._get_putaway_strategy(product, lot['quantity'])
             vals_list.append({**default_vals,
                              **lot,
+                             'location_id': loc.id,
                              'location_dest_id': putaway_loc_dest.id,
                              'product_uom_id': default_vals.get('uom_id', product.uom_id.id),
                             })
