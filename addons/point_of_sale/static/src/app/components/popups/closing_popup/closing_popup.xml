@@ -111,7 +111,13 @@
                 <div class="mt-3" t-if="this.orderForNextDays > 0">
                     <label class="form-label">Orders status</label>
                     <div class="alert alert-info" role="alert">
+<<<<<<< 67e04dec5455c0d9849025258f94a9719d9c1762
                         You still have <span t-out="this.orderForNextDays" /> open orders for the next few days.
+||||||| fe0caa9943ae7a2463667572f9e99642b703a48e
+                        You still have <span t-esc="orderForNextDays" /> open orders for the next few days.
+=======
+                        You still have <span t-esc="orderForNextDays" /> open orders planned for later.
+>>>>>>> c15d7ca6796ab8fcecea82ae308369da54348e82
                     </div>
                 </div>
             <t t-set-slot="footer">
