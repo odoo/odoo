@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2025-11-16 08:49+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-20 10:34+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-2/"
 "cloud_storage/sv/>\n"
 "Language: sv\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_attachment
@@ -31,7 +32,7 @@ msgstr "Bilaga"
 #: model:ir.model.fields.selection,name:cloud_storage.selection__ir_attachment__type__cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Cloud Storage"
-msgstr "Cloud Storage"
+msgstr "Molnlagring"
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
@@ -47,19 +48,19 @@ msgstr "Cloud Storage inställningar"
 #. odoo-python
 #: code:addons/cloud_storage/models/ir_attachment.py:0
 msgid "Cloud Storage is not enabled"
-msgstr "Cloud Storage är inte aktiverat"
+msgstr "Molnlagring är inte aktiverat"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/controllers/attachment.py:0
 msgid "Cloud storage configuration has been changed. Please refresh the page."
-msgstr "Konfigurationen för molnlagring har ändrats. Vänligen uppdatera sidan."
+msgstr "Inställningarna för molnlagring har ändrats. Vänligen uppdatera sidan."
 
 #. module: cloud_storage
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
 msgid "Cloud storage error"
-msgstr "Cloud storage fel"
+msgstr "Fel med molnlagring"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_res_config_settings
@@ -79,6 +80,7 @@ msgstr "Visningsnamn"
 msgid ""
 "Failed to download attachment (%(id)s) from cloud: %(code)s - %(reason)s"
 msgstr ""
+"Kunde inte ladda ner bilagan (%(id)s) från molnet: %(code)s - %(reason)s"
 
 #. module: cloud_storage
 #: model:ir.model,name:cloud_storage.model_ir_http
@@ -95,7 +97,7 @@ msgstr "ID"
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid "Minimum File Size (bytes)"
-msgstr "Minsta filstorlek (bytes)"
+msgstr "Minsta filstorlek (byte)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
@@ -106,7 +108,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/cloud_storage/models/res_config_settings.py:0
 msgid "Please configure the Cloud Storage before enabling it"
-msgstr "Konfigurera molnlagringen innan du aktiverar den"
+msgstr ""
+"Vänligen välj inställningar för molnlagring innan du aktiverar funktionen"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
@@ -122,7 +125,7 @@ msgstr "Typ"
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
 msgid "You are not allowed to upload file to the cloud storage"
-msgstr "Du får inte ladda upp filen till molnlagringen"
+msgstr "Det är inte tillåtet att ladda upp filen till molnlagring"
 
 #. module: cloud_storage
 #: model:ir.model.fields,help:cloud_storage.field_ir_attachment__type
@@ -130,8 +133,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"Du kan antingen ladda upp en fil från din dator eller ange en URL till din "
-"fil."
+"Du kan antingen ladda upp en fil från din dator eller klistra in en URL till "
+"din fil."
 
 #. module: cloud_storage
 #: model:ir.model.fields,help:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
@@ -142,6 +145,6 @@ msgid ""
 "        the cloud storage."
 msgstr ""
 "webclient kan ladda upp filer som är större än den minsta filstorleken\n"
-"        (i byte) som url-bilagor till servern och sedan ladda upp filen "
+"        (i byte) som URL-bilagor till servern och sedan ladda upp filen "
 "till\n"
-"        molnlagringen."
+"        molnlagring."

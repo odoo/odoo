@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-06-12 03:41+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-26 08:58+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-2/mail/"
 "fi/>\n"
 "Language: fi\n"
@@ -4203,7 +4203,7 @@ msgstr "Lisäkommentit..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Extra info"
-msgstr "Lisätieto"
+msgstr "Lisätiedot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -5742,10 +5742,10 @@ msgid ""
 "- auth: The auth value should be treated as a secret and not shared outside "
 "of Odoo"
 msgstr ""
-"Viittaa selaimen näppäimiin, joita ilmoitus käyttää:\n"
+"Viittaa ilmoituksen käyttämiin sovellusavaimiin:\n"
 "- p256dh: Se on selaimen luoma tilauksen julkinen avain. Selain\n"
 "          pitää yksityisen avaimen salassa ja käyttää sitä hyötykuorman "
-"purkamiseen\n"
+"salauksen purkamiseen\n"
 "- auth: Auth-arvoa on käsiteltävä salaisuutena, eikä sitä saa jakaa Odoon "
 "ulkopuolelle"
 
@@ -9571,7 +9571,7 @@ msgstr "Lähetetty"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__sequence
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -11022,8 +11022,8 @@ msgstr ""
 "(Viestintä)\n"
 "- 'Lähetä tekstiviesti': lähettää tekstiviestejä, kirjaa ne asiakirjoihin "
 "(Tekstiviesti)\n"
-"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia (Viestintä)"
-"\n"
+"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia "
+"(Viestintä)\n"
 "- 'Luo kirjaus': luo uuden kirjauksen uusilla arvoilla\n"
 "- 'Suorita koodi': pätkä Python-koodia, joka suoritetaan\n"
 "- 'Lähetä Webhook-ilmoitus': lähettää JULKAISU-pyynnön ulkoiseen "
@@ -11611,7 +11611,7 @@ msgstr "Video on näkyvillä puheluvälilehdellä"
 #: code:addons/mail/models/mail_thread.py:0
 #: model:ir.model,name:mail.model_ir_ui_view
 msgid "View"
-msgstr "Näytä"
+msgstr "Katso"
 
 #. module: mail
 #. odoo-python
@@ -11624,19 +11624,19 @@ msgstr "Katso %s"
 #: code:addons/mail/static/src/core/web/recipients_popover.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "View Profile"
-msgstr "Näytä profiili"
+msgstr "Katso profiili"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "View Reactions"
-msgstr "Näytä reaktiot"
+msgstr "Katso reaktiot"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/message_actions.js:0
 msgid "View Thread"
-msgstr "Katso ketju"
+msgstr "Katso viestiketju"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
@@ -11648,13 +11648,13 @@ msgstr "Näkymän tyyppi"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 msgid "View all activities"
-msgstr "Näytä kaikki aktiviteetit"
+msgstr "Katso kaikki toimenpiteet"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "View or join channels"
-msgstr "Kanavien katselu tai niihin liittyminen"
+msgstr "Katso kanavia tai liity niihin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -11671,12 +11671,12 @@ msgstr "Ääni"
 #. module: mail
 #: model:ir.ui.menu,name:mail.menu_call_settings
 msgid "Voice & Video"
-msgstr "Ääni ja video"
+msgstr "Ääni & video"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.discuss_call_settings_action
 msgid "Voice & Video Settings"
-msgstr "Puhe- ja videoasetukset"
+msgstr "Ääni- & videoasetukset"
 
 #. module: mail
 #. odoo-javascript
@@ -12003,6 +12003,12 @@ msgstr "Voit keskustella vain olemassa olevien käyttäjien kanssa."
 msgid "You can only chat with partners that have a dedicated user."
 msgstr ""
 "Voit keskustella vain sellaisten kumppanien kanssa, joilla on oma käyttäjä."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias_domain.py:0
+msgid "You cannot assign an empty domain name."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -12485,7 +12491,7 @@ msgstr "on juuri antanut sinulle seuraavan tehtävän:"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "id"
-msgstr "tunniste"
+msgstr "tunnus"
 
 #. module: mail
 #. odoo-javascript

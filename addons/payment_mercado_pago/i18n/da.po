@@ -7,13 +7,14 @@
 # Kira Petersen, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2025-11-22 10:41+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 13:57+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
 "payment_mercado_pago/da/>\n"
 "Language: da\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
@@ -35,30 +36,32 @@ msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
 msgstr ""
+"Ring til din kortudsteder for at aktivere dit kort, eller brug en anden "
+"betalingsform. Telefonnummeret finder du på kortets bagside."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Check expiration date."
-msgstr ""
+msgstr "Kontrollér udløbsdatoen."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Check the card number."
-msgstr ""
+msgstr "Kontrollér kortnummeret."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Check the card security code."
-msgstr ""
+msgstr "Kontrollér kortets sikkerhedskode."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Check the data."
-msgstr ""
+msgstr "Kontrollér dataene."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
@@ -75,7 +78,7 @@ msgstr "Det var ikke muligt at oprette forbindelse til API'et."
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__id
@@ -91,13 +94,13 @@ msgstr "Mercado Pago"
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
 msgid "Mercado Pago Access Token"
-msgstr ""
+msgstr "Mercado Pago-adgangstoken"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Der blev ikke fundet nogen transaktion, der matcher referencen %s."
 
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_provider
@@ -114,30 +117,32 @@ msgstr "Betalingstransaktion"
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Payment was not processed, use another card or contact issuer."
 msgstr ""
+"Betalingen blev ikke gennemført. Brug et andet kort, eller kontakt "
+"udstederen."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with invalid status: %s"
-msgstr ""
+msgstr "Modtagne data med ugyldig status: %s"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with missing payment id."
-msgstr ""
+msgstr "Modtagne data med manglende betalings-ID."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Modtagne data med manglende reference."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with missing status."
-msgstr ""
+msgstr "Modtagne data med manglende status."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -146,6 +151,8 @@ msgid ""
 "The communication with the API failed. Mercado Pago gave us the following "
 "information: '%(error_message)s' (code %(error_code)s)"
 msgstr ""
+"Kommunikationen med API'en mislykkedes. Mercado Pago gav os følgende "
+"information: '%(error_message)s' (kode %(error_code)s)"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -154,17 +161,19 @@ msgid ""
 "The communication with the API failed. The response is empty. Please verify "
 "your access token."
 msgstr ""
+"Kommunikationen med API’et mislykkedes. Svaret er tomt. Kontrollér venligst "
+"dit adgangstoken."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Denne betalingsudbyders tekniske kode."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "This payment method does not process payments in installments."
-msgstr ""
+msgstr "Denne betalingsform understøtter ikke betaling i rater."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -173,6 +182,8 @@ msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
 msgstr ""
+"Vi behandler din betaling. Du vil modtage en e-mail inden for højst 2 "
+"hverdage, hvis din betaling er blevet krediteret."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -182,6 +193,9 @@ msgid ""
 "will notify you by e-mail if your payment has been credited or if we need "
 "more information."
 msgstr ""
+"Vi behandler din betaling. Du vil modtage en e-mail inden for 2 hverdage, "
+"hvis din betaling er blevet krediteret, eller hvis vi har brug for "
+"yderligere oplysninger."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -189,12 +203,14 @@ msgstr ""
 msgid ""
 "We were unable to process your payment, please check your card information."
 msgstr ""
+"Vi kunne ikke behandle din betaling. Kontrollér venligst dine "
+"kortoplysninger."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "We were unable to process your payment, please use another card."
-msgstr ""
+msgstr "Vi kunne ikke behandle din betaling. Brug venligst et andet kort."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -203,6 +219,8 @@ msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
 msgstr ""
+"Du har allerede foretaget en betaling for det beløb. Hvis du skal betale "
+"igen, skal du bruge et andet kort eller en anden betalingsform."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -211,18 +229,20 @@ msgid ""
 "You have reached the limit of allowed attempts. Choose another card or other "
 "means of payment."
 msgstr ""
+"Du har nået grænsen for tilladte forsøg. Vælg et andet kort eller en anden "
+"betalingsform."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "You must authorize the payment with this card."
-msgstr ""
+msgstr "Du skal godkende betalingen med dette kort."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Your card has not enough funds."
-msgstr ""
+msgstr "Der er ikke nok penge på dit kort."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -231,3 +251,5 @@ msgid ""
 "Your payment has been credited. In your summary you will see the charge as a "
 "statement descriptor."
 msgstr ""
+"Din betaling er blevet krediteret. I din oversigt vil beløbet fremgå som en "
+"kontopost."

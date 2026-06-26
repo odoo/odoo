@@ -7,13 +7,14 @@
 # Kira Petersen, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:32+0000\n"
-"PO-Revision-Date: 2025-11-22 10:39+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 12:21+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
 "mrp_account/da/>\n"
 "Language: da\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp_account
 #. odoo-python
@@ -67,7 +68,7 @@ msgstr "<span>Produkt</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span>Quantity</span>"
-msgstr "<span>Antal</span>"
+msgstr "<span>Mængde</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -102,12 +103,12 @@ msgstr "Bogføringslinje skal oprettes ved en WIP-kontobevægelse"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Omkostningssted"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analytisk fordeling"
+msgstr "Omkostningsfordeling"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
@@ -117,7 +118,7 @@ msgstr "Analytisk linje"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Anvendelsesmuligheder for analytiske planer"
+msgstr "Anvendelsesmuligheder for analytiske kontoplaner"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
@@ -153,7 +154,7 @@ msgstr "Kategori"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Udregn pris fra stykliste"
+msgstr "Beregn pris ud fra stykliste"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -227,12 +228,12 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Analytisk fordelingskonto"
+msgstr "Fordeling af omkostningssteder"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
@@ -242,7 +243,7 @@ msgstr "Domæne"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
 msgid "Expense Account"
-msgstr "Vareforbrugskonto"
+msgstr "Udgiftskonto"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -354,8 +355,7 @@ msgstr "Omkostningsstedslinje ved produktionsordrer"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Please make sure the total credit amount equals the total debit amount."
-msgstr ""
-"Sørg for, at det samlede kreditbeløb svarer til det samlede debetbeløb."
+msgstr "Sørg for, at det samlede kreditbeløb svarer til det samlede debetbeløb."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -385,7 +385,7 @@ msgstr "Produktkategori"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product Variant"
-msgstr "Varevariant"
+msgstr "Produktvariant"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
@@ -411,7 +411,7 @@ msgstr "Produktionsordrer med tilsvarende WIP"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
 msgid "Reversal Date"
-msgstr "Tilbageførsel Dato"
+msgstr "Tilbageførselsdato"
 
 #. module: mrp_account
 #. odoo-python
@@ -433,7 +433,7 @@ msgstr "Vis evaluering"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerflytning"
+msgstr "Lagerbevægelse"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
@@ -471,12 +471,12 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Credit"
-msgstr "Kreditor total"
+msgstr "Samlet kredit"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
-msgstr "Debitor total"
+msgstr "Samlet debet"
 
 #. module: mrp_account
 #. odoo-python
@@ -555,7 +555,7 @@ msgstr "Arbejdscenter forbrug"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
-msgstr "Produktionsordre"
+msgstr "Arbejdsordre"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
@@ -566,17 +566,17 @@ msgstr "Antal arbejdsordrer"
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 msgid "Work Orders"
-msgstr "Produktionsordre"
+msgstr "Arbejdsordrer"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenter"
-msgstr "Workcenter"
+msgstr "Arbejdscenter"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr "Workcenter produktivitets log"
+msgstr "Arbejdscentrets produktivitetslog"
 
 #. module: mrp_account
 #. odoo-python

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-06-08 20:21+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-20 10:44+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-2/account_edi_ubl_cii/es_419/>\n"
@@ -55,14 +55,14 @@ msgid "(Un)Group lines by tax"
 msgstr "(Des)agrupar líneas por impuesto"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">FROM</span>"
-msgstr "<span class=\"text-muted\">DE</span>"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">TO</span>"
-msgstr "<span class=\"text-muted\">A</span>"
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Preview\n"
+"                    </span>"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -74,6 +74,8 @@ msgstr "A"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
 msgstr ""
+"Es necesario proporcionar una referencia del comprador o una referencia de "
+"la orden de compra."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -269,6 +271,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"No se pudo recuperar un contacto correspondiente a %s con el mismo número de "
+"identificación fiscal. Creamos un nuevo contacto."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -568,7 +572,7 @@ msgstr "Descuento general"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General upsell"
-msgstr ""
+msgstr "Venta adicional general"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1017,6 +1021,7 @@ msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
 msgstr "El impuesto \"%(tax_name)s\" no es válido: %(error_message)s"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
 msgstr "Número de identificación fiscal"
@@ -1067,6 +1072,15 @@ msgid ""
 msgstr ""
 "El punto de conexión Peppol no es válido. El formato esperado es: "
 "73282932000074"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid ""
+"The Unit of Measure '%(uom)s' (from unit code '%(code)s') was ignored on the "
+"line for product '%(product)s' because it is not compatible with the "
+"product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1147,6 +1161,14 @@ msgid "The prepaid amount of %s corresponds to the withholding tax applied."
 msgstr "El importe prepagado de %s corresponde al impuesto retenido aplicado."
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"This is a visual representation of the xml content.<br/>\n"
+"                    <strong style=\"color: #495057;\">It is not an official "
+"document.</strong>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
 msgid "Turkey VAT"
 msgstr "Turquia - NIF"
@@ -1174,17 +1196,17 @@ msgstr "Facturación UBL BIS 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "Capa UBL PINT-EU"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193
@@ -1245,11 +1267,6 @@ msgstr "Sin impuestos"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT"
 msgstr "Ciudad del Vaticano - NIF"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "Vendor Bill"
-msgstr "Factura de proveedor"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1322,6 +1339,15 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "<span class=\"text-muted\">FROM</span>"
+#~ msgstr "<span class=\"text-muted\">DE</span>"
+
+#~ msgid "<span class=\"text-muted\">TO</span>"
+#~ msgstr "<span class=\"text-muted\">A</span>"
+
+#~ msgid "Vendor Bill"
+#~ msgstr "Factura de proveedor"
 
 #~ msgid "Discount lines must have a negative amount."
 #~ msgstr "Las líneas de descuento deben tener un importe negativo."

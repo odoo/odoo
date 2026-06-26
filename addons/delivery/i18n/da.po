@@ -8,13 +8,14 @@
 # Mads Søndergaard, 2025
 # Kira Petersen, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2025-11-15 21:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 14:13+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
 "delivery/da/>\n"
 "Language: da\n"
@@ -22,13 +23,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
-msgstr "%(carrier)sFejl"
+msgstr "%(carrier)s Fejl"
 
 #. module: delivery
 #. odoo-python
@@ -37,6 +38,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Gratis levering"
 
 #. module: delivery
 #. odoo-python
@@ -47,7 +50,7 @@ msgstr "%s (kopi)"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Få pris"
 
 #. module: delivery
 #. odoo-python
@@ -68,16 +71,18 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Test-</span>\n"
+"                                <span class=\"o_stat_text\">miljø</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Ingen fejlfinding</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr "<span class=\"text-success\">Fejlfinding forespørgsler</span>"
+msgstr "<span class=\"text-success\">Fejlfindingsforespørgsler</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -86,11 +91,13 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"text-success\">Produktions-</span>\n"
+"                                <span class=\"o_stat_text\">miljø</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>Leveringsbeskrivelse</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -99,11 +106,14 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"En beskrivelse af den leveringsmetode, du vil kommunikere til dine kunder i "
+"salgsordren og salgsbekræftelsen, herunder eventuelle instruktioner, som "
+"kunden skal følge."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr "Handling, mens du bekræfter leveringsordrer"
+msgstr "Handling ved validering af leveringsordre"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -120,7 +130,7 @@ msgstr "Tilføj"
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a shipping method"
-msgstr "Tilføj en leveringsmetode"
+msgstr "Tilføj en forsendelsesmetode"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -130,7 +140,7 @@ msgstr "Tilføj levering"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Yderligere margen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -142,7 +152,7 @@ msgstr "Beløb"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "Ordrebeløb for at få fri levering, angivet i firmaets valuta"
+msgstr "Ordrebeløb for at få gratis levering, angivet i firmaets valuta"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -156,6 +166,8 @@ msgid ""
 "Are you sure you want the delivery to be free for this order? You might have "
 "forgotten to compute the rates."
 msgstr ""
+"Er du sikker på, at denne ordres levering skal være gratis? Du har måske "
+"glemt at beregne alle priser."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -165,7 +177,7 @@ msgstr "Til rådighed"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr "Tilgængelig fragtfimaer"
+msgstr "Tilgængelige transportfirmaer"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -183,7 +195,7 @@ msgstr "Kan generere returnering"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Fragtfirma"
+msgstr "Transportfirma"
 
 #. module: delivery
 #. odoo-python
@@ -191,11 +203,13 @@ msgstr "Fragtfirma"
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
+"Transportfirma %s kan ikke have det samme tag både under \"Nødvendige tags\" "
+"og \"Ekskluderede tags\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Beskrivelse af transportfirma"
 
 #. module: delivery
 #. odoo-javascript
@@ -240,7 +254,7 @@ msgstr "Indhold"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
 msgid "Cost"
-msgstr "Kostpris"
+msgstr "Pris"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
@@ -283,22 +297,22 @@ msgstr "Kunde"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr "Fejlfinding logføring"
+msgstr "Logning af fejlfinding"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr "Definer en ny leveringsmetode"
+msgstr "Fastsæt en ny leveringsmetode"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr "Fragtfirma"
+msgstr "Transportfirma"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "Leveringsvirksomhed valg guide"
+msgstr "Assistent til udvælgelse af transportfirma"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -309,7 +323,7 @@ msgstr "Leveringsomkostninger"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr "Leverings besked"
+msgstr "Leveringsbesked"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -318,7 +332,7 @@ msgstr "Leverings besked"
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Delivery Method"
-msgstr "Leveringsmåde"
+msgstr "Leveringsmetode"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -329,7 +343,7 @@ msgstr "Leveringsmetoder"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
 msgid "Delivery Price"
-msgstr "Levering pris"
+msgstr "Leveringspris"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -349,7 +363,7 @@ msgstr "Levering angivet"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Postnummerpræfiks for levering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -363,6 +377,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Postnummerpræfikser tildeles transportfirmaer for at begrænse,\n"
+"            hvilke postnumre er tilgængelige."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -394,7 +410,7 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -403,6 +419,9 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"Alle transportfirmaer (f.eks. UPS) kan have flere leveringsmetoder (f.eks.\n"
+"            UPS Express eller UPS Standard) , hver med sin egen \n"
+"            prisliste."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -419,7 +438,7 @@ msgstr "Fejl: Denne leveringsmetode er ikke tilgængelig for denne addresse."
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "Fejl: Denne leveringsmetode er ikke tilgængelig."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -429,11 +448,14 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Anslået pris: Kunden faktureres den anslåede pris for leveringen.\n"
+"Faktisk pris: Kunden faktureres den faktiske pris for leveringen. "
+"Leveringens pris opdateres på salgsordren efter gennemført levering."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
-msgstr "Forventet omkostning"
+msgstr "Anslåede pris"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
@@ -444,7 +466,7 @@ msgstr "Ekskluderede tags"
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Udfyld dette felt, hvis du planlægger at fakturere forsendelsen baseret på "
+"Udfyld dette felt, hvis fakturering af forsendelsen sker på baggrund af "
 "plukning."
 
 #. module: delivery
@@ -453,11 +475,13 @@ msgid ""
 "Filling this form allows you to make the shipping method available according "
 "to the content of the order or its destination."
 msgstr ""
+"Når du udfylder denne formular, kan du angive den forsendelsesmetode, der er "
+"tilgængelig, baseret på ordrens indhold eller destination."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Fast margen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -468,12 +492,12 @@ msgstr "Fast pris"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr "Gratis hvis der bestilles for over"
+msgstr "Gratis, hvis der bestilles for over"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr "Generer refunderings mærkat"
+msgstr "Generér returseddel"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -508,8 +532,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
-"Hvis ordretotalen (eksklusiv fragt) overstiger eller er lig med denne værdi, "
-"drager kunden fordel af gratis fragt"
+"Hvis ordrens samlede beløb (ekskl. fragt) er større end eller lig med denne "
+"værdi, får kunden gratis fragt"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -517,6 +541,8 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
+"Hvis ordrens samlede volumen overstiger denne grænse, er forsendelsesmetoden "
+"ikke tilgængelig."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
@@ -524,26 +550,28 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
+"Hvis ordren overstiger denne samlede vægt, er forsendelsesmetoden ikke "
+"tilgængelig."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr "Installer flere udbydere"
+msgstr "Installér flere udbydere"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "Forsikringssats"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
 msgid "Integration Level"
-msgstr "Integrations niveau"
+msgstr "Integrationsniveau"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
 msgid "Invoicing Message"
-msgstr "Fakturerings besked"
+msgstr "Faktureringsbesked"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
@@ -554,12 +582,12 @@ msgstr "Faktureringspolitik"
 #: model:ir.model.fields,field_description:delivery.field_res_partner__is_pickup_location
 #: model:ir.model.fields,field_description:delivery.field_res_users__is_pickup_location
 msgid "Is Pickup Location"
-msgstr ""
+msgstr "Er afhentningssted"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
-msgstr "Leveringsmåde"
+msgstr "Er en levering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_uid
@@ -581,28 +609,28 @@ msgstr "Sidst opdateret den"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
-msgstr "Liste visning"
+msgstr "Listevisning"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
-msgstr "Indlæser..."
+msgstr "Indlæser ..."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 msgid "Local Delivery"
-msgstr ""
+msgstr "Lokal levering"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr "Log anmodninger for at gør fejlsøgning nemmere"
+msgstr "Log anmodninger for at gøre fejlfinding nemmere"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Håndtér postnummerpræfikser for leveringer"
 
 #. module: delivery
 #. odoo-javascript
@@ -613,22 +641,22 @@ msgstr "Kortvisning"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
-msgstr "Avance"
+msgstr "Margen"
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_margin_not_under_100_percent
 msgid "Margin cannot be lower than -100%"
-msgstr "Margin kan ikke være lavere end -100%"
+msgstr "Margen kan ikke være lavere end -100 %"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr "Margin eller sats"
+msgstr "Fortjenstemargen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Maks. volumen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
@@ -643,7 +671,7 @@ msgstr "Maksimal værdi"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Nødvendige tags"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -654,13 +682,13 @@ msgstr "Navn"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "New Providers"
-msgstr ""
+msgstr "Nye udbydere"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr "Der er intet udleveringssted for denne leveringsadresse."
+msgstr "Der er intet afhentningssted for denne leveringsadresse."
 
 #. module: delivery
 #. odoo-javascript
@@ -672,7 +700,7 @@ msgstr "Intet resultat"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Not available for current order"
-msgstr ""
+msgstr "Ikke tilgængelig for nuværende ordre"
 
 #. module: delivery
 #. odoo-javascript
@@ -684,7 +712,7 @@ msgstr "Åbningstider"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
 msgid "Operator"
-msgstr "Operatør"
+msgstr "Operator"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
@@ -694,12 +722,13 @@ msgstr "Ordre"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Afhentningsstedets data"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
 msgstr ""
+"Vælg venligst et land, før du vælger en stat eller et postnummerpræfiks."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -709,7 +738,7 @@ msgstr "Præfix"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Præfiks findes allerede!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -719,6 +748,10 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Postnummerpræfikser, der gælder for dette transportfirma. Bemærk, at "
+"regulære udtryk kan anvendes til lande med forskellige postnummerlængder. "
+"For eksempel kan \"$\" tilføjes sidst i et præfiks for at matche det præcise "
+"postnummer (f.eks. \"100$\" matcher kun '100' og ikke '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -730,7 +763,7 @@ msgstr "Pris"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "Pris regler"
+msgstr "Prisregler"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -750,7 +783,7 @@ msgstr "Produktkategori"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
-msgstr "Vare antal"
+msgstr "Produktmængde"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_type
@@ -763,12 +796,12 @@ msgstr "Udbyder"
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
 msgid "Quantity"
-msgstr "Antal"
+msgstr "Mængde"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr "Refunderings mærkat tilgængelig via kundeportal"
+msgstr "Returseddel tilgængelig via kundeportal"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -805,28 +838,29 @@ msgstr "Sekvens"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr "Service produkt"
+msgstr "Serviceprodukt"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr "Sæt til Rigtig, hvis dine oplysninger er certificeret til produktion."
+msgstr ""
+"Sæt til “Sandt”, hvis dine loginoplysninger er certificeret til produktion."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Shipping Method"
-msgstr "Leveringsmetode"
+msgstr "Forsendelsesmetode"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "Leveringsmetoder"
+msgstr "Forsendelsesmetoder"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
 msgid "Shipping Weight"
-msgstr "Forsendelses vægt"
+msgstr "Forsendelsesvægt"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
@@ -834,6 +868,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Forsendelsesforsikring er en service, der kan tilbagebetale afsender, hvis "
+"pakker mistes, bliver stjålet eller beskadiges under transport."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -841,12 +877,14 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Oplysninger om forsendelsesmetoden skal vises nederst på salgsordren og i "
+"kundens bekræftelsesmail, f.eks. instruktioner, som kunden skal følge."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Standardlevering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -856,13 +894,13 @@ msgstr "Status"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "Understøtter forsendelsesforsikring"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
-msgstr "The Poste"
+msgstr "Posten"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__excluded_tag_ids
@@ -870,6 +908,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Denne metode er IKKE tilgængelig, hvis mindst ét produkt i ordren har et af "
+"disse tags."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -877,28 +917,31 @@ msgid ""
 "The method is available only if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Denne metode er kun tilgængelig, hvis mindst ét produkt i ordren har et af "
+"disse tags."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr "Refunderings mærkatet kan hentes ned af kunden fra kundeportalen."
+msgstr "Kunden kan downloade retursedlen via kundeportalen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr "Refunderings mærkatet oprettes automatisk ved levering."
+msgstr "Retursedlen genereres automatisk ved levering."
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
 msgstr ""
+"Forsendelsesforsikringen skal angives som en procentsats mellem 0 og 100."
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr "Levering er gratis hvis den samlede pris overstiger %.2f."
+msgstr "Levering er gratis, hvis det samlede beløb overstiger %.2f."
 
 #. module: delivery
 #. odoo-javascript
@@ -913,11 +956,14 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Denne metode gør det muligt automatisk at beregne leveringsprisen\n"
+"            ud fra dine indstillinger — enten på salgsordren (baseret på\n"
+"            tilbuddet) eller på fakturaen (baseret på leveringsordrerne)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Dette faste beløb lægges automatisk til forsendelsesprisen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__tracking_url
@@ -925,39 +971,41 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Denne mulighed tilføjer et link i kundeportalen, så kunden nemt kan spore "
+"sin pakke. Brug <shipmenttrackingnumber> som pladsholder i din URL."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr "Denne procentdel vil blive tilføjet til leveringsprisen."
+msgstr "Denne procent lægges til leveringsprisen."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Ordrens samlede vægt"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Sporingslink"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Update"
-msgstr "Opdater"
+msgstr "Opdatér"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Update shipping cost"
-msgstr "Opdater leveringsomkostninger"
+msgstr "Opdatér leveringsomkostninger"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Used in sales orders."
-msgstr ""
+msgstr "Brugt i salgsordrer."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -983,7 +1031,7 @@ msgstr "Volumen"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr "Volumen måleenhed mærkat"
+msgstr "Etiket for volumenmåleenhed"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
@@ -1000,12 +1048,12 @@ msgstr "Vægt * volumen"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Navn på vægtmåleenhed"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Vægtens måleenhed for mærkat"
+msgstr "Vægtenhed på etiket"
 
 #. module: delivery
 #. odoo-python
@@ -1021,8 +1069,8 @@ msgstr ""
 "Du kan ikke opdatere fragtomkostningerne på en ordre, der allerede er "
 "faktureret!\n"
 "\n"
-"De følgende leveringslinjer (produkt, faktureret mængde, og pris) er "
-"allerede blevet behandlet:\n"
+"De følgende leveringslinjer (produkt, faktureret mængde og pris) er allerede "
+"blevet behandlet:\n"
 "\n"
 
 #. module: delivery
@@ -1032,6 +1080,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Du kan ikke slette produktkategorien for leveringen, da den bruges af "
+"transportfirmaerne til levering af produkter."
 
 #. module: delivery
 #. odoo-javascript
@@ -1042,12 +1092,12 @@ msgstr "Dit postnummer"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 msgid "Zip Prefix"
-msgstr "Zip præfiks"
+msgstr "Postnummerpræfiks"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Postnummerpræfikser"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1057,4 +1107,4 @@ msgstr "f.eks. UPS Express"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
-msgstr ""
+msgstr "dvs. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

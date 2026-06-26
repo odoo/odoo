@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2025-11-15 10:20+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 16:58+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
 "pos_online_payment_self_order/da/>\n"
 "Language: da\n"
@@ -20,12 +21,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurér indstillinger"
+msgstr "Konfigurationsindstillinger"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_ir_http__display_name
@@ -35,12 +36,12 @@ msgstr "Konfigurér indstillinger"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP-routing"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_ir_http__id
@@ -55,7 +56,7 @@ msgstr "ID"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Online Payment"
-msgstr "Online betaling"
+msgstr "Onlinebetaling"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -83,7 +84,7 @@ msgstr "Betal ved kassen, hvis den er tom"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Payment Methods"
-msgstr "Betalingsmetoder"
+msgstr "Betalingsformer"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_payment_transaction
@@ -94,22 +95,22 @@ msgstr "Betalingstransaktion"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
-msgstr "Betaling i gang"
+msgstr "Betaling behandles"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "POS konfiguration"
+msgstr "POS-konfiguration"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "POS ordrer"
+msgstr "POS-ordrer"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Point of Sale betalingsmetoder"
+msgstr "POS-betalingsformer"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
@@ -121,13 +122,15 @@ msgstr "Scan QR-koden for at betale"
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Self Online Payment"
-msgstr "Selv online betaling"
+msgstr "Selvbetaling online"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr "Den aktuelle ordre kan ikke betales (måske er den allerede betalt)."
+msgstr ""
+"Betaling af denne ordre er ikke mulig (den ser ud til allerede at være "
+"betalt)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -135,7 +138,7 @@ msgstr "Den aktuelle ordre kan ikke betales (måske er den allerede betalt)."
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
-"Den online betalingsmetode, der skal bruges, når en kunde betaler en "
+"Den online betalingsform, der skal bruges, når en kunde betaler en "
 "selvbestilling online."
 
 #. module: pos_online_payment_self_order
@@ -146,11 +149,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
-"Den online betalingsmetode, der bruges til selvbestilling i en POS-"
-"konfiguration, skal have mindst én offentliggjort betalingsudbyder, der "
-"understøtter den pågældende POS-konfigurations valuta."
+"Den online betalingsform, der bruges til selvbestilling i en POS-"
+"konfiguration, skal have mindst én offentliggjort betalingsudbyder, som "
+"understøtter konfigurationens valuta."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr "Brug selvbestilling online betaling"
+msgstr "Brug onlinebetaling til selvbestilling"

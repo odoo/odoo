@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-06-08 10:11+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-22 17:18+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-2/"
 "account_edi_ubl_cii/de/>\n"
@@ -51,14 +51,19 @@ msgid "(Un)Group lines by tax"
 msgstr "Zeilen pro Steuer (ent-)gruppieren"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">FROM</span>"
-msgstr "<span class=\"text-muted\">VON</span>"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">TO</span>"
-msgstr "<span class=\"text-muted\">BIS</span>"
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Preview\n"
+"                    </span>"
+msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Vorschau\n"
+"                   </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -69,7 +74,7 @@ msgstr "A"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
-msgstr ""
+msgstr "Eine Käufer- oder Bestellnummer muss angegeben werden."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -269,6 +274,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"Es konnte kein Partner mit derselben USt-IdNr. gefunden werden, der „%s“ "
+"entspricht. Ein neuer Partner wurde erstellt."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -572,7 +579,7 @@ msgstr "Allgemeiner Rabatt"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General upsell"
-msgstr ""
+msgstr "Allgemeines Upselling"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1017,6 +1024,7 @@ msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
 msgstr "Steuer „%(tax_name)s“ ist ungültig: %(error_message)s"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
 msgstr "USt-IdNr."
@@ -1067,6 +1075,19 @@ msgid ""
 msgstr ""
 "Der Peppol-Endpunkt ist nicht gültig. Das erwartete Format ist: "
 "73282932000074"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid ""
+"The Unit of Measure '%(uom)s' (from unit code '%(code)s') was ignored on the "
+"line for product '%(product)s' because it is not compatible with the "
+"product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
+msgstr ""
+"Die Maßeinheit „%(uom)s“ (aus dem Einheitscode „%(code)s“) wurde in der "
+"Zeile für das Produkt „%(product)s“ ignoriert, da sie nicht mit der "
+"Maßeinheit des Produkts „%(product_uom)s“ kompatibel ist. Die Maßeinheit "
+"wurde leer gelassen."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1145,6 +1166,17 @@ msgstr ""
 "Der vorausbezahlte Betrag von %s entspricht der einbehaltenen Quellensteuer."
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"This is a visual representation of the xml content.<br/>\n"
+"                    <strong style=\"color: #495057;\">It is not an official "
+"document.</strong>"
+msgstr ""
+"Dies ist eine visuelle Darstellung des XML-Inhalts.<br/>\n"
+"                    <strong style=\"color: #495057;\">Es handelt sich nicht "
+"um ein offizielles Dokument.</strong>"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
 msgid "Turkey VAT"
 msgstr "Türkei - MwSt."
@@ -1172,17 +1204,17 @@ msgstr "UBL BIS Billing 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "UBL PINT-EU Layer"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193
@@ -1243,11 +1275,6 @@ msgstr "Nettobetrag"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT"
 msgstr "Vatikan - MwSt."
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "Vendor Bill"
-msgstr "Lieferantenrechnung"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1321,6 +1348,15 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "<span class=\"text-muted\">FROM</span>"
+#~ msgstr "<span class=\"text-muted\">VON</span>"
+
+#~ msgid "<span class=\"text-muted\">TO</span>"
+#~ msgstr "<span class=\"text-muted\">BIS</span>"
+
+#~ msgid "Vendor Bill"
+#~ msgstr "Lieferantenrechnung"
 
 #~ msgid "Discount lines must have a negative amount."
 #~ msgstr "Rabattzeilen müssen einen negativen Betrag aufweisen."
