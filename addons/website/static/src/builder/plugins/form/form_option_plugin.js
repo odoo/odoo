@@ -45,6 +45,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { getParsedDataFor } from "@website/js/utils";
+import { RANGE_COMPARATORS } from "./form_field_option";
 import { isTargetVisible } from "@html_builder/core/visibility_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 
@@ -194,6 +195,7 @@ export class FormOptionPlugin extends Plugin {
         ].map((selector) => `.s_website_form form ${selector}`),
         clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
+            this.removeIncompleteRequirements(rootEl);
             return rootEl;
         },
         on_will_save_handlers: async (rootEl) => {
@@ -960,6 +962,29 @@ export class FormOptionPlugin extends Plugin {
         delete fieldEl.dataset.errorMessage;
         delete fieldEl.dataset.requirementBetween;
         delete fieldEl.dataset.requirementCondition;
+    }
+
+    /**
+     * Drops requirement comparators left without their value(s): a comparator
+     * with no condition (nor end value for ranges) is a no-op requirement.
+     *
+     * @param {HTMLElement} rootEl
+     */
+    removeIncompleteRequirements(rootEl) {
+        for (const fieldEl of rootEl.querySelectorAll(
+            ".s_website_form_field[data-requirement-comparator]"
+        )) {
+            const {
+                requirementComparator: comparator,
+                requirementCondition: condition,
+                requirementBetween: between,
+            } = fieldEl.dataset;
+            const missingEnd = RANGE_COMPARATORS.includes(comparator) && !between;
+            if (!condition || condition === "[]" || missingEnd) {
+                delete fieldEl.dataset.requirementComparator;
+                this.clearValidationDataset(fieldEl);
+            }
+        }
     }
 
     /**
