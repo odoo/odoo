@@ -281,6 +281,19 @@ class TestUsers(UsersCommonCase):
 
         self.assertEqual(user.context_get()['lang'], 'en_US')
 
+    def test_non_internal_user_multiple_emails(self):
+        multiple_emails = 'user1@example.com, user2@example.com'
+
+        portal_user = new_test_user(self.env, 'portal_user', groups='base.group_portal')
+        public_user = new_test_user(self.env, 'public_user', groups='base.group_public')
+        for user in portal_user | public_user:
+            with self.subTest(user=user.login), self.assertRaises(ValidationError):
+                user.email = multiple_emails
+
+        internal_user = new_test_user(self.env, 'internal_user', email=multiple_emails)
+        with self.assertRaises(ValidationError):
+            internal_user.group_ids = self.env.ref('base.group_portal')
+
     def test_user_self_update(self):
         """ Check that the user has access to write his phone. """
         test_user = self.env['res.users'].create({'name': 'John Smith', 'login': 'jsmith'})
