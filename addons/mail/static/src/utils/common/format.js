@@ -166,7 +166,7 @@ export function escapeAndCompactTextContent(content) {
 function generateMentionsLinks(body, { partners = [], threads = [], specialMentions = [] }) {
     const mentions = [];
     for (const partner of partners) {
-        const placeholder = `@-mention-partner-${partner.id}`;
+        const placeholder = `@-mention-partner-${partner.id}!`;
         const text = `@${partner.name}`;
         mentions.push({
             class: "o_mail_redirect",
@@ -178,7 +178,7 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
         body = htmlReplace(body, text, placeholder);
     }
     for (const thread of threads) {
-        const placeholder = `#-mention-channel-${thread.id}`;
+        const placeholder = `#-mention-channel-${thread.id}!`;
         let className, text;
         if (thread.parent_channel_id) {
             className = "o_channel_redirect o_channel_redirect_asThread";
