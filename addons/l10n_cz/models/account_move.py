@@ -17,14 +17,8 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.country_code == 'CZ' and m.move_type != 'entry'):
             move.show_taxable_supply_date = True
 
-    def _compute_date(self):
-        super()._compute_date()
-        for move in self:
-            if move.country_code == 'CZ' and move.taxable_supply_date and move.state == 'draft' and not move.statement_line_id and not move.posted_before:
-                move.date = move.taxable_supply_date
+    def _get_accounting_date_source(self):
+        return (self.country_code == 'CZ' and self.taxable_supply_date) or super()._get_accounting_date_source()
 
     def _get_invoice_currency_rate_date(self):
-        self.ensure_one()
-        if self.country_code == 'CZ' and self.taxable_supply_date:
-            return self.taxable_supply_date
-        return super()._get_invoice_currency_rate_date()
+        return (self.country_code == 'CZ' and self.taxable_supply_date) or super()._get_invoice_currency_rate_date()
