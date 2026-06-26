@@ -2,26 +2,33 @@ import { plugin, Plugin, Resource, types as t } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
 
+const AUTOCLOSE_DELAY = 4000;
+
 export const NotificationOptionSchema = t.object({
-    "type?": t.selection(["warning", "danger", "success", "info"]),
-    "title?": t.or([t.string(), t.boolean(), t.object({ toString: t.function() })]),
-    "className?": t.string(),
-    "buttons?": t.array(
+    type: t.selection(["warning", "danger", "success", "info"]).optional("warning"),
+    title: t.or([t.string(), t.boolean(), t.object({ toString: t.function() })]).optional(),
+    className: t.string().optional(""),
+    buttons: t.array(
         t.object({
             name: t.string(),
-            "icon?": t.string(),
-            "primary?": t.boolean(),
+            icon: t.string().optional(),
+            primary: t.boolean().optional(),
             onClick: t.function(),
         })
-    ),
-    "sticky?": t.boolean(),
-    "autocloseDelay?": t.number(),
+    )
+        .optional([]),
+    sticky: t.boolean().optional(),
+    autocloseDelay: t.number().optional(AUTOCLOSE_DELAY),
     close: t.function(),
 });
 
 export const NotificationSchema = t.and([
     t.object({
-        message: t.or([t.string(), t.object({ toString: t.function() })]),
+        message: t.customValidator(
+            t.any(),
+            (m) =>
+                typeof m === "string" || (typeof m === "object" && typeof m.toString === "function")
+        ),
     }),
     NotificationOptionSchema,
 ]);
@@ -29,7 +36,7 @@ export const NotificationSchema = t.and([
 export const NotificationOptionWrapperSchema = t.object({
     id: t.number(),
     props: NotificationSchema,
-    "onClose?": t.function(),
+    onClose: t.function().optional(),
 });
 
 export class NotificationPlugin extends Plugin {

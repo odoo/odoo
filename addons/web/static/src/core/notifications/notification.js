@@ -1,24 +1,16 @@
-import { Component, useEffect, props, signal } from "@odoo/owl";
+import { Component, useEffect, props, signal, applyDefaults } from "@odoo/owl";
 import { NotificationSchema } from "./notification_plugin";
 import { useTimer } from "@web/core/utils/timing";
 
-const AUTOCLOSE_DELAY = 4000;
-
 export class Notification extends Component {
     static template = "web.NotificationWowl";
-    // TODO-JUCOP: Why is the default part not applied ?
-    notification = props.static("notification", NotificationSchema, {
-        buttons: [],
-        className: "",
-        type: "warning",
-        autocloseDelay: AUTOCLOSE_DELAY,
-    });
+    notification = applyDefaults(props.static("notification", NotificationSchema), NotificationSchema);
 
     autocloseProgress = signal(null);
 
     setup() {
-        if (!this.notification.sticky && (this.notification.autocloseDelay ?? AUTOCLOSE_DELAY) > 0) {
-            this.timer = useTimer(this.notification.autocloseDelay ?? AUTOCLOSE_DELAY);
+        if (!this.notification.sticky && this.notification.autocloseDelay > 0) {
+            this.timer = useTimer(this.notification.autocloseDelay);
 
             useEffect(() => {
                 if (this.timer.progress() >= 1) {
