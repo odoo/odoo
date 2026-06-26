@@ -3,6 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(AttendeeCalendarCommonPopover.prototype, {
     get isEventArchivable() {
-        return super.isEventArchivable || (this.isCurrentUserOrganizer && this.props.record.rawRecord.microsoft_id);
+        return super.isEventArchivable || (this.isCurrentUserOrganizer && this.record?.rawRecord?.microsoft_id);
     },
 });

@@ -2,10 +2,7 @@ import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calen
 import { useService } from "@web/core/utils/hooks";
 
 export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
-    static subTemplates = {
-        ...CalendarCommonPopover.subTemplates,
-        popover: "hr_holidays.TimeOffCalendarCommonPopover.popover",
-    };
+    static template = "hr_holidays.TimeOffCalendarPopover";
 
     setup() {
         super.setup();
@@ -15,12 +12,12 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     onEditEvent() {
-        this.props.close()
+        this.props.close();
         this.actionService.doAction({
-            name: this.record.display_name,
+            name: this.title,
             type: "ir.actions.act_window",
             res_model: this.props.model.resModel,
-            res_id: this.record.id,
+            res_id: this.props.resId,
             views: [[false, "form"]],
         });
     }

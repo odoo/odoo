@@ -2,10 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 
 export class ProjectCalendarCommonPopover extends CalendarCommonPopover {
-    static subTemplates = {
-        ...CalendarCommonPopover.subTemplates,
-        footer: "project.ProjectCalendarCommonPopover.footer",
-    };
+    static defaultFooterButtonsTemplate = "project.ProjectCalendarCommonPopover.footer";
 
     setup() {
         super.setup();
@@ -15,7 +12,7 @@ export class ProjectCalendarCommonPopover extends CalendarCommonPopover {
     onClickViewTasks() {
         this.actionService.doActionButton({
             type: "object",
-            resId: this.props.record.id,
+            resId: this.props.resId,
             name: "action_view_tasks",
             resModel: "project.project",
         });

@@ -12,11 +12,8 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         Dropdown,
         DropdownItem,
     };
-    static subTemplates = {
-        ...CalendarCommonPopover.subTemplates,
-        body: "calendar.AttendeeCalendarCommonPopover.body",
-        footer: "calendar.AttendeeCalendarCommonPopover.footer",
-    };
+    static defaultFooterButtonsTemplate = "calendar.AttendeeCalendarCommonPopover.footer";
+
     setup() {
         super.setup();
         this.orm = useService("orm");
@@ -27,7 +24,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     async onWillStart() {
-        // Show status dropdown if user is in attendees list
         if (this.isEventEditable) {
             const stateSelections = await this.env.services.orm.call(
                 this.props.model.resModel,
@@ -46,29 +42,29 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
                     color: this.statusColors[selection[0]],
                 };
             }
-            this.selectedStatusInfo = this.statusInfo[this.props.record.attendeeStatus];
+            this.selectedStatusInfo = this.statusInfo[this.record?.attendeeStatus];
         }
     }
 
     get isCurrentUserAttendee() {
         return (
-            this.props.record.rawRecord.partner_ids.includes(user.partnerId) ||
-            this.props.record.rawRecord.partner_id[0] === user.partnerId
+            this.record?.rawRecord?.partner_ids?.includes(user.partnerId) ||
+            this.record?.rawRecord?.partner_id?.[0] === user.partnerId
         );
     }
 
     get isCurrentUserOrganizer() {
-        return this.props.record.rawRecord.partner_id[0] === user.partnerId;
+        return this.record?.rawRecord?.partner_id?.[0] === user.partnerId;
     }
 
     get isEventPrivate() {
-        return this.props.record.rawRecord.privacy === "private";
+        return this.record?.rawRecord?.privacy === "private";
     }
 
     get displayAttendeeAnswerChoice() {
         return (
-            this.props.record.rawRecord.partner_ids.some((partner) => partner !== user.partnerId) &&
-            this.props.record.isCurrentPartner
+            this.record?.rawRecord?.partner_ids?.some((partner) => partner !== user.partnerId) &&
+            this.record?.isCurrentPartner
         );
     }
 
@@ -82,50 +78,36 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
 
     async onClickOpenRecord() {
         const action = await this.orm.call("calendar.event", "action_open_calendar_event", [
-            this.props.record.id,
+            this.props.resId,
         ]);
         this.actionService.doAction(action);
     }
 
-    /**
-     * @override
-     */
     get isEventDeletable() {
         return super.isEventDeletable && this.isEventEditable && !this.isEventArchivable;
     }
 
-    /**
-     * @override
-     */
     get isEventEditable() {
-        return this.props.record.rawRecord.user_can_edit;
+        return this.record?.rawRecord?.user_can_edit;
     }
 
     get isEventViewable() {
         return this.isEventPrivate ? this.isEventEditable : super.isEventEditable;
     }
 
-    /**
-     * @override
-     */
-    get hasFooter() {
-        return this.isEventViewable || super.hasFooter;
-    }
-
     async changeAttendeeStatus(selectedStatus) {
-        const record = this.props.record;
-        if (record.attendeeStatus === selectedStatus) {
+        if (this.record?.attendeeStatus === selectedStatus) {
             return this.props.close();
         }
         let recurrenceUpdate = false;
-        if (record.rawRecord.recurrency) {
+        if (this.record?.rawRecord?.recurrency) {
             recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
             if (!recurrenceUpdate) {
                 return this.props.close();
             }
         }
         await this.env.services.orm.call(this.props.model.resModel, "change_attendee_status", [
-            [record.id],
+            [this.props.resId],
             selectedStatus,
             recurrenceUpdate,
         ]);
@@ -135,6 +117,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
 
     async onClickArchive() {
         this.props.close();
-        await this.props.model.archiveRecord(this.props.record);
+        await this.props.model.archiveRecord(this.record);
     }
 }
