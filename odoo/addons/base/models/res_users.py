@@ -532,6 +532,12 @@ class ResUsers(models.Model):
                         _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
                     )
 
+    @api.constrains('email', 'share')
+    def _check_email(self):
+        for user in self:
+            if user.share and len(tools.email_normalize_all(user.email)) > 1:
+                raise ValidationError(_('The user cannot have more than one email address.'))
+
     @api.constrains('group_ids')
     def _check_disjoint_groups(self):
         """We check that no users are both portal and users (same with public).
