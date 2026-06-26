@@ -3888,6 +3888,51 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('test_combo_price_unchanged_with_lot_tracked_product', login="pos_admin")
 
+    def test_dynamic_barcode_extra(self):
+        """
+        Tests that a dynamic product with extra price has the right price when
+        added to the order via its barcode
+        """
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Dynamic Attribute',
+            'create_variant': 'dynamic',
+        })
+        value_1, value_2 = self.env['product.attribute.value'].create([
+            {
+                'name': 'M',
+                'attribute_id': dynamic_attribute.id,
+            },
+            {
+                'name': 'L',
+                'default_extra_price': 10,
+                'attribute_id': dynamic_attribute.id,
+            }
+        ])
+        product_template = self.env['product.template'].create({
+            'name': 'Dynamic Product',
+            'is_storable': True,
+            'list_price': 30.0,
+            'available_in_pos': True,
+            'taxes_id': [],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': dynamic_attribute.id,
+                    'value_ids': [Command.set([value_1.id, value_2.id])],
+                }),
+            ],
+        })
+        ptav_value_2 = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda v: v.product_attribute_value_id == value_2
+        )
+        self.env['product.product'].create({
+            'product_tmpl_id': product_template.id,
+            'product_template_attribute_value_ids': [Command.set(ptav_value_2.ids)],
+            'barcode': '1234567890',
+        })
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_dynamic_barcode_extra', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

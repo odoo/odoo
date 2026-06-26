@@ -174,3 +174,19 @@ registry.category("web_tour.tours").add("test_gs1_barcode_scan_missing_product_v
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_dynamic_barcode_extra", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("1234567890"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "Dynamic Product",
+                    attributeLine: "L",
+                    price: "40.0",
+                })
+            ),
+        ].flat(),
+});
