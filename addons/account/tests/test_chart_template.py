@@ -3,7 +3,7 @@ import io
 from markupsafe import Markup
 from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import RedirectWarning
 from odoo.tests import tagged
 from odoo.addons.account.models.chart_template import code_translations, AccountChartTemplate, TEMPLATE_MODELS
@@ -368,6 +368,55 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             fiscal_position.map_account(self.env['account.chart.template'].ref('test_account_3_template')),
             self.env['account.chart.template'].ref('test_account_4_template'),
         )
+
+    def test_reload_journals_create_new_without_updating_existing(self):
+        """Reloading a chart should not overwrite existing journal customizations."""
+        purchase_journal = self.env['account.chart.template'].ref('purchase')
+        manual_default_account = self.env['account.chart.template'].ref('test_account_income_template')
+
+        # Simulate manual user input
+        purchase_journal.write({
+            'color': 7,
+            'default_account_id': manual_default_account.id,
+            'non_deductible_account_id': False,
+        })
+        self.env.invalidate_all()
+        self.env.cr._now = fields.Datetime.now()
+        self.env.cr.execute("UPDATE account_journal SET write_date = %s WHERE id = %s", [self.env.cr.now(), purchase_journal.id])
+
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['account.journal']['purchase']['color'] = 3
+            data['account.journal']['purchase']['default_account_id'] = 'test_account_expense_template'
+            data['account.journal']['purchase']['non_deductible_account_id'] = 'test_account_expense_template'
+            data['account.journal']['new_general'] = {
+                'name': 'New General Journal',
+                'type': 'general',
+                'code': 'NEW',
+                'color': 5,
+            }
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertRecordValues(purchase_journal, [{
+            'color': 7,
+            'default_account_id': manual_default_account.id,
+            'non_deductible_account_id': False,
+        }])
+        self.assertRecordValues(self.env['account.chart.template'].ref('new_general'), [{
+            'name': 'New General Journal',
+            'type': 'general',
+            'code': 'NEW',
+            'color': 5,
+        }])
+
+        purchase_journal.default_account_id = False
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        self.assertFalse(purchase_journal.default_account_id)
 
     def test_remove_fiscal_position_try_loading_force_create_false(self):
         """Test that removing a fiscal position and calling try_loading with force_create=False does not recreate it."""
