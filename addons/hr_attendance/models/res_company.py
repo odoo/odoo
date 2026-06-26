@@ -40,8 +40,10 @@ class ResCompany(models.Model):
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Attendance Work Entry Type",
-        domain=[('requires_allocation', '=', False)],
-        default=lambda self: self._get_default_attendance_work_entry_type(),
+        domain=[('requires_allocation', '=', False), ('count_as', '=', 'working_time')],
+        store=True,
+        compute='_compute_attendance_work_entry_type_id',
+        groups="hr.group_hr_user",
         help="Work entry type assigned to attendances and read by the time rule engine.",
     )
 
@@ -58,6 +60,21 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+ 
+    def _compute_attendance_work_entry_type_id(self):
+        fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        country_codes = self.mapped('country_id.code')
+        country_types = self.env['hr.work.entry.type'].search([
+            ('count_as', '=', 'working_time'),
+            ('requires_allocation', '=', False),
+            ('code', '=', 'WORK100'),
+            ('country_code', 'in', country_codes),
+        ])
+        type_by_country = {t.country_code: t for t in country_types}
+        for company in self:
+            if company.attendance_work_entry_type_id:
+                continue
+            company.attendance_work_entry_type_id = type_by_country.get(company.country_id.code) or fallback
 
     # ---------------------------------------------------------
     # ORM Overrides
