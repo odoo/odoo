@@ -85,7 +85,7 @@ class HrAttendance(models.Model):
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type', string="Work Entry Type", index=True,
+        'hr.work.entry.type', string="Time Type", index=True,
         default=lambda self: self.env.company.attendance_work_entry_type_id,
     )
 

@@ -115,6 +115,7 @@
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
+                                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
                             </group>
                         </group>
                         <notebook>
@@ -208,16 +209,7 @@
             <xpath expr="//field[@id='employee_manager']" position="attributes">
                 <attribute name="readonly">1</attribute>
             </xpath>
-            <xpath expr="//separator[@name='check_in_separator']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//group[@name='check_in_group']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//separator[@name='check_out_separator']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//group[@name='check_out_group']" position="attributes">
+            <xpath expr="//notebook" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
