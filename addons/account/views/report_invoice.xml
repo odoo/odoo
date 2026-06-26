@@ -61,7 +61,7 @@
                     <div class="page mb-4">
                         <t t-set="layout_document_title">
                             <span t-if="not proforma"></span>
-                            <span t-else="">PROFORMA</span>
+                            <span t-elif="o.state == 'posted'">PROFORMA</span>
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
                             <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                             <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
