@@ -34,3 +34,18 @@ class TestPaymentProvider(AccountPaymentCustomCommon):
         self.auto_confirm_cron.active = True
         self.provider._remove_provider("custom", custom_mode="wire_transfer")
         self.assertFalse(self.auto_confirm_cron.active)
+
+    def test_pay_on_invoice_provider_not_available_for_invoices(self):
+        available_providers = self.env["payment.provider"]._find_available_providers(
+            company_id=self.company_id,
+            partner_id=self.partner.id,
+            amount=self.amount,
+            is_invoice=True,
+        )
+        self.assertNotIn(self.pay_on_invoice_provider, available_providers)
+
+    def test_pay_on_invoice_provider_available_for_sales_orders(self):
+        available_providers = self.env["payment.provider"]._find_available_providers(
+            company_id=self.company_id, partner_id=self.partner.id, amount=self.amount,
+        )
+        self.assertIn(self.pay_on_invoice_provider, available_providers)
