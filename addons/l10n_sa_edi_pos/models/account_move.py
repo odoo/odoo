@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import api, models
 
 
 class AccountMove(models.Model):
@@ -36,3 +36,14 @@ class AccountMove(models.Model):
             self.env['account.move.send']._generate_and_send_invoices(
                 self, sending_methods={}
             )
+
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        data = super()._load_pos_data_read(records, config)
+        if data and self.env.company.country_id.code == 'SA':
+            alerts_by_id = {move.id: move._l10n_sa_get_alerts() for move in records}
+            for record in data:
+                alerts = alerts_by_id.get(record['id'])
+                if alerts:
+                    record['_l10n_sa_alerts'] = [{'message': a['message']} for a in alerts.values()]
+        return data
