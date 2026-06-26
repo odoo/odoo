@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import json
 import logging
@@ -137,6 +138,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
         string="JSON",
         related='json_attachment_id.raw',
     )
+    debug_json_raw = fields.Binary(
+        string="Debug JSON",
+        readonly=True,
+    )
     json_attachment_filename = fields.Char(
         string="JSON Filename",
         compute='_compute_json_attachment_filename',
@@ -183,7 +188,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
     def _compute_json_attachment_filename(self):
         for document in self:
             document_type = 'anulacion' if document.document_type == 'cancellation' else 'alta'
-            name = f"verifactu_registro_{document.chain_index}_{document_type}.json"
+            if document.chain_index:
+                name = f"verifactu_registro_{document.chain_index}_{document_type}.json"
+            else:
+                name = f"verifactu_debug_{document_type}.json"
             document.json_attachment_filename = name
 
     @api.ondelete(at_uninstall=False)
@@ -440,13 +448,20 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if not record_values['errors']:
             record_values['errors'] = self._check_record_values(record_values)
 
+        document_dict = None
+        render_vals = None
+        try:
+            previous_document = record_values['company']._l10n_es_edi_verifactu_get_last_document()
+            render_vals = self._render_vals(record_values, previous_record_identifier=previous_document._get_record_identifier())
+            document_dict = {render_vals['record_type']: render_vals[render_vals['record_type']]}
+        except (AttributeError, KeyError, ValueError, TypeError) as error:
+            _logger.info("Could not generate Veri*Factu debug json. %s", error)
+            document_dict = None
+
         if record_values['errors']:
             document_vals['errors'] = self._format_errors(error_title, record_values['errors'])
         else:
-            previous_document = record_values['company']._l10n_es_edi_verifactu_get_last_document()
-            render_vals = self._render_vals(
-                record_values, previous_record_identifier=previous_document._get_record_identifier(),
-            )
+            self._update_render_vals_with_chaining_info(render_vals)
             document_dict = {render_vals['record_type']: render_vals[render_vals['record_type']]}
 
             # We check whether zeep can generate a valid XML (according to the information from the WSDL / XSD)
@@ -508,6 +523,10 @@ class L10nEsEdiVerifactuDocument(models.Model):
             document.sudo().json_attachment_id = attachment
             # Remove (previously generated) documents that failed to generate a (valid) JSON
             record_values['documents'].filtered(lambda rd: not rd.json_attachment_id).sudo().unlink()
+        else:
+            document.debug_json_raw = base64.b64encode(
+                json.dumps(document_dict, indent=4).encode()
+        ).decode('utf-8')
 
         return document
 
@@ -569,8 +588,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
         }
         render_vals[record_type] = remove_None_and_False(record_type_vals)
 
-        self._update_render_vals_with_chaining_info(render_vals)
-
         return render_vals
 
     @api.model
@@ -581,7 +598,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if vals['cancellation']:
             render_vals = {
                 'IDFactura': {
-                    'IDEmisorFacturaAnulada': company_values['NIF'],
+                    'IDEmisorFacturaAnulada': company_values.get('NIF'),
                     'NumSerieFacturaAnulada': vals['name'],
                     'FechaExpedicionFacturaAnulada': invoice_date,
                 }
@@ -589,9 +606,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
             return render_vals
 
         render_vals = {
-            'NombreRazonEmisor': company_values['NombreRazon'],
+            'NombreRazonEmisor': company_values.get('NombreRazon'),
             'IDFactura': {
-                'IDEmisorFactura': company_values['NIF'],
+                'IDEmisorFactura': company_values.get('NIF'),
                 'NumSerieFactura': vals['name'],
                 'FechaExpedicionFactura': invoice_date,
             }
@@ -610,19 +627,19 @@ class L10nEsEdiVerifactuDocument(models.Model):
         elif vals['verifactu_move_type'] == 'correction_substitution':
             tipo_rectificativa = 'S'
             tipo_factura = vals['refund_reason']
-            rectified = rectified_document._get_record_identifier()
-            fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            rectified = rectified_document._get_record_identifier() or {}
+            fecha_operacion = rectified.get('FechaOperacion') or rectified.get('FechaExpedicionFactura')
         else:
             # vals['verifactu_move_type'] == 'correction_incremental':
             tipo_rectificativa = 'I'
             tipo_factura = vals['refund_reason']
-            rectified = rectified_document._get_record_identifier()
-            fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            rectified = rectified_document._get_record_identifier() or {}
+            fecha_operacion = rectified.get('FechaOperacion') or rectified.get('FechaExpedicionFactura')
 
         # Note: Error [1189]
         # Si TipoFactura es F1 o F3 o R1 o R2 o R3 o R4 el bloque Destinatarios tiene que estar cumplimentado.
 
-        if not vals['is_simplified']:
+        if not vals['is_simplified'] and vals['partner']:
             render_vals['Destinatarios'] = {
                 'IDDestinatario': [vals['partner']._l10n_es_edi_verifactu_get_values()]
             }
@@ -635,11 +652,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
         })
 
         if vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution'):
-            rectified_record_identifier = rectified_document._get_record_identifier()
+            rectified_record_identifier = rectified_document._get_record_identifier() or {}
             render_vals.update({
                 'FacturasRectificadas': [{
                     'IDFacturaRectificada': {
-                        key: rectified_record_identifier[key]
+                        key: rectified_record_identifier.get(key)
                         for key in ['IDEmisorFactura', 'NumSerieFactura', 'FechaExpedicionFactura']
                     }
                 }],
