@@ -28,6 +28,7 @@ BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
     'mailing.subscription.contact_id',                  # covered by first key of _unique_contact_list
     'knowledge.article.member.article_id',              # covered by first key of _unique_article_partner
     'slide.channel.forum_id',                           # covered by _forum_uniq
+    'forum.tag.forum_id',                               # covered by first key of _forum_id_posts_count_idx
     'hr.appraisal.skill.appraisal_id',                  # covered by first key of __unique_skill
     'mail.presence.user_id',                            # covered by _user_unique
     'mail.presence.guest_id',                           # covered by _guest_unique
