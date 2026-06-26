@@ -22,6 +22,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 
 import { range } from "@web/core/utils/numbers";
 import {
+    clickSave,
     defineActions,
     getService,
     mockService,
@@ -29,7 +30,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
-import { queryFirst } from "@odoo/hoot-dom";
+import { click as clickField, edit, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -268,6 +269,36 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     await dragenterFiles(".o-mail-Chatter", [textPdf]);
     await dropFiles(".o-Dropzone", [textPdf]);
     await contains(".o-mail-Attachment iframe", { count: 1 });
+});
+
+test("attachment created without message_post refreshes the chatter on reload", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>`,
+    });
+    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']:text('1')", { count: 0 });
+    // Attachment linked to the record without going through message_post, as
+    // when "Send & Print" generates an invoice pdf.
+    pyEnv["ir.attachment"].create({
+        mimetype: "application/pdf",
+        name: "invoice.pdf",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    // Reloading the same record (here through a save) must refresh the chatter.
+    await clickField(".o_field_widget[name=name] input");
+    await edit("Jane Doe", { confirm: "blur" });
+    await clickSave();
+    await contains("button[aria-label='Attach files']:text('1')");
 });
 
 test("should display subject when subject isn't infered from the record", async () => {
