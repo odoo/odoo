@@ -295,7 +295,7 @@ export class TicketScreen extends Component {
                 if (Object.values(toRefundDetail).some((detail) => detail.destination_order_uuid)) {
                     return;
                 }
-                if (toRefundDetail.qty == toRefundDetail.refundableQty) {
+                if (toRefundDetail.qty >= toRefundDetail.refundableQty) {
                     toRefundDetail.qty = 0;
                 } else {
                     toRefundDetail.qty += 1;
@@ -323,7 +323,6 @@ export class TicketScreen extends Component {
             return this.numberBuffer.reset();
         }
 
-        toRefundDetail.refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
         if (toRefundDetail.refundableQty <= 0) {
             return this.numberBuffer.reset();
         }
@@ -766,7 +765,10 @@ export class TicketScreen extends Component {
         }
 
         const toRefundDetail = this.getToRefundDetail(orderline);
-        if (this.pos.isProductQtyZero(toRefundDetail.maxQty - 1) && toRefundDetail.qty === 0) {
+        if (
+            this.pos.isProductQtyZero(toRefundDetail.refundableQty - 1) &&
+            toRefundDetail.qty === 0
+        ) {
             toRefundDetail.qty = 1;
         }
         return true;
