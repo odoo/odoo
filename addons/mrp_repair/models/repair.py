@@ -11,6 +11,16 @@ class RepairOrder(models.Model):
         compute='_compute_production_count',
         groups='mrp.group_mrp_user',
     )
+    component_product_ids = fields.Many2many('product.product', compute='_compute_component_product_ids')
+
+    @api.depends('company_id', 'product_id')
+    def _compute_component_product_ids(self):
+        self.component_product_ids = False
+        for repair in self:
+            bom = self.env['mrp.bom']._bom_find(repair.product_id, company_id=repair.company_id.id)[repair.product_id]
+            bom_line_products = bom.bom_line_ids.product_id
+            if bom_line_products:
+                repair.component_product_ids = bom_line_products
 
     @api.depends('reference_ids.production_ids')
     def _compute_production_count(self):
@@ -65,14 +75,12 @@ class RepairOrder(models.Model):
         return action
 
     def _get_action_add_from_catalog_extra_context(self):
-        bom = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id)[self.product_id]
-        product_ids = [line.product_id.id for line in bom.bom_line_ids] if bom else []
+        action = super()._get_action_add_from_catalog_extra_context()
         child_field = self.env.context.get('child_field')
-        return {
-            **super()._get_action_add_from_catalog_extra_context(),
-            'catalog_bom_product_ids': product_ids,
-            'search_default_bom_parts': bool(product_ids) and child_field == 'move_ids',
-        }
+        if child_field == 'move_ids':
+            action['catalog_bom_product_ids'] = self.component_product_ids.ids
+            action['search_default_bom_parts'] = bool(self.component_product_ids)
+        return action
 
 
 class StockMove(models.Model):
