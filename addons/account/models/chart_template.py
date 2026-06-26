@@ -287,7 +287,8 @@ class AccountChartTemplate(models.AbstractModel):
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
-                del data['account.journal'][xmlid]
+                if 'type' in journal_data:
+                    del data['account.journal'][xmlid]
             else:
                 journal = None
                 lang = self._get_untranslatable_fields_target_language(company.chart_template, company)
@@ -307,7 +308,8 @@ class AccountChartTemplate(models.AbstractModel):
                         ('name', 'in', (journal_data['name'], translated_name)),
                     ], limit=1)
                 if journal:
-                    del data['account.journal'][xmlid]
+                    if 'type' in journal_data:
+                        del data['account.journal'][xmlid]
                     self.env['ir.model.data']._update_xmlids([{
                         'xml_id': self.company_xmlid(xmlid, company),
                         'record': journal,
@@ -750,13 +752,13 @@ class AccountChartTemplate(models.AbstractModel):
         if not company.currency_exchange_journal_id:
             company.currency_exchange_journal_id = self.ref('exch', raise_if_not_found=False)
 
-        # Setup default Income/Expense Accounts on Sale/Purchase journals
-        sale_journal = self.ref("sale", raise_if_not_found=False)
-        if sale_journal and company.income_account_id:
-            sale_journal.default_account_id = company.income_account_id
-        purchase_journal = self.ref("purchase", raise_if_not_found=False)
-        if purchase_journal and company.expense_account_id:
-            purchase_journal.default_account_id = company.expense_account_id
+        # Setup default Income/Expense Accounts on new Sale/Purchase journals
+        for journal, account in [
+            (self.ref("sale", raise_if_not_found=False), company.income_account_id),
+            (self.ref("purchase", raise_if_not_found=False), company.expense_account_id),
+        ]:
+            if journal and account and not journal.default_account_id and journal.write_date == journal.create_date:
+                journal.default_account_id = account
 
         # Set default Purchase and Sale taxes on the company
         if not company.account_sale_tax_id:

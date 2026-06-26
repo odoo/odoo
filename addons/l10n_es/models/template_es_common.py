@@ -39,6 +39,14 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    @template('es_common', 'account.journal')
+    def _get_es_common_account_journal(self):
+        return {
+            'purchase': {
+                'non_deductible_account_id': 'account_common_544',
+            },
+        }
+
     @template('es_common', 'account.account')
     def _get_es_common_account_account(self):
         return {
@@ -115,12 +123,3 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'account_common_611',
             },
         }
-
-    def _post_load_data(self, template_code, company, template_data):
-        super()._post_load_data(template_code, company, template_data)
-        if (
-            template_data['parent'] == 'es_common'
-            and (purchase_journal := self.ref('purchase', raise_if_not_found=False))
-            and (non_decuctible_account := self.ref('account_common_544', raise_if_not_found=False))
-        ):
-            purchase_journal.non_deductible_account_id = non_decuctible_account
