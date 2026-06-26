@@ -11,9 +11,6 @@ class ResCompany(models.Model):
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
 
     def _get_default_attendance_work_entry_type(self):
-        if not self:
-            # TODO: to check
-            return self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         self.ensure_one()
         country_type = self.env['hr.work.entry.type'].search([
             ('code', '=', 'WORK100'),
