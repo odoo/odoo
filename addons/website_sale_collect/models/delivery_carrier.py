@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
+from odoo.addons.website_sale import utils as wsale_utils
 from odoo.addons.website_sale_collect import utils
 
 
@@ -115,9 +116,8 @@ class DeliveryCarrier(models.Model):
             in_store_stock_data = {}
             if product:  # Called from the product page.
                 uom = self.env["uom.uom"].browse(uom_id)
-                cart_qty = (order_sudo and order_sudo._get_cart_qty(product.id)) or 0
-                in_store_stock_data = utils.format_product_stock_values(
-                    product, wh_id=wh.id, uom=uom, cart_qty=cart_qty
+                in_store_stock_data = wsale_utils.format_product_stock_values(
+                    product, uom, warehouse_id=wh.id
                 )
             elif order_sudo:  # Called from the checkout page.
                 in_store_stock_data = {"in_stock": order_sudo._is_in_stock(wh.id)}

@@ -198,16 +198,8 @@
 
     <template id="website_sale.delivery_availability_widget">
         <t t-set="props" t-value="{
-            'productId': product_variant.id,
-            'zipCode': zip_code,
-            'countryCode': country_code,
-            'showSelectStoreButton': show_select_store_button,
-            'selectedLocationData': selected_location_data or {},
-            'inStoreStockData': combination_info.get('in_store_stock_data', {}),
+            'uomName': combination_info.get('uom_name'),
             'deliveryStockData': combination_info.get('delivery_stock_data', {}),
-            'deliveryMethodId': delivery_method.id,
-            'deliveryMethodType': delivery_method.delivery_type,
-            'deliveryMethodName': delivery_method.name,
         }"/>
         <owl-component
             name="website_sale.DeliveryAvailability"

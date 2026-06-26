@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.fields import Domain
 
 
 class Website(models.Model):
@@ -44,9 +45,15 @@ class Website(models.Model):
     def _get_max_in_store_product_available_qty(self, product):
         """Return maximum amount of product available to deliver with in store delivery method."""
         return max(
-            [
-                product.with_context(warehouse_id=wh.id).free_qty
+            (
+                product._get_free_qty(warehouse_id=wh.id)
                 for wh in self.sudo().in_store_dm_id.warehouse_ids
-            ],
+            ),
             default=0,
         )
+
+    def _get_available_delivery_methods_domain(self, *, in_store=None, **kwargs):
+        domain = super()._get_available_delivery_methods_domain(in_store=in_store, **kwargs)
+        if in_store is not None:
+            domain &= Domain("delivery_type", (in_store and "=") or "!=", "in_store")
+        return domain

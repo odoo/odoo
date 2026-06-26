@@ -1246,3 +1246,12 @@ class Website(models.Model):
                 for country in all_countries
             },
         }
+
+    def _get_available_delivery_methods_domain(self, *, product=None, **_kwargs):
+        domain = Domain([
+            ("website_id", "in", self.ids + [False]),
+            ("website_published", "=", True),
+        ])
+        if product:
+            domain &= Domain("excluded_tag_ids", "not in", product.all_product_tag_ids.ids)
+        return domain

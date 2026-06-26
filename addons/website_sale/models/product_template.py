@@ -13,6 +13,7 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
 from odoo.addons.website.tools import text_from_html
+from odoo.addons.website_sale import utils
 
 # A delimiter that users aren't likely to search for in product codes.
 RARE_DELIMITER = "\u241e"
@@ -975,11 +976,26 @@ class ProductTemplate(models.Model):
                 "has_stock_notification": has_stock_notification,
                 "stock_notification_email": stock_notification_email,
                 "is_in_wishlist": product_sudo._is_in_wishlist(),
+                **self._prepare_delivery_availability_values(product_or_template, website, uom),
             })
         else:
             combination_info.update({"free_qty": 0, "cart_qty": 0})
 
         return combination_info
+
+    def _prepare_delivery_availability_values(self, product, website, uom, /, **kwargs):
+        values = {"show_delivery_availability": True, "delivery_stock_data": {}}
+
+        DeliveryCarrier = self.env["delivery.carrier"].sudo()
+        can_deliver = DeliveryCarrier.search_count(
+            website._get_available_delivery_methods_domain(product=product, **kwargs), limit=1
+        )
+        if can_deliver:
+            values["delivery_stock_data"].update(
+                utils.format_product_stock_values(product, uom, **kwargs)
+            )
+
+        return values
 
     def _get_dynamic_attribute_images(self, combination_ids, website_id):
         """Compute the 'closest variant' image for every value based on the current selection.
