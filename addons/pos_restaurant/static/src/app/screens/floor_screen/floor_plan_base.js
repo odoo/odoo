@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { Component, proxy, signal } from "@odoo/owl";
 import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 
@@ -9,7 +8,7 @@ export class FloorPlanBase extends Component {
         super.setup();
         this.floorPlanStore = useFloorPlanStore();
         this.containerRef = signal.ref();
-        this.canvasRef = useRef("canvas");
+        this.canvasRef = signal.ref();
         this.state = proxy({ canvasWidth: 0, canvasHeight: 0 });
     }
 
@@ -17,7 +16,7 @@ export class FloorPlanBase extends Component {
         if (!uuid) {
             return null;
         }
-        return this.canvasRef.el.querySelector(`#${ELEM_ID_PREFIX}${uuid}`);
+        return this.canvasRef().querySelector(`#${ELEM_ID_PREFIX}${uuid}`);
     }
 
     getTableUuidFromDOMEl(element) {

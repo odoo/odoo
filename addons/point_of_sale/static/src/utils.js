@@ -313,3 +313,13 @@ export function getDisplayDateInfo(sqlDate) {
         monthDayLabel: dateTime.toLocaleString({ month: "long", day: "numeric" }),
     };
 }
+
+// TODO-PARP: Temporary compatibility wrapper that exposes Owl 3 signal refs
+// through the legacy `el` interface expected by existing web hooks.
+export function getWebHookRef(signalRef) {
+    return {
+        get el() {
+            return signalRef();
+        },
+    };
+}

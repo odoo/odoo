@@ -7,6 +7,7 @@ import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/uti
 import { calculateBoundsFromTransform } from "@pos_restaurant/app/services/floor_plan/utils/bounds_calculator";
 import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { getWebHookRef } from "@point_of_sale/utils";
 
 const TABLE_LINKING_DELAY = 400;
 
@@ -122,7 +123,7 @@ export class FloorPlan extends FloorPlanBase {
         this.state.canvasWidth = canvasWidth;
         this.state.canvasHeight = canvasHeight;
         // Assign the size and style here to be able to scroll correctly
-        this.canvasRef.el.style = this.getCanvasStyles();
+        this.canvasRef().style = this.getCanvasStyles();
     }
 
     getContainerStyle() {
@@ -252,14 +253,14 @@ export class FloorPlan extends FloorPlanBase {
         };
 
         useDraggable({
-            ref: this.canvasRef, // TODO-PARP: ?
+            ref: getWebHookRef(this.canvasRef),
             elements: ".table",
             enabled: true,
             onDragStart: ({ addClass, element }) => {},
 
             onWillStartDrag: ({ addClass, element, x, y }) => {
                 addClass(element, "shadow");
-                addClass(this.canvasRef.el, "o_fp_table_linking");
+                addClass(this.canvasRef(), "o_fp_table_linking");
 
                 dndContext = {};
                 const uuid = this.getTableUuidFromDOMEl(element);
@@ -268,7 +269,7 @@ export class FloorPlan extends FloorPlanBase {
                 dndContext.tableGeo = table.getGeometry();
 
                 // Calculate offset from cursor to table's logical position
-                const canvasRect = this.canvasRef.el.getBoundingClientRect();
+                const canvasRect = this.canvasRef().getBoundingClientRect();
                 const tablePos = table.linkedPosition;
                 dndContext.dragOffset = {
                     x: x - canvasRect.left - tablePos.left,
@@ -278,7 +279,7 @@ export class FloorPlan extends FloorPlanBase {
 
             onDrag: ({ element, x, y, addClass }) => {
                 const { table, dragOffset, targetTable } = dndContext;
-                const canvasRect = this.canvasRef.el.getBoundingClientRect();
+                const canvasRect = this.canvasRef().getBoundingClientRect();
                 const newLeft = x - canvasRect.left - dragOffset.x;
                 const newTop = y - canvasRect.top - dragOffset.y;
 

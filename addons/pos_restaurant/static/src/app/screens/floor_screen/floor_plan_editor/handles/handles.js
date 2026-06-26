@@ -75,7 +75,7 @@ export class Handles extends Component {
         this.setStyle(floorElement);
         this.state.rotationHandlePosition = computeRotationHandlePosition(
             floorElement,
-            canvasRef.el,
+            canvasRef(),
             this.props.actionMenuPosition
         );
     }

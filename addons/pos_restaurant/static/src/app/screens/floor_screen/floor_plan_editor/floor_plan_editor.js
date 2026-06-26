@@ -177,7 +177,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         }
 
         if (
-            e.target === this.canvasRef.el ||
+            e.target === this.canvasRef() ||
             e.target === this.snapGuidesRef() ||
             e.target === this.containerRef()
         ) {
@@ -340,7 +340,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         if (tables.length === 0) {
             return { left: TABLE_START_X, top: TABLE_START_Y };
         }
-        const canvasWidth = this.canvasRef.el.clientWidth;
+        const canvasWidth = this.canvasRef().clientWidth;
         const maxRight = canvasWidth - TABLE_SPACING;
         let currentRow = 0;
         while (currentRow < 100) {
@@ -449,7 +449,7 @@ export class FloorPlanEditor extends FloorPlanBase {
         // If element has transparent area, check if click is on border
         const transparentInfo = element.getTransparentAreaInfo();
         const borderInfo = element.getTransparentAreaBorderInfo();
-        const canvasRect = this.canvasRef.el.getBoundingClientRect();
+        const canvasRect = this.canvasRef().getBoundingClientRect();
 
         // Convert canvas coordinates to screen coordinates
         // transparentInfo.left/top are relative to canvas, canvasRect gives us canvas position in viewport
@@ -753,7 +753,7 @@ export class FloorPlanEditor extends FloorPlanBase {
             el: this.getDOMFloorElement(this.floorPlanStore.selectedElementUuid),
             floorElement: this.floorPlanStore.getSelectedElement(),
             floorPlanStore: this.floorPlanStore,
-            canvasEl: this.canvasRef.el,
+            canvasEl: this.canvasRef(),
             scrollContainerEl: this.containerRef(),
             snapping: this.snapping,
             handles: this.handles,

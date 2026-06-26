@@ -40,7 +40,7 @@ export class EditFloorProperties extends Component {
     }
 
     handleWindowResize() {
-        const canvasEl = this.props.canvasRef.el;
+        const canvasEl = this.props.canvasRef();
         if (canvasEl) {
             this.state.resolution = canvasEl.offsetWidth + " x " + canvasEl.offsetHeight + " px";
         } else {
