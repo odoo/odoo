@@ -20,6 +20,7 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     peppol_external_provider = fields.Char(related='company_id.peppol_external_provider', readonly=False)
+    peppol_purchase_journal_required = fields.Boolean(compute='_compute_peppol_purchase_journal_required')
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
     peppol_parent_company_name = fields.Char(compute='_compute_peppol_use_parent_company')
 
@@ -49,6 +50,11 @@ class ResConfigSettings(models.TransientModel):
         mode_constraint = self.env['ir.config_parameter'].sudo().get_param('account_peppol.mode_constraint')
         trial_param = self.env['ir.config_parameter'].sudo().get_param('saas_trial.confirm_token')
         self.account_peppol_mode_constraint = trial_param and 'demo' or mode_constraint or 'prod'
+
+    @api.depends('account_peppol_proxy_state')
+    def _compute_peppol_purchase_journal_required(self):
+        for config in self:
+            config.peppol_purchase_journal_required = config.account_peppol_proxy_state in ('smp_registration', 'receiver')
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
