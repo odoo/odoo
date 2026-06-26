@@ -1603,7 +1603,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.39";
+  var version = "3.0.0-alpha.40";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -3822,10 +3822,7 @@ ${issueStrings}`);
       }
       this.processing = true;
       this.frame = 0;
-      for (let node of this.cancelledNodes) {
-        node._destroy();
-      }
-      this.cancelledNodes.clear();
+      this.processCancelledNodes();
       for (let fiber of this.tasks) {
         if (fiber.root !== fiber) {
           this.tasks.delete(fiber);
@@ -3855,6 +3852,17 @@ ${issueStrings}`);
         }
       }
       this.processing = false;
+    }
+    processCancelledNodes() {
+      for (let node of this.cancelledNodes) {
+        node._destroy();
+      }
+      this.cancelledNodes.clear();
+      for (let task of this.tasks) {
+        if (task.node.status === STATUS.DESTROYED) {
+          this.tasks.delete(task);
+        }
+      }
     }
   };
   var Component = class {
@@ -4392,7 +4400,7 @@ ${issueStrings}`);
         destroy: () => {
           this.roots.delete(root);
           node?.destroy();
-          this.scheduler.processTasks();
+          this.scheduler.processCancelledNodes();
         }
       };
       this.roots.add(root);
@@ -4403,7 +4411,9 @@ ${issueStrings}`);
         root.destroy();
       }
       this.pluginManager.destroy();
-      this.scheduler.processTasks();
+      this.scheduler.processCancelledNodes();
+      this.scheduler.tasks.clear();
+      this.scheduler.delayedRenders = [];
       apps.delete(this);
       this.destroyed = true;
     }
@@ -4735,8 +4745,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-06-25T07:19:45.013Z",
-    hash: "c3543c60",
+    date: "2026-06-26T12:30:41.410Z",
+    hash: "e74870c2",
     url: "https://github.com/odoo/owl"
   };
 
