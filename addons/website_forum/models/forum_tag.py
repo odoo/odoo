@@ -16,7 +16,7 @@ class ForumTag(models.Model):
 
     name = fields.Char('Name', required=True)
     color = fields.Integer('Color')
-    forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     post_ids = fields.Many2many(
         'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_post_id',
         string='Posts', domain=[('state', '=', 'active')])
@@ -25,6 +25,7 @@ class ForumTag(models.Model):
         'unique (name, forum_id)',
         'Tag name already exists!',
     )
+    _forum_id_posts_count_idx = models.Index('(forum_id, posts_count desc)')
 
     follower_ids = fields.Many2many(
         'res.partner',

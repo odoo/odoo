@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from operator import itemgetter
 
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.translate import html_translate
 
 MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
@@ -139,8 +139,8 @@ class ForumForum(models.Model):
 
     # tags
     tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
-    tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
-    tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_ids_usage')
+    tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_most_used_ids')
+    tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_unused_ids')
 
     def _compute_website_url(self):
         super()._compute_website_url()
@@ -230,33 +230,36 @@ class ForumForum(models.Model):
             forum.can_moderate = self.env.user.karma >= forum.karma_moderate
 
     @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
-    def _compute_tag_ids_usage(self):
-        forums_without_tags = self.filtered(lambda f: not f.tag_ids)
-        forums_without_tags.tag_most_used_ids = forums_without_tags.tag_unused_ids = False
-        forums_with_tags = self - forums_without_tags
-        if not forums_with_tags:
-            return
+    def _compute_tag_most_used_ids(self):
+        access_query = self.env['forum.tag']._search([])
+        query = SQL("""
+            SELECT top_tags.id
+              FROM unnest(%(forum_ids)s) AS f(id)
+              JOIN LATERAL (
+                    SELECT id
+                      FROM forum_tag
+                     WHERE forum_id = f.id
+                       AND posts_count > 0
+                       AND id IN %(allowed_ids)s
+                  ORDER BY posts_count DESC, name, id
+                     LIMIT %(most_used_count)s
+                   ) AS top_tags ON TRUE
+        """, forum_ids=self.ids, most_used_count=MOST_USED_TAGS_COUNT, allowed_ids=access_query.subselect())
+        tag_ids = [row[0] for row in self.env.execute_query(query)]
+        tags = self.env['forum.tag'].browse(tag_ids)
+        tags_by_forum = tags.grouped('forum_id')
+        for forum in self:
+            forum.tag_most_used_ids = tags_by_forum.get(forum, self.env['forum.tag'])
 
-        tags_data = self.env['forum.tag'].search_read(
-            [('forum_id', 'in', forums_with_tags.ids)],
-            fields=['id', 'forum_id', 'posts_count'],
-            order='forum_id, posts_count DESC, name, id',
-        )
-        current_forum_id = tags_data[0]['forum_id'][0]
-        forum_tags = defaultdict(lambda: {'most_used_ids': [], 'unused_ids': []})
-
-        for tag_data in tags_data:
-            tag_id, tag_forum_id, posts_count = itemgetter('id', 'forum_id', 'posts_count')(tag_data)
-            if tag_forum_id[0] != current_forum_id:
-                current_forum_id = tag_forum_id[0]
-            if not posts_count:  # Could be 0 or None
-                forum_tags[current_forum_id]['unused_ids'].append(tag_id)
-            elif len(forum_tags[current_forum_id]['most_used_ids']) < MOST_USED_TAGS_COUNT:
-                forum_tags[current_forum_id]['most_used_ids'].append(tag_id)
-
-        for forum in forums_with_tags:
-            forum.tag_most_used_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['most_used_ids'])
-            forum.tag_unused_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['unused_ids'])
+    @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
+    def _compute_tag_unused_ids(self):
+        unused_tags = self.env['forum.tag'].search([
+            ('forum_id', 'in', self.ids),
+            ('posts_count', '=', 0),
+        ])
+        tags_by_forum = unused_tags.grouped('forum_id')
+        for forum in self:
+            forum.tag_unused_ids = tags_by_forum.get(forum, self.env['forum.tag'])
 
     @api.depends('post_ids')
     def _compute_last_post_id(self):
