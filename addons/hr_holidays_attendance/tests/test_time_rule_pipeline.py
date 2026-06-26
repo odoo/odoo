@@ -2018,6 +2018,62 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(type2_hours, 1.0, places=5,
             msg="1h should be classified by 'Above 4h' rule (the hour exceeding the threshold)")
 
+    def test_excess_day1_deficit_day2_two_rules(self):
+        """Excess rule fires on day1, deficit rule fires on day2 across two sources.
+
+        _____________day1___________|_____________day2___________|
+        [att1 8-18      ]      [att2 22->6   ]
+
+        att1 Mon 08:00-18:00 (10h, threshold 8h) -> 2h OT output linked to att1.
+        att2 Mon 22:00 to Tue 06:00: Mon portion (2h) is all excess; Tue portion
+        (6h, threshold 8h) is 2h short -> 2h deficit output linked to att2.
+        """
+        undertime_type = self.env['hr.work.entry.type'].create({
+            'name': 'Undertime', 'code': 'EXDEF_UT', 'count_as': 'absence', 'requires_allocation': False,
+        })
+        deficit_rule = self.env['hr.time.rule'].create({
+            'name': 'Deficit Rule',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+
+        att1 = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),   # Mon
+            'check_out': datetime(2022, 12, 12, 18),  # Mon 18:00 — 10h, 2h above threshold
+        })
+        att2 = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 22),   # Mon 22:00
+            'check_out': datetime(2022, 12, 13, 6),   # Tue 06:00 — 6h on Tue side, 2h below threshold
+        })
+
+        att1_ot = att1.overtime_attendance_ids.filtered(
+            lambda a: a.time_rule_id == self.time_rule
+        )
+        att2_ot = att2.overtime_attendance_ids.filtered(
+            lambda a: a.time_rule_id == self.time_rule
+        )
+        att2_deficit = att2.overtime_attendance_ids.filtered(
+            lambda a: a.time_rule_id == deficit_rule
+        )
+
+        self.assertAlmostEqual(
+            sum(a.worked_hours for a in att1_ot), 2.0, places=5,
+            msg="att1: 10h worked, 8h threshold -> 2h OT",
+        )
+        self.assertAlmostEqual(
+            sum(a.worked_hours for a in att2_ot), 2.0, places=5,
+            msg="att2 Mon portion (22:00-24:00, 2h) is all above threshold -> 2h OT",
+        )
+        self.assertAlmostEqual(
+            sum(a.worked_hours for a in att2_deficit), 2.0, places=5,
+            msg="att2 Tue portion (00:00-06:00, 6h) < 8h threshold -> 2h deficit",
+        )
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
@@ -2083,26 +2139,17 @@ class TestTimeRuleCronBehavior(TransactionCase):
                     'check_in': datetime(2022, 12, 12, 8),
                     'check_out': datetime(2022, 12, 12, 14),  # 6h
                 })
-                # Dec 12 is "today" , output deferred to the nightly cron.
-                self.assertFalse(
-                    self._outputs_for(att.id),
-                    "No output expected while attendance date is still today",
+
+                outputs = self._outputs_for(att.id)
+                self.assertTrue(outputs, "overtime output should be created immediately")
+                self.assertAlmostEqual(
+                    sum(o.worked_hours for o in outputs), 6.0, places=5,
+                    msg="all 6h reclassified to daily OT",
                 )
-
-            with freeze_time('2022-12-13'):
-                # Cron runs next morning and targets Dec 12 (yesterday).
-                self.env['hr.attendance']._cron_process_day_time_rules()
-
-            outputs = self._outputs_for(att.id)
-            self.assertTrue(outputs, "Day cron should have created a daily OT output")
-            self.assertAlmostEqual(
-                sum(o.worked_hours for o in outputs), 6.0, places=5,
-                msg="All 6h reclassified to daily OT",
-            )
         finally:
             rule.write({'active': False})
 
-    def test_day_and_week_cron_independence(self):
+    def test_day_and_week_cron_independence_overtime_attendance(self):
         day_rule = self.env['hr.time.rule'].create({
             'name': 'Daily > 4h',
             'working_hours_mode': 'day',
@@ -2124,15 +2171,10 @@ class TestTimeRuleCronBehavior(TransactionCase):
                     'check_in': datetime(2022, 12, 12, 8),
                     'check_out': datetime(2022, 12, 12, 14),  # 6h
                 })
-                self.assertFalse(self._outputs_for(att.id), "Today , still deferred")
-
-            with freeze_time('2022-12-13'):
-                self.env['hr.attendance']._cron_process_day_time_rules()
-
-            day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
-            week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
-            self.assertAlmostEqual(day_h, 2.0, places=5, msg="2h daily OT after day cron")
-            self.assertAlmostEqual(week_h, 0.0, places=5, msg="Week rules not yet processed")
+                day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
+                week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
+                self.assertAlmostEqual(day_h, 2.0, places=5, msg="2h daily OT created immedaitely")
+                self.assertAlmostEqual(week_h, 0.0, places=5, msg="week rules wait for the cron")
 
             with freeze_time('2022-12-19'):
                 # Mon 2022-12-19: week cron processes Mon 12 - Sun 18.
@@ -2143,14 +2185,12 @@ class TestTimeRuleCronBehavior(TransactionCase):
             self.assertAlmostEqual(day_h, 2.0, places=5,
                 msg="Day OT preserved , week cron must not remove it")
             self.assertAlmostEqual(week_h, 1.0, places=5,
-                msg="1h weekly OT added by week cron (6h − 5h threshold)")
+                msg="1h weekly OT added by week cron (6h - 5h threshold)")
         finally:
             day_rule.write({'active': False})
             week_rule.write({'active': False})
 
     def test_retroactive_attendance_triggers_immediate_reprocess(self):
-        """An attendance created for a past date triggers immediate output generation.
-        """
         rule = self.env['hr.time.rule'].create({
             'name': 'All hours -> daily OT (retro)',
             'working_hours_mode': 'day',
@@ -2320,7 +2360,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
                 'check_out': datetime(2022, 12, 12, 12),  # 4h, at threshold, no excess
                 'work_entry_type_id': att_src_wet.id,
                 'state': 'validated',
-            })
+            }).with_context(skip_time_rules=False)
             outputs = self.env['hr.attendance'].search([
                 ('source_attendance_id', '=', att.id), ('is_time_rule_output', '=', True),
             ])
@@ -2395,7 +2435,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         rule = self.env['hr.time.rule'].create({
             'name': 'Exceed 4h (state write)',
             'working_hours_mode': 'day',
-            'threshold_operator': 'exceed',
+            'threshold_operatortest_day_and_week_cron_independence': 'exceed',
             'expected_hours': 4,
             'work_entry_type_id': self.out_type.id,
             'condition_work_entry_type_ids': [self.src_type.id],
@@ -2468,7 +2508,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             'condition_work_entry_type_ids': [self.src_type.id],
         })
         try:
-            # Mon 2022-12-12 to Fri 2022-12-16 (past complete week): 5 days × 6h = 30h > 20h
+            # Mon 2022-12-12 to Fri 2022-12-16 (past complete week): 5 days x 6h = 30h > 20h
             leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 16, 14))
             self.assertTrue(self._outputs(leave), "Weekly rule must fire for past complete-week leave")
         finally:
@@ -2617,7 +2657,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             rule1.write({'active': False})
             rule2.write({'active': False})
 
-    def test_day_and_week_cron_independence(self):
+    def test_day_and_week_cron_independence_undertime_leave(self):
         """Day cron only fires day rules; week cron only fires week rules; neither interferes."""
         day_rule = self.env['hr.time.rule'].create({
             'name': 'Less than 8h/day (cron indep)',
@@ -2642,12 +2682,12 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         try:
             with freeze_time('2022-12-12'):
                 leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
-                self.assertFalse(self._outputs(leave), "Today: both rules deferred")
+                self.assertFalse(self._outputs(leave), "Today's undertime should wait for the day cron")
 
             with freeze_time('2022-12-13'):
                 self.env['hr.leave']._cron_process_day_undertime_rules()
 
-            self.assertTrue(self._outputs(leave, self.out_type), "Day cron must fire the day rule")
+            self.assertTrue(self._outputs(leave, self.out_type), "Day cron must fire the undertime day rule")
             self.assertFalse(self._outputs(leave, out_type_week), "Day cron must not fire the week rule")
 
             with freeze_time('2022-12-19'):  # Monday: week Dec 12-18 complete
@@ -2698,7 +2738,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             rule.write({'active': False})
 
-    def test_day_and_week_cron_independence_att(self):
+    def test_day_and_week_cron_independence_undertime_attendance(self):
         """Day cron fires day rules only; week cron fires week rules only; neither interferes (attendance)."""
         src_wet = self.env['hr.work.entry.type'].create({
             'name': 'Att Src (day/week indep)', 'code': 'ATSRCINDEP', 'requires_allocation': False,

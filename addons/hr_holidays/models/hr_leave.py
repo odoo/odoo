@@ -69,8 +69,12 @@ class HrLeave(models.Model):
     _name = 'hr.leave'
     _description = "Time Off"
     _order = "date_from desc"
-    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
+    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'hr.time.rule.source.mixin']
     _mail_post_access = 'read'
+
+    _time_rule_source_field = 'source_leave_id'
+    _time_rule_span_start_field = 'date_from'
+    _time_rule_span_end_field = 'date_to'
 
     @api.model
     def default_get(self, fields):
@@ -1293,7 +1297,8 @@ class HrLeave(models.Model):
             return
         today = fields.Date.today()
         latest_monday = today - timedelta(days=today.weekday())
-        to_date = lambda dt: dt.date() if hasattr(dt, 'date') else dt
+        def to_date(dt):
+            return dt.date() if hasattr(dt, 'date') else dt
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
         today = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
         past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_monday]
@@ -1356,19 +1361,11 @@ class HrLeave(models.Model):
         merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
         (day_rules | week_rules)._apply_leave_output(merged_excess, merged_deficit)
 
-    def _collect_time_rule_outputs(self, rules, ranges_by_employee):
-        all_excess = defaultdict(lambda: defaultdict(list))
-        all_deficit = defaultdict(lambda: defaultdict(list))
-        if not rules:
-            return all_excess, all_deficit
+    def _get_source_records_for_time_rules(self, employees, start_dt, end_dt):
+        return self._get_source_leaves_for_time_rules(employees, start_dt, end_dt)
 
-        by_range = defaultdict(list)
-        for employee, (date_from, date_to) in ranges_by_employee.items():
-            start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
-            end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
-            by_range[start_dt, end_dt].append(employee)
-
-        auto_ctx = dict(
+    def _collect_auto_ctx(self):
+        return dict(
             skip_time_rules=True,
             leave_fast_create=True,
             leave_skip_date_check=True,
@@ -1379,70 +1376,17 @@ class HrLeave(models.Model):
             skip_create_resource_leave=True,
         )
 
-        for (start_dt, end_dt), employees in by_range.items():
-            employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
-            all_source_leaves = self._get_source_leaves_for_time_rules(employee_rs, start_dt, end_dt)
+    def _restore_source_span(self, source, original_end, auto_ctx):
+        source.with_context(**auto_ctx).write({
+            'active': True,
+            'date_to': original_end,
+            'request_date_to': original_end.date(),
+            'date_from': source.date_from,
+        })
 
-            if not all_source_leaves:
-                continue
-
-            is_weekly = bool(rules) and all(r.quantity_period == 'week' for r in rules)
-
-            all_children = self.env['hr.leave'].sudo().search([
-                ('source_leave_id', 'in', all_source_leaves.ids),
-            ])
-
-            if is_weekly:
-                # only delete prior weekly-rule outputs; day-rule outputs must be preserved
-                non_weekly = all_children.filtered(lambda l: l.time_rule_id not in rules)
-                (all_children - non_weekly).with_context(skip_time_rules=True).unlink()
-                # day-rule excess outputs may have shrunk source date_to; restore the original
-                # span so weekly totals are computed against the full leave duration
-                max_child_dt = {}
-                for child in non_weekly:
-                    src = child.source_leave_id
-                    if child.date_from > src.date_to:
-                        continue  # deficit child extends past source end — ignore for span restoration
-                    sid = src.id
-                    if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
-                        max_child_dt[sid] = child.date_to
-            else:
-                # collect max child date_to before deletion so we can restore source date_to;
-                # deficit children extend past source.date_to and must not inflate it
-                max_child_dt = {}
-                for child in all_children:
-                    src = child.source_leave_id
-                    if child.date_from > src.date_to:
-                        continue
-                    sid = src.id
-                    if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
-                        max_child_dt[sid] = child.date_to
-                all_children.with_context(skip_time_rules=True).unlink()
-
-            modified_sources = self.env['hr.leave']
-            for src in all_source_leaves:
-                original_dt = max(src.date_to, max_child_dt.get(src.id, src.date_to))
-                if not src.active or original_dt != src.date_to:
-                    src.with_context(**auto_ctx).write({
-                        'active': True,
-                        'date_to': original_dt,
-                        'request_date_to': original_dt.date(),
-                        'date_from': src.date_from,
-                    })
-                    modified_sources |= src
-
-            if modified_sources:
-                modified_sources.with_context(**auto_ctx)._create_resource_leave()
-
-            excess, deficit = rules._evaluate_rules(all_source_leaves, start_dt, end_dt)
-            for emp, by_leave in excess.items():
-                for lv, items in by_leave.items():
-                    all_excess[emp][lv].extend(items)
-            for emp, by_leave in deficit.items():
-                for lv, items in by_leave.items():
-                    all_deficit[emp][lv].extend(items)
-
-        return all_excess, all_deficit
+    def _after_source_restore(self, modified_sources, auto_ctx):
+        if modified_sources:
+            modified_sources.with_context(**auto_ctx)._create_resource_leave()
 
     def _merge_rule_outputs(self, a, b):
         merged = defaultdict(lambda: defaultdict(list))

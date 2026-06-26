@@ -25,7 +25,11 @@ class HrAttendance(models.Model):
     _name = 'hr.attendance'
     _description = "Attendance"
     _order = "check_in desc"
-    _inherit = ["mail.thread"]
+    _inherit = ["mail.thread", "hr.time.rule.source.mixin"]
+
+    _time_rule_source_field = 'source_attendance_id'
+    _time_rule_span_start_field = 'check_in'
+    _time_rule_span_end_field = 'check_out'
 
     def _default_employee(self):
         return self.env.user.employee_id
@@ -98,10 +102,6 @@ class HrAttendance(models.Model):
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
     source_attendance_id = fields.Many2one('hr.attendance', ondelete='cascade', index=True)
     overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
-
-    # aliases
-    date_from = fields.Datetime(related='check_in', string="Date From")
-    date_to = fields.Datetime(related='check_out', string="Date To")
 
     @api.depends('date')
     def _compute_day_of_date(self):
@@ -810,89 +810,8 @@ class HrAttendance(models.Model):
         merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
         (day_rules | week_rules)._apply_attendance_output(merged_excess, merged_deficit)
 
-    def _collect_time_rule_outputs(self, rules, ranges_by_employee):
-        def _max_span_check_out(children):
-            """Return {source_id: max_check_out} for children that extend the source's own span.
-
-            Deficit output records start *after* the source ends (they represent unworked schedule
-            gaps), so they must not be used to infer the original source check_out.
-            """
-            result = {}
-            for child in children:
-                src = child.source_attendance_id
-                # deficit outputs start past the source's current check_out;
-                # using their check_out would incorrectly inflate the source's restored span
-                if src and child.check_in > src.check_out:
-                    continue
-                sid = src.id
-                if child.check_out and (sid not in result or child.check_out > result[sid]):
-                    result[sid] = child.check_out
-            return result
-        all_excess = defaultdict(lambda: defaultdict(list))
-        all_deficit = defaultdict(lambda: defaultdict(list))
-        if not rules:
-            return all_excess, all_deficit
-
-        by_range = defaultdict(list)
-        for employee, (date_from, date_to) in ranges_by_employee.items():
-            start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
-            end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
-            by_range[start_dt, end_dt].append(employee)
-
-        for (start_dt, end_dt), employees in by_range.items():
-            employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
-            source_attendances = self._get_source_attendances_for_time_rules(employee_rs, start_dt, end_dt)
-            if not source_attendances:
-                continue
-
-            is_weekly = bool(rules) and all(r.quantity_period == 'week' for r in rules)
-            auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
-            sources_to_revert = {}
-
-            if is_weekly:
-                # only delete prior weekly-rule outputs; day-rule outputs must be preserved
-                all_children = self.env['hr.attendance'].sudo().search([
-                    ('source_attendance_id', 'in', source_attendances.ids),
-                ])
-                non_weekly = all_children.filtered(lambda a: a.time_rule_id not in rules)
-                (all_children - non_weekly).with_context(skip_time_rules=True).unlink()
-                # day-rule outputs may have shrunk source check_out; temporarily restore full span
-                # so weekly totals are computed against the original attendance duration
-                max_child_co = _max_span_check_out(non_weekly)
-                for src in source_attendances:
-                    effective_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
-                    if effective_co != src.check_out:
-                        sources_to_revert[src.id] = src.check_out
-                        src.with_context(**auto_ctx).write({'check_out': effective_co})
-            else:
-                # day rules: collect child bounds before deletion so we can restore source check_out
-                all_children = self.env['hr.attendance'].sudo().search([
-                    ('source_attendance_id', 'in', source_attendances.ids),
-                ])
-                max_child_co = _max_span_check_out(all_children)
-                all_children.with_context(skip_time_rules=True).unlink()
-                # restore original check_out and unarchive
-                # skip restore when user explicitly wrote a new check_out (don't override their intent)
-                from_write = self.env.context.get('source_bounds_from_write')
-                for src in source_attendances:
-                    original_co = src.check_out if from_write else max(src.check_out, max_child_co.get(src.id, src.check_out))
-                    if not src.active or original_co != src.check_out:
-                        src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
-
-            excess, deficit = rules._evaluate_rules(source_attendances, start_dt, end_dt)
-
-            # revert any temporary check_out restoration done for weekly evaluation
-            for src in source_attendances:
-                if src.id in sources_to_revert:
-                    src.with_context(**auto_ctx).write({'check_out': sources_to_revert[src.id]})
-            for emp, by_att in excess.items():
-                for att, items in by_att.items():
-                    all_excess[emp][att].extend(items)
-            for emp, by_att in deficit.items():
-                for att, items in by_att.items():
-                    all_deficit[emp][att].extend(items)
-
-        return all_excess, all_deficit
+    def _get_source_records_for_time_rules(self, employees, start_dt, end_dt):
+        return self._get_source_attendances_for_time_rules(employees, start_dt, end_dt)
 
     def _merge_rule_outputs(self, a, b):
         merged = defaultdict(lambda: defaultdict(list))
