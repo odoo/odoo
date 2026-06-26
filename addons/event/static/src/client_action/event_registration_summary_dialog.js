@@ -10,7 +10,6 @@ export class EventRegistrationSummaryDialog extends Component {
     static props = {
         close: Function,
         doNextScan: { type: Function, optional: true },
-        model: { type: Object, optional: true },
         playSound: { type: Function, optional: true },
         registration: { type: Object },
     };
@@ -46,9 +45,6 @@ export class EventRegistrationSummaryDialog extends Component {
 
     async onRegistrationClose() {
         this.props.close();
-        if (this.props.model) {
-            this.props.model.load();
-        }
         if (this.props.doNextScan) {
             this.onScanNext();
         }
@@ -65,9 +61,6 @@ export class EventRegistrationSummaryDialog extends Component {
             await this.orm.call("event.registration", "action_set_draft", [this.registration.id]);
         }
         this.props.close();
-        if (this.props.model) {
-            this.props.model.load();
-        }
     }
 
     async onRegistrationPrintPdf() {
