@@ -62,8 +62,6 @@ class ResPartner(models.Model):
         for partner in l10n_ar_partners:
             if id_number := partner._get_id_number_sanitize():
                 partner.vat = str(id_number)
-            if validation == 'error':
-                partner._l10n_ar_identification_validation()
 
         return super(ResPartner, self - l10n_ar_partners)._run_check_identification(validation=validation)
 
@@ -127,10 +125,11 @@ class ResPartner(models.Model):
         self.ensure_one()
         if not self.vat:
             return 0
-        if self.l10n_latam_identification_type_id.l10n_ar_afip_code in ['80', '86']:
+        if module := self._get_validation_module():
+            self._l10n_ar_identification_validation()
             # Compact is the number clean up, remove all separators leave only digits
-            res = int(stdnum.ar.cuit.compact(self.vat))
+            res = module.compact(self.vat)
+            res = res and int(res)
         else:
-            id_number = re.sub('[^0-9]', '', self.vat)
-            res = id_number and int(id_number)
+            res = re.sub(r'[^0-9a-zA-Z]', '', self.vat)
         return res
