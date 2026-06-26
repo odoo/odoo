@@ -114,6 +114,10 @@ export class FormFieldOption extends BaseOptionComponent {
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await loadFieldOptionData(el);
+            if (!fieldOptionData) {
+                // el has been removed from DOM during async operations
+                return new Promise(() => {});
+            }
             this.state.fields = fieldOptionData.fields;
             this.state.availableFields.push(...fieldOptionData.availableFields);
             this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
@@ -123,6 +127,10 @@ export class FormFieldOption extends BaseOptionComponent {
         onWillUpdateProps(async (props) => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await loadFieldOptionData(el);
+            if (!fieldOptionData) {
+                // el has been removed from DOM during async operations
+                return new Promise(() => {});
+            }
             this.state.fields = fieldOptionData.fields;
             this.state.availableFields.length = 0;
             this.state.availableFields.push(...fieldOptionData.availableFields);

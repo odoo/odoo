@@ -642,12 +642,13 @@ export class FormOptionPlugin extends Plugin {
         replaceFieldElement(oldFieldEl, fieldEl);
     }
     async loadFieldOptionData(fieldEl) {
+        const isValid = (el) => el && el.isConnected;
         const formEl = fieldEl.closest("form");
         const fields = {};
         // Get the authorized existing fields for the form model
         // Do it on each render because of custom property fields which can
         // change depending on the project selected.
-        const existingFields = await this.fetchAuthorizedFields(formEl).then((fieldsFromCache) => {
+        const existingFieldsProm = this.fetchAuthorizedFields(formEl).then((fieldsFromCache) => {
             for (const [fieldName, field] of Object.entries(fieldsFromCache)) {
                 field.name = fieldName;
                 const fieldDomain = getDomain(formEl, field.name, field.type, field.relation);
@@ -730,6 +731,9 @@ export class FormOptionPlugin extends Plugin {
                         [],
                         [idField, displayNameField]
                     );
+                    if (!isValid(fieldEl)) {
+                        return;
+                    }
                     for (const record of records) {
                         conditionValueList.push({
                             value: String(record[idField]),
@@ -786,6 +790,11 @@ export class FormOptionPlugin extends Plugin {
                     fieldEl.dataset.visibilityComparator = "fileSet";
                 }
             }
+        }
+
+        const existingFields = await existingFieldsProm;
+        if (!isValid(fieldEl)) {
+            return;
         }
 
         const currentFieldName = getFieldName(fieldEl);
