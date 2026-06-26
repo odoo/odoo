@@ -95,7 +95,7 @@ class MrpProduction(models.Model):
                 work_center_cost += work_order._cal_cost(times=time_lines)
                 time_lines.write({'cost_already_recorded': True})
             qty_done = finished_move.product_uom._compute_quantity(
-                finished_move.quantity_done, finished_move.product_id.uom_id)
+                finished_move.quantity_done, finished_move.product_id.uom_id, rounding_method='HALF-UP')
             extra_cost = self.extra_cost * qty_done
             total_cost = - sum(consumed_moves.sudo().stock_valuation_layer_ids.mapped('value')) + work_center_cost + extra_cost
             byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity_done > 0)
