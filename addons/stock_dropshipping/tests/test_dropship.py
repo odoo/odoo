@@ -36,7 +36,7 @@ class TestDropship(AccountTestInvoicingCommon):
 
         cls.lot_dropship_product = cls.env['product.product'].create({
             'name': "Serial product",
-            'tracking': 'lot',
+            'tracking': 'serial',
             'seller_ids': [(0, 0, {
                 'partner_id': cls.supplier.id,
             })],
