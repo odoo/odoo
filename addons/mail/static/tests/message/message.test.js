@@ -1845,7 +1845,7 @@ test("Channel should be opened after clicking on its mention", async () => {
     await click(".o-mail-Composer-send:enabled");
     await click(".o_channel_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow:text('my-channel')");
+    await contains(".o-mail-ChatWindow-displayName:text('my-channel')");
 });
 
 test("delete all attachments of message without content should mark message as deleted", async () => {
