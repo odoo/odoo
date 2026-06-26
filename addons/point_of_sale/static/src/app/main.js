@@ -38,19 +38,19 @@ whenReady(() => {
     }
     browser.sessionStorage.removeItem("pos_reload_recovery");
     try {
-        const app = await mountComponent(Chrome, document.body, {
+        const { env } = await mountComponent(Chrome, document.body, {
             name: "Odoo Point of Sale",
             props: { disableLoader: () => (loader.isShown = false) },
         });
         window.addEventListener("beforeunload", function (event) {
-            if (app.env.services.pos_data.network.offline) {
+            if (env.services.pos_data.network.offline) {
                 var confirmationMessage = _t(
                     "You are currently offline. Reloading the page may cause you to lose unsaved data."
                 );
                 event.returnValue = confirmationMessage;
                 return confirmationMessage;
             }
-            const pos = app.env.services.pos;
+            const pos = env.services.pos;
             if (pos?.session?.state === "opening_control") {
                 browser.sessionStorage.setItem("pos_reload_recovery", String(pos.session.id));
                 const data = JSON.stringify({
@@ -77,7 +77,7 @@ whenReady(() => {
         if (user.userId === 1) {
             classList.add("o_is_superuser");
         }
-        if (app.env.debug) {
+        if (env.debug) {
             classList.add("o_debug");
         }
         if (hasTouch()) {

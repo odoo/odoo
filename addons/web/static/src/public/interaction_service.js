@@ -1,4 +1,4 @@
-import { useApp } from "@odoo/owl";
+import { useApp, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Colibri } from "./colibri";
 import { Interaction } from "./interaction";
@@ -35,6 +35,7 @@ class InteractionService {
      * @param {Object} env
      */
     constructor(el, env) {
+        this.scope = useScope();
         this.Interactions = [];
         this.el = el;
         this.isActive = false;
@@ -56,7 +57,7 @@ class InteractionService {
      */
     activate(Interactions, target) {
         this.Interactions = Interactions;
-        const startProm = this.env.isReady.then(() => this.startInteractions(target));
+        const startProm = this.scope.ready.then(() => this.startInteractions(target));
         this.proms.push(startProm);
     }
 

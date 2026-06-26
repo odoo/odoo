@@ -1,19 +1,20 @@
-import { onWillRender } from "@web/owl2/utils";
 import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, xml, proxy } from "@odoo/owl";
-import {
-    mountWithCleanup,
-    allowTranslations,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
-
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     WithLazyGetterTrap,
     clearGettersCache,
     createLazyGetter,
 } from "@point_of_sale/lazy_getter";
+import {
+    allowTranslations,
+    clearRegistry,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
 import { zip } from "@web/core/utils/arrays";
+import { onWillRender } from "@web/owl2/utils";
 
 /**
  * @param {string} value
@@ -141,6 +142,8 @@ class Root extends Component {
 }
 
 test("each getter should only be called once and only when needed", async () => {
+    clearRegistry(registry.category("services"));
+
     patchWithCleanup(AppStore.prototype, {
         get ab() {
             unorderedStep("ab");
@@ -195,6 +198,8 @@ test("each getter should only be called once and only when needed", async () => 
 });
 
 test("only dependent components rerender", async () => {
+    clearRegistry(registry.category("services"));
+
     patchWithCleanup(WithStore.prototype, {
         onWillRender() {
             unorderedStep(this.property);

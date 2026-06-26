@@ -8,7 +8,7 @@ import { services } from "@web/core/services";
 import { getTemplate } from "@web/core/templates";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
-import { customDirectives, globalValues, makeEnv, startServices } from "@web/env";
+import { customDirectives, globalValues, makeEnv } from "@web/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
 import { patchWithCleanup } from "./patch_test_helpers";
 
@@ -25,11 +25,6 @@ import { patchWithCleanup } from "./patch_test_helpers";
 //-----------------------------------------------------------------------------
 // Internals
 //-----------------------------------------------------------------------------
-
-function cleanupMockEnvs() {
-    registry.category("services").trigger("CLEANUP");
-    currentEnvs.length = 0;
-}
 
 /**
  * TODO: remove when services do not have side effects anymore
@@ -48,8 +43,6 @@ const registerRegistryForCleanup = (registry) => {
 };
 
 const registriesContent = new WeakMap();
-/** @type {OdooEnv[]} */
-const currentEnvs = [];
 /**
  * Current main test App instance. It is assigned via a patch of `App.apps.set`
  * becaue the app can be instantiated either from the test helpers, or by the production
@@ -67,37 +60,22 @@ afterEach(function restoreMainRegistry() {
     restoreRegistry(registry);
 });
 
-patchWithCleanup(App.apps, {
-    add(app) {
-        if (!currentApp) {
-            currentApp = app;
-            registerDebugInfo("app", app);
-        }
-        after(() => destroyApp(app));
-        return super.add(app);
-    },
+beforeEach(() => {
+    patchWithCleanup(App.apps, {
+        add(app) {
+            if (!currentApp) {
+                currentApp = app;
+                registerDebugInfo("app", app);
+            }
+            after(() => destroyApp(app));
+            return super.add(app);
+        },
+    });
 });
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-
-/**
- * @deprecated
- * @param {OdooEnv} env
- * @param {App} app
- */
-export function assignEnvToApp(env, app) {
-    if (!app.env === env) {
-        return;
-    }
-    app.env = env;
-    app.pluginManager.config.env = env;
-    const envPluginInstance = app.pluginManager.getPluginById("__ENV__");
-    if (envPluginInstance) {
-        envPluginInstance.env = env;
-    }
-}
 
 /**
  * Empties the given registry.
@@ -119,11 +97,12 @@ export function destroyApp(app = currentApp) {
     }
     if (app === currentApp) {
         currentApp = null;
+        restoreRegistry(registry);
     }
 }
 
 export function getMockEnv() {
-    return currentEnvs[0];
+    return currentApp?.env;
 }
 
 /**
@@ -132,11 +111,12 @@ export function getMockEnv() {
  * @returns {Services[T]}
  */
 export function getService(name) {
-    return currentEnvs[0]?.services[name];
+    return getMockEnv()?.services[name];
 }
 
 /**
  * @param {{
+ *  env?: any;
  *  makeNew?: boolean;
  *  name?: string;
  * }} [options]
@@ -149,6 +129,8 @@ export function getTestApp(options) {
         return currentApp;
     }
     return new App({
+        // @ts-ignore
+        env: options?.env,
         customDirectives,
         dev: false,
         getTemplate,
@@ -170,8 +152,7 @@ export function getTestApp(options) {
  * }} [options]
  */
 export async function makeMockEnv(partialEnv, options) {
-    const isFirstEnv = !currentEnvs.length;
-    if (!isFirstEnv && !options?.makeNew) {
+    if (currentApp && !options?.makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
         );
@@ -181,30 +162,14 @@ export async function makeMockEnv(partialEnv, options) {
         await makeMockServer();
     }
 
-    const app = getTestApp(options);
+    if (!currentApp) {
+        startRouter();
+    }
+
     const env = makeEnv();
     Object.assign(env, partialEnv, createDebugContext(env)); // This is needed if the views are in debug mode
-
-    assignEnvToApp(env, app);
-
-    try {
-        if (isFirstEnv) {
-            startRouter();
-        }
-        currentEnvs.push(env);
-
-        await startServices(env, app);
-    } finally {
-        // Cleanup needs to be done even if there is a crash during setup of router/
-        // services.
-        if (isFirstEnv) {
-            // Cleanup needs to be added *after* the services have been started:
-            // this is because it will trigger a "CLEANUP" event that needs to be
-            // applied *before* removing the event listeners that have been setup
-            // and will be torn down in plugins/services.
-            after(cleanupMockEnvs);
-        }
-    }
+    const app = getTestApp({ ...options, env });
+    await app.pluginManager.ready;
 
     return env;
 }
@@ -259,14 +224,13 @@ export function mockService(name, serviceFactory) {
     );
 
     // Patch already initialized service
-    for (const env of currentEnvs) {
-        if (env.services?.[name]) {
-            if (typeof serviceFactory === "function") {
-                const dependencies = pick(env.services, ...(originalService.dependencies || []));
-                env.services[name] = serviceFactory(env, dependencies);
-            } else {
-                patch(env.services[name], serviceFactory);
-            }
+    const env = getMockEnv();
+    if (env?.services?.[name]) {
+        if (typeof serviceFactory === "function") {
+            const dependencies = pick(env.services, ...(originalService.dependencies || []));
+            env.services[name] = serviceFactory(env, dependencies);
+        } else {
+            patch(env.services[name], serviceFactory);
         }
     }
 }
