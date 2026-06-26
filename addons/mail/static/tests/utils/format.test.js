@@ -46,6 +46,9 @@ function testPrettifyMessageContentMentions(recordType, records, messageTemplate
 
 const partnerMessageTemplate = '{1} says hello to {0}';
 testPrettifyMessageContentMentions('partners', [{id: 1, name: 'Bernard'}, {id: 12, name: 'Isabelle'}], partnerMessageTemplate);
+testPrettifyMessageContentMentions('partners', [{id: 1, name: 'Bernard'}, {id: 2, name: 'Bernard Junior'}], partnerMessageTemplate);
 
 const threadMessageTemplate = 'There may be answers here {1} or here {0}';
 testPrettifyMessageContentMentions('threads', [{id: 1, displayName: 'Best beer in Belgium'}, {id: 18, displayName: 'Cutest cats'}], threadMessageTemplate);
+testPrettifyMessageContentMentions('threads', [{id: 1, displayName: 'Best beer'}, {id: 2, displayName: 'Best beer in Belgium'}], threadMessageTemplate);
+testPrettifyMessageContentMentions('threads', [{id: 1, displayName: 'Best beer'}, {id: 2, displayName: 'in Belgium', parent_channel_id: {displayName: 'Best beer'}}], threadMessageTemplate);
