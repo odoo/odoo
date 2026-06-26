@@ -15,10 +15,12 @@ from odoo.tools import str2bool
 
 from ..generators import DEFAULT_GENERATORS, Generator, get_fields_vals
 from ..utils.orm import VirtualField, drop_pending_update, get_ref_domain
+from ..utils.profiling import profiled_execution_scope
 from ..utils.seed import derive_seed_from
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Iterator, Mapping
+    from contextlib import AbstractContextManager
 
 MAX_RECORD_COMMIT_SIZE = 1000
 
@@ -196,7 +198,7 @@ class Job(models.Model):
         assert not self.is_done, "Cannot execute a job that is already done"
         assert seed is not None or self.seed is not False
 
-        with execution_scope(self):
+        with get_execution_scope(self):
             # A generator's scope is applicable per whole job, subjob included.
             if generators is None:
                 generators = self.__create_generators(seed or self.seed)
@@ -377,8 +379,24 @@ class Job(models.Model):
         )
 
 
+def get_execution_scope(job: Job) -> AbstractContextManager[Job]:
+    """Return the context manager to use for executing one job.
+
+    The plain job scope owns locking, logging, completion, and commit. When
+    profiling is enabled, executable jobs are wrapped by the profiler proxy so
+    the profiler starts from the caller's ``with`` statement.
+    """
+    job.ensure_one()
+
+    job_scope = _execution_scope(job)
+    if job.session_id.is_profiling:
+        return profiled_execution_scope(job, job.session_id.profile_session_name, job_scope)
+
+    return job_scope
+
+
 @contextmanager
-def execution_scope(job: Job):
+def _execution_scope(job: Job) -> Iterator[Job]:
     """Lock, log, mark done, and commit one job execution.
 
     :param job: Singleton job being executed.

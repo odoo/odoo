@@ -19,6 +19,7 @@ odoo-bin populate -d <database> -b <blueprint>
 | `--scale <factor>` | Multiply all record counts by this factor (default: `1`)     |
 | `-j <workers>`     | Parallel processes (`auto` = all CPU threads, default: `1`)  |
 | `--resume [id]`    | Resume the last (or a specific) interrupted session          |
+| `--profile`        | Save profiler traces for each executable populate job        |
 
 > **Important:** After installing a new module that ships blueprints, upgrade
 > the `populate` module first:
@@ -38,6 +39,9 @@ odoo-bin populate -d mydb -b project.fake_project_demo --scale 10 -j 4
 
 # Resume the last interrupted session
 odoo-bin populate -d mydb --resume
+
+# Profile a populate run
+odoo-bin populate -d mydb -b project.fake_project_demo --profile
 ```
 
 ## Blueprints
