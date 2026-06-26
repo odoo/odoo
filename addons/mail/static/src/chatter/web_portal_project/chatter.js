@@ -7,7 +7,7 @@ import { Component, onMounted, proxy, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 export class Chatter extends Component {
@@ -63,6 +63,17 @@ export class Chatter extends Component {
             },
             { initialRun: false }
         );
+        // The useOnChange above only refetches when the thread identity changes.
+        // A same-record form reload keeps the same thread, so we also refetch on
+        // MAIL:RELOAD-THREAD to catch data that changed without a message_post
+        // (e.g. an attachment created server-side). Mirrors the message refetch
+        // in Thread.
+        useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
+            const thread = this.state.thread;
+            if (thread?.model === detail.model && thread?.id === detail.id) {
+                this.load(thread, this.requestList);
+            }
+        });
     }
 
     get afterPostRequestList() {
