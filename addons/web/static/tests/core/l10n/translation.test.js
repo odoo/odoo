@@ -1,17 +1,21 @@
 /* eslint no-restricted-syntax: 0 */
 import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, xml } from "@odoo/owl";
+import { App, Component, markup, xml } from "@odoo/owl";
 import {
     defineParams,
+    destroyApp,
+    getTestApp,
     makeMockEnv,
     mountWithCleanup,
     onRpc,
     patchTranslations,
     patchWithCleanup,
+    restoreRegistry,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { render } from "@web/owl2/utils";
 import { session } from "@web/session";
@@ -311,6 +315,22 @@ test("can lazy translate", async () => {
     });
     await mountWithCleanup(TestComponent);
     expect("#main").toHaveText("Bonjour");
+});
+
+test("destroying one app keeps translations loaded for the other apps", async () => {
+    // Translations are a page-global singleton shared by every Owl App. A second
+    // app (e.g. a livechat embed or a "new tab") can run alongside the webclient,
+    // so destroying one app must not unload the translations the others still use.
+    await makeMockEnv();
+    expect(translatedTerms[translationLoaded]).toBe(true);
+    const mainApp = getTestApp();
+    restoreRegistry(registry);
+    const knownApps = new Set(App.apps);
+    await makeMockEnv(null, { makeNew: true });
+    const secondApp = [...App.apps].find((app) => !knownApps.has(app));
+    destroyApp(mainApp);
+    expect(translatedTerms[translationLoaded]).toBe(true);
+    destroyApp(secondApp);
 });
 
 test.tags("headless");

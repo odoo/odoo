@@ -32,6 +32,12 @@ const NUMBERING_SYSTEMS = [
     [/.*/i, "latn"],
 ];
 
+// Translations live in module-global maps shared by every Owl App on the page.
+// Count the live localization plugins so the reset only runs once the last app
+// is destroyed, instead of every time any single app is torn down (which would
+// wipe translations still used by another app, e.g. a livechat embed).
+let liveLocalizationPlugins = 0;
+
 export class LocalizationPlugin extends Plugin {
     // we need the localization plugin to start (and be ready) before the rest
     // of the code can use translated strings, so we define here a low sequence
@@ -56,9 +62,11 @@ export class LocalizationPlugin extends Plugin {
             }
         });
 
+        liveLocalizationPlugins++;
         onWillStart(() => this.load());
         onWillDestroy(() => {
-            if (!translatedTerms[translationLoaded]) {
+            liveLocalizationPlugins--;
+            if (liveLocalizationPlugins > 0 || !translatedTerms[translationLoaded]) {
                 return;
             }
             for (const key in translatedTerms) {
