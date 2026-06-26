@@ -3,6 +3,7 @@ import re
 import time
 
 from odoo import api, models
+from odoo.exceptions import AccessDenied
 from odoo.http import request, root, SessionExpiredException
 
 
@@ -88,6 +89,9 @@ class IrHttp(models.AbstractModel):
             - {"mfa": True, "auth_methods": [...]} if a second factor is required,
             - None if re-authentication is complete.
 
+        :raises AccessDenied: if the credential type is not one of the user's enabled
+            authentication methods, or if the credential itself is invalid.
+
         :rtype: dict or None
         """
         check_identity = cls._must_check_identity() or {}
@@ -98,6 +102,9 @@ class IrHttp(models.AbstractModel):
             if first_fa and first_fa in auth_methods:
                 auth_methods.remove(first_fa)
             return {"user_id": user.id, "login": user.login, "auth_methods": auth_methods}
+
+        if credential.get("type") not in auth_methods:
+            raise AccessDenied()
 
         if credential.get("type") in ("totp", "totp_mail"):
             credential["token"] = int(re.sub(r"\s", "", credential["token"]))
