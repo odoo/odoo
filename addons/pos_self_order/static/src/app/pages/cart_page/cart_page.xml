@@ -12,7 +12,7 @@
                     <h1 class="ms-3 ms-sm-0 mb-3 ">Your Order</h1>
                     <div class="order_box d-flex flex-column bg-white px-3 px-kiosk-p-4 rounded-4 border border-light shadow-sm">
                         <t t-foreach="lines" t-as="line" t-key="line.uuid">
-                            <t t-set="display_change_quantity" t-value="Object.keys(selfOrder.currentOrder.changes).length &gt; 0"/>
+                            <t t-set="display_change_quantity" t-value="!selfOrder.isSyncedOrderRestricted"/>
                             <div t-attf-class="product-cart-item d-flex align-items-center py-3 py-kiosk-p-4 {{!line_last ? 'border-bottom border-medium' : ''}}">
                                 <t t-set="product" t-value="line.product_id"/>
                                 <div class="product_img w-25 me-3 me-kiosk-p-4 ratio ratio-1x1 align-self-start">

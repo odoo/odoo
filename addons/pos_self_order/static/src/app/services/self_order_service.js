@@ -444,6 +444,19 @@ export class SelfOrder extends Reactive {
         return this.config.self_ordering_mode === "kiosk";
     }
 
+    get isSyncedOrderRestricted() {
+        if (
+            this.config.self_ordering_mode === "mobile" &&
+            this.config.self_ordering_pay_after === "each" &&
+            this.currentOrder.isSynced &&
+            !this.hasPaymentMethod()
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     markupDescriptions() {
         for (const product of this.models["product.template"].getAll()) {
             product.public_description = product.public_description
@@ -724,8 +737,12 @@ export class SelfOrder extends Reactive {
     }
 
     async sendDraftOrderToServer() {
+        const hasDeletedLines = Object.keys(this.currentOrder.uiState.lineChanges).some(
+            (uuid) => !this.currentOrder.lines.find((l) => l.uuid === uuid)
+        );
+
         if (
-            Object.keys(this.currentOrder.changes).length === 0 ||
+            (Object.keys(this.currentOrder.changes).length === 0 && !hasDeletedLines) ||
             this.currentOrder.lines.length === 0
         ) {
             return this.currentOrder;
@@ -787,7 +804,7 @@ export class SelfOrder extends Reactive {
         }));
 
         const accessTokens = [...dbAccessToken, ...argTokens];
-        if (Object.keys(accessTokens).length === 0 && !tableIdentifier) {
+        if (accessTokens.length === 0 && !tableIdentifier) {
             return;
         }
 
@@ -803,17 +820,19 @@ export class SelfOrder extends Reactive {
                 this.selectedOrderUuid = openOrder.uuid;
 
                 // Remove all other open orders in draft and add orderline in the current order
-                const lineCmd = [];
-                for (const order of this.models["pos.order"].filter((o) => o.state === "draft")) {
-                    if (order.uuid !== openOrder.uuid) {
-                        lineCmd.push(...order.lines);
+                const otherOrders = this.models["pos.order"].filter(
+                    (o) => o.state === "draft" && o.uuid !== openOrder.uuid
+                );
+
+                if (otherOrders.length > 0) {
+                    const linesToMerge = otherOrders.flatMap((o) => o.lines);
+                    for (const order of otherOrders) {
                         order.delete();
                     }
+                    openOrder.update({
+                        lines: [["link", linesToMerge]],
+                    });
                 }
-
-                openOrder.update({
-                    lines: [["link", lineCmd]],
-                });
                 openOrder.recomputeChanges();
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
