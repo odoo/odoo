@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useApp } from "@odoo/owl";
+import { Component, useApp, useEffect } from "@odoo/owl";
 import { CriticalPOSError } from "./critical_pos_error/critical_pos_error";
 
 export class Loader extends Component {
@@ -9,7 +8,7 @@ export class Loader extends Component {
 
     setup() {
         const app = useApp();
-        useLayoutEffect(
+        useEffect(
             (isShown) => {
                 if (!isShown) {
                     // Destroy the loader app after it has faded out
