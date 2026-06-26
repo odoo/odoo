@@ -55,7 +55,7 @@ from werkzeug.exceptions import BadRequest
 import odoo.cli
 import odoo.models
 import odoo.orm.registry
-from odoo import api
+from odoo import api, fields
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http import request, request_var
@@ -1475,6 +1475,14 @@ class TransactionCase(BaseCase):
                 stack.enter_context(
                     patch.object(report_model, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
                 )
+            yield
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt=None):
+        """Freeze wall clock and ``BaseCursor.now()`` together."""
+        if mock_dt is None:
+            mock_dt = fields.Datetime.now()
+        with freeze_time(mock_dt), patch('odoo.sql_db.BaseCursor.now', lambda self: mock_dt):
             yield
 
 

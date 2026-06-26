@@ -11,7 +11,7 @@ from itertools import product
 
 from odoo.tests import new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase, BusResult
-from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
@@ -45,31 +45,31 @@ class TestMailPresence(WebsocketCase, MailCommon):
         )
         self.assertEqual(notifications[0]["message"]["payload"][target._name][0]["id"], target.id)
 
-    @freeze_all_time()
     def test_presence_access(self):
-        internal = new_test_user(self.env, login="internal_user", groups="base.group_user")
-        other_internal = new_test_user(
-            self.env, login="other_internal_user", groups="base.group_user"
-        )
-        portal = new_test_user(self.env, login="portal_user", groups="base.group_portal")
-        other_portal = new_test_user(
-            self.env, login="other_portal_user", groups="base.group_portal"
-        )
-        guest = self.env["mail.guest"].create({"name": "Guest"})
-        other_guest = self.env["mail.guest"].create({"name": "Other Guest"})
-        for requested_by, target, has_token, allowed in [
-            *product([internal], [guest, other_internal, portal], [True, False], [True]),
-            *product([guest, portal], [internal, other_guest, other_portal], [False], [False]),
-            *product([guest, portal], [internal, other_guest, other_portal], [True], [True]),
-        ]:
-            with self.subTest(
-                f"test presence access, requested_by={requested_by.name}, target={target.name}, has_token={has_token}, allowed={allowed}"
-            ):
-                if allowed:
-                    self._receive_presence(requested_by, target, has_token=has_token)
-                else:
-                    with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
+        with self.mock_datetime_and_now():
+            internal = new_test_user(self.env, login="internal_user", groups="base.group_user")
+            other_internal = new_test_user(
+                self.env, login="other_internal_user", groups="base.group_user"
+            )
+            portal = new_test_user(self.env, login="portal_user", groups="base.group_portal")
+            other_portal = new_test_user(
+                self.env, login="other_portal_user", groups="base.group_portal"
+            )
+            guest = self.env["mail.guest"].create({"name": "Guest"})
+            other_guest = self.env["mail.guest"].create({"name": "Other Guest"})
+            for requested_by, target, has_token, allowed in [
+                *product([internal], [guest, other_internal, portal], [True, False], [True]),
+                *product([guest, portal], [internal, other_guest, other_portal], [False], [False]),
+                *product([guest, portal], [internal, other_guest, other_portal], [True], [True]),
+            ]:
+                with self.subTest(
+                    f"test presence access, requested_by={requested_by.name}, target={target.name}, has_token={has_token}, allowed={allowed}"
+                ):
+                    if allowed:
                         self._receive_presence(requested_by, target, has_token=has_token)
+                    else:
+                        with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
+                            self._receive_presence(requested_by, target, has_token=has_token)
 
     def test_manual_im_status(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
