@@ -832,7 +832,7 @@ class Website(models.CachedModel):
                 '/api/website/2/configurator/custom_resources/%s' % industry_id,
                 {'theme': theme or ''},
             )
-        except AccessError as e:
+        except (AccessError, RequestException) as e:
             logger.warning(
                 "Failed to fetch configurator images for industry %s: %s",
                 industry_id,
