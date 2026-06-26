@@ -18,7 +18,7 @@
             </span>
         </xpath>
         <xpath expr="//span[@class='ticket-name-prefix']" position="attributes">
-            <attribute name="t-if">!order.isInCompany</attribute>
+            <attribute name="t-if" add="not order.isInCompany" separator=" and "/>
         </xpath>
         <xpath expr="//span[@class='ticket-name-prefix']" position="after">
             <span t-if="order.isInCompany" class="ticket-name-prefix">
