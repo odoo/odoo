@@ -45,6 +45,7 @@
         />
         <t t-set="language_ids" t-value="this.env.services.website.currentWebsite.language_ids || []"/>
         <BuilderButton t-if="language_ids.length > 1"
+            id="'header_language_selector_opt'"
             title.translate="Language Selector"
             className="'flex-grow-1'"
             icon="'flag'"

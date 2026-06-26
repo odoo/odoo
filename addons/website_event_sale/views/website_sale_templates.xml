@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="index_topbar" inherit_id="website_event.index_topbar">
-        <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
-            <t t-call="website_sale.pricelist_list" _classes.f="d-none d-lg-inline me-2"/>
-        </xpath>
-    </template>
-
     <!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
     <template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
         <xpath expr="//a" position="attributes">
