@@ -459,7 +459,7 @@ class TestPosStockFlow(CommonPosStockTest):
             'use_existing_lots': True,
         })
         product = self.ten_dollars_with_10_incl.product_variant_id
-        product.write({
+        self.ten_dollars_with_10_incl.write({
             'tracking': 'lot',
             'is_storable': True,
         })
