@@ -75,7 +75,9 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def lazy_session_info(self):
-        return {}
+        return {
+            'is_demo': bool(self.env['ir.module.module'].sudo().search_count([('demo', '=', True)])),
+        }
 
     def session_info(self):
         user = self.env.user

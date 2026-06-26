@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class BillGuide extends Component {
     static template = "account.BillGuide";
@@ -14,16 +14,10 @@ export class BillGuide extends Component {
     static props = ["*"];  // could contain view_widget props
 
     setup() {
-        this.orm = useService("orm");
+        this.lazySession = useService("lazy_session");
         this.action = useService("action");
-        this.context = null;
-        this.alias = null;
-        this.showSampleAction = false;
         this.ui = useService("ui");
-        onWillStart(this.onWillStart);
-    }
 
-    async onWillStart() {
         const rec = this.props.record;
         const ctx = this.env.searchModel.context;
         if (rec) {
@@ -33,14 +27,16 @@ export class BillGuide extends Component {
                 default_move_type: (rec.data.type === 'sale' && 'out_invoice') || (rec.data.type === 'purchase' && 'in_invoice') || 'entry',
                 active_model: rec.resModel,
                 active_ids: [rec.resId],
-            }
+            };
             this.alias = rec.data.alias_domain_id && rec.data.alias_id[1] || false;
         } else if (!ctx?.default_journal_id && ctx?.active_id) {
             this.context = {
                 default_journal_id: ctx.active_id,
-            }
+            };
         }
-        this.showSampleAction = await this.orm.call("account.journal", "is_sample_action_available");
+
+        this.showSampleAction = proxy({ value: false });
+        this.lazySession.getValue("is_demo", v => (this.showSampleAction.value = !!v));
     }
 
     handleButtonClick(action, model="account.journal") {

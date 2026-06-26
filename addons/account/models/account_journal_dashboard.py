@@ -926,11 +926,6 @@ class AccountJournal(models.Model):
                 journal_types=', '.join(journal_types),
             )
 
-    @api.model
-    def is_sample_action_available(self):
-        """Used to hide 'try our sample' when demo data is not installed."""
-        return bool(self.env.ref('base.res_partner_2', raise_if_not_found=False))
-
     def action_create_vendor_bill(self):
         """ This function is called by the "try our sample" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
