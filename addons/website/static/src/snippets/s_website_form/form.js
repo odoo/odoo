@@ -236,26 +236,67 @@ export class Form extends Interaction {
             const inputEl = fieldEl.querySelector("input");
             const defaultValue = inputEl.getAttribute("value");
             this.disableDateTimePickers.push(
-                this.services.datetime_picker
-                    .create({
-                        target: inputEl,
-                        onChange: () =>
-                            inputEl.dispatchEvent(new Event("input", { bubbles: true })),
-                        pickerProps: {
-                            showWeekNumbers: false,
-                            type: fieldEl.matches(".s_website_form_date, .o_website_form_date")
-                                ? "date"
-                                : "datetime",
-                            value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
-                        },
-                    })
-                    .enable()
+                this.services.datetime_picker.create({
+                    target: inputEl,
+                    onChange: () => inputEl.dispatchEvent(new Event("input", { bubbles: true })),
+                    pickerProps: {
+                        showWeekNumbers: false,
+                        type: fieldEl.matches(".s_website_form_date, .o_website_form_date")
+                            ? "date"
+                            : "datetime",
+                        value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                        ...this.getDateRequirementLimits(fieldEl),
+                    },
+                }).destroy
             );
             // Disable virtual keyboard to fix popover display issues on small
             // screens
             inputEl.setAttribute("inputmode", "none");
         }
         this.datepickerInitialized = true;
+    }
+
+    getDateRequirementLimits(fieldEl) {
+        const { requirementComparator, requirementCondition, requirementBetween } =
+            fieldEl.closest(".s_website_form_field").dataset;
+        if (!requirementComparator) {
+            return {};
+        }
+        const isDateTime = fieldEl.matches(".s_website_form_datetime, .o_website_form_datetime");
+        const step = isDateTime ? { seconds: 1 } : { days: 1 };
+
+        const toDate = (value) => {
+            if (!value) {
+                return undefined;
+            }
+            if (value === "today") {
+                return isDateTime ? this.today : this.today.startOf("day");
+            }
+            return DateTime.fromSeconds(parseInt(value));
+        };
+
+        const conditionDate = toDate(requirementCondition);
+        if (!conditionDate) {
+            return {};
+        }
+
+        const betweenDate = toDate(requirementBetween);
+        switch (requirementComparator) {
+            // Strict comparators exclude the boundary, so shift it by one step.
+            case "after":
+                return { minDate: conditionDate.plus(step) };
+            case "before":
+                return { maxDate: conditionDate.minus(step) };
+            case "equal or after":
+                return { minDate: conditionDate };
+            case "equal or before":
+                return { maxDate: conditionDate };
+            case "between":
+                return betweenDate && betweenDate >= conditionDate
+                    ? { minDate: conditionDate, maxDate: betweenDate }
+                    : {};
+        }
+        return {};
     }
 
     prefillValues() {
