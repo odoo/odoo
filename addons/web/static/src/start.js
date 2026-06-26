@@ -1,12 +1,12 @@
-import { mountComponent } from "./env";
-import { localization } from "@web/core/l10n/localization";
-import { session } from "@web/session";
+import { whenReady } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
-import { Component, whenReady } from "@odoo/owl";
+import { session } from "@web/session";
+import { _t } from "./core/l10n/translation";
 import { rpc } from "./core/network/rpc";
 import { RPCCache } from "./core/network/rpc_cache";
-import { _t } from "./core/l10n/translation";
+import { mountComponent } from "./env";
 
 // Chrome iOS wraps some text nodes (like measures, email...)
 // with a `<chrome_annotation>` tag, which breaks OWL rendering.
@@ -22,7 +22,7 @@ document.head.appendChild(chromeMetaTag);
  * It's meant to be webclient flexible so we can have a subclass of
  * webclient in enterprise with added features.
  *
- * @param {Component} Webclient
+ * @param {import("@odoo/owl").ComponentConstructor} Webclient
  */
 export async function startWebClient(Webclient) {
     odoo.info = {
@@ -38,9 +38,7 @@ export async function startWebClient(Webclient) {
     }
 
     await whenReady();
-    const app = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
-    const { env } = app;
-    Component.env = env;
+    const { env } = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
 
     if (!window.isSecureContext) {
         console.error(

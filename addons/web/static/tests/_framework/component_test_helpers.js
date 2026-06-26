@@ -3,7 +3,7 @@ import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { patch } from "@web/core/utils/patch";
-import { assignEnvToApp, getMockEnv, getTestApp, makeMockEnv } from "./app_test_helpers";
+import { getMockEnv, getTestApp, makeMockEnv } from "./app_test_helpers";
 import { patchWithCleanup } from "./patch_test_helpers";
 
 import { makeMockServer, MockServer } from "./mock_server/mock_server";
@@ -128,10 +128,8 @@ export async function mountWithCleanup(ComponentClass, options) {
         await makeMockServer();
     }
 
-    const app = getTestApp({ name: name || `TEST: ${ComponentClass.name}` });
     const commonEnv = env || getMockEnv() || (await makeMockEnv());
-
-    assignEnvToApp(commonEnv, app);
+    const app = getTestApp({ name: name || `TEST: ${ComponentClass.name}`, env });
 
     const componentRoot = app.createRoot(ComponentClass, {
         env: Object.assign(Object.create(commonEnv), componentEnv),

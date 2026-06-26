@@ -1,9 +1,9 @@
-import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { post } from "@web/core/network/http_service";
-import { Component, markup } from "@odoo/owl";
 import { rpc, RPCError } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
 /**
  * Display the composer (according to access right)
@@ -211,7 +211,7 @@ export class PortalComposer extends Interaction {
     async chatterPostMessage(route) {
         const result = await this.waitFor(rpc(route, this.prepareMessageData()));
         const res = result.store_data || result;
-        Component.env.bus.trigger("reload_chatter_content", res);
+        this.env.bus.trigger("reload_chatter_content", res);
         return res;
     }
 }

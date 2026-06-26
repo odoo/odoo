@@ -1,23 +1,21 @@
-import { App, whenReady, Component, proxy } from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
-import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
-import { makeEnv, startServices } from "@web/env";
-import { getTemplate } from "@web/core/templates";
-import { _t, appTranslateFn } from "@web/core/l10n/translation";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { rpc } from "@web/core/network/rpc";
-import { useService, useBus } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
 import { KioskConfirmation } from "@hr_attendance/components/confirmation/confirmation";
 import { KioskGreetings } from "@hr_attendance/components/greetings/greetings";
-import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
 import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
+import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
+import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog/new_employee_dialog";
+import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
+import { Component, proxy, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isIosApp } from "@web/core/browser/feature_detection";
-import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
-import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog/new_employee_dialog";
+import { _t } from "@web/core/l10n/translation";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import { rpc } from "@web/core/network/rpc";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { url } from "@web/core/utils/urls";
+import { mountComponent } from "@web/env";
 import { session } from "@web/session";
-import { services } from "@web/core/services";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
 class kioskAttendanceApp extends Component {
     static template = "hr_attendance.public_kiosk_app";
@@ -258,18 +256,9 @@ class kioskAttendanceApp extends Component {
 
 export async function createPublicKioskAttendance(document, kiosk_backend_info) {
     await whenReady();
-    const env = makeEnv();
     session.server_version_info = kiosk_backend_info.server_version_info;
-    const app = new App({
-        getTemplate,
-        dev: env.debug,
-        translateFn: appTranslateFn,
-        translatableAttributes: ["data-tooltip"],
-        plugins: services,
-    });
-    await startServices(env, app);
-    const root = app.createRoot(kioskAttendanceApp, {
-        env: env,
+    await mountComponent(kioskAttendanceApp, document.body, {
+        name: "Kiosk Attendance",
         props: {
             token: kiosk_backend_info.token,
             companyId: kiosk_backend_info.company_id,
@@ -282,6 +271,5 @@ export async function createPublicKioskAttendance(document, kiosk_backend_info) 
             captureCheckInImage: kiosk_backend_info.capture_check_in_image,
         },
     });
-    return root.mount(document.body);
 }
 export default { kioskAttendanceApp, createPublicKioskAttendance };
