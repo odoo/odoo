@@ -39,7 +39,7 @@ class PosOrder(models.Model):
 
         for order in orders_needing_invoice:
             invoice = order.account_move
-            if invoice and invoice._l10n_sa_is_phase_2_applicable():
+            if invoice and invoice._l10n_sa_is_phase_2_applicable() and not invoice._l10n_sa_get_alerts():
                 invoice.sudo().l10n_sa_edi_document_id._l10n_sa_post_zatca_edi(False)
 
         return result
