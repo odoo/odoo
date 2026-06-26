@@ -4,7 +4,10 @@
 import json
 
 from odoo.http import request, route
-from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+from odoo.addons.website_event_booth.controllers.event_booth import (
+    WebsiteEventBoothController as WebsiteEventController,
+)
 
 
 class WebsiteEventBoothController(WebsiteEventController):

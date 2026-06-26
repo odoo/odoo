@@ -69,9 +69,7 @@ class TestCustomize(
         cls.env["product.pricelist"].action_archive()
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
-        self.env.user.write({
-            "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
-        })
+        self.group_user.sudo()._apply_group(self.quick_ref("product.group_product_pricelist"))
         self.env["product.pricelist"].sudo().create({
             "name": "Custom pricelist (TEST)",
             "sequence": 4,
@@ -246,9 +244,7 @@ class TestCustomize(
         )
 
     def test_07_editor_shop(self):
-        self.env.user.write({
-            "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
-        })
+        self.group_user.sudo()._apply_group(self.quick_ref("product.group_product_pricelist"))
         self.env["product.pricelist"].sudo().create([
             {"name": "Base Pricelist", "selectable": True},
             {"name": "Other Pricelist", "selectable": True},

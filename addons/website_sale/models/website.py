@@ -11,7 +11,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import SQL, BinaryBytes, file_open, split_every
+from odoo.tools import SQL, BinaryBytes, file_open, lazy, split_every
 
 from odoo.addons.website_sale import const
 
@@ -258,13 +258,6 @@ class Website(models.Model):
         string="Categories", comodel_name="product.public.category"
     )
 
-    currency_id = fields.Many2one(
-        string="Default Currency",
-        comodel_name="res.currency",
-        compute="_compute_currency_id",
-        compute_sql="_compute_sql_currency_id",
-        compute_sudo=True,
-    )
     pricelist_ids = fields.One2many(
         string="Price list available for this Ecommerce/Website",
         comodel_name="product.pricelist",
@@ -312,6 +305,21 @@ class Website(models.Model):
         " editor option.",
     )
 
+    # Session dependant
+    pricelist_id = fields.Many2one(
+        comodel_name="product.pricelist",
+        compute="_compute_pricelist_id",
+        compute_sudo=True,
+        inverse="_inverse_pricelist_id",
+    )
+    currency_id = fields.Many2one(
+        string="Default Currency",
+        comodel_name="res.currency",
+        compute="_compute_currency_id",
+        compute_sql="_compute_sql_currency_id",
+        compute_sudo=True,
+    )
+
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -322,12 +330,27 @@ class Website(models.Model):
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
-    @api.depends("company_id")
+    def _compute_pricelist_id(self):
+        self.pricelist_id = self.env["product.pricelist"].browse(
+            request and hasattr(request, "pricelist") and request.pricelist.id
+        )
+
+    def _inverse_pricelist_id(self):
+        self.ensure_one()
+        if not request:
+            return
+        if self.pricelist_id:
+            request.session[PRICELIST_SESSION_CACHE_KEY] = self.pricelist_id.id
+            request.pricelist = self.pricelist_id.with_env(request.env).sudo()
+        else:
+            request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+            request.pricelist = lazy(self.with_env(request.env)._get_and_cache_current_pricelist)
+        self.invalidate_model(["pricelist_id"], flush=False)
+
+    @api.depends("pricelist_id", "company_id")
     def _compute_currency_id(self):
         for website in self:
-            website.currency_id = (
-                request and hasattr(request, "pricelist") and request.pricelist.currency_id
-            ) or website.company_id.sudo().currency_id
+            website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
 
     def _compute_sql_currency_id(self, table):  # noqa: ARG002
         msg = "website.currency_id is not searchable"
@@ -350,6 +373,18 @@ class Website(models.Model):
         return self._fields["shop_default_sort"]._description_selection(self.env)
 
     # === BUSINESS METHODS ===#
+
+    @api.model
+    def _render_template(self, template, values=None):
+        self.ensure_one()
+
+        if self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
+            values = values or {}
+            values.setdefault(
+                "website_sale_pricelists", lazy(self.get_pricelist_available, show_visible=True)
+            )
+
+        return super()._render_template(template, values=values)
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super().get_cta_data(website_purpose, website_type)
@@ -540,7 +575,7 @@ class Website(models.Model):
 
         # Note: 1. pricelists from all_pl are already website compliant (went through
         #          `_get_website_pricelists_domain`)
-        #       2. do not read `property_product_pricelist` here as `_get_pl_partner_order`
+        #       2. do not read `specific_property_product_pricelist` here as `_get_pl_partner_order`
         #          is cached and the result of this method will be impacted by that field value.
         #          Pass it through `partner_pl_id` parameter instead to invalidate the cache.
 
@@ -549,7 +584,8 @@ class Website(models.Model):
             pricelists |= (
                 self
                 .env["res.country.group"]
-                .search([("country_ids.code", "=", country_code)]).sudo()
+                .search([("country_ids.code", "=", country_code)])
+                .sudo()
                 .pricelist_ids.filtered(
                     lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
                 )
@@ -566,9 +602,9 @@ class Website(models.Model):
                 )
             )
 
-        # if logged in, add partner pl (which is `property_product_pricelist`, might not be website
-        # compliant)
-        if not self.env.user._is_public():
+        # if logged in, add partner pl (which is `specific_property_product_pricelist`, might not be
+        # website compliant)
+        if partner_pl_id and not self.env.user._is_public():
             # keep partner_pricelist only if website compliant
             partner_pricelist = pricelists.browse(partner_pl_id).filtered(
                 lambda pl: (
@@ -604,11 +640,8 @@ class Website(models.Model):
         website = self.with_company(self.company_id)
 
         partner_sudo = website.env.user.partner_id
-        is_user_public = self.env.user._is_public()
-        if not is_user_public:
-            # Don't needlessly trigger `depends_context` recompute
-            ctx = {"country_code": country_code} if country_code else {}
-            partner_pricelist_id = partner_sudo.with_context(**ctx).property_product_pricelist.id
+        if not self.env.user._is_public():
+            partner_pricelist_id = partner_sudo.specific_property_product_pricelist.id
         else:  # public user: do not compute partner pl (not used)
             partner_pricelist_id = False
         website_pricelists = website.sudo().pricelist_ids
@@ -727,15 +760,19 @@ class Website(models.Model):
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()
             pricelist_sudo = cart_sudo.pricelist_id
-        else:
-            pricelist_sudo = self.env.user.partner_id.property_product_pricelist
-            available_pricelists = self.get_pricelist_available()
-            if not available_pricelists:
-                pricelist_sudo = available_pricelists
-            elif pricelist_sudo not in available_pricelists:
+        elif available_pricelists := self.get_pricelist_available():
+            pricelist_sudo = self.env.user.partner_id.specific_property_product_pricelist
+            if pricelist_sudo not in available_pricelists:
                 pricelist_sudo = available_pricelists[0].sudo()
+        else:
+            pricelist_sudo = ProductPricelistSudo
 
-        request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist_sudo.id
+        if not request.session.is_new or request.session.is_dirty:
+            # Only cache in a session that will be persisted anyway: one already stored on disk, or
+            # one already modified during this request. Otherwise, caching the pricelist would force
+            # the session to be saved on disk for every visitor on all the pages of the website
+            # showing the pricelist selector.
+            request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist_sudo.id
 
         return pricelist_sudo
 
@@ -859,7 +896,7 @@ class Website(models.Model):
     def sale_reset(self):  # noqa: PLR6301
         request.session.pop(CART_SESSION_CACHE_KEY, None)
         request.session.pop("website_sale_cart_quantity", None)
-        request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+        self.env.website.sudo().pricelist_id = False
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
         request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 
@@ -1189,10 +1226,11 @@ class Website(models.Model):
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
-        """Provides a list of settings that should always be set on the default
-        website. When the default website changes, a check is performed. If some
-        of these settings are not already set on the new default website, they
-        are copied from the previous default website."""
+        """Provide a list of settings that should always be set on the default website.
+
+        When the default website changes, a check is performed. If some of these settings are not
+        already set on the new default website, they are copied from the previous default website.
+        """
         return super()._get_settings_to_copy_onto_new_default_website() + [
             "salesperson_id",
             "salesteam_id",

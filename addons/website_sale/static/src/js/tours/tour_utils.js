@@ -380,18 +380,20 @@ export function searchProduct(productName, { select = false, willOpenModel = fal
 }
 
 /**
- * Used to select a pricelist on the /shop view
+ * Select a pricelist by its name.
+ *
+ * @param {string} pricelist - The pricelist name. E.g, Benelux.
  */
 export function selectPriceList(pricelist) {
     return [
         {
             content: "Click on pricelist dropdown",
-            trigger: "div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            trigger: `header div[name="pricelist_selector"] .dropdown-toggle`,
             run: "click",
         },
         {
-            content: "Click on pricelist",
-            trigger: `span:contains(${pricelist})`,
+            content: `Switch to ${pricelist}`,
+            trigger: `header div[name="pricelist_selector"] .dropdown-item:contains(${pricelist})`,
             run: "click",
             expectUnloadPage: true,
         },

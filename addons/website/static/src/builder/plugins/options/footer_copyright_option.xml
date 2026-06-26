@@ -15,7 +15,7 @@
                 nullValue: 'NULL',
             }"/>
     </BuilderRow>
-    <t t-if="this.languages.length > 1">
+    <t name="footer_language_selector_opts" t-if="this.languages.length > 1">
         <BuilderRow label.translate="Language Selector">
             <BuilderSelect id="'footer_language_selector_opt'" preview="false" action="'websiteConfig'">
                 <BuilderSelectItem id="'language_selector_none_opt'" actionParam="{ views: [] }">None</BuilderSelectItem>

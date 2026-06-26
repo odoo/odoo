@@ -242,6 +242,15 @@
                 _link_class.f="o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="dropup"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"
+                _dropdown_menu_class.f="w-100"
+                _txt_class.f="me-auto small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_default" inherit_id="website.template_header_default">
@@ -255,6 +264,13 @@
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class="_additional_btn_color or 'nav-link'"
+                _dropdown_menu_class.f="dropdown-menu-end"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_hamburger" inherit_id="website.template_header_hamburger">
@@ -268,6 +284,15 @@
                 _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="dropup"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"
+                _dropdown_menu_class.f="w-100"
+                _txt_class.f="me-auto small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_stretch" inherit_id="website.template_header_stretch">
@@ -283,6 +308,15 @@
                 _link_class.f="o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset"
                 _badge_class.f="rounded"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="h-100 border-start o_border_contrast"
+                _btn_class.f="o_navlink_background_hover btn h-100 rounded-0 text-reset"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_vertical" inherit_id="website.template_header_vertical">
@@ -296,6 +330,13 @@
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class.f="o_navlink_background btn text-reset"
+                _dropdown_menu_class.f="dropdown-menu-end"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_search" inherit_id="website.template_header_search">
@@ -311,6 +352,13 @@
                 _link_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset"
                 _badge_class.f="rounded"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="h-100 border-end o_border_contrast"
+                _btn_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_sales_one" inherit_id="website.template_header_sales_one">
@@ -324,6 +372,14 @@
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class.f="btn rounded-circle text-reset o_navlink_background"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_sales_two" inherit_id="website.template_header_sales_two">
@@ -343,6 +399,24 @@
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"
                 _text_class.f="small"/>
         </xpath>
+        <xpath expr="//div[hasclass('o_header_sales_two_top')]" position="attributes">
+            <attribute name="t-if" add="is_view_active('website_sale.header_pricelist_selector')" separator="or"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="replace">
+            <li class="d-flex align-items-center">
+                <ul class="navbar-nav flex-row align-items-center gap-2">
+                    <t>$0</t>
+                    <t
+                        t-call="website_sale.placeholder_header_pricelist_selector"
+                        _div_classes.f="d-flex align-items-center h-100"
+                        _btn_class.f="btn btn-sm btn-outline-secondary border-0"
+                    />
+                </ul>
+            </li>
+        </t>
+        <!-- We replaced the language selector by an always visible `<li>` element,
+             making the dedicated spacer redundant. -->
+        <xpath expr="//li[hasclass('o_header_sales_two_lang_selector_placeholder')]" position="replace"/>
     </template>
 
     <template id="website_sale.template_header_sales_three" inherit_id="website.template_header_sales_three">
@@ -360,6 +434,14 @@
                 _icon_wrap_class.f="d-contains"
                 _badge_class.f="top-0 d-block ms-2"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _item_class.f="position-relative"
+                _btn_class.f="nav-link d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"
+                _dropdown_menu_class.f="dropdown-menu-end"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_sales_four" inherit_id="website.template_header_sales_four">
@@ -373,6 +455,15 @@
                 _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _item_class.f="position-relative"
+                _btn_class.f="nav-link"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_sidebar" inherit_id="website.template_header_sidebar">
@@ -388,6 +479,15 @@
                     _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
             </ul>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="dropup"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"
+                _dropdown_menu_class.f="w-100"
+                _txt_class.f="me-auto small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.template_header_boxed" inherit_id="website.template_header_boxed">
@@ -401,6 +501,14 @@
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center gap-1 border-0 rounded-pill px-3"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
     </template>
 
     <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
@@ -435,6 +543,106 @@ Disallow: /*/shop/payment
 Disallow: /shop/confirmation
 Disallow: /*/shop/confirmation
 </t>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.placeholder_header_pricelist_selector"
+        name="Placeholder Header Pricelist Selector"
+    />
+
+    <template
+        id="website_sale.header_pricelist_selector"
+        inherit_id="website_sale.placeholder_header_pricelist_selector"
+        name="Header Pricelist Selector"
+    >
+        <xpath expr="." position="inside">
+            <li
+                t-if="
+                    not hide_pricelist_selector
+                    and website_sale_pricelists
+                    and len(website_sale_pricelists) &gt; 1
+                "
+                name="header_pricelist_selector"
+                t-attf-class="o_header_pricelist_selector #{_item_class}"
+            >
+                <t t-call="website_sale.pricelist_selector" _div_classes.f="#{_div_classes} dropdown"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.footer_pricelist_selector"
+        inherit_id="portal.frontend_layout"
+        name="Footer Pricelist Selector"
+        priority="10"
+    >
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-2">
+                <div class="flex-md-shrink-0">$0</div>
+                <div class="d-flex align-items-center gap-2 min-w-0 mw-100">
+                    <t
+                        t-call="website_sale.pricelist_selector"
+                        _div_classes.f="dropup flex-grow-1 min-w-0"
+                        _btn_class.f="d-inline-flex align-items-center btn btn-secondary btn-sm border-0 min-w-0 w-100"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.footer_pricelist_selector_with_language_selector"
+        inherit_id="website_sale.footer_pricelist_selector"
+        active="False"
+    >
+        <t t-call="website_sale.pricelist_selector" position="before">
+            <t id="language_selector_hook" position="move"/>
+        </t>
+    </template>
+
+    <template id="website_sale.pricelist_selector" name="Pricelist Selector">
+        <div
+            t-if="
+                not hide_pricelist_selector
+                and website_sale_pricelists
+                and len(website_sale_pricelists) &gt; 1
+            "
+            name="pricelist_selector"
+            t-attf-class="#{_div_classes or 'dropdown'} o_typeahead d-print-none"
+        >
+            <t t-set="active_pricelist" t-value="website.pricelist_id"/>
+            <button
+                t-attf-class="dropdown-toggle #{_btn_class or 'btn btn-sm btn-secondary border-0'}"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-haspopup="true"
+                aria-expanded="false"
+                t-attf-aria-label="Pricelist: #{active_pricelist.name}"
+            >
+                <span t-attf-class="text-truncate #{_txt_class}" t-out="active_pricelist.name"/>
+            </button>
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}">
+                <a
+                    t-foreach="website_sale_pricelists"
+                    t-as="pricelist"
+                    t-attf-class="dropdown-item {{pricelist == active_pricelist and 'active'}}"
+                    t-att-aria-current="pricelist == active_pricelist and 'true'"
+                    t-attf-href="/shop/change_pricelist/#{pricelist.id}"
+                >
+                    <span t-att-class="_txt_class" t-out="pricelist.name"/>
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sale.typeahead_language_selector" inherit_id="portal.language_selector">
+        <xpath expr="//div[contains(@t-attf-class, 'js_language_selector')]" position="attributes">
+            <attribute name="t-attf-class" add="o_typeahead" separator=" "/>
+        </xpath>
+        <xpath expr="//a[hasclass('dropdown-item')]" position="attributes">
+            <attribute name="t-att-data-value">lg.name.split('/').pop()</attribute>
         </xpath>
     </template>
 
