@@ -1323,7 +1323,7 @@ test("keyboard navigation", async () => {
     triggerHotkey("ArrowUp");
     await contains(".o-mail-NotificationItem:last.o-active", { name: "Mitchell Admin" });
     triggerHotkey("Enter");
-    await contains(".o-mail-ChatWindow:text('Mitchell Admin')");
+    await contains(".o-mail-ChatWindow-name:text('Mitchell Admin')");
 });
 
 test("keyboard navigation with quick search", async () => {
