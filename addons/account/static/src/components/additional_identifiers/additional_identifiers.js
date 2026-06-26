@@ -9,6 +9,9 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const METADATA_FIELD = "available_additional_identifiers_metadata";
+const FR_AND_DOM_TOM = [
+    'FR', 'BL', 'GF', 'GP', 'MF', 'MQ', 'NC', 'PF', 'PM', 'RE', 'TF', 'WF', 'YT',
+]
 
 function parseJson(value) {
     if (!value) {
@@ -86,7 +89,8 @@ export class AdditionalIdentifiersList extends AdditionalIdentifiersCommon {
 
     onUpdateValue(identifierType, event) {
         const currentVal = event.target.value.trim();
-        if (currentVal === "") {
+        console.log(!FR_AND_DOM_TOM.includes(this.props.record.data.country_code))
+        if (currentVal === "" && (identifierType != "FR_SIREN" || !FR_AND_DOM_TOM.includes(this.props.record.data.country_code))) {
             delete this.state.identifiers[identifierType];
         } else {
             this.state.identifiers[identifierType] = currentVal;
