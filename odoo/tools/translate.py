@@ -720,7 +720,15 @@ class StoredTranslations(dict):
             valid_self[k] = v.value
         return valid_self
 
-    def translated(self, env: Environment, field: Field, term_updates: dict[str, dict[str, str]], *, digest: Callable[[str], str] | None = None) -> StoredTranslations | None:
+    def translated(
+        self,
+        env: Environment,
+        field: Field,
+        term_updates: dict[str, dict[str, str]],
+        *,
+        digest: Callable[[str], str] | None = None,
+        overwrite: bool = True,
+    ) -> StoredTranslations | None:
         """ Apply term-level translations and build a new stored mapping.
 
         :param env: Current Odoo environment, used for validation and
@@ -730,15 +738,19 @@ class StoredTranslations(dict):
                              for languages explicitly updated in this call.
         :param digest: Optional digest function for source terms in ``term_updates``
                        when the caller sends digested source keys.
+        :param overwrite: Controls merge priority between incoming ``term_updates`` and
+                          the prior term mappings derived from the stored field value.
+                          When ``True`` (default), incoming updates take priority; when
+                          ``False``, prior mappings take priority. Prior mappings are those
+                          where the stored term differs from the source term (``term != src``).
         :return: A new validated ``StoredTranslations`` result, or ``None`` when no
                  valid translation can be kept.
         """
         assert callable(field.translate)
+        source_lang = env.lang or 'en_US'
         valid_self = self._validate(env, field, check_structure=False, auto_fix=True)
         if not valid_self:
             return None
-
-        source_lang = env.lang or 'en_US'
 
         # For updated languages, use the latest synchronized value as base.
         for lang in term_updates:
@@ -778,8 +790,8 @@ class StoredTranslations(dict):
 
         model = env[field.model_name]
         for lang, src2term in term_updates.items():
-            old_src2term = {src: term for src, lang2term in old_translation_dictionary.items() if (term := lang2term.get(lang))}
-            new_src2term = {**old_src2term, **src2term}
+            old_src2term = {src: term for src, lang2term in old_translation_dictionary.items() if (term := lang2term.get(lang)) and term != src}
+            new_src2term = {**old_src2term, **src2term} if overwrite else {**src2term, **old_src2term}
             translation = field.translate(new_src2term.get, old_source_lang_value)
             valid_self[lang] = field.convert_to_cache(translation, model)
         return valid_self
@@ -2058,40 +2070,26 @@ class TranslationImporter:
 
                     # [id, translations, id, translations, ...]
                     params = []
-                    for id_, xmlid, values, noupdate in rows:
+                    for id_, xmlid, values, imd_noupdate in rows:
                         if not values:
                             continue
                         _value_en = values.get('_en_US', values['en_US'])
                         if not _value_en:
                             continue
 
-                        # {src: {lang: value}}
+                        # {src: {lang: term_lang}}
                         record_dictionary = field_dictionary[xmlid]
-                        langs = {lang for translations in record_dictionary.values() for lang in translations.keys()}
-                        translation_dictionary = field.get_translation_dictionary(
-                            _value_en,
-                            {
-                                k: values.get(f'_{k}', v)
-                                for k, v in values.items()
-                                if k in langs
-                            }
-                        )
-
-                        if force_overwrite or (not noupdate and overwrite):
-                            # overwrite existing translations
-                            for term_en, translations in record_dictionary.items():
-                                translation_dictionary[term_en].update(translations)
-                        else:
-                            # keep existing translations
-                            for term_en, translations in record_dictionary.items():
-                                translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
-                                translation_dictionary[term_en] = translations
-
+                        # {lang: {src: term_lang}}
+                        term_updates = {}
+                        for term_en, translations in record_dictionary.items():
+                            for lang, value in translations.items():
+                                term_updates.setdefault(lang, {})[term_en] = value
+                        do_overwrite = force_overwrite or (not imd_noupdate and overwrite)
+                        updated_values = dict(StoredTranslations(values).translated(env, field, term_updates, overwrite=do_overwrite))
                         changed_values = {}
-                        for lang in langs:
-                            # translate and confirm model_terms translations
-                            new_val = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
-                            if values.get(lang, None) != new_val:
+                        for lang in term_updates:
+                            new_val = updated_values.get(lang)
+                            if values.get(lang) != new_val:
                                 changed_values[lang] = new_val
                             if f'_{lang}' in values:
                                 changed_values[f'_{lang}'] = None
