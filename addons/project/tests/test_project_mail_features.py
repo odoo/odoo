@@ -461,6 +461,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
     @users('bastien')
     def test_task_notification_on_project_update(self):
         """ Test changing task's project notifies people following 'New Task' """
+        self.project_goats.allowed_internal_user_ids |= self.user_projectmanager
         test_task = self.test_task.with_user(self.env.user)
         with self.mock_mail_gateway():
             test_task.project_id = False
