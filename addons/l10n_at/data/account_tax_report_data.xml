@@ -77,7 +77,7 @@
                     <record id="tax_report_line_l10n_at_tva_total" model="account.report.expression">
                         <field name="label">vat</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">AT_022.vat + AT_029.vat + AT_006.vat + AT_037.vat + AT_052.vat + AT_007.vat + AT_056.vat + AT_057.vat + AT_048.vat + AT_044.vat + AT_032.vat + AT_072.vat + AT_073.vat + AT_008.vat + AT_088.vat</field>
+                        <field name="formula">AT_022.vat + AT_124.vat + AT_029.vat + AT_006.vat + AT_037.vat + AT_052.vat + AT_007.vat + AT_056.vat + AT_057.vat + AT_048.vat + AT_044.vat + AT_032.vat + AT_072.vat + AT_125.vat + AT_073.vat + AT_008.vat + AT_088.vat</field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -243,12 +243,12 @@
                             <record id="tax_report_line_at_base_title_4_14_19" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">AT_022.base + AT_029.base + AT_006.base + AT_037.base + AT_052.base + AT_007.base</field>
+                                <field name="formula">AT_022.base + AT_124.base + AT_029.base + AT_006.base + AT_037.base + AT_052.base + AT_007.base</field>
                             </record>
                             <record id="tax_report_line_at_tax_title_4_14_19" model="account.report.expression">
                                 <field name="label">vat</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">AT_022.vat + AT_029.vat + AT_006.vat + AT_037.vat + AT_052.vat + AT_007.vat</field>
+                                <field name="formula">AT_022.vat + AT_124.vat + AT_029.vat + AT_006.vat + AT_037.vat + AT_052.vat + AT_007.vat</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -266,6 +266,23 @@
                                         <field name="label">vat</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">KZ 022 Umsatzsteuer</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_l10n_at_tva_line_4_15_0" model="account.report.line">
+                                <field name="name">4.15.0 4.9% Reduced rate [124]</field>
+                                <field name="name@de">4.15.0 4,9% ermäßigter Steuersatz [124]</field>
+                                <field name="code">AT_124</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_l10n_at_tva_line_4_15_0_base_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-KZ 124 Bemessungsgrundlage</field>
+                                    </record>
+                                    <record id="tax_report_line_l10n_at_tva_line_4_15_0_tax_tag" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">KZ 124 Umsatzsteuer</field>
                                     </record>
                                 </field>
                             </record>
@@ -476,12 +493,12 @@
                             <record id="tax_report_line_at_base_title_4_28_31" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">AT_072.base + AT_073.base + AT_008.base + AT_088.base</field>
+                                <field name="formula">AT_072.base + AT_125.base + AT_073.base + AT_008.base + AT_088.base</field>
                             </record>
                             <record id="tax_report_line_at_tax_title_4_28_31" model="account.report.expression">
                                 <field name="label">vat</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">AT_072.vat + AT_073.vat + AT_008.vat + AT_088.vat</field>
+                                <field name="formula">AT_072.vat + AT_125.vat + AT_073.vat + AT_008.vat + AT_088.vat</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -499,6 +516,23 @@
                                         <field name="label">vat</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">KZ 072 Umsatzsteuer</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_l10n_at_tva_line_4_29_0" model="account.report.line">
+                                <field name="name">4.29.0 4.9% Reduced rate [125]</field>
+                                <field name="name@de">4.29.0 4,9% ermäßigter Steuersatz [125]</field>
+                                <field name="code">AT_125</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_l10n_at_tva_line_4_29_0_base_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-KZ 125 Bemessungsgrundlage</field>
+                                    </record>
+                                    <record id="tax_report_line_l10n_at_tva_line_4_29_0_tax_tag" model="account.report.expression">
+                                        <field name="label">vat</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">KZ 125 Umsatzsteuer</field>
                                     </record>
                                 </field>
                             </record>
