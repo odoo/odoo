@@ -684,6 +684,8 @@ class TestProjectSharing(TestProjectSharingCommon):
             'privacy_visibility': 'followers',
             'user_id': self.user_projectmanager.id,
         })
+        # Remove the current user, subscribed at creation to private projects, to keep the follower count meaningful.
+        project.message_unsubscribe(partner_ids=self.env.user.partner_id.ids)
         self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should be a follower of the project")
         project_share_wizard = self.env['project.share.wizard'].create({
             'res_model': 'project.project',
