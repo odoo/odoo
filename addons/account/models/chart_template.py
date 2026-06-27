@@ -6,15 +6,16 @@ from collections import defaultdict
 from functools import wraps
 from inspect import getmembers
 from copy import deepcopy
+from psycopg2 import IntegrityError
 
 import logging
 import re
 
 from odoo import Command, api, models
-from odoo.exceptions import AccessError, UserError, RedirectWarning
+from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError
 from odoo.fields import Domain
 from odoo.modules import get_resource_from_path
-from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
+from odoo.tools import file_open, float_compare, get_lang, mute_logger, SQL
 from odoo.tools.translate import _, code_translations, TranslationImporter
 
 _logger = logging.getLogger(__name__)
@@ -216,10 +217,13 @@ class AccountChartTemplate(models.AbstractModel):
         )
         company = self.env['res.company'].browse(company.id)  # also update company.pool
 
-        reload_template = template_code == company.chart_template
+        previous_template_code = company.chart_template
+        reload_template = template_code == previous_template_code
+        existing_accounting = company.root_id._existing_accounting()
         company.chart_template = template_code
 
-        if not reload_template and (not company.root_id._existing_accounting() or install_demo):
+        reset_accounting = not reload_template and (not existing_accounting or install_demo)
+        if reset_accounting:
             children_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
             for model in ('account.move',) + self._get_template_models()[::-1]:
                 if not company.parent_id:
@@ -233,17 +237,23 @@ class AccountChartTemplate(models.AbstractModel):
                     records.with_context(force_delete=True).unlink()
 
         data = self._get_chart_template_data(template_code)
+        new_template_xmlids = {
+            model_name: set(records)
+            for model_name, records in data.items()
+        }
         template_data = data.pop('template_data')
         if company.parent_id:
             data = {
                 'res.company': data['res.company'],
             }
 
-        if reload_template:
+        if reload_template or (existing_accounting and not reset_accounting and previous_template_code):
             self._pre_reload_data(company, template_data, data, force_create)
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
+        if previous_template_code and not reload_template and existing_accounting and not reset_accounting:
+            self._cleanup_removed_chart_template_records(company, previous_template_code, new_template_xmlids)
         self._post_load_data(template_code, company, template_data)
         self._load_translations(companies=company)
 
@@ -272,6 +282,39 @@ class AccountChartTemplate(models.AbstractModel):
             demo_data = self_ctx._get_chart_template_data(company.chart_template, demo=True)
             self_ctx.with_context(skip_pdf_attachment_generation=True)._load_data(demo_data)
             self_ctx._post_load_demo_data(company.chart_template)
+
+    def _cleanup_removed_chart_template_records(self, company, previous_template_code, new_template_xmlids):
+        """Delete or archive records that belonged to the previous CoA only."""
+        previous_data = self._get_chart_template_data(previous_template_code)
+        for model_name in self._get_template_models()[::-1]:
+            removed_xmlids = set(previous_data.get(model_name, {})) - new_template_xmlids.get(model_name, set())
+            if not removed_xmlids:
+                continue
+
+            records = self.env[model_name]
+            for xmlid in removed_xmlids:
+                if record := self.ref(xmlid, raise_if_not_found=False):
+                    records |= record
+
+            if not records:
+                continue
+
+            records_to_archive = self.env[model_name]
+
+            for record in records:
+                try:
+                    with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                        record.with_context(force_delete=True).unlink()
+                except (IntegrityError, UserError, ValidationError):
+                    _logger.info(
+                        "Could not delete record %s from chart template %s for company %s in model %s; archiving it instead.",
+                        record.display_name or record.id, previous_template_code, company.id, model_name,
+                    )
+
+                    records_to_archive |= record
+
+            if records_to_archive and 'active' in self.env[model_name]._fields:
+                records_to_archive.write({'active': False})
 
     def _pre_reload_data(self, company, template_data, data, force_create=True, force_update=False):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -1268,6 +1311,14 @@ class AccountChartTemplate(models.AbstractModel):
             parents.append(code)
             code = template_mapping.get(code).get('parent')
         return parents
+
+    def _has_same_parent(self, template_code, other_template_code):
+        parent = self._get_parent_template(template_code)[1:2]
+        other_parent = self._get_parent_template(other_template_code)[1:2]
+        return bool(parent) and bool(other_parent) and parent[0] == other_parent[0]
+
+    def _is_parent_of(self, template_code, other_template_code):
+        return [template_code] == self._get_parent_template(other_template_code)[1:2]
 
     def _get_tag_mapper(self, country_id):
         tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search([
