@@ -55,9 +55,8 @@ class LoyaltyProgram(models.Model):
         query = """
                 WITH reward_to_orders_count AS (
                  SELECT reward.id                    AS lr_id,
-                        COUNT(DISTINCT pos_order.id) AS orders_count
+                        COUNT(DISTINCT line.order_id) AS orders_count
                    FROM pos_order_line line
-                   JOIN pos_order ON line.order_id = pos_order.id
                    JOIN loyalty_reward reward ON line.reward_id = reward.id
                GROUP BY lr_id
               ),
