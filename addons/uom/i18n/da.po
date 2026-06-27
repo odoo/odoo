@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-14 08:05+0000\n"
+"PO-Revision-Date: 2026-06-27 21:14+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-1/uom/"
 "da/>\n"
@@ -22,12 +22,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
-msgstr ""
+msgstr "Absolute mængde"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -67,7 +67,7 @@ msgstr "Dage"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -85,6 +85,7 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
 msgstr ""
+"Hvor meget større eller mindre er denne enhed i forhold til referenceenheden"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
@@ -94,12 +95,12 @@ msgstr "ID"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kwh
 msgid "KWH"
-msgstr ""
+msgstr "kWh"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_litre
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
@@ -119,12 +120,12 @@ msgstr "Håndtering af mange måleenheder"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_minute
 msgid "Minutes"
-msgstr ""
+msgstr "Minutter"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "Pakke med 6"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
@@ -136,12 +137,12 @@ msgstr "Overordnet sti"
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Product Field Name"
-msgstr ""
+msgstr "Produktfeltnavn"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Vareenhed"
+msgstr "Produktmåleenhed"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -153,29 +154,29 @@ msgstr "Mængde"
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Quantity Field Name"
-msgstr ""
+msgstr "Navn på mængdefelt"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
-msgstr ""
+msgstr "Referenceenhed"
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "Reference unit of measure is missing."
-msgstr ""
+msgstr "Referenceenheden mangler."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
-msgstr ""
+msgstr "Relaterede måleenheder"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
-msgstr "Afrunding"
+msgstr "Afrundingspræcision"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -199,11 +200,18 @@ msgid ""
 "Therefore, changing core units of measure in a running database is not "
 "recommended."
 msgstr ""
+"Nogle vigtige felter blev ændret den %s.\n"
+"Bemærk, at eksisterende data ikke opdateres som følge af denne ændring.\n"
+"\n"
+"Da måleenheder påvirker hele systemet, kan dette føre til kritiske "
+"problemer.\n"
+"Det anbefales derfor ikke at ændre primære måleenheder i en database, der er "
+"i drift."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "Konverterings raten for en enhed kan ikke være 0!"
+msgstr "Konverteringsraten for en enhed kan ikke være 0!"
 
 #. module: uom
 #. odoo-python
@@ -213,23 +221,26 @@ msgid ""
 "%s\n"
 "You can archive them instead."
 msgstr ""
+"Systemet bruger følgende måleenheder, som ikke kan slettes: %s\n"
+"Du kan i stedet arkivere dem."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "Ton"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Afmarker det aktive felt for at deaktivere en måleenhed uden at slette den."
+"Fjern markeringen af det aktive felt for at deaktivere en måleenhed uden at "
+"slette den."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit Name"
-msgstr ""
+msgstr "Enhedens navn"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -245,7 +256,7 @@ msgstr "Enheder og emballage"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Units of Measure"
-msgstr "Enheder"
+msgstr "Måleenheder"
 
 #. module: uom
 #. odoo-javascript
@@ -277,7 +288,7 @@ msgstr "fod"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_square_foot
 msgid "ft²"
-msgstr "ft²"
+msgstr "fod²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
@@ -287,7 +298,7 @@ msgstr "fod³"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gram
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
@@ -297,7 +308,7 @@ msgstr "gallon (US)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "i"
+msgstr "tomme"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
@@ -322,7 +333,7 @@ msgstr "lb"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_meter
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -332,7 +343,7 @@ msgstr "mil"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_milliliter
 msgid "ml"
-msgstr ""
+msgstr "ml"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

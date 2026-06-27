@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-06-08 15:12+0000\n"
+"PO-Revision-Date: 2026-06-27 21:17+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_peppol/fi/>\n"
@@ -37,7 +37,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (Puuttuu %(eas)s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -69,6 +69,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s käsiteltyä Peppol-asiakirjaa, %(deleted)s poistettua asiakirjaa"
 
 #. module: account_peppol
 #. odoo-python
@@ -906,7 +907,7 @@ msgstr "Näytä 'Käytä emoyhtiön yhteyttä' -valinta"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "Haluatko jatkaa?"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -922,13 +923,13 @@ msgstr "Asiakirjan nimi"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Asiakirja peruutettu onnistuneesti"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Asiakirjan palauttaminen luonnokseksi onnistui"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -938,6 +939,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Peppolin kautta lähetettyjä/vastaanotettuja asiakirjoja ei voi poistaa.\n"
+"\n"
+"Haluatko sen sijaan peruuttaa tämän asiakirjan?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -947,6 +951,9 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Peppolin kautta lähetettyjä/vastaanotettuja asiakirjoja ei voi poistaa.\n"
+"\n"
+"Haluatko sen sijaan palauttaa tämän asiakirjan luonnokseksi?"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -1225,7 +1232,7 @@ msgstr "Kelvollista AS4-osallistujapäätepistettä ei löytynyt."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "Ei, säilytä se"
 
 #. module: account_peppol
 #. odoo-python
@@ -1348,13 +1355,13 @@ msgstr "Peppol-yhteystiedon sähköposti"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppol-asiakirjoja ei voi poistaa"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppol-asiakirjat: Laskua ei voi poistaa"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1678,7 +1685,7 @@ msgstr "Poista Peppolista"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Palauta luonnokseksi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1980,6 +1987,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Seuraava(t) %s Peppol-asiakirja(t) palautetaan luonnokseksi:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1989,6 +1999,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Seuraavat %s Peppol-asiakirjaluonnokset peruutetaan:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2051,7 +2064,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "Jäljellä olevat %s asiakirjaa poistetaan."
 
 #. module: account_peppol
 #. odoo-python
@@ -2311,13 +2324,13 @@ msgstr "Ohjattu toiminto"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Kyllä, peruuta se"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Kyllä, jatka"
 
 #. module: account_peppol
 #. odoo-python
