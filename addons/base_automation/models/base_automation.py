@@ -255,14 +255,19 @@ class BaseAutomation(models.Model):
     def _get_cron_interval(self, actions=None):
         """ Return the expected time interval used by the cron, in minutes. """
         def get_delay(rec):
-            return abs(rec.trg_date_range) * DATE_RANGE_FACTOR[rec.trg_date_range_type]
+            return max(1, abs(rec.trg_date_range)) * DATE_RANGE_FACTOR[rec.trg_date_range_type]
 
         if actions is None:
             actions = self.with_context(active_test=True).search([('trigger', '=', 'on_time')])
 
         # Minimum 1 minute, maximum 4 hours, 10% tolerance
+        max_time = 4 * 60
+        min_time = 1
+        if all(range is False for range in actions.mapped('trg_date_range_type')):
+            # We have no currently active time-based automation and should use the maximum time
+            return max_time
         delay = min(actions.mapped(get_delay), default=0)
-        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
+        return min(max(min_time, delay // 10), max_time)
 
     def _compute_least_delay_msg(self):
         msg = _("Note that this action can be triggered up to %d minutes after its schedule.")
