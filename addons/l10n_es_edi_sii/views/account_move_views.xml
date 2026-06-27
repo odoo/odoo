@@ -10,9 +10,16 @@
                     <field name="l10n_es_registration_date" attrs="{'readonly': [('state', '=', 'posted')], 'invisible': [('country_code', '!=', 'ES')]}"/>
                     <field name="l10n_es_edi_csv" invisible="1"/>
                 </xpath>
-                <field name="ref" position="attributes">
-                    <attribute name="attrs">{'readonly': [('l10n_es_edi_csv', '!=', False)]}</attribute>
-                </field>
+                <xpath expr="//field[@name='ref'][@nolabel='1']" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))], 'readonly': [('l10n_es_edi_csv', '!=', False)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//field[@name='ref'][not(@nolabel)]" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible':[('move_type', 'in', ('in_invoice', 'in_receipt', 'in_refund', 'out_invoice', 'out_refund'))], 'readonly': [('l10n_es_edi_csv', '!=', False)]}
+                    </attribute>
+                </xpath>
             </field>
         </record>
     </data>
