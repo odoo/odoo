@@ -7,13 +7,14 @@
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 22:42+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 19:45+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/resource/"
 "da/>\n"
 "Language: da\n"
@@ -21,12 +22,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "# Work Resources"
-msgstr ""
+msgstr "# Arbejdsressourcer"
 
 #. module: resource
 #. odoo-python
@@ -51,7 +52,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"ms-1\">%</span>"
-msgstr ""
+msgstr "<span class=\"ms-1\">%</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -61,17 +62,17 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"ms-2\">hours/week</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">timer/uge</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr "<span class=\"o_stat_text\">Fri</span>"
+msgstr "<span class=\"o_stat_text\">Fravær</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span>hours/week</span>"
-msgstr ""
+msgstr "<span>timer/uge</span>"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -98,6 +99,8 @@ msgid ""
 "Are you sure you want to switch to a 1-week calendar? All work entries will "
 "be lost."
 msgstr ""
+"Er du sikker på, at du vil skifte til en 1-ugers kalender? Alle "
+"arbejdsoptegnelser vil gå tabt."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -105,6 +108,8 @@ msgid ""
 "Are you sure you want to switch to a 2-week calendar? All work entries will "
 "be lost."
 msgstr ""
+"Er du sikker på, at du vil skifte til en 2-ugers kalender? Alle "
+"arbejdsoptegnelser vil gå tabt."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__duration_based
@@ -116,7 +121,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Attendances can't overlap."
-msgstr "Deltagelser kan ikke overlappe."
+msgstr "Fremmøde kan ikke overlappe."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
@@ -126,14 +131,15 @@ msgstr "Avatar 128"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr "Gennemsnits timer per dag"
+msgstr "Gennemsnitstimer pr. dag"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
-"Gennemsnits timer per dag en ressource burde fungere med denne kalender."
+"Gennemsnitlige timer pr. dag, som en ressource bør være tilgængelig med "
+"denne kalender."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -209,7 +215,7 @@ msgstr "Dato"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
-msgstr "Dag periode"
+msgstr "Tidspunkt på dagen"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
@@ -220,7 +226,7 @@ msgstr "Ugedag"
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
 msgid "Default Working Hours"
-msgstr "Standard arbejdstimer"
+msgstr "Standardarbejdstimer"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -243,8 +249,7 @@ msgstr ""
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
-msgstr ""
-"Definer den planlagte arbejdstid og tidsplan, som dine ansatte skal følge"
+msgstr "Angiv den planlagte arbejdstid og tidsplan, som dine ansatte skal følge"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__display_name
@@ -255,12 +260,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_type
 msgid "Display Type"
-msgstr "Vis type"
+msgstr "Visningstype"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
@@ -285,7 +290,7 @@ msgstr "E-mail"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
 msgid "End Date"
-msgstr "Slut dato"
+msgstr "Slutdato"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
@@ -298,7 +303,8 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
-"Ekstern bruger med begrænset adgang, oprettet kun med formålet at dele data."
+"Ekstern bruger med begrænset adgang, oprettet udelukkende med henblik på at "
+"dele data."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -320,7 +326,7 @@ msgstr "Fleksibel"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
 msgid "Flexible Hours"
-msgstr ""
+msgstr "Fleksible timer"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -337,7 +343,7 @@ msgstr "Fredag eftermiddag"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Friday Lunch"
-msgstr ""
+msgstr "Fredagsfrokost"
 
 #. module: resource
 #. odoo-python
@@ -368,12 +374,12 @@ msgstr "Fuldt fleksibel"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr "Giver sekvensen på denne linje ved visning af ressource kalenderen."
+msgstr "Angiver sekvensen for denne linje ved visning af ressourcekalenderen."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 msgid "Global Time Off"
-msgstr "Global fri tid"
+msgstr "Globalt fravær"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -383,7 +389,7 @@ msgstr "Timer"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
 msgid "Hours per Week"
-msgstr "Timer per uge"
+msgstr "Timer pr. uge"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -415,8 +421,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
-"Hvis tom, er dette en generisk fri tid for virksomheden. Hvis en ressource "
-"er angivet, vil fri tiden kun gælde for denne ressource"
+"Hvis feltet er tomt, er dette et generisk fravær for virksomheden. Hvis en "
+"ressource er angivet, gælder fraværet kun for den pågældende ressource"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -424,7 +430,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Hvis det aktive felt er sat til Falsk, vil du kunne gemme ressourcen uden at "
+"Hvis det aktive felt er sat til \"falsk\", kan du gemme ressourcen uden at "
 "fjerne den."
 
 #. module: resource
@@ -433,8 +439,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
-"Hvis det aktive felt er sat til falsk, vil det gøre dig istand til at skjule "
-"Arbejdstiden uden at fjerne den."
+"Hvis det aktive felt er sat til \"falsk\", kan du skjule arbejdstiden uden "
+"at fjerne den."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -448,8 +454,7 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar.py:0
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
-msgstr ""
-"I en kalender med 2-ugers tilstand, skal alle perioder var i sektionerne."
+msgstr "I en 2-ugers kalender skal alle perioder være placeret i sektionerne."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
@@ -493,7 +498,7 @@ msgstr "Mandag eftermiddag"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Monday Lunch"
-msgstr ""
+msgstr "Mandagsfrokost"
 
 #. module: resource
 #. odoo-python
@@ -529,7 +534,7 @@ msgstr "Andet"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Partial working schedules"
-msgstr ""
+msgstr "Arbejdstidsplaner for deltid"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -577,29 +582,29 @@ msgstr "Ressource"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr "Ressource Mixin"
+msgstr "Ressource-mixin"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr "Ressource fri tid"
+msgstr "Ressourcens fravær"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Resource fritid detaljer"
+msgstr "Resourcens fraværsoplysninger"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "ressource arbejdstid"
+msgstr "Ressourcens arbejdstid"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
 msgid "Resource's Calendar"
-msgstr "Ressource kalender"
+msgstr "Ressourcens kalender"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -614,7 +619,7 @@ msgstr "Ressourcer"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr "Ressourcer fri tid"
+msgstr "Ressourcers fravær"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -624,9 +629,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Ressourcer tillader dig at oprette og administrere ressourcer, der bør "
-"inddrages i et konkret projekt fasen. Du kan også indstille deres "
-"virkningsgrad og arbejdsbyrde baseret på deres ugentlige arbejdstid."
+"Ressourcer giver dig mulighed for at oprette og administrere ressourcer, der "
+"skal inddrages i en konkret projektfase. Du kan også angive deres "
+"effektivitet og arbejdsbyrde baseret på deres ugentlige arbejdstid."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -636,7 +641,7 @@ msgstr "Lørdag"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Schedule Total Time"
-msgstr ""
+msgstr "Planens samlede varighed"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__schedule_type
@@ -651,7 +656,7 @@ msgstr "Søg ressource"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr "Søg arbejdsperiode fri tid"
+msgstr "Søg efter fravær i arbejdstiden"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -661,7 +666,7 @@ msgstr "Søg arbejdstider"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
 msgid "Second"
-msgstr "Sekund"
+msgstr "Anden"
 
 #. module: resource
 #. odoo-python
@@ -693,7 +698,7 @@ msgstr "Standard 40 timer/uge"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 msgid "Start Date"
-msgstr "Start dato"
+msgstr "Startdato"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__hour_from
@@ -701,13 +706,13 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
-"Start og slut tid for arbejde.\n"
+"Start- og sluttid for arbejde.\n"
 "En specifik værdi på 24:00 læses som 23:59:59.999999."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "Fraværets start"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -742,7 +747,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
 msgid "Technical field for UX purpose."
-msgstr "Teknisk felt til UX øjemed."
+msgstr "Teknisk felt til UX-formål."
 
 #. module: resource
 #. odoo-python
@@ -763,7 +768,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_leaves.py:0
 msgid "The start date of the time off must be earlier than the end date."
-msgstr "Startdato på fri tiden skal være tidligere end slutdatoen."
+msgstr "Startdatoen for fraværet skal være tidligere end slutdatoen."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -772,8 +777,7 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
-"Dette felt bruges til at definere, i hvilken tidszone ressourcerne vil "
-"arbejde."
+"Dette felt bruges til at definere, hvilken tidszone ressourcerne arbejder i."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
@@ -784,11 +788,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"Dette felt bruges til at udregne den forventede varighed for en arbejdsordre "
-"ved dette arbejdscentre. For eksempel, hvis en arbejdsordre tager en time, "
-"og effektivitetsfaktoren er 100%, vil den forventede varighed være en time. "
-"Hvis effektivitetsfaktoren er 200%, vil den forventede varighed derimod være "
-"30 minutter."
+"Dette felt bruges til at beregne den forventede varighed af en arbejdsordre "
+"for dette arbejdscenter. For eksempel, hvis en arbejdsordre tager én time, "
+"og effektivitetsfaktoren er 100 %, vil den forventede varighed være én time. "
+"Hvis effektivitetsfaktoren er 200 %, vil den derimod være 30 minutter."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -805,7 +808,7 @@ msgstr "Torsdag eftermiddag"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "Torsdagsfrokost"
 
 #. module: resource
 #. odoo-python
@@ -817,23 +820,23 @@ msgstr "Torsdag morgen"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
 msgid "Time Off"
-msgstr "Fri"
+msgstr "Fravær"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "Fraværsoplysninger"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr "Tid type"
+msgstr "Tidstype"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
 msgid "Time efficiency must be strictly positive"
-msgstr "Effektiv tid skal udelukkende være positiv"
+msgstr "Effektiv tid skal være positiv"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -845,7 +848,7 @@ msgstr "Tidszone"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz_offset
 msgid "Timezone offset"
-msgstr "Tidszone offset"
+msgstr "Tidsforskel"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -867,7 +870,7 @@ msgstr "Tirsdag eftermiddag"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "Tirsdagsfrokost"
 
 #. module: resource
 #. odoo-python
@@ -909,7 +912,7 @@ msgstr "Onsdag eftermiddag"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "Onsdagsfrokost"
 
 #. module: resource
 #. odoo-python
@@ -938,18 +941,19 @@ msgid ""
 "When enabled, it will allow employees to work flexibly, without relying on "
 "the company's working schedule (working hours)."
 msgstr ""
+"Når denne funktion er aktiveret, kan medarbejdere arbejde fleksibelt uden at "
+"være bundet af virksomhedens arbejdstider."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
 "Whether this should be computed as a time off or as work time (eg: formation)"
-msgstr ""
-"Hvorvidt dette bør udregnes som fri tid eller arbejdstid (f.eks.: formation)"
+msgstr "Om dette skal beregnes som fritid eller arbejdstid (f.eks. uddannelse)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr "Arbejds detaljer"
+msgstr "Arbejdsoplysninger"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -959,13 +963,13 @@ msgstr "Arbejdsressourcer"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_resources_count
 msgid "Work Resources count"
-msgstr ""
+msgstr "Antal arbejdsressourcer"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
-msgstr "Arbejdstid rate"
+msgstr "Arbejdstidssats"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
@@ -977,7 +981,9 @@ msgstr "Arbejdstid fra"
 msgid ""
 "Work time rate versus full time working schedule, should be between 0 and "
 "100 %."
-msgstr "Arbejdstid rate kontra fuldtid arbejdsplan, bør være mellem 0 og 100%"
+msgstr ""
+"Arbejdstidsandelen i forhold til fuldtidsarbejdstiden skal ligge mellem 0 og "
+"100 %."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
@@ -1002,7 +1008,7 @@ msgstr "Arbejdstimer af %s"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 msgid "Working Schedules"
-msgstr "Arbejdsplan"
+msgstr "Arbejdstidsplaner"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -1030,7 +1036,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "You can't delete section between weeks."
-msgstr "Du kan ikke slette sektion mellem uger."
+msgstr "Du kan ikke slette afsnit mellem uger."
 
 #. module: resource
 #. odoo-python

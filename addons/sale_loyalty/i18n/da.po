@@ -3,13 +3,14 @@
 # * sale_loyalty
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2025-09-14 21:19+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-06-23 17:42+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
 "sale_loyalty/da/>\n"
 "Language: da\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -140,7 +141,7 @@ msgstr "Rabat og loyalitetsprogram"
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
@@ -165,14 +166,14 @@ msgstr "Gavekortkode"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
 msgid "Gift Card Count"
-msgstr ""
+msgstr "Antal gavekort"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Gift Cards"
-msgstr ""
+msgstr "Gavekort"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
@@ -234,7 +235,7 @@ msgstr "Udstedt:"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Journalpost"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -259,7 +260,7 @@ msgstr "Medlemskort:"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Loyalitetskupon"
+msgstr "Medlemskupon"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
@@ -298,7 +299,7 @@ msgid ""
 "No card found for this loyalty program and no points will be given with this "
 "order."
 msgstr ""
-"Ingen loyalitetskort er knyttet til programmet, så ordren udløser ikke nogen "
+"Ingen medlemskort er knyttet til programmet, så ordren udløser ikke nogen "
 "point."
 
 #. module: sale_loyalty
@@ -381,17 +382,17 @@ msgstr "Belønningsprodukter"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Rewards Available"
-msgstr ""
+msgstr "Tilgængelige belønninger"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
-msgstr "Kundeloyalitet – Guide til anvendelse af rabatkuponer"
+msgstr "Kundeloyalitet – Assistent til anvendelse af rabatkuponer"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
 msgid "Sale Loyalty - Reward Selection Wizard"
-msgstr "Kundeloyalitet – Guide til udvalg af belønning"
+msgstr "Kundeloyalitet – Assistent til udvælgelse af belønning"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
@@ -404,7 +405,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
 msgid "Sale Order Customer"
-msgstr ""
+msgstr "Salgsordrekunde"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -478,7 +479,7 @@ msgstr "Salgsordren, som rabatkuponen er baseret på"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "There are available rewards not added to this order."
-msgstr ""
+msgstr "Nogle belønninger er tilgængelige, men er ikke medtaget i denne ordre."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -566,8 +567,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
-msgstr ""
-"Opdatér de aktuelle kampagnenlinjer, og vælg eventuelt nye belønninger."
+msgstr "Opdatér de aktuelle kampagnenlinjer, og vælg eventuelt nye belønninger."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
@@ -599,7 +599,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "order_id"
-msgstr ""
+msgstr "order_id"
 
 #~ msgid ""
 #~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
