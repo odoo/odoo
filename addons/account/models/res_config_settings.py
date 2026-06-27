@@ -3,12 +3,14 @@
 
 from odoo import _, api, fields, models
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
+    can_change_chart_template = fields.Boolean(compute='_compute_has_chart_of_accounts')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
@@ -236,7 +238,13 @@ class ResConfigSettings(models.TransientModel):
         # install a chart of accounts for the given company (if required)
         if self.env.company == self.company_id and self.chart_template \
         and self.chart_template != self.company_id.chart_template:
-            self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
+            ChartTemplate = self.env['account.chart.template']
+            if (
+                self.has_accounting_entries
+                and not ChartTemplate._has_same_chart_template_root(self.company_id.chart_template, self.chart_template)
+            ):
+                raise UserError(_("You can only change to another chart template that shares the same root chart template."))
+            ChartTemplate.try_loading(self.chart_template, company=self.company_id)
             self.company_id._initiate_account_onboardings()
 
     def reload_template(self):
@@ -244,8 +252,18 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
-        self.has_chart_of_accounts = bool(self.company_id.chart_template)
-        self.has_accounting_entries = self.company_id.root_id._existing_accounting()
+        ChartTemplate = self.env['account.chart.template']
+        chart_template_mapping = ChartTemplate._get_chart_template_mapping()
+        for config in self:
+            config.has_chart_of_accounts = bool(config.company_id.chart_template)
+            config.has_accounting_entries = config.company_id.root_id._existing_accounting()
+            template_code = config.company_id.chart_template
+            root_template_code = ChartTemplate._get_chart_template_root(template_code)
+            config.can_change_chart_template = bool(root_template_code) and any(
+                sibling_template_code != template_code
+                and ChartTemplate._get_chart_template_root(sibling_template_code) == root_template_code
+                for sibling_template_code in chart_template_mapping
+            )
 
     @api.depends('module_account_extract')
     def _compute_module_account_invoice_extract(self):
