@@ -74,7 +74,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @typedef {((selection: EditorSelection) => boolean | undefined)[]} can_format_content_predicates
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
- * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} can_remove_format_predicates
  *
  * @typedef {(({
  *      node: Node,
@@ -130,7 +130,7 @@ export class FormatPlugin extends Plugin {
             {
                 id: "removeFormat",
                 description: (sel, nodes) =>
-                    nodes && this.hasAnyFormat(nodes)
+                    nodes && this.canRemoveFormat(nodes)
                         ? _t("Remove Format (Ctrl + Space)")
                         : _t("Selection has no format"),
                 icon: "fa-eraser",
@@ -187,7 +187,7 @@ export class FormatPlugin extends Plugin {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
-                isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
+                isDisabled: (sel, nodes) => !this.canRemoveFormat(nodes),
             }),
         ],
         format_specs: [
@@ -434,7 +434,7 @@ export class FormatPlugin extends Plugin {
         return hasFormatted;
     }
 
-    hasAnyFormat(targetedNodes) {
+    canRemoveFormat(targetedNodes) {
         const editableTargetedNodes = targetedNodes.filter(
             this.dependencies.selection.isNodeEditable
         );
@@ -443,9 +443,7 @@ export class FormatPlugin extends Plugin {
                 return true;
             }
         }
-        return editableTargetedNodes.some(
-            (node) => this.checkPredicates("has_format_predicates", node) ?? false
-        );
+        return this.checkPredicates("can_remove_format_predicates", editableTargetedNodes) ?? false;
     }
 
     /**

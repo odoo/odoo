@@ -68,8 +68,12 @@ export class TableAlignPlugin extends Plugin {
         on_all_formats_removed_handlers: this.setVerticalAlignment.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => {
-            if (closestElement(node, "td, th")?.style.verticalAlign) {
+        can_remove_format_predicates: (editableTargetedNodes) => {
+            if (
+                editableTargetedNodes.some(
+                    (node) => closestElement(node, "td, th")?.style.verticalAlign
+                )
+            ) {
                 return true;
             }
         },

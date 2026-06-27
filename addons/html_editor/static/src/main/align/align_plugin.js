@@ -7,6 +7,7 @@ import { AlignSelector } from "./align_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { READ, withSequence } from "@html_editor/utils/resource";
+import { removeStyle } from "@html_editor/utils/dom";
 
 const alignmentItems = [
     // In RTL, left and right icons are reverted to represent start and end.
@@ -65,11 +66,23 @@ export class AlignPlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateAlignmentParams.bind(this)),
         on_history_commit_undone_handlers: this.updateAlignmentParams.bind(this),
         on_history_commit_redone_handlers: this.updateAlignmentParams.bind(this),
-        on_all_formats_removed_handlers: this.setAlignment.bind(this),
+        on_all_formats_removed_handlers: this.removeTextAlignment.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => {
-            if (closestBlock(node)?.style.textAlign) {
+        can_remove_format_predicates: (editableTargetedNodes) => {
+            const formattedBlocks = [
+                ...new Set(
+                    editableTargetedNodes
+                        .map(closestBlock)
+                        .filter((block) => block && block.style.textAlign)
+                ),
+            ];
+            if (
+                formattedBlocks.length &&
+                formattedBlocks.every((block) =>
+                    this.dependencies.selection.areNodeContentsFullySelected(block)
+                )
+            ) {
                 return true;
             }
         },
@@ -143,11 +156,15 @@ export class AlignPlugin extends Plugin {
                     }
                 }
                 if (textAlign !== modeForBlock) {
-                    block.style.setProperty("text-align", modeForBlock);
-                    // If a class overrides the inline style (e.g. with !important),
-                    // apply !important so the selected alignment takes effect.
-                    if (modeForBlock && getComputedStyle(block).textAlign !== modeForBlock) {
-                        block.style.setProperty("text-align", modeForBlock, "important");
+                    if (modeForBlock) {
+                        block.style.setProperty("text-align", modeForBlock);
+                        // If a class overrides the inline style (e.g. with !important),
+                        // apply !important so the selected alignment takes effect.
+                        if (getComputedStyle(block).textAlign !== modeForBlock) {
+                            block.style.setProperty("text-align", modeForBlock, "important");
+                        }
+                    } else {
+                        removeStyle(block, "text-align");
                     }
                     isAlignmentUpdated = true;
                 }
@@ -166,5 +183,16 @@ export class AlignPlugin extends Plugin {
 
     updateAlignmentParams() {
         this.alignment.displayName = this.alignmentIconMode;
+    }
+
+    removeTextAlignment() {
+        const blocksToAlign = this.getBlocksToAlign();
+        const areAllBlocksFullySelected = blocksToAlign.every(
+            this.dependencies.selection.areNodeContentsFullySelected
+        );
+
+        if (areAllBlocksFullySelected) {
+            this.setAlignment();
+        }
     }
 }
