@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:27+0000\n"
-"PO-Revision-Date: 2026-06-11 09:23+0000\n"
+"PO-Revision-Date: 2026-06-26 06:18+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -3234,7 +3234,7 @@ msgstr "Buchungsdatum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr "Wirtschaftsprüfungsmodus"
+msgstr "Modus für Buchhaltungskanzleien"
 
 #. module: account
 #. odoo-python
@@ -3276,7 +3276,7 @@ msgstr "Buchhaltungsdokumente"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
 msgstr ""
-"Der Wirtschaftsprüfungsmodus verändert die Codierung von Ein-/"
+"Der Modus für Buchhaltungskanzleien verändert die Codierung von Ein-/"
 "Ausgangsrechnungen:"
 
 #. module: account
@@ -6036,7 +6036,7 @@ msgstr "Unternehmenswährung"
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Dokumentenlayout des Unternehmens"
+msgstr "Dokumentlayout des Unternehmens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_fiscal_country_code
@@ -6134,7 +6134,7 @@ msgstr "Konfigurieren"
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Dokumentenlayout konfigurieren"
+msgstr "Dokumentlayout konfigurieren"
 
 #. module: account
 #. odoo-javascript
@@ -8345,8 +8345,8 @@ msgstr "Dynamische Berichte"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
 msgstr ""
-"Dynamisches Feld, das für das Stichwort, das für die Steuer eingestellt "
-"werden kann, verwendet wird"
+"Dynamisches Feld, das für das Stichwort verwendet wird, das für die Steuer "
+"eingestellt werden kann"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -8495,7 +8495,7 @@ msgstr "Rechnungen per E-Mail versenden"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
+msgstr "E-Mail-Domain z. B. „beispiel.com“ in „odoo@beispiel.com“"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -11417,12 +11417,12 @@ msgstr "Ist zwischen"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
 msgid "Is greater than or equal to"
-msgstr "Ist größer oder gleich"
+msgstr "Ist größer als oder gleich"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
 msgid "Is lower than or equal to"
-msgstr "Ist weniger oder gleich"
+msgstr "Ist niedriger als oder gleich"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -13499,7 +13499,7 @@ msgstr "Einführung für Unternehmensdaten"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr "Einführung für Dokumentenlayout"
+msgstr "Einführung für Dokumentlayout"
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
@@ -21626,8 +21626,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
-"Sie können die Konten „%s“, die auf der Kontenzuordnung einer Steuerposition "
-"eingestellt sind, nicht entfernen/deaktivieren."
+"Sie können die Konten „%s“, die in der Kontenzuordnung einer Steuerposition "
+"eingestellt sind, nicht entfernen oder deaktivieren."
 
 #. module: account
 #. odoo-python
@@ -21679,7 +21679,7 @@ msgid ""
 "different %(vat_label)s."
 msgstr ""
 "Sie können keinen Partner als Rechnungsadresse eines anderen Partners "
-"festlegen, wenn dieser einen andere %(vat_label)s hat."
+"festlegen, wenn dieser eine andere %(vat_label)s hat."
 
 #. module: account
 #. odoo-python
@@ -21688,7 +21688,7 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"Sie können das Konto für die Kontenabstimmung nicht wechseln, solange sie "
+"Sie können das Konto für die Kontenabstimmung nicht wechseln, solange Sie "
 "noch offene Teilabstimmungen offen haben."
 
 #. module: account
@@ -21776,15 +21776,15 @@ msgstr ""
 msgid "You do not have the right to trust or un-trust a bank account."
 msgstr ""
 "Sie haben nicht das Recht, ein Bankkonto als vertrauenswürdig oder nicht "
-"vertrauenswürdig einzuschätzen."
+"vertrauenswürdig einzustufen."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "You do not have the rights to trust or un-trust accounts."
 msgstr ""
-"Sie haben nicht das Recht, ein Konten als vertrauenswürdig oder nicht "
-"vertrauenswürdig einzuschätzen."
+"Sie haben nicht das Recht, ein Konto als vertrauenswürdig oder nicht "
+"vertrauenswürdig einzustufen."
 
 #. module: account
 #. odoo-python

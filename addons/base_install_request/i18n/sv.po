@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-03-27 12:03+0000\n"
+"PO-Revision-Date: 2026-06-18 12:50+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "base_install_request/sv/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_install_request
 #: model:mail.template,body_html:base_install_request.mail_template_base_install_request
@@ -63,21 +63,21 @@ msgstr ""
 "        Hej,\n"
 "        <br/><br/>\n"
 "        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
-"har begärt att aktivera <span style=\"font-weight: bold;\" t-"
-"out=\"object.module_id.shortdesc\"/> modulen.\n"
+"har skickat en aktiveringsförfrågan för modulen <span style=\"font-weight: "
+"bold;\" t-out=\"object.module_id.shortdesc\"/>.\n"
 "        <br/><br/>\n"
-"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
-"quote=\"1\">\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">"
+"\n"
 "            <t t-out=\"object.body_html\"/>\n"
 "        </blockquote>\n"
 "        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
-"        <a t-attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"padding:8px 16px 8px 16px; text-decoration:none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"        <a t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding:8px "
+"16px 8px 16px; text-decoration:none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-"
-"base_install_request.action_base_module_install_review?"
-"menu_id={{ ctx['menu_id'] }}\">Granska förfrågan</a>\n"
+"base_install_request.action_base_module_install_review?menu_id={{ "
+"ctx['menu_id'] }}\">Granska förfrågan</a>\n"
 "        <br/><br/>\n"
 "        Tack,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -96,7 +96,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
 msgid "Activation Request of \"%s\""
-msgstr "Begäran om aktivering av \"%s\""
+msgstr "Aktiveringsförfrågan för \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -160,7 +160,7 @@ msgstr "Senast uppdaterad den"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr "Mail: Begäran om installation"
+msgstr "E-post: Installeringsförfrågan"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -172,23 +172,22 @@ msgstr "Modul"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr "Begäran om aktivering av modul"
+msgstr "Aktiveringsförfrågan för en modul"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr ""
-"Begäran om aktivering av modul för \"{{ object.module_id.shortdesc }}\""
+msgstr "Aktiveringsförfrågan för modulen \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr "Granskning av modulaktivering"
+msgstr "Granskning av aktivering av en modul"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr "Moduler Beskrivning"
+msgstr "Beskrivning av moduler"
 
 #. module: base_install_request
 #. odoo-python
@@ -199,12 +198,12 @@ msgstr "Ingen modul vald."
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr "Begär tillgång"
+msgstr "Be om åtkomst"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr "Begär aktivering"
+msgstr "Be om aktivering"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
@@ -236,13 +235,13 @@ msgstr "Varför behöver du denna modul?"
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
 msgid "You are about to install an extra application"
-msgstr "Du håller på att installera en extra applikation"
+msgstr "Du håller på att installera en extra app"
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 msgid "Your request has been successfully sent"
-msgstr "Din förfrågan har skickats med framgång"
+msgstr "Din förfrågan har skickats"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -250,6 +249,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
-"jag skulle t.ex. vilja använda modulen SMS Marketing för att organisera "
-"marknadsföringen av våra interna evenemang och utställningar. Jag behöver "
-"åtkomst för 3 personer i mitt team."
+"t.ex. Jag skulle vilja använda modulen Sms-marknadsföring för att organisera "
+"marknadsföring av våra interna evenemang och utställningar. Jag behöver ge "
+"behörighet till tre personer i mitt team."

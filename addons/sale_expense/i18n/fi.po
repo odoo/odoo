@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-07 09:19+0000\n"
+"PO-Revision-Date: 2026-06-26 08:05+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "sale_expense/fi/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -42,7 +42,7 @@ msgstr "Voidaan edelleenlaskuttaa"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr "Asiakas, jota laskutetaan"
+msgstr "Uudelleenlaskutettava asiakas"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
@@ -83,8 +83,7 @@ msgstr "Kulut"
 #. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 msgid "Expenses of this category may not be added to a Sales Order."
-msgstr ""
-"Tähän kategoriaan kuuluvia kuluja ei voi lisätä tähän myyntitilaukseen."
+msgstr "Tämän kategorian kuluja ei voi lisätä myyntitilaukseen."
 
 #. module: sale_expense
 #. odoo-python
@@ -102,8 +101,8 @@ msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
-"Kulut lisätään myyntitilaukseen niiden myyntihintaan (tuotteen hinta, "
-"hinnasto jne.), kun ne kirjataan."
+"Kulut lisätään myyntitilaukseen niiden myyntihinnalla (tuotteen hinta, "
+"hinnasto, jne.) kun ne kirjataan."
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__id
@@ -122,7 +121,7 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
-"Jos luokalla on kulukäytäntö, se laskutetaan uudelleen tässä "
+"Jos kategorialla on kulukäytäntö, se laskutetaan uudelleen tässä "
 "myyntitilauksessa"
 
 #. module: sale_expense

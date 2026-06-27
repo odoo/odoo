@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-05-23 09:47+0000\n"
+"PO-Revision-Date: 2026-06-23 18:49+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/da/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -221,7 +221,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Vil du have en faktura?"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-print me-2\"/>Print"
-msgstr "Print"
+msgstr "<i class=\"fa fa-print me-2\"/>Udskriv"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
@@ -319,8 +319,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-"
-"muted\"><u>Vilkår og betingelser</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
+"Vilkår og betingelser</u></a><br/>\n"
 "            30 dages fuld returret<br/>\n"
 "            Forsendelse: 2-3 hverdage\n"
 "        </small>"
@@ -333,7 +333,7 @@ msgstr "<span class=\"align-middle\">Har du allerede en konto?</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">for at følge din ordre.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -455,8 +455,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
-"1\">Baseret på varianter</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
+"Baseret på varianter</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -525,8 +525,8 @@ msgid ""
 msgstr ""
 "<span>Din ordre kan desværre ikke bekræftes, da beløbet på din betaling ikke "
 "stemmer overens med beløbet i din indkøbskurv.\n"
-"                        Kontakt venligst butikken for yderligere oplysninger."
-"</span>"
+"                        Kontakt venligst butikken for yderligere "
+"oplysninger.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -551,7 +551,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
-msgstr "<strong>Der kunne ikke findes en egnet leveringsmetode.</strong>"
+msgstr "<strong>Der kunne ikke findes nogen passende leveringsmetode.</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -653,8 +653,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -678,10 +678,10 @@ msgstr ""
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\">\n"
 "                            Genoptag ordre\n"
 "                        </a>\n"
@@ -728,8 +728,8 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"En detaljeret, formateret beskrivelse til at præsentere dit produkt "
-"på                                      denne side. Brug '/' for at få vist "
+"En detaljeret, formateret beskrivelse til at præsentere dit produkt på"
+"                                      denne side. Brug '/' for at få vist "
 "flere funktioner."
 
 #. module: website_sale
@@ -1113,7 +1113,7 @@ msgstr "Tilbage til kurven"
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
 msgid "Back to extra info"
-msgstr "Tilbage til yderligere oplysninger"
+msgstr "Tilbage til supplerende oplysninger"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1203,7 +1203,7 @@ msgstr "Fakturering"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 msgid "Billing address"
-msgstr "Fakturerings adresse"
+msgstr "Faktureringsadresse"
 
 #. module: website_sale
 #. odoo-python
@@ -1308,7 +1308,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Cabinet with Doors"
-msgstr "Kabinet med døre"
+msgstr "Skab med døre"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
@@ -1386,8 +1386,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
-"Kategorier bruges til at vise dine produkter ved brugen af \n"
-"                trykfølsom skærm."
+"Kategorier bruges til at vise dine produkter på\n"
+"                trykfølsomme skærme."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1521,7 +1521,7 @@ msgstr "Vælg dette sted"
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your favorite"
-msgstr "Vælg din favorit"
+msgstr "Vælg dit foretrukne"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1714,7 +1714,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Conference Chair"
-msgstr "Konference Stol"
+msgstr "Konferencestol"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
@@ -1938,7 +1938,7 @@ msgstr "Kunder"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Customizable Desk"
-msgstr "Tilpasningsbart Skrivebord"
+msgstr "Tilpasseligt skrivebord"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1954,7 +1954,7 @@ msgstr "Tilpas e-mailskabeloner"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "SLIP BYGGEKLODENE HER FOR AT GØRE DEM TILGÆNGELIGE PÅ ALLE PRODUKTER"
+msgstr "SLIP DESIGNMODULER HER FOR AT GØRE DEM TILGÆNGELIGE FOR ALLE PRODUKTER"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2073,7 +2073,7 @@ msgstr "Leveringsadresse"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
 msgid "Delivery and Installation"
-msgstr "Levering og Installation"
+msgstr "Levering og installation"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -2155,7 +2155,7 @@ msgstr "Angiver rækkefølgen, produkterne vises i webshoppen på hjemmesiden"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
 msgid "Digest"
-msgstr "Opsummering"
+msgstr "Oversigt"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2172,7 +2172,7 @@ msgstr "Deaktiveret (køb som gæst)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Discount code..."
-msgstr "Rabatkode..."
+msgstr "Rabatkode ..."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2183,7 +2183,7 @@ msgstr "Rabatter, loyalitetsprogrammer & gavekort"
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
 msgid "Discover our team"
-msgstr "Se vores hold"
+msgstr "Mød vores team"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2230,7 +2230,7 @@ msgstr "Vis"
 #: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2291,7 +2291,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Har ikke adgang, spring over disse data til brugerens opsamlingsmail"
+msgstr "Har ikke adgang, spring over disse data til brugerens oversigtsmail"
 
 #. module: website_sale
 #. odoo-python
@@ -2362,7 +2362,7 @@ msgstr "Yderligere oplysninger om webshop vises på produktsiden"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
 msgid "E-commerce"
-msgstr "e-Handel"
+msgstr "Webshop"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -2724,7 +2724,7 @@ msgstr "Gamingskrivebord"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Gap"
-msgstr "Gap"
+msgstr "Afstand"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3051,7 +3051,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Invalid category."
-msgstr ""
+msgstr "Ugyldig kategori."
 
 #. module: website_sale
 #. odoo-python
@@ -3301,13 +3301,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
-msgstr "Liste visning"
+msgstr "Listevisning"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
-msgstr "Indlæser..."
+msgstr "Indlæser ..."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
@@ -3366,7 +3366,7 @@ msgstr "Kortvisning"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
 msgid "Media"
-msgstr "Medie"
+msgstr "Medier"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_medicine
@@ -3580,7 +3580,7 @@ msgstr "Intet produkt defineret"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in this category."
-msgstr "Intet produkt defineret i denne kategori"
+msgstr "Intet produkt defineret i denne kategori."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -4122,7 +4122,7 @@ msgstr "Prisliste"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr "Prisliste regel"
+msgstr "Prislisteregel"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -4333,7 +4333,7 @@ msgstr "Attributlinje for produktskabelon"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Produkt skabelon egenskab værdi"
+msgstr "Attributværdi for produktskabelon"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
@@ -4715,7 +4715,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Reviews"
-msgstr "Bedømmelser"
+msgstr "Anmeldelser"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4870,7 +4870,7 @@ msgstr "Søg i"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "Search {{0}} ({{1}})"
-msgstr ""
+msgstr "Søg {{0}} ({{1}})"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -4994,7 +4994,7 @@ msgstr "Levering"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_delivery_carrier
 msgid "Shipping Methods"
-msgstr "Leveringsmetoder"
+msgstr "Forsendelsesmetoder"
 
 #. module: website_sale
 #. odoo-python
@@ -5017,7 +5017,7 @@ msgstr "Shop – Bekræftet"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Method"
-msgstr "Butik – Vælg betalingsmetode"
+msgstr "Butik – Vælg betalingsform"
 
 #. module: website_sale
 #. odoo-python
@@ -5167,7 +5167,7 @@ msgstr "Sidepanel"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr "Tilmeld"
+msgstr "Tilmeld dig"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -5233,7 +5233,7 @@ msgstr "Vi kan desværre ikke sende din ordre."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sort By"
-msgstr "Sorter efter"
+msgstr "Sortér efter"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5266,7 +5266,7 @@ msgstr "Specificér enhed"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menus_logos
 msgid "Spring collection has arrived!"
-msgstr "Forårskollektionen er ankommet!"
+msgstr "Så er forårskollektionen her!"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_stackable
@@ -5419,7 +5419,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
-msgstr "Tekst Farve"
+msgstr "Tekstfarve"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -5441,8 +5441,7 @@ msgstr "Adgangstokenet er ugyldigt."
 #: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
 msgid ""
 "The building block will remain empty until the user visits a product page."
-msgstr ""
-"Designmodulerne forbliver tomme, indtil en bruger åbner en produktside."
+msgstr "Designmodulerne forbliver tomme, indtil en bruger åbner en produktside."
 
 #. module: website_sale
 #. odoo-python
@@ -5463,15 +5462,14 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
-"Virksomheden bag den hjemmeside, du forsøger at sælge fra (%"
-"(website_company)s), er forskellig fra den, du ønsker at anvende (%"
-"(company)s)"
+"Virksomheden bag den hjemmeside, du forsøger at sælge fra (%(website_company)"
+"s), er forskellig fra den, du ønsker at anvende (%(company)s)"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "The delivery method is not compatible with your delivery address."
-msgstr ""
+msgstr "Leveringsmetoden er ikke kompatibel med leveringsadressen."
 
 #. module: website_sale
 #. odoo-python
@@ -5492,7 +5490,8 @@ msgstr "Hjemmesidens fulde webadresse, der giver adgang til dokumentet."
 #: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr "Hjemmesidens fulde webadresse, der giver adgang til dokumentet."
+msgstr ""
+"Hjemmesidens fulde absolutte webadresse, der giver adgang til dokumentet."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
@@ -5680,7 +5679,7 @@ msgstr "Denne kampagnekode er ikke tilgængelig."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Three-Seat Sofa"
-msgstr "Tre sædet sofa"
+msgstr "Trepersoners sofa"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5860,7 +5859,7 @@ msgstr "Variant"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variant_ribbon_id
 msgid "Variant Ribbon"
-msgstr "Variant bånd"
+msgstr "Variantbånd"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variants_default_code
@@ -5893,7 +5892,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/interactions/website_sale.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
-msgstr "Se mere"
+msgstr "Få mere at vide"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6029,7 +6028,7 @@ msgstr "Hjemmeside"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_absolute_url
 msgid "Website Absolute URL"
-msgstr "Hjemmesidens fulde webadresse"
+msgstr "Hjemmesidens absolutte webadresse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
@@ -6078,7 +6077,7 @@ msgstr "Webshop"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr "Snippet-filter til hjemmeside"
+msgstr "Kodestykkefilter til hjemmeside"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_url
@@ -6369,12 +6368,12 @@ msgstr "Webshopkategorier"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description_ecommerce
 #: model:ir.model.fields,field_description:website_sale.field_product_template__description_ecommerce
 msgid "eCommerce Description"
-msgstr "Webshop beskrivelse"
+msgstr "Beskrivelse af webshop"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter"
-msgstr "Webshop Filter"
+msgstr "Webshopfilter"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
@@ -6394,7 +6393,7 @@ msgstr "Salg på webshop"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
 msgid "eCommerce cart"
-msgstr "eHandel kurv"
+msgstr "Kurv på webshop"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
@@ -6409,7 +6408,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
-msgstr "hvis du viil forene din tidligere kurv med den nuværende."
+msgstr ""
+"hvis du vil flette din tidligere indkøbskurv med den aktuelle indkøbskurv."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -6417,8 +6417,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
-"hvis du vil genoprette din tidligere kurv. Din nuværende kurv vil blive "
-"erstattet med din tidligere kurv."
+"hvis du vil gendanne din tidligere indkøbskurv. Din nuværende indkøbskurv "
+"vil blive erstattet med din tidligere indkøbskurv."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -6509,7 +6509,7 @@ msgstr "Vilkår &amp; betingelser"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item

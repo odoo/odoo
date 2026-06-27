@@ -9,13 +9,14 @@
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-08 21:55+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 19:12+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/da/>\n"
 "Language: da\n"
@@ -23,13 +24,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [Bogført den %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -51,12 +52,12 @@ msgstr "<span>Produkt</span>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr "<span>Antal</span>"
+msgstr "<span>Mængde</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr "<span>SN/LN</span>"
+msgstr "<span>Parti-/serienummer</span>"
 
 #. module: stock_account
 #. odoo-python
@@ -79,7 +80,7 @@ msgstr "Konto"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Kontoplansskabelon"
+msgstr "Kontoplanskabelon"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -90,7 +91,7 @@ msgstr "Bogføringsdato"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
-msgstr "Regnskabsinformation"
+msgstr "Bogføringsinformation"
 
 #. module: stock_account
 #. odoo-javascript
@@ -104,7 +105,7 @@ msgstr ""
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Tilføj yderligere omkostning (transport, told, ...) til værdien af produktet."
+"Tilføj yderligere omkostning (transport, told ...) til værdien af produktet."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__quantity
@@ -114,14 +115,14 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__added_value
 msgid "Added Value"
-msgstr "Tilføjet Værdi"
+msgstr "Tilføjet værdi"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.product_value_action
 #: model:ir.actions.server,name:stock_account.stock_move_action_adjust_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "Justér værdiansættelse"
 
 #. module: stock_account
 #. odoo-python
@@ -142,8 +143,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
 msgstr ""
-"Påvirk landede omkostninger ved modtagelsesoperationer og opdel dem mellem "
-"produkter for at opdatere deres omkostningspris."
+"Påvirk de landede omkostninger ved modtagelsesoperationer, og fordel dem på "
+"produkterne for at opdatere deres kostpris."
 
 #. module: stock_account
 #. odoo-javascript
@@ -164,7 +165,7 @@ msgstr "Omkostningsstedslinje"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr "Analytiske planer"
+msgstr "Analytiske kontoplaner"
 
 #. module: stock_account
 #. odoo-javascript
@@ -190,7 +191,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
-msgstr "Gennemsnitlig kostpris"
+msgstr "Gennemsnitlig omkostning"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
@@ -231,7 +232,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr ""
+msgstr "Cogs-oprindelse"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -271,7 +272,7 @@ msgstr "Konfigurationsindstillinger"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
 msgid "Cost"
-msgstr "Kostpris"
+msgstr "Omkostning"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
@@ -279,7 +280,7 @@ msgstr "Kostpris"
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Omkostningsmetode"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -289,7 +290,7 @@ msgstr "Pris for produktion"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
 msgid "Costing Method"
-msgstr "Kostpris metode"
+msgstr "Omkostningsmetode"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_expense_id
@@ -302,7 +303,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
-msgstr "Lande kode"
+msgstr "Landekode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_uid
@@ -330,7 +331,7 @@ msgstr "Valuta"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value
 msgid "Current Value"
-msgstr "Aktuel værdi"
+msgstr "Nuværende værdi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_description
@@ -360,8 +361,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"Dato hvorpå konto posteringerne vil blive oprettet, i tilfælde af automatisk "
-"inventar vurdering. Hvis efterladt tom, vil inventar datoen anvendes."
+"Dato for oprettelse af kontoposteringer ved automatisk lagervurdering. Hvis "
+"feltet ikke udfyldes, anvendes lagerdatoen."
 
 #. module: stock_account
 #. odoo-javascript
@@ -378,7 +379,7 @@ msgstr "Beskrivelse"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "Vis Lot & Serienumre på faktura"
+msgstr "Vis parti- og serienumre på faktura"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__display_name
@@ -406,12 +407,12 @@ msgstr "Vis Lot & Serienumre på faktura"
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "Vis Serie & lot nummer på faktura"
+msgstr "Vis parti- og serienummer på faktura"
 
 #. module: stock_account
 #. odoo-javascript
@@ -530,7 +531,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Lager lokationer"
+msgstr "Lagerlokationer"
 
 #. module: stock_account
 #. odoo-javascript
@@ -596,7 +597,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
-msgstr "Journalbilag"
+msgstr "Journalpostering"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
@@ -637,17 +638,17 @@ msgstr "Tabskonto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__lot_id
 msgid "Lot"
-msgstr "Lot"
+msgstr "Parti"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Lot/serienummer"
+msgstr "Parti-/serienummer"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Parti- og serienumre angives på fakturaen"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__manual
@@ -721,7 +722,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Pluk type"
+msgstr "Plukningstype"
 
 #. module: stock_account
 #. odoo-python
@@ -769,19 +770,19 @@ msgstr "Produktkategori"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produkt bevægelser (Lagerbevægelse linje)"
+msgstr "Produktbevægelser (Lagerbevægelseslinje)"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Confirmed"
-msgstr ""
+msgstr "Produktmængde bekræftet"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Updated"
-msgstr "Produkt kvantitet opdateret"
+msgstr "Produktmængde opdateret"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_value
@@ -792,12 +793,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr "Varevariant"
+msgstr "Produktvariant"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "WIP-konto for produktion"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
@@ -807,7 +808,7 @@ msgstr "WIP-konto for fællesomkostninger for produktion"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr "Kvantum"
+msgstr "Kvantiteter"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -827,7 +828,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_value
 msgid "Remaining Value"
-msgstr "Tilbageværende værdi"
+msgstr "Resterende værdi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__res_model_name
@@ -837,7 +838,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Returner pluk linje"
+msgstr "Returplukningslinje"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
@@ -851,7 +852,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
 msgid "Standard Price"
-msgstr "Standard pris"
+msgstr "Standardpris"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
@@ -864,14 +865,13 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standard pris: Produkterne er værdiansat ved deres standard pris, defineret "
-"på produktet.\n"
-"          Gennemsnitlig pris (AVCO): Produkterne er værdiansat til den "
-"vægtede gennemsnits pris.\n"
-"           Første ind, første ud (FIFO): Produkterne er værdiansat udfra "
-"antagelsen, at de der først ankommer til virksomheden, vil være de sidste "
-"der forlader den.\n"
-"        "
+"Standard pris: Produkterne værdiansættes til deres standardpris, som er "
+"defineret på produktet.\n"
+"          Gennemsnitlig pris (AVCO): Produkterne værdiansættes til den "
+"vægtede gennemsnitlige pris.\n"
+"           Første ind, første ud (FIFO): Produkterne værdiansættes ud fra "
+"antagelsen om, at de varer, der først ankommer til virksomheden, også er de "
+"første, der forlader den."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -906,26 +906,26 @@ msgstr "Lagerjournal"
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_ids
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__stock_move
 msgid "Stock Move"
-msgstr "Lagerflytning"
+msgstr "Lagerbevægelse"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "Lager Genopfyldning Rapport"
+msgstr "Lagergenopfyldningsrapport"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.model,name:stock_account.model_stock_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr "Lager vurdering"
+msgstr "Værdiansættelse af lageret"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_valuation_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
-msgstr "Konto for lagerværdien"
+msgstr "Konto for lagerværdiansættelse"
 
 #. module: stock_account
 #. odoo-javascript
@@ -947,6 +947,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Teknisk felt til korrekt visning af valuta for den aktuelt valgte "
+"virksomhed, svarende til den samlede værdi af produktets vurderingsniveauer"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -971,6 +973,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Denne handling kan medføre datatab. Vurderingen er den samme for alle parti-/"
+"serienumre. Vil du fortsætte? "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -985,7 +989,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "Samlet resterende værdi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -1009,8 +1013,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale "
 "Order/Purchase Order"
 msgstr ""
-"Udlys en sænkning af kvantiteten på leveret/modtaget i den tilhørende salg-/"
-"købsordre"
+"Udløs en nedjustering af mængden på den tilhørende salgs- eller indkøbsordre "
+"for leveret/modtaget"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1029,7 +1033,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr "Opdater kvantiteter på SO/PO"
+msgstr "Opdatér mængder på salgsordrer/indkøbsordrer"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__anglo_saxon_accounting
@@ -1055,7 +1059,7 @@ msgstr "Værdisætning"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "Værdisætningsvaluta"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
@@ -1081,7 +1085,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Tilgængelig værdi:"
 
 #. module: stock_account
 #. odoo-python
@@ -1097,6 +1101,10 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Partiværdi (beregnes automatisk som gennemsnitlig kostpris).\n"
+"        Anvendes til værdiansættelse af varen, når indkøbsomkostningerne "
+"ikke er kendt (f.eks. ved lageroptælling).\n"
+"        Anvendes til beregning af avancer på salgsordrer."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
@@ -1109,8 +1117,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Når automatiseret inventar vurdering er aktiveret for et produkt, vil denne "
-"konto holde den nuværende værdi af produkterne."
+"Når automatiseret lagerværdiansættelse er aktiveret for et produkt, bruges "
+"denne konto til at holde den aktuelle værdi af produkterne."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1118,9 +1126,9 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Ved udførsel af automatiseret inventar vurdering, er dette "
-"regnskabsjournalen hvori der poster vil blive posteret automatisk når lager "
-"bevægelser behandles."
+"Ved udførelse af automatiseret lagerværdiansættelse er dette den "
+"regnskabsjournal, hvor poster bogføres automatisk, når lagerbevægelser "
+"behandles."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id

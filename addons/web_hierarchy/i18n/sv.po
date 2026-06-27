@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-03-25 08:43+0000\n"
+"PO-Revision-Date: 2026-06-18 08:08+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "web_hierarchy/sv/>\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Vy för åtgärdsfönster"
+msgstr "Åtgärdens fönster-vy"
 
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_base
@@ -35,7 +35,7 @@ msgstr "Bas"
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
 msgid "Cannot change the parent because it will cause a cyclic."
 msgstr ""
-"Kan inte ändra överordnad post eftersom det kommer att orsaka en cyklisk."
+"Kan inte ändra överordnad handling eftersom det kommer att orsaka en cykel."
 
 #. module: web_hierarchy
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__display_name
@@ -47,7 +47,7 @@ msgstr "Visningsnamn"
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
 msgid "Fold"
-msgstr "Vik ihop"
+msgstr "Dölj"
 
 #. module: web_hierarchy
 #: model:ir.model.fields.selection,name:web_hierarchy.selection__ir_actions_act_window_view__view_mode__hierarchy
@@ -59,13 +59,13 @@ msgstr "Hierarki"
 #. odoo-python
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
 msgid "Hierarchy child can only be field or template, got %s"
-msgstr "Hierarkins underordnade kan endast vara fält eller mall, fick %s"
+msgstr "Underordnade i hierarkin kan endast vara fält eller mallar, hittade %s"
 
 #. module: web_hierarchy
 #. odoo-python
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
 msgid "Hierarchy view can contain only one templates tag"
-msgstr "Hierarkivyn kan endast innehålla en malltagg"
+msgstr "Hierarki-vyn kan endast innehålla en tagg för mallar"
 
 #. module: web_hierarchy
 #: model:ir.model.fields,field_description:web_hierarchy.field_ir_actions_act_window_view__id
@@ -80,8 +80,8 @@ msgid ""
 "Impossible to update the parent node of the dragged node because no parent "
 "has been found."
 msgstr ""
-"Omöjligt att uppdatera den dragna nodens överordnade nod eftersom ingen "
-"överordnad har hittats."
+"Det gick inte att uppdatera den flyttade nodens överordnade nod eftersom "
+"ingen överordnad nod hittades."
 
 #. module: web_hierarchy
 #. odoo-python
@@ -90,8 +90,8 @@ msgid ""
 "Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes "
 "must be in (%(valid_attributes)s)"
 msgstr ""
-"Ogiltiga attribut (%(invalid_attributes)s )i hierarkivy. Attribut måste "
-"finnas i  (%(valid_attributes)s)"
+"Hierarki-vy har ogiltiga attribut (%(invalid_attributes)s ). Attribut måste "
+"vara (%(valid_attributes)s)"
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -106,20 +106,20 @@ msgid ""
 "The parent of \"%s\" was successfully updated. Reloading records to account "
 "for other changes."
 msgstr ""
-"Överordnad post till \"%s\" har uppdaterats. Laddar om poster för att ta "
-"hänsyn till andra ändringar."
+"\"%s\" överordnade handling har uppdaterats. Laddar om handlingar för att ta "
+"hänsyn till övriga ändringar."
 
 #. module: web_hierarchy
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
 msgid "The parent record cannot be the record dragged."
-msgstr "Den överordnade posten kan inte vara den post som dragits."
+msgstr "Den överordnade handlingen kan inte vara den handling som flyttats."
 
 #. module: web_hierarchy
 #. odoo-javascript
 #: code:addons/web_hierarchy/static/src/hierarchy_card.xml:0
 msgid "Unfold"
-msgstr "Vik ut"
+msgstr "Öppna"
 
 #. module: web_hierarchy
 #: model:ir.model,name:web_hierarchy.model_ir_ui_view
