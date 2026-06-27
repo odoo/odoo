@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-01-27 08:09+0000\n"
+"PO-Revision-Date: 2026-06-24 07:37+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/sale/da/"
-">\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/sale/da/>"
+"\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -1003,15 +1003,14 @@ msgstr ""
 "('draft', 'sent') else 'order'\"/>\n"
 "        Hej\n"
 "        <br/><br/>\n"
-"        Din proformafaktura for <t t-out=\"doc_name or ''\">tilbuddet</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
-"span>\n"
+"        Din proforma faktura for <t t-out=\"doc_name or ''\">tilbuddet</t> "
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>"
+"\n"
 "        <t t-if=\"object.origin\">\n"
 "            (med nummeret: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        på <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
-"kr.</span> er klar.\n"
+"        på <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">10,00 kr.</span> er klar.\n"
 "        <br/><br/>\n"
 "        Kontakt os venligst, hvis du har spørgsmål.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -1084,7 +1083,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr "<i class=\"fa fa-print me-1\"/>Se detaljer"
+msgstr "<i class=\"fa fa-print me-1\"/>Vis detaljer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1356,7 +1355,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Kontoplansskabelon"
+msgstr "Kontoplanskabelon"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -1505,12 +1504,12 @@ msgstr "Tilladt måleenhed"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Gør det muligt at sende proforma fakturaer til dine kunder"
+msgstr "Gør det muligt at sende proformafakturaer til dine kunder"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Gør det muligt at sende proforma faktura."
+msgstr "Gør det muligt at sende proformafaktura."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
@@ -1610,7 +1609,7 @@ msgstr "Omkostningslinje"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Anvendelsesmuligheder for omkostningsplaner"
+msgstr "Anvendelsesmuligheder for analytiske kontoplaner"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
@@ -1857,7 +1856,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr "Hæv transaktion"
+msgstr "Registrér transaktion"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1977,7 +1976,7 @@ msgstr "Virksomhed"
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Layout af virksomhedsdokument"
+msgstr "Virksomhedens dokumentlayout"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1993,7 +1992,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Beregn leveringsomkostninger, og send med Easypost"
+msgstr "Beregn leveringsomkostninger, og send med EasyPost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2191,8 +2190,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Opret faktura, registrér betalinger, og hold overblik over samtaler med dine "
-"kunder."
+"Opret faktura, registrér betalinger, og bevar overblikket over samtaler med "
+"dine kunder."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -2372,8 +2371,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
-"Standardindstilling for, om salgsprisen, der anvendes på produktet og "
-"faktura med denne virksomhed, inkluderer moms."
+"Standardindstilling for, om salgsprisen på produktet og fakturaen fra denne "
+"virksomhed inkluderer moms."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2431,7 +2430,7 @@ msgstr "Leveringsdato"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Delivery Date:"
-msgstr ""
+msgstr "Leveringsdato:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -2528,7 +2527,7 @@ msgstr "Rabattype"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr "Rabatguide"
+msgstr "Rabatassistent"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -2587,7 +2586,7 @@ msgstr "Vis udkast til fakturaadvarsel"
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -2728,7 +2727,7 @@ msgstr "Duplikeret ordre"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Forsendelse med Easypost"
+msgstr "Forsendelse med EasyPost"
 
 #. module: sale
 #. odoo-javascript
@@ -2842,7 +2841,7 @@ msgstr "Følgere (partnere)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome-ikon, f.eks. fa-opgaver"
+msgstr "FontAwesome-ikon, f.eks. fa-opgaver"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -3985,7 +3984,7 @@ msgstr "PDF-tilbudsgenerator"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "PROFORMA faktura"
+msgstr "PROFORMA-faktura"
 
 #. module: sale
 #. odoo-javascript
@@ -4173,17 +4172,17 @@ msgstr "Udskriv"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Proforma faktura"
+msgstr "Proformafaktura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr "Proforma faktura #"
+msgstr "Proformafaktura #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Proforma fakturaer"
+msgstr "Proformafakturaer"
 
 #. module: sale
 #. odoo-javascript
@@ -4542,7 +4541,7 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
-"Anmod om betaling for at bekræfte ordrer, enten fuldt ud (100%) eller "
+"Anmod om betaling for at bekræfte ordrer, enten fuldt ud (100 %) eller "
 "delvist. Standardindstillingen kan ændres pr. ordre eller skabelon."
 
 #. module: sale
@@ -4612,7 +4611,7 @@ msgstr "Salgsoplysninger"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "Advarselsmeddelelse for salgslinje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4949,7 +4948,7 @@ msgstr "Send"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Send PROFORMA Faktura"
+msgstr "Send PROFORMA-faktura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5042,7 +5041,7 @@ msgstr "Shopee-synkronisering"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
-msgstr "Vis alle poster, hvor næste aktivitetsdato er tidligere end i dag"
+msgstr "Vis alle poster, hvis næste aktivitetsdato er før i dag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5371,8 +5370,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
-"Salgsordren %(order)s til fakturering er blevet pt. låst. Det er ikke muligt "
-"at registrere en udgift på en låst salgsordre."
+"Salgsordren %(order)s til fakturering er blevet p.t. låst. Det er ikke "
+"muligt at registrere en udgift på en låst salgsordre."
 
 #. module: sale
 #. odoo-python
@@ -5542,7 +5541,7 @@ msgstr "Produktet (%(product)s) har uforenelige værdier: %(value_list)s"
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
-msgstr ""
+msgstr "Salgsordren er udløbet."
 
 #. module: sale
 #. odoo-python
@@ -5629,7 +5628,7 @@ msgid ""
 "of email list"
 msgstr ""
 "Dette er kilden til linket, f.eks. søgemaskine, andet domæne eller navn på "
-"mailingliste"
+"adresseliste"
 
 #. module: sale
 #. odoo-javascript
@@ -5938,7 +5937,7 @@ msgstr ""
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
-"Anvendes af sælgere, når de sender tilbud eller proformafakturaer til "
+"Anvendes af sælgere, når de sender tilbud eller proforma fakturaer til "
 "potentielle kunder"
 
 #. module: sale
@@ -5978,7 +5977,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Værdier angivet her er specifikke for virksomheden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6319,8 +6318,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Ordre under behandling' or 'Ordre' }} (Ref {{ object.name "
-"or 'n/a' }})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -6329,7 +6328,7 @@ msgid ""
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"'Proformafaktura' or 'Ordre'}} (Ref {{ object.name or 'n/a' }})"
+"'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -6338,7 +6337,7 @@ msgid ""
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"'Tilbud' or 'Ordre' }} (Ref {{ object.name or 'n/a' }})"
+"'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

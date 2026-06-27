@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2026-04-24 12:03+0000\n"
+"PO-Revision-Date: 2026-06-19 14:07+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/auth_ldap/"
 "de/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -43,7 +43,7 @@ msgstr ""
 "    Filter für die Suche nach Benutzerkonten in der LDAP-Datenbank. Es ist "
 "ein beliebiger LDAP-Filter in Zeichenkettendarstellung. Jeder `%s`-"
 "Platzhalter wird durch die vom Benutzer angegebene Anmeldung (Kennung) "
-"ersetzt, der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
+"ersetzt. Der Filter sollte mindestens einen solchen Platzhalter enthalten.\n"
 "\n"
 "Der Filter muss genau ein (1) Ergebnis liefern, andernfalls wird die "
 "Anmeldung als ungültig betrachtet.\n"
@@ -61,7 +61,9 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Erstelle automatisch Benutzerkonten für neue Benutzer, die sich mit LDAP anmelden"
+msgstr ""
+"Erstellen Sie automatisch Benutzerkonten für neue Benutzer, die sich über "
+"LDAP anmelden"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -86,7 +88,7 @@ msgstr "Konfigurationseinstellungen"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr "Benutzer/in anlegen"
+msgstr "Benutzer erstellen"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -125,47 +127,47 @@ msgstr "LDAP-Konfiguration"
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr "LDAP Parameter"
+msgstr "LDAP-Parameter"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr "LDAP Server"
+msgstr "LDAP-Server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP Server"
+msgstr "LDAP-Serveradresse"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP Server Port"
+msgstr "LDAP-Server-Port"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "LDAP-Basis"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP binddn"
+msgstr "binddn für LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr "LDAP Filter"
+msgstr "LDAP-Filter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr "LDAP Passwort"
+msgstr "LDAP-Passwort"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
@@ -180,12 +182,14 @@ msgstr "Zuletzt aktualisiert am"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Login Information"
+msgstr "Anmelde-Informationen"
 
 #. module: auth_ldap
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "Kein lokaler Benutzer für die LDAP-Anmeldung gefunden und nicht zum Erstellen eines Benutzers konfiguriert"
+msgstr ""
+"Für die LDAP-Anmeldung wurde kein lokaler Benutzer gefunden und es kann "
+"keiner erstellt werden"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -195,7 +199,10 @@ msgstr "Prozessparameter"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Anforderung einer sicheren TLS/SSL Verschlüsselung für die Verbindung zum LDAP Server. STARTTLS muss aktiviert sein, sonst werden Authentifizierungsversuche fehlschlagen."
+msgstr ""
+"Fragen Sie nach einer sicheren TLS/SSL-Verschlüsselung für die Verbindung "
+"zum LDAP-Server. STARTTLS muss aktiviert sein, sonst werden "
+"Authentifizierungsversuche fehlschlagen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -220,12 +227,16 @@ msgstr "Benutzervorlage"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Das Passwort des Benutzers, der die LDAP Anfragen durchführt"
+msgstr ""
+"Das Passwort des Benutzerkontos auf dem LDAP-Server, das für die Abfrage des "
+"Verzeichnisses verwendet wird."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Des Benutzerkonto für die Identifizierung auf dem LDAP Server. Leer für anonymen Zugang."
+msgstr ""
+"Das Benutzerkonto zur Identifizierung auf dem LDAP-Server. Leer für anonymen "
+"Zugriff."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-06-10 16:27+0000\n"
+"PO-Revision-Date: 2026-06-18 12:52+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "base_address_extended/sv/>\n"
@@ -48,8 +48,8 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
-"Markera den här rutan för att säkerställa att varje adress som skapas i det "
-"landet har en \"Stad\" som är vald i listan över landets städer."
+"Kryssa i den här rutan för att säkerställa att varje adress som skapas i "
+"landet har en \"Stad\" som motsvarar listan över landets officiella städer."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
@@ -114,11 +114,11 @@ msgid ""
 "country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
-"Visa och hantera listan över alla städer som kan tilldelas till\n"
-"                dina partnerposter. Notera att ett alternativ kan ställas in "
-"för varje land separat\n"
-"                för att tvinga alla adresser i landet att ha en stad i denna "
-"lista."
+"Visa och hantera listan över alla officiella städer som kan anges\n"
+"                i partners handlingar. Obs: ett alternativ kan ställas in "
+"för varje enskilt land\n"
+"                så att alla adresser i det landet kräver en angiven stad "
+"från listan."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -129,14 +129,14 @@ msgstr "Dörr"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Door #"
-msgstr "Dörrnummer"
+msgstr "Lägenhetsnummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr "Upprätthålla städer"
+msgstr "Verkställ städer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -147,7 +147,7 @@ msgstr "Hus"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "House #"
-msgstr "Husnummer"
+msgstr "Gatunummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
@@ -174,7 +174,7 @@ msgstr "Namn"
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
 msgid "Search City"
-msgstr "Sök stad"
+msgstr "Sök efter stad"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
