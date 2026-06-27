@@ -7,21 +7,22 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-16 15:02+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
+"PO-Revision-Date: 2026-06-27 21:22+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-1/"
 "auth_password_policy/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
@@ -32,7 +33,7 @@ msgstr "Konfigurationsindstillinger"
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
@@ -49,15 +50,15 @@ msgstr "Medium"
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr "Mindste længde på kodeord"
+msgstr "Mindste længde på adgangskode"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
-"Mindste antal tegn, som kodeord skal indeholde (sættes til 0 for at slå "
-"kontrollen fra)."
+"Minimum antal tegn, som adgangskoden skal indeholde. Sæt til 0 for at "
+"deaktivere kontrollen."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -74,12 +75,16 @@ msgid ""
 "Hint: to increase password strength, increase length, use multiple words, "
 "and use non-letter characters."
 msgstr ""
+"Påkrævet: %s\n"
+"\n"
+"Bemærk: For at øge adgangskodens styrke anbefales det at øge længden, bruge "
+"flere ord samt inkludere tal og specialtegn."
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 msgid "Strong"
-msgstr ""
+msgstr "Stærk"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -90,7 +95,7 @@ msgstr "Bruger"
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_meter.js:0
 msgid "Weak"
-msgstr ""
+msgstr "Svag"
 
 #. module: auth_password_policy
 #. odoo-python
@@ -99,24 +104,26 @@ msgid ""
 "Your password must contain at least %(minimal_length)d characters and only "
 "has %(current_count)d."
 msgstr ""
+"Din adgangskode skal indeholde mindst %(minimal_length)d tegn, men "
+"indeholder kun %(current_count)d."
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s character classes"
-msgstr ""
+msgstr "mindst %s tegntyper"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s characters"
-msgstr ""
+msgstr "mindst %s tegn"
 
 #. module: auth_password_policy
 #. odoo-javascript
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s words"
-msgstr ""
+msgstr "mindst %s ord"
 
 #. module: auth_password_policy
 #. odoo-javascript
