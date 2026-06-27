@@ -11,9 +11,13 @@ const hrEmployeePatch = {
     setup() {
         super.setup();
         this.leave_date_to = fields.Date();
+        this.on_public_leave = fields.Attr(false);
     },
     /** @returns {string} */
     get outOfOfficeDateEndText() {
+        if (this.on_public_leave) {
+            return _t("On Public Holiday");
+        }
         if (!this.leave_date_to) {
             return "";
         }

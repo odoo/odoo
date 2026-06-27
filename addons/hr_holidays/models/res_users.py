@@ -10,6 +10,7 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     leave_date_to = fields.Date(**related_employee_field('leave_date_to'))
+    on_public_leave = fields.Boolean(**related_employee_field('on_public_leave'))
 
     def _clean_leave_responsible_users(self):
         # self = old bunch of leave responsibles
@@ -35,15 +36,20 @@ class ResUsers(models.Model):
         users.sudo()._clean_leave_responsible_users()
         return users
 
-    @api.depends('leave_date_to')
+    @api.depends("leave_date_to", "on_public_leave")
     @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
         super()._compute_display_name()
         for user in self:
-            if user.env.context.get("formatted_display_name") and user.leave_date_to:
+            if not user.env.context.get("formatted_display_name"):
+                continue
+            base_name = user.display_name or user.name
+            if user.on_public_leave:
+                user.display_name = ("%s \t ✈ --%s--" % (base_name, _("On Public Holiday"))).strip()
+            elif user.leave_date_to:
                 name = "%s \t ✈ --%s %s--" % (user.display_name or user.name, _("Back on"), format_date(self.env, user.leave_date_to, self.env.user.lang, "medium"))
                 user.display_name = name.strip()
 
     def _store_main_user_fields(self, res: Store.FieldList):
         super()._store_main_user_fields(res)
-        res.many("all_employee_ids", ["leave_date_to"], internal=True)
+        res.many("all_employee_ids", ["leave_date_to", "on_public_leave"], internal=True)

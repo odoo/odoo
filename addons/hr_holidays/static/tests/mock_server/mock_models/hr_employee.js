@@ -5,6 +5,7 @@ export class HrEmployee extends hrModels.HrEmployee {
     _name = "hr.employee";
 
     leave_date_to = fields.Date();
+    on_public_leave = fields.Boolean();
 
     _records = [
         {
@@ -23,10 +24,12 @@ export class HrEmployee extends hrModels.HrEmployee {
     _store_avatar_card_fields(res) {
         super._store_avatar_card_fields(res);
         res.attr("leave_date_to");
+        res.attr("on_public_leave");
     }
 
     _store_im_status_fields(res) {
         super._store_im_status_fields(res);
         res.attr("leave_date_to");
+        res.attr("on_public_leave");
     }
 }

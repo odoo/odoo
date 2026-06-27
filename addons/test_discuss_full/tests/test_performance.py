@@ -425,6 +425,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "id": self.employees[0].id,
                     "leave_date_to": False,
+                    "on_public_leave": False,
                     "user_id": self.users[0].id,
                     "work_location_type": False,
                 },
@@ -2094,6 +2095,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {
             "id": employee.id,
             "leave_date_to": False,
+            "on_public_leave": False,
             "user_id": employee.user_id.id,
             "work_location_type": False,
         }
