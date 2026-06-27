@@ -9,13 +9,14 @@
 # Martin Trigaux, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-04-04 08:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 16:52+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
 "hr_timesheet/da/>\n"
 "Language: da\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -63,7 +64,7 @@ msgstr "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Timesheets"
-msgstr "%(name)ss Timesedler"
+msgstr "Tidsregistreringer for %(name)s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -105,7 +106,7 @@ msgstr "2 timer"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr "<b class=\"tip_title\">Tip: Registrér din timesedler hurtigere</b>"
+msgstr "<b class=\"tip_title\">Tip: Hurtigere tidsregistrering</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -113,18 +114,18 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
 "title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
-"title=\"Date\"/>"
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Dato\" "
+"title=\"Dato\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr "<i class=\"fa fa-print\"/> Vis Detaljer"
+msgstr "<i class=\"fa fa-print\"/> Vis detaljer"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Timesedler</span>"
+msgstr "<span class=\"o_stat_text\">Tidsregistreringer</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -233,7 +234,7 @@ msgstr "Alle"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Alle timesedler"
+msgstr "Alle tidsregistreringer"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allocated_hours
@@ -308,20 +309,19 @@ msgid ""
 "<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
-"Analyser de projekter og opgaver, som dine medarbejdere bruger deres tid på."
-"<br>\n"
-"                Vurder, hvilken del der er fakturerbar, og hvilke "
-"omkostninger den repræsenterer."
+"Analysér de projekter og opgaver, som dine medarbejdere bruger tid på.<br>\n"
+"                Vurdér, hvilken del der er fakturerbar, og hvilke "
+"omkostninger den medfører."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
 msgid "Approver Reminder"
-msgstr "Godkender påmindelse"
+msgstr "Påmindelse til godkendelsesansvarlige"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr "Arkiver Medarbejder"
+msgstr "Arkivér medarbejdere"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
@@ -336,7 +336,7 @@ msgstr "Audrey Peterson"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Average of Progress"
-msgstr "Gennemsnit af fremskridt"
+msgstr "Gennemsnitlig fremskridt"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
@@ -361,7 +361,7 @@ msgstr "Ring til kunden og drøft projektet"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr "Samarbejdende i delt projekt"
+msgstr "Medarbejdere i fælles projekt"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -376,7 +376,7 @@ msgstr "Virksomhed"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
+msgstr "Konfigurationsindstillinger"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -423,7 +423,7 @@ msgstr "Dage"
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__days
 msgid "Days / Half-Days"
-msgstr "Dage / halve dage"
+msgstr "Dage/halve dage"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -437,14 +437,15 @@ msgstr "Dage Brugt"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr "Standard projekt værdi for timeseddel genereret fra fri tids type."
+msgstr "Standardprojektværdi for tidsregistrering genereret ud fra fraværstype."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
 msgid ""
 "Define an 'hourly cost' on the employee to track the cost of their time."
 msgstr ""
-"Angiv en 'timekostpris' på medarbejderen og se kostprisen på deres tid."
+"Angiv medarbejderens 'timekostpris', og se kostprisen for deres registrerede "
+"tid."
 
 #. module: hr_timesheet
 #: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
@@ -488,7 +489,7 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__display_timesheet_stats
@@ -523,12 +524,12 @@ msgstr "Medarbejder"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
 msgid "Employee Delete Wizard"
-msgstr "Medarbejder Slet Guide"
+msgstr "Assistent til sletning af medarbejdere"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
 msgid "Employee Reminder"
-msgstr "Medarbejder påmindelse"
+msgstr "Påmindelse til medarbejdere"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -547,7 +548,7 @@ msgstr "Medarbejdere"
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 #, python-format
 msgid "Employees' Timesheets"
-msgstr "Medarbejdernes timesedler"
+msgstr "Medarbejdernes tidsregistreringer"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
@@ -558,7 +559,7 @@ msgstr "Indkod Måleenhed i Dage"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
 msgid "Encoding Method"
-msgstr "Registrerings metode"
+msgstr "Kodningsmetode"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
@@ -570,18 +571,18 @@ msgstr "Indkodnings måleenhed"
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Extra Time"
-msgstr "Ekstra tid"
+msgstr "Overtid"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
-"Generer timesedler for validerede afspadseringsanmodninger og helligdage"
+"Generér tidsregistrering for validerede fraværsanmodninger og helligdage"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-routing"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_active_employee
@@ -605,7 +606,7 @@ msgstr "Timer"
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
-msgstr "Timer / Minutter"
+msgstr "Timer/minutter"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
@@ -736,12 +737,12 @@ msgstr "Menu"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
-msgstr "Min afdelings opdateringer"
+msgstr "Mine afdelingsopdateringer"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Team's Updates"
-msgstr "Mit teams opdateringer"
+msgstr "Mine teamopdateringer"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
@@ -749,7 +750,7 @@ msgstr "Mit teams opdateringer"
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Timesheets"
-msgstr "Mine timesedler"
+msgstr "Mine tidsregistreringer"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -792,7 +793,7 @@ msgstr "OK"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr "Overtid"
+msgstr "Overarbejde"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -804,7 +805,7 @@ msgstr "Overordnet opgave"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "Kontakt"
+msgstr "Partner"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -814,7 +815,7 @@ msgstr "Slet venligst først alle deres tidsregistreringer."
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Vareenhed"
+msgstr "Produktets måleenhed"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -823,7 +824,7 @@ msgstr "Vareenhed"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 #, python-format
 msgid "Progress"
-msgstr "Fremdrift"
+msgstr "Fremskridt"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -844,12 +845,12 @@ msgstr "Projekt"
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
-msgstr "Projekt tidsenhed"
+msgstr "Projekttidsenhed"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_update
 msgid "Project Update"
-msgstr "Projekt update"
+msgstr "Projektopdatering"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
@@ -859,7 +860,7 @@ msgstr "Projekt i overtid"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "Projekts Timesedler"
+msgstr "Projektets tidsregistreringer"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
@@ -877,8 +878,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"Opret dine timesedler på ingen tid ved at trykke på Shift + den tilsvarende "
-"hotkey for at tilføje 15 min. til dine projekter."
+"Opret dine tidsregistreringer hurtigt ved at trykke på Shift + den "
+"tilsvarende genvejstast for at føje 15 min. til dine projekter."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -923,7 +924,7 @@ msgstr "Forskning og udvikling/Nyt portalsystem"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
-msgstr "Gennemgå alle timesedler relateret til dine projekter"
+msgstr "Gennemgå alle tidsregistreringer knyttet til dine projekter"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -937,33 +938,33 @@ msgstr "Søg i alle"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr "Søg i Beskrivelse"
+msgstr "Søg i beskrivelse"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr "Søg i Medarbejder"
+msgstr "Søg i medarbejder"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "Søg i Projekt"
+msgstr "Søg i projekt"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr "Søg i Opgave"
+msgstr "Søg i opgave"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "See Timesheets"
-msgstr "Se timesedler"
+msgstr "Se tidsregistreringer"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -971,7 +972,7 @@ msgstr "Se timesedler"
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr "Se timeseddel poster"
+msgstr "Se tidsregistreringsposteringer"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -979,8 +980,8 @@ msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
 msgstr ""
-"Send en periodisk e-mail-påmindelse til timeseddels godkendere, der stadig "
-"har timesedler at validere"
+"Send regelmæssige mailpåmindelser til godkendelsesansvarlige om "
+"tidsregistreringer, der endnu ikke er godkendt"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -988,13 +989,13 @@ msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
 msgstr ""
-"Send en periodisk e-mail-påmindelse til timeseddels brugere, der stadig har "
-"timesedler at indkode"
+"Send en periodisk mailpåmindelse til brugere, der endnu ikke har indtastet "
+"deres timesedler"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
 msgid "Settings"
-msgstr "Opsætning"
+msgstr "Indstillinger"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1023,24 +1024,24 @@ msgstr "Opgave"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr "Opgaves Timesedler"
+msgstr "Opgavens tidsregistreringer"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr "Opgave analyse"
+msgstr "Opgaveanalyse"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 #, python-format
 msgid "The Internal Project of a company should be in that company."
-msgstr "En virksomheds interne projekt skal være i den virksomhed."
+msgstr "Et internt projekt skal høre til den pågældende virksomhed."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "Der er ikke nogen timesedler."
+msgstr "Der er ikke nogen tidsregistreringer."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1050,8 +1051,8 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing "
 "these projects, you have to remove these timesheet entries."
 msgstr ""
-"Disse projekter har nogle timeseddel posteringer der henviser til dem. Før "
-"fjernelse af disse projekter, skal du fjerne disse timeseddel posteringer."
+"Disse projekter har tidsregistreringer knyttet til dem. Fjern først "
+"tidsregistreringerne, før projekterne kan slettes."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1093,8 +1094,8 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this "
 "project, you have to remove these timesheet entries."
 msgstr ""
-"Dette projekt har nogle timeseddel posteringer der henviser til den. Før du "
-"fjerner dette projekt, skal du fjerne disse timeseddel posteringer."
+"Dette projekt har tidsregistreringer knyttet til det. Fjern først "
+"tidsregistreringerne, før projektet kan slettes."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1103,7 +1104,7 @@ msgstr ""
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
 msgstr ""
-"Denne opgave kan ikke være privat, fordi der er nogle timesedler knyttet til "
+"Opgaven kan ikke gøres privat, da der findes tidsregistreringer knyttet til "
 "den."
 
 #. module: hr_timesheet
@@ -1132,9 +1133,9 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Dette sætter måleenheden, der anvendes i projekter og opgaver.\n"
-"Hvis du bruger timesedler knyttet til projekter, skal du huske at angive den "
-"rigtige måleenhed på dine medarbejdere."
+"Her angives måleenheden, som bruges i projekter og opgaver. Hvis du anvender "
+"tidsregistreringer knyttet til projekter, skal du sikre, at medarbejderne "
+"har den korrekte måleenhed."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1146,25 +1147,24 @@ msgstr "Dette år"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr "Timeregistrering"
+msgstr "Tidskodning"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Off"
-msgstr "Fri"
+msgstr "Fravær"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr ""
-"Tid brugt på under-opgaver (og deres egne under-opgaver) for denne opgave."
+msgstr "Tid brugt på delopgaver (og deres egne delopgaver) for denne opgave."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
 msgstr ""
-"Tid brugt på denne opgave og dens underopgaver (og deres egne underopgaver)."
+"Tid brugt på denne opgave og dens delopgaver (og deres egne delopgaver)."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_report_project_task_user__total_hours_spent
@@ -1181,14 +1181,14 @@ msgstr "Tidsenhed anvendt ved registrering på din timesedler"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Tidsskema"
+msgstr "Tidsregistrering"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr "Tidsskema aktiviteter"
+msgstr "Tidsregistreringsaktiviteter"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_employee
@@ -1203,7 +1203,7 @@ msgstr "Tidsskema aktiviteter"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Timeseddel Omkostninger"
+msgstr "Omkostninger baseret på tidsregistreringer"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1213,7 +1213,7 @@ msgstr "Timeseddel registrerings Uom"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Timeseddel registrerings enhed"
+msgstr "Enhed for tidsregistrering"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_percentage
@@ -1223,12 +1223,12 @@ msgstr "Timeseddel procent"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Timesheet Report"
-msgstr "Timeseddelrapport"
+msgstr "Tidsregistreringsrapport"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
 msgid "Timesheet Time"
-msgstr "Timeseddel Tid"
+msgstr "Registreret tid"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1267,57 +1267,57 @@ msgstr "Timeseddel Tid"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
-msgstr "Timesedler"
+msgstr "Tidsregistreringer"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets - %s"
-msgstr "Timesedler - %s"
+msgstr "Tidsregistreringer – %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Timesheets 80%"
-msgstr "Timesedler 80%"
+msgstr "Tidsregistreringer 80 %"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
 msgid "Timesheets >100%"
-msgstr "Timesedler >100%"
+msgstr "Tidsregistreringer >100 %"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr "Timeseddelsanalyse"
+msgstr "Tidsregistreringsanalyse"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr "Timeseddelsanalyse rapport"
+msgstr "Tidsregistreringsanalyserapport"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheets Control"
-msgstr "Timeseddelkontrol"
+msgstr "Kontrol af tidsregistrering"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr "Timesedler pr. medarbejder"
+msgstr "Tidsregistreringer pr. medarbejder"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr "Timesedler pr. projekt"
+msgstr "Tidsregistreringer pr. projekt"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr "Timesedler pr. opgave"
+msgstr "Tidsregistreringer pr. opgave"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
@@ -1329,7 +1329,7 @@ msgstr "Timesedler kan registreres på denne opgave."
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets cannot be created on a private task."
-msgstr "Timesedler kan ikke oprettes på en privat opgave."
+msgstr "Tidsregistreringer kan ikke oprettes på en privat opgave."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1349,19 +1349,20 @@ msgstr ""
 msgid ""
 "Timesheets must be created with an active employee in the selected companies."
 msgstr ""
-"Timesedler skal oprettes med en aktiv medarbejder i de valgte virksomheder."
+"Tidsregistreringer skal oprettes med en aktiv medarbejder i de valgte "
+"virksomheder."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 #, python-format
 msgid "Timesheets of %(name)s"
-msgstr "Timesedler for %(name)s"
+msgstr "Tidsregistreringer for %(name)s"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr "Tip: registrér dine timesedler hurtigere"
+msgstr "Tip: hurtigere tidsregistrering"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1380,7 +1381,7 @@ msgstr "I alt"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Allocated Time"
-msgstr "Samlet Tildelt tid"
+msgstr "Tildelt tid i alt"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1418,7 +1419,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "Total:"
-msgstr "Total:"
+msgstr "I alt:"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1428,7 +1429,7 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your "
 "customers."
 msgstr ""
-"Spor dine arbejdstimer per projekt hver dag og fakturer dine kunder for din "
+"Spor dine arbejdstimer pr. projekt hver dag, og fakturér dine kunder for din "
 "tid."
 
 #. module: hr_timesheet
@@ -1436,7 +1437,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/res_company.py:0
 #, python-format
 msgid "Training"
-msgstr "Træning"
+msgstr "Oplæring"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__uom_id
@@ -1475,12 +1476,12 @@ msgstr "Bruger"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr "Bruger: alle timesedler"
+msgstr "Bruger: alle tidsregistreringer"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr "Bruger: kun egne timesedler"
+msgstr "Bruger: kun egne tidsregistreringer"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -1497,14 +1498,14 @@ msgstr "Widget"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr "Du kan ikke tilgå timesedler der ikke er dine egne."
+msgstr "Du kan ikke tilgå tidsregistreringer, der ikke er dine egne."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 #, python-format
 msgid "You cannot delete employees who have timesheets."
-msgstr "Du kan ikke slette medarbejdere, der har timesedler."
+msgstr "Du kan ikke slette medarbejdere, der har tidsregistreringer."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -1575,7 +1576,7 @@ msgid ""
 "span>)"
 msgstr ""
 "på\n"
-"                            <span class=\"fw-bold text-dark\"> Underopgaver</"
+"                            <span class=\"fw-bold text-dark\"> delopgaver</"
 "span>)"
 
 #. module: hr_timesheet
@@ -1585,8 +1586,7 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "på\n"
-"                        <span class=\"fw-bold text-dark\"> Underopgaver</"
-"span>)"
+"                        <span class=\"fw-bold text-dark\"> delopgaver</span>)"
 
 #~ msgid "2021-09-01"
 #~ msgstr "2021-09-01"

@@ -12,13 +12,14 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Kira Petersen, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-11-22 17:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 17:31+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
 "sale_timesheet/da/>\n"
 "Language: da\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -71,12 +72,13 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Registrer timesedler\n"
+"                    Tidsregistrering\n"
 "                </p><p>\n"
-"                    Du kan registrere og følge dine arbejdstimer per projekt "
-"hver\n"
-"                    dag. Al tid brugt på et projekt vil blive til en "
-"omkostning, og kan genfaktureres til kunder, om nødvendigt.\n"
+"                    Følg og registrér dagligt dine arbejdstimer pr. "
+"projekt.\n"
+"                    Al tid, der bruges på et projekt, registreres som en "
+"omkostning og kan om nødvendigt viderefaktureres til\n"
+"                    kunder.\n"
 "                </p>\n"
 "            "
 
@@ -138,12 +140,12 @@ msgstr "<span class=\"o_stat_text\">Registreret</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr "<span class=\"o_stat_text\">Sales Ordre</span>"
+msgstr "<span class=\"o_stat_text\">Salgsordre</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Amount Due:</strong>"
-msgstr "<strong>Skyldige beløb:</strong>"
+msgstr "<strong>Forfaldent beløb:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -182,14 +184,14 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Ud fra produkt konfiguration kan leveret mængde udregnes automatisk via "
-"mekanismen :\n"
-" - Manuel: Kvantiteten angives manuelt på linjen\n"
-" - Analytisk fra udgifter: Kvantiteten er summen af kvantiteten fra posteret "
-"udgifter\n"
-" - Timeseddel: Kvantiteten er summen af timer optegnet for opgaver relateret "
-"til denne salgslinje\n"
-" - Lager bevægelser: Kvantiteten kommer fra verificerede pluk\n"
+"Afhængigt af produktets konfiguration kan den leverede mængde beregnes "
+"automatisk på følgende måder:\n"
+" - Manuel: Mængden indtastes direkte på linjen.\n"
+" - Analytisk ud fra udgifter: Mængden beregnes som summen af de bogførte "
+"udgifter.\n"
+" - Tidsregistrering: Mængden svarer til det samlede antal timer registreret "
+"på opgaver, der er knyttet til salgsordrelinjen.\n"
+" - Lagerbevægelser: Mængden hentes fra bekræftede plukninger.\n"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
@@ -219,13 +221,13 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
-"En medarbejder kan ikke vælges mere end én gang i kortlægningen. Vær venlig "
-"at fjerne duplikat(er) og forsøg igen."
+"En medarbejder kan ikke vælges mere end én gang i allokeringen. Fjern "
+"venligst dublet(ter), og prøv igen."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytisk linje"
+msgstr "Analyselinje"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
@@ -290,14 +292,14 @@ msgstr "Faktureret til en fast pris"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_milestones
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Milestones"
-msgstr "Faktureret fra milepæle"
+msgstr "Faktureret efter milepæle"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr "Faktureret fra timesedler"
+msgstr "Faktureret efter tidsregistreringer"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -313,7 +315,7 @@ msgstr "Faktureringstype"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr "Per Faktureringstype"
+msgstr "Pr. faktureringstype"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
@@ -339,17 +341,17 @@ msgstr "Virksomhed"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
+msgstr "Konfigurationsindstillinger"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your services"
-msgstr "Konfigurer dine tjenester"
+msgstr "Konfigurér dine tjenester"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost
 msgid "Cost"
-msgstr "Kostpris"
+msgstr "Omkostning"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost_currency_id
@@ -429,12 +431,12 @@ msgstr "Kunde"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
-msgstr "Kundepleje (forudbetalte timer)"
+msgstr "Kundeservice (forudbetalte timer)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "Customer Ratings"
-msgstr "Kundebedømmelse "
+msgstr "Kundebedømmelse"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -468,12 +470,12 @@ msgstr "Kassér"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "Draft Invoice"
-msgstr "Proforma faktura"
+msgstr "Fakturaudkast"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -485,7 +487,7 @@ msgstr "Medarbejder"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr "Medarbejder rate"
+msgstr "Medarbejderens timeløn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -495,7 +497,7 @@ msgstr "Medarbejder der har timesedler på projektet."
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
 msgid "End Date"
-msgstr "Slut dato"
+msgstr "Slutdato"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__existing_employee_ids
@@ -505,7 +507,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Fixed price services"
-msgstr "Ydelser med fast pris"
+msgstr "Ydelser til fast pris"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
@@ -520,12 +522,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr "Har Flere Sol"
+msgstr "Har flere salgsordrelinjer"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
 msgid "Hourly Cost"
-msgstr "Timepris"
+msgstr "Timeløn"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -609,7 +611,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr "Faktura oprettet fra timesedlen"
+msgstr "Faktura oprettet ud fra tidsregistrering"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -641,7 +643,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr "Er projekt kort tomt"
+msgstr "Er projekttilknytningen tom"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
@@ -656,12 +658,12 @@ msgstr "Journalbilag"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
 msgid "Journal Item"
-msgstr "Journalpost"
+msgstr "Posteringslinje"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr "Junior Arkitekt (Faktura på timesedler)"
+msgstr "Juniorarkitekt (fakturering baseret på tidsregistrering)"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
@@ -700,12 +702,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
-"Angiv manuelt mængder på ordre: Faktura baseret på den manuelt angivne "
-"mængde, uden oprettelsen af en analytisk konto.\n"
-"Timesedler på kontrakt: Faktura baseret på de sporede timer på den relateret "
-"timeseddel.\n"
-"Opret en opgave og spor timer: Opret en opgave på salgsordre godkendelsen og "
-"følg arbejdstimer."
+"Angiv mængder manuelt på ordren: Faktureringen sker ud fra de manuelt "
+"angivne mængder, uden oprettelse af et omkostningssted.\n"
+"Tidsregistreringer på kontrakt: Faktureringen baseres på de timer, der er "
+"registreret i den tilknyttede tidsregistrering.\n"
+"Opret en opgave og registrér timer: Når salgsordren godkendes, oprettes en "
+"opgave, hvor arbejdstimer kan registreres og følges."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
@@ -727,7 +729,7 @@ msgstr "Metode til opdatering af leveret antal"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
-msgstr "Milepæle tjenester"
+msgstr "Milepælsydelser"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -813,10 +815,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
-"Kun timesedler der endnu ikke er faktureret (og valideret, hvis relevant) "
-"fra denne periode vil blive faktureret. Hvis perioden ikke er indikeret, vil "
-"alle timesedler der endnu ikke er faktureret (og valideret, hvis relevant) "
-"blive faktureret uden forskel."
+"Kun tidsregistreringer fra den valgte periode, som endnu ikke er faktureret "
+"(og valideret, hvis relevant), vil blive faktureret. Hvis ingen periode er "
+"angivet, faktureres alle endnu ikke fakturerede (og validerede, hvis "
+"relevant) tidsregistreringer uden undtagelse."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -828,13 +830,13 @@ msgstr "Operation ikke understøttet"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
 msgid "Order Reference"
-msgstr "Ordre reference"
+msgstr "Ordrereference"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
 msgid "Other costs"
-msgstr "Andre omkostninger"
+msgstr "Øvrige omkostninger"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
@@ -866,7 +868,7 @@ msgstr "Produkt"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product Variant"
-msgstr "Varevariant"
+msgstr "Produktvariant"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -891,7 +893,7 @@ msgstr "Projekt"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr "Projekt salgslinje, medarbejder kortlægning"
+msgstr "Projektsalgslinje, medarbejderkortlægning"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -902,7 +904,7 @@ msgstr "Projektskabelon"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
 msgid "Project Update"
-msgstr "Projekt update"
+msgstr "Projektopdatering"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
@@ -912,7 +914,7 @@ msgstr "Projekt vi opretter en salgsordre til"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr "Projekt sats"
+msgstr "Projektsats"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
@@ -946,7 +948,7 @@ msgstr "Tilbageværende dage på SO:"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
 msgid "Remaining Hours Available"
-msgstr "Tilbageværende timer tilgængelige"
+msgstr "Resterende tilgængelige timer"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
@@ -995,7 +997,7 @@ msgstr "Salgslinje/medarbejder kort"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Salgsfaktura på forudbetaling"
+msgstr "Salgsfaktura for forudbetaling"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1024,7 +1026,7 @@ msgstr "Salgsordre"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
 msgid "Sales Order Item"
-msgstr "Salgsordre Emne"
+msgstr "Salgsordrelinje"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1039,7 +1041,7 @@ msgstr "Salgsordrelinje"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
-msgstr "Salgsordre"
+msgstr "Salgsordrer"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1076,8 +1078,8 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"Salgsordrer, som den registrerede tid tilknyttes, så den kan faktureres til "
-"din kunde. Fjern salgsordren for at forhindre, at tidsregistreringen kan "
+"Salgsordrelinje, som den registrerede tid tilknyttes, så den kan faktureres "
+"til din kunde. Fjern salgsordren for at forhindre, at tidsregistreringen kan "
 "faktureres."
 
 #. module: sale_timesheet
@@ -1124,7 +1126,7 @@ msgstr "Sælg servicer og fakturér brugt tid"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr "Senior Arkitekt (Faktura på timesedler)"
+msgstr "Seniorarkitekt (fakturering baseret på timesedler)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -1179,7 +1181,7 @@ msgstr "Solgt"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
 msgid "Start Date"
-msgstr "Start dato"
+msgstr "Startdato"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1204,7 +1206,7 @@ msgstr "Opgaver"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr "Opgave analyse"
+msgstr "Opgaveanalyse"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1320,14 +1322,14 @@ msgstr "Tidsfakturering"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Time-based services"
-msgstr "Tidsbaserede servicer"
+msgstr "Tidsbaserede ydelser"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 msgid "Timesheet"
-msgstr "Tidsskema"
+msgstr "Tidsregistrering"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
@@ -1335,7 +1337,7 @@ msgstr "Tidsskema"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr "Timeseddel Omkostninger"
+msgstr "Tidsregistreringsomkostninger"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1349,12 +1351,12 @@ msgstr "Timeseddel registrerings enhed"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
 msgid "Timesheet Product"
-msgstr "Timeseddel produkt"
+msgstr "Tidsregistreringsprodukt"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 msgid "Timesheet Report"
-msgstr "Timeseddelrapport"
+msgstr "Tidsregistreringsrapport"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -1369,7 +1371,7 @@ msgstr "Tidsregistreringsomkostninger"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_total_duration
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr "Timeseddel samlet varighed"
+msgstr "Samlet varighed af tidsregistrering"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
@@ -1393,14 +1395,14 @@ msgstr "Timeseddels aktiviteter"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 #, python-format
 msgid "Timesheets"
-msgstr "Timesedler"
+msgstr "Tidsregistrering"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed Manually)"
-msgstr "Timesedler (faktureret manuelt)"
+msgstr "Tidsregistrering (faktureret manuelt)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1433,17 +1435,17 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr "Timeseddelsanalyse"
+msgstr "Tidsregistreringsanalyse"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr "Timeseddelsanalyse rapport"
+msgstr "Tidsregistreringsanalyserapport"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr "Timesedler Periode"
+msgstr "Tidsregistreringsperiode"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -1453,19 +1455,19 @@ msgstr "Tidsregistreringer efter faktureringstype"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr "Timesedler for"
+msgstr "Tidsregistreringer for"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Timesedler for %s"
+msgstr "Tidsregistreringer for %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "Timesedler på projekter (en takst per Salgsordre/Projekt)"
+msgstr "Tidsregistreringer på projekter (en takst pr. salgsordre/projekt)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1482,7 +1484,7 @@ msgstr "Tidsregistreringsomsætning minus omkostninger"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr "Tidsregistreringer, der tages højde for, når din tid faktureres"
+msgstr "Tidsregistreringer, der indgår i faktureringen af din tid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
@@ -1512,8 +1514,8 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
-"Samlet registrerede varighed, udtrykt i den indkodede måleenhed, og afrundet "
-"til enheden"
+"Samlet registreret varighed, angivet i den valgte måleenhed og afrundet til "
+"nærmeste enhed"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1524,7 +1526,7 @@ msgstr "Total:"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
 msgid "Track Service"
-msgstr "Sporingsservice"
+msgstr "Registrér ydelser"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
@@ -1533,8 +1535,8 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your "
 "customers."
 msgstr ""
-"Spor dine arbejdstimer per projekt hver dag og fakturer dine kunder for din "
-"tid."
+"Registrér dine arbejdstimer dagligt pr. projekt, og fakturér kunderne for "
+"din tid."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
@@ -1558,7 +1560,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
 msgid "View Timesheets"
-msgstr "Vis timesedler"
+msgstr "Vis tidsregistreringer"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
@@ -1619,12 +1621,13 @@ msgstr ""
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "Du kan ikke fjerne en timeseddel der allerede er blevet faktureret."
+msgstr ""
+"Du kan ikke fjerne en tidsregistrering, der allerede er blevet faktureret."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__manually
 msgid "billed manually"
-msgstr "Faktureret manuelt"
+msgstr "faktureret manuelt"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1655,7 +1658,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__not_billable
 msgid "not billable"
-msgstr "Ikke fakturerbare timer"
+msgstr "Ikke fakturerbar"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
@@ -1667,4 +1670,4 @@ msgstr "de solgte timer."
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "remaining"
-msgstr "tilbageværende"
+msgstr "resterende"

@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-06-14 21:06+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-20 10:00+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/pl/>\n"
 "Language: pl\n"
@@ -579,8 +579,7 @@ msgstr "BIS3 DE (XRechnung)"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Cannot decode origin file, try by importing it again"
-msgstr ""
-"Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
+msgstr "Nie można zdekodować pliku źródłowego, spróbuj zaimportować go ponownie"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -655,8 +654,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
 msgstr ""
-"Nie można pobrać waluty: %s. Czy włączyłeś opcję wielowalutowości i "
-"aktywowałeś walutę?"
+"Nie można pobrać waluty: %s. Czy włączyłeś opcję wielu walut i aktywowałeś "
+"walutę?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -698,21 +697,21 @@ msgstr "ROZSZERZONE"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr "Każda linia faktury ma jeden i tylko jeden podatek."
+msgstr "Każda pozycja faktury ma jeden i tylko jeden podatek."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr "Każdy wiersz faktury powinien mieć produkt lub etykietę."
+msgstr "Każda pozycja faktury powinna mieć produkt lub etykietę."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr "Każda linia faktury powinna mieć przynajmniej jeden podatek."
+msgstr "Każda pozycja faktury powinna mieć przynajmniej jeden podatek."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
@@ -785,7 +784,7 @@ msgstr "Format"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Format used to import the invoice: %s"
-msgstr "Format używany do importowania faktury:  %s"
+msgstr "Format używany do importowania faktury: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__invoice_is_ubl_cii
@@ -820,6 +819,9 @@ msgid ""
 "Invalid Tax Setup for Co-Contractor. Please apply the standard co-contractor "
 "tax, or ensure your custom tax uses a tax amount of 0"
 msgstr ""
+"Nieprawidłowa konfiguracja podatku dla współwykonawcy. Proszę zastosować "
+"standardowy podatek dla współwykonawcy lub upewnić się, że podatek "
+"niestandardowy ma wartość 0."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -975,7 +977,7 @@ msgstr ""
 #, python-format
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
 msgstr ""
-"Punkt końcowy Peppol jest nieprawidłowy. Oczekiwany format to: 0239843188"
+"Punkt końcowy Peppol jest nieprawidłowy. Oczekiwany format to: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1119,7 +1121,7 @@ msgid ""
 "known as 'Endpoint ID'."
 msgstr ""
 "Unikalny identyfikator używany przez BIS Billing 3.0 i jego pochodne, znany "
-"również jako „Endpoint ID”."
+"również jako \"ID punktu końcowego\" (Endpoint ID)."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1140,7 +1142,7 @@ msgstr "Nieobsługiwany typ pliku przez %s"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Untaxed"
-msgstr "Nieopodatkowane"
+msgstr "Netto"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1151,7 +1153,7 @@ msgid ""
 "each invoice line should be greater than 0."
 msgstr ""
 "W przypadku zastosowania kanaryjskiego ogólnego podatku pośredniego (IGIC), "
-"stawka podatku w każdej linii faktury powinna być większa niż 0."
+"stawka podatku w każdej pozycji faktury powinna być większa niż 0."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__xrechnung
@@ -1163,7 +1165,7 @@ msgstr "XRechnung CIUS"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
-msgstr "Możesz (od)grupować tylko wierze faktury w wersji roboczej"
+msgstr "Można (od)grupować tylko pozycje faktury w wersji roboczej"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1179,7 +1181,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only group lines of an invoice"
-msgstr "Można grupować tylko pozycje faktury"
+msgstr "Można grupować tylko wiersze faktury"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1190,9 +1192,9 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
 "code (BT-151)."
 msgstr ""
-"Należy uwzględnić co najmniej jeden podatek w każdej linii faktury. [BR-"
-"CO-04]-Każda linia faktury (BG-25) powinna być skategoryzowana za pomocą "
-"kodu kategorii VAT pozycji fakturowanej (BT-151)."
+"Należy uwzględnić co najmniej jeden podatek w każdej pozycji faktury. [BR-CO-"
+"04]-Każda pozycja faktury (BG-25) powinna być skategoryzowana za pomocą kodu "
+"kategorii VAT pozycji fakturowanej (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__zugferd

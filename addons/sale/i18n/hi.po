@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2026-05-22 15:30+0000\n"
+"PO-Revision-Date: 2026-06-22 17:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/sale/hi/>\n"
 "Language: hi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -26,7 +26,7 @@ msgstr " डेटा मिल गया"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# सेल ऑर्डर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -36,14 +36,14 @@ msgstr "# पंक्तियां"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# सेल्स ऑर्डर"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
 #. odoo-python
@@ -89,7 +89,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'प्रो-फॉर्मा - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -97,6 +97,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('ड्राफ़्ट', 'भेजा गया') और 'कोटेशन - %s' % (object.name)) या "
+"'ऑर्डर - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -113,7 +115,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
-msgstr ""
+msgstr "<b>कोटेशन खुद को भेजें</b> और जांचें कि ग्राहक को क्या मिलेगा।"
 
 #. module: sale
 #. odoo-javascript
@@ -520,7 +522,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> नई कोटेशन पाने के लिए हमसे संपर्क करें।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -537,38 +539,39 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> अधिकृत"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>भुगतान किया गया"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>वापस किया गया"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> समाप्त"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> भुगतान का इंतज़ार"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/> रद्द की गई"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -583,6 +586,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        लॉक किया गया"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -592,17 +597,17 @@ msgstr "<i class=\"fa fa-print\"/> जानकारी देखें"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> अस्वीकार करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">आपका संपर्क</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">आपका फ़ायदा</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -610,6 +615,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">सेल्स ऑर्डर #</span>\n"
+"                            <span class=\"d-block d-md-none\">रेफ़रेंस</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -619,13 +626,13 @@ msgstr "<span class=\"flex-grow-1\">/ महीना </span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">के</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">बेचा गया</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -706,7 +713,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr ""
+msgstr "<strong>वित्तीय स्थिति पर टिप्पणी:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -729,7 +736,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>हस्ताक्षर</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -744,12 +751,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>धन्यवाद!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>यह ऑफ़र समाप्त हो गया है!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -764,7 +771,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "सेल्स ऑर्डर की पुष्टि करने के लिए तारीख डालना ज़रूरी है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -784,6 +791,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"एक स्टैंडर्ड इनवॉइस सभी ऑर्डर लाइनों के साथ जारी किया जाता है, जो उनकी इनवॉइसिंग "
+"पॉलिसी (ऑर्डर की गई या डिलीवर की गई मात्रा के आधार पर) के अनुसार इनवॉइसिंग के लिए "
+"तैयार होती हैं।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -797,7 +807,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "किसी प्रॉडक्ट या ग्राहक (सेल) पर एक चेतावनी सेट की जा सकती है"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -811,24 +821,24 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "कोटेशन स्वीकार करें और पेमेंट करें"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "कोटेशन स्वीकार करें और हस्ताक्षर करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "स्वीकार करें &amp; पेमेंट करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "स्वीकार करें &amp; हस्ताक्षर करें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -867,7 +877,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "अक्रूड रेवेन्यू एंट्री"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -928,7 +938,7 @@ msgstr "सेक्शन जोड़ें"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "ग्रिड से ऑर्डर में कई वैरिएंट जोड़ें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__allowed_so_line_ids
@@ -938,12 +948,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr ""
+msgstr "यह आपको अपने ग्राहकों को प्रो-फार्मा इनवॉइस भेजने की अनुमति देता है"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr ""
+msgstr "यह आपको प्रो-फार्मा इनवॉइस भेजने की अनुमति देता है।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
@@ -970,12 +980,12 @@ msgstr "पेमेंट किया जा चुका है"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "पहले ही इनवॉइस भेजा जा चुका है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Amazon सिंक"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
@@ -1010,6 +1020,8 @@ msgid ""
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
 msgstr ""
+"अपसेल तब होता है जब डिलीवर की गई मात्राएं शुरू में ऑर्डर की गई मात्राओं से अधिक हों,\n"
+"            और इनवॉइसिंग से जुड़ी नीति ऑर्डर की गई मात्राओं पर आधारित हो।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
@@ -1030,7 +1042,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "एक्सपेंस से एनालिटिक्स"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1063,11 +1075,13 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"सेल्स ऑर्डर लाइनों पर मैन्युअल छूट लागू करें या प्राइसलिस्ट से गणना की गई छूट दिखाएं "
+"(प्राइसलिस्ट कॉन्फ़िगरेशन में इसे सक्रिय करने का विकल्प)।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the"
-msgstr ""
+msgstr "क्या आप वाकई रद्द करना चाहते हैं"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1089,11 +1103,13 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"उदाहरण के तौर पर, यदि आप प्री-पेड सर्विस घंटे बेचते हैं, तो Odoo आपको सलाह देता है\n"
+"            कि जब सभी ऑर्डर किए गए घंटे खत्म हो जाएं, तो आप अतिरिक्त घंटे बेचें।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
 msgid "At cost"
-msgstr ""
+msgstr "लागत पर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
@@ -1124,7 +1140,7 @@ msgstr "अधिकृत लेन-देन"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "ऑटोमैटिक इनवॉइस"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1139,12 +1155,12 @@ msgstr "बैंक का नाम"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "ग्राहक आईडी के आधार पर"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "दस्तावेज़ संदर्भ के आधार पर"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1196,7 +1212,7 @@ msgstr "बॉडी में बदलाव किया जा सकता 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "प्रॉडक्ट में बदलाव कर सकते हैं"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -1216,13 +1232,13 @@ msgstr "%s रद्द करें"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "कई कोटेशन रद्द करें"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "कोटेशन रद्द करें"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1285,6 +1301,8 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"मौजूदा कोटेशन की कंपनी बदलने के लिए लाइनों के विवरण में कुछ मैन्युअल बदलाव करने पड़ सकते हैं. "
+"आपको कीमतों को अपडेट करने पर विचार करना चाहिए।"
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -1303,14 +1321,14 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr ""
+msgstr "अपने कोटेशन में कुछ प्रॉडक्ट या सेवाएं जोड़ने के लिए यहां क्लिक करें।"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "इनवॉइसिंग लक्ष्य तय करने के लिए क्लिक करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1357,11 +1375,14 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"शिपिंग लागत की गणना करें और DHL के साथ शिप करें<br/>\n"
+"                                    <strong>(कृपया इंस्टॉल करने के लिए "
+"Home&gt;ऐप्स पर जाएं)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "शिपिंग लागत की गणना करें और Easypost के साथ शिप करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1370,16 +1391,19 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"शिपिंग लागत की गणना करें और FedEx के साथ शिप करें<br/>\n"
+"                                    <strong>(कृपया इंस्टॉल करने के लिए "
+"Home&gt;Apps पर जाएं)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "शिपिंग लागत की गणना करें और Sendcloud के साथ शिप करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "शिपिंग लागत की गणना करें और Shiprocket के साथ शिप करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1388,6 +1412,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"शिपिंग लागत की गणना करें और UPS के साथ शिप करें<br/>\n"
+"                                    <strong>(कृपया इंस्टॉल करने के लिए "
+"Home&gt;ऐप्लिकेशन पर जाएं)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1396,16 +1423,19 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"शिपिंग लागत की गणना करें और USPS के साथ शिप करें<br/>\n"
+"                                    <strong>(कृपया इंस्टॉल करने के लिए "
+"Home&gt;ऐप्लिकेशन पर जाएं)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "शिपिंग लागत की गणना करें और bpost से भेजें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "ऑर्डर पर शिपिंग लागत की गणना करें"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1435,7 +1465,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr ""
+msgstr "कनेक्टर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1463,12 +1493,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "देश का कोड"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "कूपन और लॉयल्टी"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1514,7 +1544,7 @@ msgstr "एक नया कोटेशन बनाएं, एक नए स�
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoices"
-msgstr ""
+msgstr "इनवॉइस बनाएं"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1564,6 +1594,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"ड्राफ़्ट/भेजे गए ऑर्डर को बनाने की तारीख,\n"
+"पुष्टि किए जा चुके ऑर्डर का पुष्टि करने की तारीख।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
@@ -1618,13 +1650,13 @@ msgstr "ग्राहक का देश"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "ग्राहक इकाई"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "कस्टमर इंडस्ट्री"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1639,7 +1671,7 @@ msgstr "कस्टमर रेफ़रंस"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "ग्राहक हस्ताक्षर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
@@ -1654,7 +1686,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "ग्राहक का पिन कोड"
 
 #. module: sale
 #. odoo-python
@@ -1662,6 +1694,7 @@ msgstr ""
 #, python-format
 msgid "Customer needs to pay at least %(amount)s to confirm the order."
 msgstr ""
+"ऑर्डर की पुष्टि करने के लिए ग्राहक को कम से कम %(amount)s का भुगतान करना होगा।"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -1679,12 +1712,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL कनेक्टर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express कनेक्टर"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1704,22 +1737,24 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"कोटेशन बनने और एक्सपायर होने के बीच के दिन यहां डालें. अगर आप '0' लिखते हैं, तो कोटेशन "
+"कभी अपने आप बंद नहीं होगा"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "डाउन पेमेंट घटाएं"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "कोटेशन की डिफ़ॉल्ट वैधता"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "छूट के लिए उपयोग किया जाने वाला डिफ़ॉल्ट प्रॉडक्ट"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
@@ -1742,7 +1777,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "ईमेल के ज़रिए कॉन्टेंट डिलीवर करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1754,12 +1789,12 @@ msgstr "डिलीवर किया गया"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "डिलीवर की गई मात्रा: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr ""
+msgstr "डिलीवर की गई मात्राएं"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -1780,7 +1815,7 @@ msgstr "डिलीवरी का तरीका"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "डिलीवरी की मात्रा"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1790,6 +1825,9 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"डिलीवरी की वह तारीख जिसका आप ग्राहक से वादा कर सकते हैं, जो सर्विस प्रॉडक्ट के मामले में "
+"ऑर्डर लाइनों के न्यूनतम लीड टाइम से तय होती है. शिपिंग के मामले में, ऑर्डर की शिपिंग "
+"पॉलिसी के आधार पर ऑर्डर लाइनों का न्यूनतम या अधिकतम लीड टाइम तय किया जाएगा।"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1854,7 +1892,7 @@ msgstr "डिस्काउंट प्रॉडक्ट"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "डिस्काउंट का प्रकार"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
@@ -1888,7 +1926,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "ड्राफ़्ट इनवॉइस की चेतावनी दिखाएं"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
@@ -1947,7 +1985,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "डाउन पेमेंट की राशि (फिक्स्ड)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1959,7 +1997,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "डाउन पेमेंट: %(date)s (ड्राफ़्ट)"
 
 #. module: sale
 #. odoo-python
@@ -1980,31 +2018,31 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "डाउन पेमेंट (तय की गई राशि)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "डाउन पेमेंट (प्रतिशत)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "डाउन पेमेंट <br/>"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment invoice"
-msgstr ""
+msgstr "इनवॉइस के लिए डाउन पेमेंट"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "%s%% के लिए डाउन पेमेंट"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -2012,6 +2050,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"सेल्स ऑर्डर से इनवॉइस बनाते समय डाउन पेमेंट किए जाते हैं. सेल्स ऑर्डर को डुप्लीकेट करते समय "
+"इन्हें कॉपी नहीं किया जाता है।"
 
 #. module: sale
 #. odoo-python
@@ -2024,19 +2064,19 @@ msgstr "ड्रॉफ़्ट इनवॉइस"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost कनेक्टर"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "कॉन्फ़िगरेशन में बदलाव करें"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr ""
+msgstr "इलेक्ट्रॉनिक सिग्नेचर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_email_account
@@ -2046,17 +2086,17 @@ msgstr "ईमेल"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "इनवॉइस उपलब्ध होते ही ग्राहक को ईमेल भेज दिया जाता है।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr ""
+msgstr "अनुमानित तारीख"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "अनुमानित:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -2066,7 +2106,7 @@ msgstr "समय सीमा समाप्ति"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "खत्म होने की तारीख:"
 
 #. module: sale
 #. odoo-python
@@ -2083,20 +2123,20 @@ msgstr "ज़्यादा फ़िल्टर"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "अतिरिक्त वैल्यू"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr ""
+msgstr "%s के साथ एक्स्ट्रा लाइन"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx कनेक्टर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2109,6 +2149,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the customer."
 msgstr ""
+"फ़िस्कल पोज़िशन का उपयोग विशेष ग्राहकों या सेल्स ऑर्डर/इनवॉइस के लिए टैक्स और अकाउंट्स को "
+"अनुकूलित करने के लिए किया जाता है. इसका डिफ़ॉल्ट मान ग्राहक से आता है।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2118,7 +2160,7 @@ msgstr "तय कीमत"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "अपने ऑर्डर देखें, ट्रैक करें या पेमेंट करें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2138,7 +2180,7 @@ msgstr "फॉन्ट के बेहतरीन आइकॉन जैस�
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "गैर-अकाउंटिंग सेल ऑर्डर लाइन पर प्रतिबंधित मान"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2147,11 +2189,14 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"यह रिपोर्ट आपको आपके ग्राहकों को भेजे गए इनवॉइस की कुल राशि की जानकारी देती है. आप "
+"सर्च टूल का उपयोग करके अपनी इनवॉइस रिपोर्ट को अपनी ज़रूरत के हिसाब से बदल सकते हैं और "
+"इस विश्लेषण को अपनी आवश्यकताओं के अनुसार ढाल सकते हैं।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "पूरा राशि <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2179,12 +2224,12 @@ msgstr "पेमेंट लिंक जनरेट करें"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "ऑनलाइन पेमेंट की पुष्टि होते ही इनवॉइस अपने आप जनरेट करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "ऑर्डर के समय, किसी प्रॉडक्ट या कस्टमर से जुड़ी चेतावनी देखें"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
@@ -2201,12 +2246,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "सेल्स ऑर्डर लाइनों पर छूट दें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "कुल वज़न"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2218,12 +2263,12 @@ msgstr "इन्होंने ग्रुप किया"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "ऐक्टिव प्राइसलिस्ट है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "पुष्टि किया गया ऑर्डर है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2238,12 +2283,12 @@ msgstr "मैसेज है"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "कीमत सूची बदली गई है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr ""
+msgstr "डाउन पेमेंट हैं"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__id
@@ -2284,6 +2329,8 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"अगर सेट किया गया है, तो एसओ इस जर्नल में इनवॉइस करेगा; अन्यथा, सबसे कम सीक्वेंस वाले सेल्स "
+"जर्नल का उपयोग किया जाता है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2319,12 +2366,12 @@ msgstr "प्रॉडक्ट के लिए टेम्प्लेट �
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "ऑर्डर में"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr ""
+msgstr "टैक्स सहित)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -2336,14 +2383,14 @@ msgstr "इनकम अकाउंट"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "अमान्य छूट राशि"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid order."
-msgstr ""
+msgstr "अमान्य ऑर्डर।"
 
 #. module: sale
 #. odoo-python
@@ -2357,7 +2404,7 @@ msgstr "अमान्य हस्ताक्षर डेटा।"
 #: code:addons/sale/models/account_move.py:0
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "इनवॉइस %s भुगतान किया गया"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
@@ -2372,7 +2419,7 @@ msgstr ""
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "इनवॉइस की पुष्टि हो गई"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
@@ -2387,7 +2434,7 @@ msgstr "इनवॉइस बनाया गया"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr ""
+msgstr "इनवॉइस ईमेल टेम्पलेट"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -2397,7 +2444,7 @@ msgstr "इनवॉइस लाइन"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "इनवॉइस सेल्स ऑर्डर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
@@ -2410,6 +2457,7 @@ msgstr "इनवॉइस स्टेटस"
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
+"ऑर्डर की गई मात्राओं के बजाय, डिलीवर की गई मात्राओं के आधार पर डिलीवरी के बाद इनवॉइस।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2418,16 +2466,19 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"वर्तमान महीने के लिए इनवॉइस रेवेन्यू. यह वह राशि है जिसे सेल्स चैनल ने इस महीने इनवॉइस "
+"किया है. इसका उपयोग कानबान व्यू पर वर्तमान और टारगेट रेवेन्यू के प्रगति अनुपात की गणना "
+"करने के लिए किया जाता है।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr ""
+msgstr "जो डिलीवर किया गया है उसका इनवॉइस बनाएं"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr ""
+msgstr "जो ऑर्डर किया गया है उसका इनवॉइस बनाएं"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2437,19 +2488,19 @@ msgstr "इनवॉइस किया गया"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "इनवॉइस की गई मात्रा"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "इनवॉइस की गई मात्रा: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "इस महीने इनवॉइस किया गया"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -2479,7 +2530,7 @@ msgstr "इनवॉइसिंग"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address"
-msgstr ""
+msgstr "इनवॉइसिंग के लिए पता"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2501,12 +2552,12 @@ msgstr "इनवॉइसिंग की नीति"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "इनवॉइसिंग टारगेट"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "इनवॉइसिंग और शिपिंग के लिए पता"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2516,7 +2567,7 @@ msgstr "इनवॉइसिंग और शिपिंग के लिए �
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr ""
+msgstr "डाउनपेमेंट है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2536,17 +2587,17 @@ msgstr "फ़ॉलोवर है"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr ""
+msgstr "डाउन पेमेंट है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr ""
+msgstr "खर्च है"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid "Is true if the sales order line comes from an expense or a vendor bills"
-msgstr ""
+msgstr "यह सही है अगर सेल ऑर्डर लाइन किसी खर्च या वेंडर बिल से आती है"
 
 #. module: sale
 #. odoo-python
@@ -2556,6 +2607,9 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"एक बार ऑर्डर लॉक हो जाने पर, आप नीचे दिए गए फ़ील्ड में कोई बदलाव नहीं कर सकते:\n"
+"\n"
+"%s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2575,7 +2629,7 @@ msgstr "भाषा"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "आखिरी इनवॉइस"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -2612,7 +2666,7 @@ msgstr "लीड का समय"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "अपने ग्राहकों को उनके दस्तावेज़ देखने के लिए लॉग इन करने दें"
 
 #. module: sale
 #. odoo-javascript
@@ -2637,7 +2691,7 @@ msgstr "लॉक"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "पुष्टि की जा चुकी सेल्स को लॉक करें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__locked
@@ -2647,7 +2701,7 @@ msgstr "लॉक हो गया"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "लॉक किए ऑर्डर में कोई बदलाव नहीं किया जा सकता।"
 
 #. module: sale
 #. odoo-javascript
@@ -2667,6 +2721,7 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"अपने कोटेशन को आकर्षक बनाने के लिए उसमें हेडर पेज, प्रॉडक्ट की जानकारी और फुटर पेज जोड़ें।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2686,7 +2741,7 @@ msgstr "मैन्युअल पेमेंट"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "ऑर्डर पर मात्राएं मैन्युअल रूप से सेट करें"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__service_type
@@ -2713,7 +2768,7 @@ msgstr "मार्जिन"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "कोटेशन को 'भेजा गया' के तौर पर मार्क करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2744,13 +2799,13 @@ msgstr "मैसेज डिलीवरी में गड़बड़ी"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "सेल्स ऑर्डर के लिए मैसेज"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr ""
+msgstr "सेल्स ऑर्डर लाइन के लिए मैसेज"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
@@ -2770,7 +2825,7 @@ msgstr "डिलीवर की गई मात्रा को अपडे�
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "अकाउंटेबल सेल ऑर्डर लाइन पर ज़रूरी फ़ील्ड गायब हैं।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2790,12 +2845,12 @@ msgstr "मेरे ऑर्डर"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "My Quotations"
-msgstr ""
+msgstr "मेरे कोटेशन"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "मेरा सेल्स ऑर्डर लाइन"
 
 #. module: sale
 #. odoo-python
@@ -2843,22 +2898,22 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "इस पेमेंट के लिए कोई और ज़रूरत नहीं है"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "एक बार पुष्टि हो जाने के बाद ऑर्डर में बदलाव न करें"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "इनवॉइस करने के लिए कोई ऑर्डर नहीं मिला"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "अपसेल के लिए कोई ऑर्डर नहीं मिला।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
@@ -2896,6 +2951,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"ऑर्डर की पुष्टि और ग्राहक को प्रॉडक्ट की शिपिंग के बीच के दिनों की संख्या"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -2956,6 +3012,9 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
+"एक बार सेल्स ऑर्डर कन्फर्म हो जाने के बाद, आप इसकी किसी भी लाइन को हटा नहीं सकते (हमें "
+"यह ट्रैक करना होता है कि क्या कुछ इनवॉइस या डिलीवर हुआ है).\n"
+"                इसके बजाय मात्रा को 0 पर सेट करें।"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2967,6 +3026,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"एक बार जब ग्राहक द्वारा कोटेशन की पुष्टि कर दी जाती है, तो वह सेल्स ऑर्डर बन जाता है. "
+"<br> आप इनवॉइस बना सकेंगे और पेमेंट प्राप्त कर सकेंगे।"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2974,6 +3035,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"एक बार कोटेशन की पुष्टि हो जाने पर, यह सेल्स ऑर्डर बन जाता है. <br>आप इनवॉइस बना सकेंगे "
+"और पेमेंट प्राप्त कर सकेंगे।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -3005,20 +3068,21 @@ msgstr "ऑनलाइन सिग्नेचर"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "सिर्फ़ पुष्टि किए जा चुके डाउन पेमेंट पर विचार किया जाता है।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "सिर्फ़ ड्राफ़्ट ऑर्डर को सीधे भेजे गए के रूप में मार्क किया जा सकता है।"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"प्रत्येक सेल ऑर्डर लाइन पर प्रति एट्रिब्यूट वैल्यू केवल एक कस्टम वैल्यू की अनुमति है।"
 
 #. module: sale
 #. odoo-javascript
@@ -3056,7 +3120,7 @@ msgstr "ऑर्डर"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "ऑर्डर #"
 
 #. module: sale
 #: model:onboarding.onboarding.step,title:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -3086,12 +3150,12 @@ msgstr "ऑर्डर की तारीख"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Order Date:"
-msgstr ""
+msgstr "ऑर्डर की तारीख:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "ऑर्डर की तारीख: पिछले 365 दिन"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3109,7 +3173,7 @@ msgstr "ऑर्डर रेफ़रेंस"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__state
 msgid "Order Status"
-msgstr ""
+msgstr "ऑर्डर की स्थिति"
 
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
@@ -3121,7 +3185,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "ऑर्डर पर %s के हस्ताक्षर हैं"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -3133,7 +3197,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "ऑर्डर की गई मात्रा: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -3142,11 +3206,13 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"ऑर्डर की गई मात्रा: ग्राहक द्वारा ऑर्डर की गई इनवॉइस मात्राएं.\n"
+"डिलीवर की गई मात्रा: ग्राहक को डिलीवर की गई इनवॉइस मात्राएं।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
 msgid "Ordered quantities"
-msgstr ""
+msgstr "ऑर्डर की गई मात्राएं"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
@@ -3159,18 +3225,18 @@ msgstr "ऑर्डर"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "इनवॉइस के लिए ऑर्डर"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "अपसेल के लिए ऑर्डर"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "ऑस्कर मॉर्गन"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3180,13 +3246,13 @@ msgstr "अन्य जानकारी"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "PDF Quote"
-msgstr ""
+msgstr "पीडीएफ़ कोटेशन"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "पीडीएफ़ कोटेशन बिल्डर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -3196,7 +3262,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr ""
+msgstr "प्रो-फॉर्मा इनवॉइस"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3226,7 +3292,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "किसी अन्य पेमेंट प्रोवाइडर से पेमेंट करें"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -3263,7 +3329,7 @@ msgstr "पेमेंट प्रोवाइडर"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "पेमेंट रेफ़रेंस"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -3328,12 +3394,12 @@ msgstr "प्रीव्यू"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "मूल्य कटौती टैक्स को छोड़कर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "मूल्य कटौती टैक्स को जोड़कर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3344,7 +3410,7 @@ msgstr "मूल्य सूची"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "प्राइसलिस्ट आइटम"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3360,17 +3426,17 @@ msgstr "कीमत"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr ""
+msgstr "प्रो-फॉर्मा इनवॉइस"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "प्रो-फॉर्मा इनवॉइस #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr ""
+msgstr "प्रो-फ़ॉर्मा इनवॉइस"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3397,12 +3463,12 @@ msgstr "प्रॉडक्ट एट्रिब्यूट कस्टम 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr ""
+msgstr "प्रॉडक्ट कैटलॉग"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "प्रॉडक्ट कैटलॉग प्रॉडक्ट, सेल ऑर्डर में है"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
@@ -3438,7 +3504,7 @@ msgstr "प्रॉडक्ट टाइप"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "प्रॉडक्ट Uom रीडओनली"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3457,14 +3523,14 @@ msgstr "प्रॉडक्ट के वेरिएंट"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "प्रॉडक्ट की कीमतों की फिर से गणना प्राइसलिस्ट %s के अनुसार की गई है।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "प्रॉडक्ट की कीमतों की फिर से गणना की गई है।"
 
 #. module: sale
 #. odoo-python
@@ -3472,6 +3538,7 @@ msgstr ""
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
+"प्रॉडक्ट पर लगने वाले टैक्स की पुनर्गणना वित्तीय स्थिति %s के अनुसार की गई है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3496,7 +3563,7 @@ msgstr "मात्रा"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr ""
+msgstr "डिलीवर की गई मात्रा"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
@@ -3506,22 +3573,22 @@ msgstr "इनवॉइस की गई मात्रा"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr ""
+msgstr "ऑर्डर की गई मात्रा"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "डिलीवर की जाने वाली मात्रा"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr ""
+msgstr "इनवॉइस के लिए मात्रा"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr ""
+msgstr "सेल्स ऑर्डर से इनवॉइस की जाने वाली मात्राएं"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
@@ -3533,7 +3600,7 @@ msgstr "मात्रा"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "इनवॉइस बनाने के लिए मात्रा"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3556,7 +3623,7 @@ msgstr "कोटेशन"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "कोटेशन #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -3567,7 +3634,7 @@ msgstr "कोटेशन की संख्या"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr ""
+msgstr "कोटेशन की तारीख"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3585,26 +3652,26 @@ msgstr "कोटेशन भेजा गया"
 #: code:addons/sale/wizard/res_config_settings.py:0
 #, python-format
 msgid "Quotation Validity is required and must be greater or equal to 0."
-msgstr ""
+msgstr "कोटेशन की वैधता ज़रूरी है और यह 0 से अधिक या उसके बराबर होनी चाहिए।"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "कोटेशन की पुष्टि हो गई"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "कोटेशन भेजा गया"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "ग्राहक %s द्वारा देखा गया कोटेशन"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3625,22 +3692,22 @@ msgstr "कोटेशन"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "कोटेशन और ऑर्डर"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "कोटेशन एनालिसिस"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "कोटेशन और सेल्स"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "समीक्षा के लिए कोटेशन"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -3657,7 +3724,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "री-इनवॉइस पॉलिसी का विकल्प दिखता है"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
@@ -3667,12 +3734,12 @@ msgstr "रसीद"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "इस मूल्य-सूची के आधार पर सभी कीमतों की फिर से गणना करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "इस वित्तीय स्थिति के आधार पर सभी टैक्स की फिर से गणना करें"
 
 #. module: sale
 #. odoo-python
@@ -3684,7 +3751,7 @@ msgstr "रेफ़रंस"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "वह दस्तावेज़ जिसके ज़रिए सेल्स ऑर्डर का यह अनुरोध बनाया गया है"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3694,12 +3761,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr ""
+msgstr "नियमित इनवॉइस"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "इस कोटेशन को अस्वीकार करें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_reference
@@ -3719,12 +3786,12 @@ msgstr "रिपोर्टिंग"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
-msgstr ""
+msgstr "ऑर्डर की पुष्टि के लिए ग्राहक से ऑनलाइन भुगतान का अनुरोध करें।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr ""
+msgstr "ऑर्डर की पुष्टि के लिए ग्राहक से ऑनलाइन हस्ताक्षर का अनुरोध करें।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3743,7 +3810,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "अनुरोध की गई तारीख बहुत नजदीक है।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -3765,7 +3832,7 @@ msgstr "रेवेन्यू"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "कैंपेन से जनरेट हुआ रेवेन्यू"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -3775,12 +3842,12 @@ msgstr "एसएमएस डिलीवरी में गड़बड़ी
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Sale Information"
-msgstr ""
+msgstr "बिक्री की जानकारी"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3802,12 +3869,12 @@ msgstr "सेल ऑर्डर की संख्या"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "सेल ऑर्डर प्लान"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "सेल ऑर्डर से जुड़ी चेतावनियां"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -3817,12 +3884,12 @@ msgstr "सेल ऑर्डर"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "सेल ऑर्डर की संख्या"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "सेल पेमेंट प्रोवाइडर ऑनबोर्डिंग विज़ॉर्ड"
 
 #. module: sale
 #: model:onboarding.onboarding,name:sale.onboarding_onboarding_sale_quotation
@@ -3832,17 +3899,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "बिक्री से जुड़ी चेतावनियां"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "सेल्स प्रक्रिया में चुनी गई पेमेंट की विधि"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "रद्द करने के लिए सेल ऑर्डर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3873,12 +3940,12 @@ msgstr "सेल्स ऐडवांस पेमेंट इनवॉइस
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #, python-format
 msgid "Sales Analysis"
-msgstr ""
+msgstr "सेल्स एनालिसिस"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "सेल्स पर्सन द्वारा सेल्स एनालिसिस"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
@@ -3920,7 +3987,7 @@ msgstr ""
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "सेल्स ऑर्डर की पुष्टि हुई"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
@@ -3941,17 +4008,17 @@ msgstr "परचेज़ ऑर्डर लाइन"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "सेल्स ऑर्डर लाइनें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "इनवॉइस के लिए तैयार सेल्स ऑर्डर लाइनें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "मेरे किसी सेल्स ऑर्डर से संबंधित सेल्स ऑर्डर लाइनें"
 
 #. module: sale
 #. odoo-python
@@ -3959,7 +4026,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "सेल्स ऑर्डर"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4013,11 +4080,13 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"सेल्स ऑर्डर आइटम जिसमें समय का विवरण जोड़ा जाएगा, ताकि आपके ग्राहक को उसका इनवॉइस "
+"भेजा जा सके. टाइमशीट एंट्री को गैर-बिल योग्य बनाने के लिए सेल्स ऑर्डर आइटम को हटा दें।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
-msgstr ""
+msgstr "बिक्री मूल्य"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
@@ -4027,24 +4096,24 @@ msgstr ""
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "बिक्री: ऑर्डर की पुष्टि"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "बिक्री: भुगतान किया गया"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "बिक्री: कोटेशन भेजें"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr ""
+msgstr "बिक्री: कुल (बिना टैक्स)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -4084,7 +4153,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr ""
+msgstr "सेल्स ऑर्डर खोजें"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
@@ -4133,16 +4202,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"विशेषताओं (आकार, रंग, वगैरह) का उपयोग करके किसी प्रॉडक्ट के वैरिएंट बेचें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "प्रो-फॉर्मा इनवॉइस भेजें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr ""
+msgstr "इनवॉइस की पुष्टि होते ही, उस सामान से जुड़ा एक खास ईमेल ग्राहक को भेजें"
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sample_quotation
@@ -4172,7 +4242,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "SendCloud कनेक्टर"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4181,6 +4251,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"अगर आपको किसी प्रॉडक्ट के बारे में विशिष्ट जानकारी या सामग्री (निर्देश, नियम, लिंक, "
+"मीडिया, वगैरह) शेयर करने की आवश्यकता है, तो ईमेल भेजना उपयोगी है. प्रॉडक्ट विवरण फॉर्म "
+"(अकाउंटिंग टैब में) से ईमेल टेम्प्लेट बनाएं और सेट करें।"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_cancellation
@@ -4190,7 +4263,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "ऑर्डर की पुष्टि पर ग्राहकों को भेजा जाता है"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_payment_executed
@@ -4198,6 +4271,8 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm "
 "their order"
 msgstr ""
+"ग्राहकों को तब भेजा जाता है जब भुगतान प्राप्त होता है, लेकिन उनका ऑर्डर तुरंत पुष्टि नहीं "
+"होता"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4217,7 +4292,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "कोटेशन पर सेट करें"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_config_settings
@@ -4239,7 +4314,7 @@ msgstr "शिपिंग"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Shipping Address"
-msgstr ""
+msgstr "शिपिंग के लिए पता"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
@@ -4254,24 +4329,24 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr ""
+msgstr "ऑर्डर पर मार्जिन दिखाएं"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "कोटेशन पर हस्ताक्षर करें और भुगतान करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "हस्ताक्षर करें &amp; पेमेंट करें"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
 msgid "Sign online"
-msgstr ""
+msgstr "ऑनलाइन हस्ताक्षर करें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -4294,7 +4369,7 @@ msgstr "इन्होंने साइन किया है"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr ""
+msgstr "इस समय हस्ताक्षर किया गया"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4306,7 +4381,7 @@ msgstr "बिक गया"
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "पिछले 365 दिनों में बेचा गया"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -4332,7 +4407,7 @@ msgstr "सोर्स डॉक्यूमेंट"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr ""
+msgstr "खास ईमेल"
 
 #. module: sale
 #. odoo-python
@@ -4393,7 +4468,7 @@ msgstr "उप कुल"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "कुल योग"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -4435,7 +4510,7 @@ msgstr "टैक्स आईडी"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Tax Total"
-msgstr ""
+msgstr "कुल टैक्स"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
@@ -4484,6 +4559,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"कृपया हमें बताएं कि आप इस कोटेशन को अस्वीकार क्यों कर रहे हैं, यह हमें अपनी सेवाओं को बेहतर "
+"बनाने में मदद करेगा।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -4515,7 +4592,7 @@ msgstr "नियम और शर्तें"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "नियम और शर्तें..।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__country_code
@@ -4574,11 +4651,12 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"डिलीवरी की तारीख उम्मीद से जल्दी है. हो सकता है आप समय पर डिलीवरी न कर पाएं।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "पहले से बिल की जाने वाली निश्चित राशि।"
 
 #. module: sale
 #. odoo-python
@@ -4599,6 +4677,11 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
+"नीचे दिए गए प्रॉडक्ट %(company)s कंपनी तक सीमित नहीं किए जा सकते, क्योंकि वे पहले ही "
+"किसी अन्य कंपनी में कोटेशन या सेल्स ऑर्डर में उपयोग किए जा चुके हैं:\n"
+"%(used_products)s\n"
+"आप इन प्रॉडक्ट को आर्काइव करके अपनी कंपनी के प्रतिबंध के साथ फिर से बना सकते हैं या उन्हें "
+"शेयर किए गए प्रॉडक्ट के रूप में छोड़ सकते हैं।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4623,45 +4706,47 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set "
 "in their detail form."
 msgstr ""
+"मार्जिन की गणना प्रॉडक्ट के बिक्री मूल्यों के योग में से उनके विवरण फॉर्म में निर्धारित लागत "
+"को घटाकर की जाती है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
-msgstr ""
+msgstr "नया इनवॉइस इस सेल ऑर्डर से जुड़े ड्राफ़्ट इनवॉइस की राशि को घटा देगा।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "ऑर्डर ऐसी स्थिति में नहीं है जिसमें ग्राहक पेमेंट की ज़रूरत हो।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "ऑर्डर ऐसी स्थिति में नहीं है जिसमें ग्राहक के हस्ताक्षर की ज़रूरत हो।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "ऑर्डर की गई मात्रा अपडेट कर दी गई है।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "इस सेल ऑर्डर का पेमेंट कम्यूनिकेशन।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "पैसे का लेन-देन भी प्यार और सम्मान के साथ करें"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "पहले से बिल किए जाने वाले राशि का प्रतिशत।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
@@ -4669,6 +4754,7 @@ msgid ""
 "The percentage of the amount needed that must be paid by the customer to "
 "confirm the order."
 msgstr ""
+"ऑर्डर पक्का करने के लिए ग्राहक को कुल राशि का कितना प्रतिशत हिस्सा जमा करना है।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
@@ -4715,29 +4801,29 @@ msgstr "दिए गए पैरामीटर अमान्य हैं�
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 #, python-format
 msgid "The sale order has expired."
-msgstr ""
+msgstr "सेल ऑर्डर समाप्त हो गया है।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "डाउन पेमेंट राशि का मान सकारात्मक होना चाहिए।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "वर्तमान में आपके खाते के लिए कोई कोटेशन नहीं हैं।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "वर्तमान में आपके खाते के लिए कोई सेल्स ऑर्डर नहीं हैं।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "मौजूदा"
 
 #. module: sale
 #. odoo-python
@@ -4748,6 +4834,9 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"अभी तक इस कंपनी के लिए कोई छूट वाला प्रॉडक्ट कॉन्फ़िगर नहीं किया गया है. आप या तो "
+"प्रति-लाइन छूट का उपयोग कर सकते हैं. या पहली बार छूट देने के लिए किसी एडमिन से कह सकते हैं"
+"।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4755,6 +4844,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"यह डिफ़ॉल्ट वैल्यू बनाए गए किसी भी नए प्रॉडक्ट पर लागू होता है. इसे प्रॉडक्ट की जानकारी "
+"वाले फ़ॉर्म में बदला जा सकता है।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -4774,6 +4865,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"यह डिलीवरी की वह तारीख है जो ग्राहक को दी गई है. अगर इसे सेट किया जाता है, तो "
+"डिलीवरी ऑर्डर प्रॉडक्ट लीड टाइम के बजाय इस तारीख के आधार पर शेड्यूल किया जाएगा।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4798,7 +4891,7 @@ msgstr "यह लिंक का सोर्स है, जैसे- सर�
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 #, python-format
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "यह पेमेंट कोटेशन की पुष्टि करेगा।"
 
 #. module: sale
 #. odoo-python
@@ -4859,12 +4952,14 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"यह वर्तमान में चुनी गई वित्तीय स्थिति के आधार पर सभी टैक्स को अपडेट कर देगा।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
+"यह नई मूल्य-सूची के आधार पर सभी प्रॉडक्ट की प्रति इकाई कीमत को अपडेट करेगा।"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -4889,6 +4984,8 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"B2B मोड में आमंत्रण भेजने के लिए, एक संपर्क खोलें या लिस्ट व्यू में कई संपर्कों का चयन करें और "
+"ड्रॉपडाउन मेन्यू *ऐक्शन* में 'या ऐक्सेस मैनेजमेंट' विकल्प पर क्लिक करें।"
 
 #. module: sale
 #. odoo-javascript
@@ -4917,17 +5014,17 @@ msgstr "कुल"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "कुल टैक्स"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "कुल टैक्स शामिल नहीं है"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Included"
-msgstr ""
+msgstr "कुल टैक्स शामिल"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -4965,24 +5062,24 @@ msgstr "रिकॉर्ड में जो अलग तरह की गत
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "ग्राहक खोजने के लिए टाइप करें..।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "प्रॉडक्ट खोजने के लिए टाइप करें..।"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS कनेक्टर"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS कनेक्टर"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
@@ -5033,18 +5130,18 @@ msgstr "बिना टैक्स वाली राशि"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "बिना टैक्स की इनवॉइस की गई राशि"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "इनवॉइस की जाने वाली बिना टैक्स के साथ राशि"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "बिना टैक्स के इनवॉइस की गई राशि"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -5059,7 +5156,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "कीमतें अपडेट करें"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5071,7 +5168,7 @@ msgstr "टैक्स को अपडेट करें"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "ग्राहक %(customer)s के लिए अपसेल %(order)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -5084,6 +5181,7 @@ msgstr "अपसेलिंग का मौका"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"संभावित ग्राहकों को कोटेशन या प्रोफार्मा भेजते समय सेल्सपर्सन द्वारा उपयोग किया जाता है"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5093,7 +5191,7 @@ msgstr "तक मान्य है"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Validate Order"
-msgstr ""
+msgstr "ऑर्डर सत्यापित करें"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -5118,7 +5216,7 @@ msgstr "जानकारी देखें"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "View Quotation"
-msgstr ""
+msgstr "कोटेशन देखें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on
@@ -5162,7 +5260,7 @@ msgstr "%s के लिए चेतावनी"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "आपके कोटेशन की कंपनी में बदलाव के लिए चेतावनी"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -5205,6 +5303,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"आप किसी भेजे गए कोटेशन या पुष्टि किए गए सेल्स ऑर्डर को नहीं मिटा सकते. आपको पहले इसे रद्द "
+"करना होगा।"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5212,6 +5312,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"आप सभी ऑर्डर चुनकर उन्हें बैच में इनवॉइस कर सकते हैं,<br>\n"
+"            या प्रत्येक ऑर्डर को एक-एक करके चेक करके इनवॉइस कर सकते हैं।"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -5220,20 +5322,22 @@ msgid ""
 "communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"यहां आप वह कम्यूनिकेशन टाइप सेट कर सकते हैं जो सेल्स ऑर्डर पर दिखाई देगा. जब ग्राहक भुगतान "
+"विधि का चयन करेंगे, तो उन्हें यह जानकारी प्रदान की जाएगी।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
+msgstr "आप एक लॉक किए गए ऑर्डर को रद्द नहीं कर सकते. कृपया पहले इसे अनलॉक करें।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "आप पुष्टि हो चुके किसी ऑर्डर की मूल्य सूची नहीं बदल सकते !"
 
 #. module: sale
 #. odoo-python
@@ -5244,6 +5348,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"आप प्रॉडक्ट का प्रकार नहीं बदल सकते, क्योंकि इसका उपयोग पहले ही सेल्स ऑर्डर में किया जा "
+"चुका है।"
 
 #. module: sale
 #. odoo-python
@@ -5253,13 +5359,15 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"आप सेल्स ऑर्डर लाइन का प्रकार नहीं बदल सकते. इसके बजाय आपको मौजूदा लाइन को हटाकर सही "
+"प्रकार की नई लाइन बनानी चाहिए।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "You cannot modify the product of this order line."
-msgstr ""
+msgstr "आप इस ऑर्डर लाइन के प्रॉडक्ट में बदलाव नहीं कर सकते।"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -5267,6 +5375,8 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"आप डिफ़ॉल्ट कोटेशन वैधता के लिए नेगेटिव नंबर सेट नहीं कर सकते. कोटेशन की ऑटोमैटिक समाप्ति "
+"को निष्क्रिय करने के लिए इसे खाली (या 0) छोड़ दें।"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5282,37 +5392,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
-msgstr ""
+msgstr "आपके ऑर्डर"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
-msgstr ""
+msgstr "आपका रेफ़रेंस:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "आपका फ़ीडबैक..।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "आपके ऑर्डर की पुष्टि हो गई है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"आपका ऑर्डर साइन कर दिया गया है, लेकिन कन्फर्म होने के लिए अभी इसका भुगतान किया जाना "
+"बाकी है।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "आपके ऑर्डर पर हस्ताक्षर कर दिए गए हैं।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "आपका ऑर्डर अस्वीकार किए जाने की स्थिति में नहीं है।"
 
 #. module: sale
 #. odoo-python
@@ -5332,12 +5444,12 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "ऑटोमैटिक इनवॉइस: तैयार हो चुके इनवॉइस भेजें"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost कनेक्टर"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5353,14 +5465,14 @@ msgstr "दिन"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "इस सेल ऑर्डर के लिए।"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "सेल ऑर्डर"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5382,6 +5494,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (रेफ़रेंस {{ object.name or 'n/"
+"a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

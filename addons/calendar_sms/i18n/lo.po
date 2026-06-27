@@ -3,13 +3,14 @@
 # * calendar_sms
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2026-05-18 07:25+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-20 09:59+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/calendar_sms/"
 "lo/>\n"
 "Language: lo\n"
@@ -17,39 +18,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "ກິດຈະກຳປະຕິທິນ"
 
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
-msgstr ""
+msgstr "ກິດຈະກຳປະຕິທິນ: ການແຈ້ງເຕືອນ"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
-msgstr ""
+msgstr "ການແຈ້ງເຕືອນເຫດການ"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "ຕົວຈັດການການເຕືອນກິດຈະກຳ"
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
-msgstr ""
+msgstr "ແຈ້ງເຕືອນກິດຈະກຳ: %(name)s, %(time)s."
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
 msgid "Event reminder: {{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
+"ແຈ້ງເຕືອນກິດຈະກຳ: {{ object.name }}, {{ object.get_display_time_tz"
+"(object.partner_id.tz) }}"
 
 #. module: calendar_sms
 #. odoo-python
@@ -57,7 +60,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
 #, python-format
 msgid "Notify Responsible"
-msgstr ""
+msgstr "ແຈ້ງເຕືອນຜູ້ຮັບຜິດຊອບ"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -67,41 +70,41 @@ msgstr "SMS"
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "ແມ່ແບບ SMS"
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
 msgid "SMS Text Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ SMS"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
 msgid "Send SMS"
-msgstr ""
+msgstr "ສົ່ງ SMS"
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Send SMS Text Message"
-msgstr ""
+msgstr "ສົ່ງຂໍ້ຄວາມ SMS"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
 msgid "Send SMS to attendees"
-msgstr ""
+msgstr "ສົ່ງ SMS ຫາຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: calendar_sms
 #: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "Template used to render SMS reminder content."
-msgstr ""
+msgstr "ແບບຟອມທີ່ໃຊ້ເພື່ອສ້າງເນື້ອໃນການແຈ້ງເຕືອນ SMS."
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "ບໍ່ມີຜູ້ເຂົ້າຮ່ວມໃນກິດຈະກຳເຫຼົ່ານີ້"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
