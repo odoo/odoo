@@ -1101,6 +1101,7 @@ MISC_WHITELIST = {
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
+    "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
 }
 
 
