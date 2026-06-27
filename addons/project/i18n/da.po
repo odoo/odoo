@@ -12,13 +12,14 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Kira Petersen, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-05-18 07:03+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 17:43+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/project/"
 "da/>\n"
 "Language: da\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #. odoo-python
@@ -86,7 +87,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 #, python-format
 msgid "# of Tasks"
-msgstr "Antal opgaver"
+msgstr "# opgaver"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -135,7 +136,7 @@ msgstr "Burndown-diagram for %(name)s"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr "%(name)s's Milepæle"
+msgstr "Milepæle for %(name)s"
 
 #. module: project
 #. odoo-python
@@ -197,7 +198,7 @@ msgstr "- nået den"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr "<b>Træk & Slip</b> kortet for at ændre din opgave fra stadie."
+msgstr "<b>Træk og slip</b> kortet for at flytte din opgave til næste fase."
 
 #. module: project
 #. odoo-javascript
@@ -424,7 +425,7 @@ msgstr "<i class=\"oi oi-arrow-right me-1\"/>Tilbage til redigeringstilstand"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
+msgstr "<i title=\"Privat opgave\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -444,7 +445,7 @@ msgstr "<small class=\"text-muted\">Kunde</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Datoer\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -452,8 +453,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
-"title=\"Domain Alias\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domænealias\" "
+"title=\"Domænealias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -587,8 +588,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"En Python-ordbog, der vil blive evalueret for at angive standardværdier, når "
-"du opretter nye poster til dette alias."
+"En Python-ordbog, som evalueres for at angive standardværdier ved oprettelse "
+"af nye poster via dette alias."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
@@ -623,7 +624,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
-msgstr "Et tag med samme navn eksisterer allerede."
+msgstr "Der findes allerede et tag med dette navn."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -633,7 +634,7 @@ msgstr "En opgave kan kun have en enkelt personlig fase pr. bruger."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr "Acceptér mails fra"
+msgstr "Acceptér e-mails fra"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
@@ -682,7 +683,7 @@ msgstr "Aktiviteter"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitet undtagelse markering"
+msgstr "Markering af undtagelsesaktivitet"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
@@ -695,14 +696,14 @@ msgstr "Aktivitetsplaner"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 #: model:ir.model.fields,field_description:project.field_project_update__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstilstand"
+msgstr "Aktivitetsstatus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitetstype ikon"
+msgstr "Aktivitetstypeikon"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -736,8 +737,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Tilføj kolonner for at organisere dine opgaver ind i <b>stadier</b> "
-"<i>f.eks. Ny - Igangværende - Færdig</i>."
+"Tilføj kolonner for at organisere dine opgaver ind i <b>faser</b> <i>f.eks. "
+"Ny - Igangværende - Udført</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -752,14 +753,14 @@ msgstr "Tilføj detaljer om denne opgave ..."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr "Tilføj ekstra indhold til visning i emailen"
+msgstr "Tilføj ekstra indhold, der vises i e-mailen"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr "Tilføj din opgave når den er klar."
+msgstr "Tilføj din opgave, når den er klar."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -781,42 +782,42 @@ msgstr "Alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias kontakt sikkerhed"
+msgstr "Aliaskontaktsikkerhed"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
 msgid "Alias Domain"
-msgstr "Alias domæne"
+msgstr "Aliasdomæne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias domænenavn"
+msgstr "Aliasdomænenavn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
 msgid "Alias Email"
-msgstr "Alias e-mail"
+msgstr "E-mailalias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
-msgstr "Alias navn"
+msgstr "Aliasnavn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
 msgid "Alias Status"
-msgstr "Alias status"
+msgstr "Aliasstatus"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Alias status vurderet ud fra den seneste modtagne besked."
+msgstr "Aliasstatus vurderet ud fra den senest modtagne besked."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Aliased model"
+msgstr "Aliasmodel"
 
 #. module: project
 #. odoo-python
@@ -858,7 +859,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Omkostningssted"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
@@ -930,7 +931,7 @@ msgstr "Godkendt"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr "Arkiv Stadier"
+msgstr "Arkivér faser"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -949,13 +950,13 @@ msgstr "Arkiveret"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr "Er du sikker på du vil fortsætte?"
+msgstr "Er du sikker på, at du ønsker at fortsætte?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr "Er du sikker på, at du vil slette disse stadier?"
+msgstr "Er du sikker på, at du ønsker at slette disse faser?"
 
 #. module: project
 #. odoo-javascript
@@ -963,7 +964,7 @@ msgstr "Er du sikker på, at du vil slette disse stadier?"
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 #, python-format
 msgid "Are you sure you want to delete this record?"
-msgstr "Er du sikker på du vil slette dette datasæt?"
+msgstr "Er du sikker på, at du vil slette denne post?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -980,7 +981,7 @@ msgstr "Pil ikon"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr "Samler"
+msgstr "Montage"
 
 #. module: project
 #. odoo-javascript
@@ -1006,7 +1007,7 @@ msgstr "Tildelte opgaver"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 msgid "Assigned to"
-msgstr "Tildelt til"
+msgstr "Tildelt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
@@ -1074,7 +1075,7 @@ msgstr "Forfatter"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr "Auto-generer opgaver for regulære aktiviteter"
+msgstr "Automatisk generering af opgaver for regulære aktiviteter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_state
@@ -1253,19 +1254,19 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
-"Vælg et opgave <b>navn</b> <i>(f.eks. Hjemmeside Design, Køb af Varer...)</i>"
+"Vælg et opgave<b>navn</b> <i>(f.eks. hjemmesidedesign, køb af varer ...)</i>"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr "Klientanmeldelse"
+msgstr "Kundeanmeldelse"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed On"
-msgstr "Lukket den"
+msgstr "Afsluttet den"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
@@ -1287,7 +1288,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed Tasks"
-msgstr "Lukkede opgaver"
+msgstr "Afsluttede opgaver"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -1311,7 +1312,7 @@ msgstr "Kollaboratører"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr "Samarbejdende i delt projekt"
+msgstr "Kollaboratør i delt projekt"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1362,7 +1363,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Communication history"
-msgstr "Kommunikations historik"
+msgstr "Kommunikationshistorik"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1378,7 +1379,7 @@ msgstr "Virksomhed"
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
+msgstr "Konfigurationsindstillinger"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1411,7 +1412,7 @@ msgstr "Bekræftelse"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Congratulations, you are now a master of project management."
-msgstr "Tillykke, du er nu en mester til projektledelse."
+msgstr "Tillykke, du er nu en ekspert i projektledelse."
 
 #. module: project
 #. odoo-javascript
@@ -1456,7 +1457,7 @@ msgstr "Omkostninger"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr "Coverbillede"
+msgstr "Forsidebillede"
 
 #. module: project
 #. odoo-javascript
@@ -1464,7 +1465,7 @@ msgstr "Coverbillede"
 #, python-format
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
-msgstr "Opret <b>aktiviteter</b> til dine to-dos eller planlæg møder."
+msgstr "Opret <b>aktiviteter</b> til dine gøremål, eller planlæg møder."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1479,7 +1480,7 @@ msgstr "Opret et projekt"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr "Opret et nyt stadie i opgave pipeline"
+msgstr "Opret en ny fase i opgavens pipeline"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1492,7 +1493,7 @@ msgid ""
 "Create projects to organize your tasks and define a different workflow for "
 "each project."
 msgstr ""
-"Opret projekter til at organisere dine opgaver og angiv forskellige "
+"Opret projekter til at organisere dine opgaver, og angiv forskellige "
 "workflows for hvert projekt."
 
 #. module: project
@@ -1501,19 +1502,19 @@ msgid ""
 "Create projects to organize your tasks. Define a different workflow for each "
 "project."
 msgstr ""
-"Opret projekter til at organisere dine opgaver. Angiv forskellige workflows "
-"på hvert projekt."
+"Opret projekter for at organisere dine opgaver. Angiv forskellige workflows "
+"for hvert projekt."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr "Opret opgaver ved at sende en email til"
+msgstr "Opret opgaver ved at sende en e-mail til"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr "Opret opgaver ved at sende en email til projektets emailadresse."
+msgstr "Opret opgaver ved at sende en e-mail til projektets e-mailadresse."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1598,7 +1599,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Tilpasset Ikke modtaget Besked"
+msgstr "Tilpasset meddelelse om ikke-leveret post"
 
 #. module: project
 #. odoo-python
@@ -1627,13 +1628,13 @@ msgstr "Kunde e-mail"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr "Kunde-feedback"
+msgstr "Kundefeedback"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr "Kundeportal URL"
+msgstr "Kundeportal-URL"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1641,12 +1642,12 @@ msgstr "Kundeportal URL"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr "Kundebedømmelse "
+msgstr "Kundebedømmelser"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr "Kundebedømmelsers Status"
+msgstr "Status for kundebedømmelser"
 
 #. module: project
 #. odoo-javascript
@@ -1752,7 +1753,7 @@ msgstr "Deadline"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "Dear"
-msgstr "Kære"
+msgstr "Hej"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1768,27 +1769,23 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
-"Definér de trin der vil blive brugt i projektet fra\n"
-"                 oprettelsen af opgaven, op til afslutning på den eller "
-"problemet.\n"
-"                 Du vil bruge disse stadier for at spore fremskridt ift "
-"løsning af\n"
-"                 opgaven eller problemet"
+"Definér projektfaserne fra\n"
+"                oprettelsen af en opgave til dens afslutning.\n"
+"                Faserne gør det muligt at følge\n"
+"                projektets fremdrift i detaljer."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Define the steps your projects move through from creation to completion."
 msgstr ""
-"Definér trinnene dit projekt bevæger sig igennem fra oprettelse til "
-"færdiggørelse."
+"Fastlæg de trin, som dine projekter gennemgår fra oprettelse til afslutning."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
-"Definér trinnene dit projekt bevæger sig igennem fra oprettelse til "
-"færdiggørelse."
+"Fastlæg de trin, som dine opgaver gennemgår fra oprettelse til afslutning."
 
 #. module: project
 #. odoo-javascript
@@ -1826,7 +1823,7 @@ msgstr "Slet projektfase"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr "Slet Stadie"
+msgstr "Slet fase"
 
 #. module: project
 #. odoo-javascript
@@ -1844,7 +1841,7 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
-"Levér dine tjenester automatisk, når en milepæl nås, ved at knytte dem til "
+"Levér dine tjenester automatisk, når en milepæl nås, ved at knytte den til "
 "en salgsordre."
 
 #. module: project
@@ -1906,14 +1903,14 @@ msgstr "Udvikling"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr "Opsummering"
+msgstr "Oversigt"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
-msgstr "Digital Marketing"
+msgstr "Digital marketing"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
@@ -1959,7 +1956,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
@@ -1971,8 +1968,7 @@ msgstr ""
 #: code:addons/project/models/digest_digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Har ikke adgang, spring over disse data til brugerens opsamlings e-mail"
+msgstr "Har ikke adgang: Spring disse data over i brugerens oversigtsmail"
 
 #. module: project
 #. odoo-javascript
@@ -1997,7 +1993,7 @@ msgstr "Udført"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
-msgstr "Udkast"
+msgstr "Kladde"
 
 #. module: project
 #. odoo-python
@@ -2013,7 +2009,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
 msgid "Edit"
-msgstr "Rediger"
+msgstr "Redigér"
 
 #. module: project
 #. odoo-javascript
@@ -2030,13 +2026,13 @@ msgstr "E-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
 msgid "Email Alias"
-msgstr "E-mail alias"
+msgstr "E-mailalias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "E-mail skabelon"
+msgstr "E-mailskabelon"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2051,17 +2047,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "E-mail CC"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-mail domæne f.eks. 'example.com' i 'odoo@example.com'"
+msgstr "E-maildomæne f.eks. 'eksempel.com' i 'odoo@eksempel.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
-msgstr "Emails sendt til"
+msgstr "E-mails sendt til"
 
 #. module: project
 #. odoo-javascript
@@ -2075,13 +2071,13 @@ msgstr "Kun Medarbejdere"
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_until
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "End Date"
-msgstr "Slut dato"
+msgstr "Slutdato"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_end
 msgid "Ending Date"
-msgstr "Slut dato"
+msgstr "Slutdato"
 
 #. module: project
 #. odoo-python
@@ -2122,7 +2118,7 @@ msgstr "Ekstern"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr "Ekstra info"
+msgstr "Yderligere oplysninger"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2133,7 +2129,7 @@ msgstr "Favorit"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr "Favorit projekter"
+msgstr "Favoritprojekter"
 
 #. module: project
 #. odoo-javascript
@@ -2198,13 +2194,13 @@ msgstr "Følgere (partnere)"
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Skrifttype awesome icon f.eks. fa-opgaver"
+msgstr "FontAwesome-ikon, f.eks. fa-opgaver"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__forever
 msgid "Forever"
-msgstr "For evigt"
+msgstr "For altid"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2353,8 +2349,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID for overordnet record indeholdende aliaset (eksempel: projekt, der "
-"indeholder opgaveoprettelses aliaset)"
+"ID for den overordnede aliaspost (f.eks. et projekt, der indeholder aliasset "
+"til oprettelse af opgaver)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -2375,7 +2371,7 @@ msgstr "Ikon for uventet aktivitet."
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
-msgstr "Ideer"
+msgstr "Idéer"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_needaction
@@ -2383,7 +2379,7 @@ msgstr "Ideer"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 #: model:ir.model.fields,help:project.field_project_update__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
+msgstr "Hvis dette felt er markeret, kræver nye beskeder din opmærksomhed."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error
@@ -2395,7 +2391,8 @@ msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Hvis afkrydset har nogle beskeder en leveringsfejl"
+msgstr ""
+"Hvis dette felt er markeret, indeholder nogle beskeder en leveringsfejl."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -2447,8 +2444,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Hvis angivet vil dette indhold automatisk blive sendt ud til uautoriserede "
-"brugere, i stedet for standard beskeden."
+"Hvis angivet, sendes dette indhold automatisk til uautoriserede brugere i "
+"stedet for standardbeskeden."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2469,7 +2466,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
-msgstr "I gang"
+msgstr "Behandles"
 
 #. module: project
 #. odoo-javascript
@@ -2506,9 +2503,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Intern email associeret med dette projekt. Indgående emails synkroniseres "
-"automatisk med Opgaver (eller eventuelt Problemer, hvis Problem sporings "
-"modulet er installeret)."
+"Intern e-mail knyttet til dette projekt. Indgående e-mails synkroniseres "
+"automatisk med opgaver (eller eventuelt problemer, hvis modul til "
+"problemsporing er installeret)."
 
 #. module: project
 #. odoo-javascript
@@ -2597,7 +2594,7 @@ msgstr "Sags-version"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr "JSON, der kortlægger id'er fra et many2one-felt til brugte sekunder"
+msgstr "JSON, der kortlægger ID'er fra et many2one-felt til brugte sekunder"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2701,7 +2698,7 @@ msgstr "Sidst opdateret den"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr "Overskredet aktiviteter"
+msgstr "Forfaldne aktiviteter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2773,7 +2770,7 @@ msgstr "Lad os begynde arbejdet på dine opgaver."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr "Lad os vente på at dine kunder manifesterer sig selv."
+msgstr "Lad os vente på, at dine kunder manifesterer sig selv."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
@@ -2791,14 +2788,14 @@ msgstr "Live"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr "Lokal-del baseret indgående detektion"
+msgstr "Indgående detektion baseret på lokal del"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Logo Design"
-msgstr "Logo Design"
+msgstr "Logo-design"
 
 #. module: project
 #. odoo-javascript
@@ -2857,7 +2854,7 @@ msgstr "Markér som udført"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Material Sourcing"
-msgstr "Materiale sourcing"
+msgstr "Indkøb af materialer"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -2954,7 +2951,7 @@ msgstr "Måneder"
 #: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline på mine aktiviteter "
+msgstr "Deadline på mine aktiviteter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -3074,7 +3071,7 @@ msgstr "Nye projekter"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Request"
-msgstr "Ny forespørgsel"
+msgstr "Ny anmodning"
 
 #. module: project
 #. odoo-javascript
@@ -3108,7 +3105,7 @@ msgstr "Næste aktivitet"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Næste aktivitet for kalenderarrangement"
+msgstr "Næste aktivitet i kalenderen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3181,18 +3178,18 @@ msgstr "Ingen data endnu!"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid "No projects found. Let's create one!"
-msgstr "Fandt ikke noget projekt. Lad os oprette et!"
+msgstr "Intet projekt fundet. Lad os oprette et!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "Ingen stadier fundet. Lad os oprette en!"
+msgstr "Ingen faser fundet. Lad os oprette en!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr "Fandt ingen tags. Lad os oprette en!"
+msgstr "Ingen tags fundet. Lad os oprette et!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3228,7 +3225,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
 msgid "Note"
-msgstr "Notat"
+msgstr "Note"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction_counter
@@ -3267,7 +3264,7 @@ msgstr "Antal fejl"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Antal meddelelser der kræver handling"
+msgstr "Antal meddelelser, der kræver handling"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -3295,7 +3292,7 @@ msgstr "Kontordesign"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr "Gammel Fuldført Sprint"
+msgstr "Gammelt fuldført sprint"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
@@ -3314,7 +3311,7 @@ msgstr "På rette vej"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
-msgstr "En gang i måneden"
+msgstr "Én gang om måneden"
 
 #. module: project
 #. odoo-python
@@ -3358,9 +3355,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valgfri ID for en tråd (record), som alle indgående meddelelser vil blive "
-"vedhæftet, selvom de ikke svarede på det. Hvis opsat, vil dette fuldstændigt "
-"deaktivere oprettelsen af nye poster."
+"Valgfrit ID for en tråd (post), som alle indgående meddelelser vil blive "
+"knyttet til, selv om de ikke er svar på tråden. Hvis det er angivet, vil "
+"oprettelsen af nye poster blive fuldstændigt deaktiveret."
 
 #. module: project
 #. odoo-javascript
@@ -3397,7 +3394,7 @@ msgstr "Overskredne opgaver"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr "Side ideer"
+msgstr "Idéer til sider"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -3407,7 +3404,7 @@ msgstr "Overordnet model"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Overordnet tråd (record) ID"
+msgstr "Tråd-ID for overordnet post"
 
 #. module: project
 #. odoo-python
@@ -3425,9 +3422,9 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Overordnet model der holder aliaset. Modellen med aliasreferencen er ikke "
-"nødvendigvis den model, der er givet af alias_model_id (eksempel: projekt "
-"(parent_model) og opgave (model))."
+"Den overordnede model for aliasset. Denne model, som indeholder "
+"aliasreferencen, er ikke nødvendigvis den samme som den model, der er "
+"angivet i alias_model_id (f.eks. projekt (parent_model) og opgave (model))"
 
 #. module: project
 #. odoo-python
@@ -3539,7 +3536,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr "Podcast og Video produktion"
+msgstr "Podcast- og videoproduktion"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -3550,17 +3547,17 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Politik til at oprette en besked på dokumentet ved hjælp af mailgatewayen.\n"
-"- alle: alle kan skrive\n"
-"- partnere: kun godkendte partnere\n"
-"- følgere: kun følgere af det relaterede dokument eller medlemmer af "
-"følgende kanaler\n"
+"Politik for oprettelse af beskeder på dokumentet via mailgatewayen:\n"
+"- Alle: Alle kan skrive.\n"
+"- Partnere: Kun godkendte partnere kan skrive.\n"
+"- Følgere: Kun følgere af det tilknyttede dokument eller medlemmer af de "
+"følgende kanaler kan skrive.\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr "Portal adgangs URL"
+msgstr "URL til portaladgang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
@@ -3708,7 +3705,7 @@ msgstr "Projektleder"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Projekt milepæl"
+msgstr "Projektmilepæl"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_activity
@@ -3750,7 +3747,7 @@ msgstr "Projektfase ændret"
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr "Projekt Stadie Slet Guide"
+msgstr "Assistent til sletning af projektfase"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3762,7 +3759,7 @@ msgstr "Projektfaser"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr "Projekttags"
+msgstr "Projekt-tags"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
@@ -3772,7 +3769,7 @@ msgstr "Assistent til sletning af en fase i en projektopgave"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "Project Tasks"
-msgstr "Projekt opgaver"
+msgstr "Projektopgaver"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
@@ -3783,7 +3780,7 @@ msgstr "Projekttitel"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr "Projekt update"
+msgstr "Projektopdatering"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -3794,7 +3791,7 @@ msgstr "Projektopdateringer"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr "Projekt Synlighed"
+msgstr "Projektsynlighed"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3809,7 +3806,7 @@ msgstr "Projektstatus - {{ object.name }}"
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Projekt opgaver"
+msgstr "Projektopgaver"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
@@ -3819,7 +3816,7 @@ msgstr "Projekt: Projekt afsluttet"
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr "Projeck: Modtagelse af henvendelse"
+msgstr "Projekt: Modtagelse af anmodning"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
@@ -3890,7 +3887,7 @@ msgstr "Egenskaber"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
-msgstr "Udgivet"
+msgstr "Offentliggjort"
 
 #. module: project
 #. odoo-javascript
@@ -3904,12 +3901,12 @@ msgstr "Udgivet den"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr "Udgivelse"
+msgstr "Offentliggørelse"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr "Kvartalvis"
+msgstr "Kvartalsvis"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -3937,12 +3934,12 @@ msgstr "Bedømmelse (/5)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Bedømmelse Gns. tekst"
+msgstr "Bedømmelse af gns. tekst"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr "Bedømmelse e-mailskabelon"
+msgstr "E-mailskabelon til bedømmelse"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
@@ -3962,7 +3959,7 @@ msgstr "Bedømmelse af seneste billede"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr "Sidste bedømmelse"
+msgstr "Bedømmelse af den seneste værdi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -3978,7 +3975,7 @@ msgstr "Tilfredshedsbedømmelse"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr "Vurderingstekst"
+msgstr "Bedømmelsestekst"
 
 #. module: project
 #. odoo-javascript
@@ -4006,7 +4003,7 @@ msgstr "Bedømmelser"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
 msgid "Reached"
-msgstr "Opnået"
+msgstr "Nået"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__reached_date
@@ -4031,7 +4028,7 @@ msgstr "Modtagere"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Optag tråd ID"
+msgstr "Postens tråd-ID"
 
 #. module: project
 #. odoo-javascript
@@ -4043,18 +4040,18 @@ msgstr "Optager"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
 msgid "Recurrence"
-msgstr "Gentagne"
+msgstr "Gentagelse"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
 msgid "Recurrent"
-msgstr "Gentagelse"
+msgstr "Gentagne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurring Tasks"
-msgstr "Gentagende opgaver"
+msgstr "Tilbagevendende opgaver"
 
 #. module: project
 #. odoo-javascript
@@ -4071,12 +4068,12 @@ msgstr "Tilknyttet dokument"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
 msgid "Related Document ID"
-msgstr "Relateret dokument ID"
+msgstr "Tilknyttet dokument-ID"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
-msgstr "Relateret dokument model"
+msgstr "Tilknyttet dokumentmodel"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_renovations
@@ -4094,7 +4091,7 @@ msgstr "Gentag hver"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr "Gentag Enhed"
+msgstr "Gentag enhed"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -4119,7 +4116,7 @@ msgstr "Forskning og udvikling"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr "Undersøg Projekt"
+msgstr "Forskningsprojekt"
 
 #. module: project
 #. odoo-javascript
@@ -4133,7 +4130,7 @@ msgstr "Undersøger"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr "Ressource allokering"
+msgstr "Ressourcetildeling"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_user_id
@@ -4147,7 +4144,7 @@ msgstr "Ansvarlig bruger"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Revenues"
-msgstr "Indtægter"
+msgstr "Omsætning"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4155,7 +4152,7 @@ msgstr "Indtægter"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leveringsfejl"
+msgstr "Fejl ved SMS-levering"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -4220,14 +4217,14 @@ msgstr "Søg i alle"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "Søg i ansvarlige"
+msgstr "Søg i tildelte"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
-msgstr "Søg i kunder"
+msgstr "Søg i kunde"
 
 #. module: project
 #. odoo-python
@@ -4255,7 +4252,7 @@ msgstr "Søg i prioritet"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "Søg i Projekt"
+msgstr "Søg i projekt"
 
 #. module: project
 #. odoo-python
@@ -4309,7 +4306,7 @@ msgstr "Sekvens"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Angiv coverbillede"
+msgstr "Angiv forsidebillede"
 
 #. module: project
 #. odoo-python
@@ -4323,7 +4320,7 @@ msgstr "Angiv status"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr "Angiv en Bedømmelses Email Skabelon i Stadier"
+msgstr "Angiv en e-mailskabelon til evaluering af faser"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
@@ -4371,7 +4368,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
-msgstr "Opsætning"
+msgstr "Indstillinger"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
@@ -4417,14 +4414,14 @@ msgstr "Siden"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr "Software udvikling"
+msgstr "Softwareudvikling"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Undskyld. Du kan ikke angive en opgave som dens ophavene opgave."
+msgstr "Undskyld. Du kan ikke angive en opgave som dens overordnede opgave."
 
 #. module: project
 #. odoo-javascript
@@ -4438,21 +4435,21 @@ msgstr "Specifikationer"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr "Sprint Efterslæb"
+msgstr "Sprintefterslæb"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr "Sprint Fuldfør"
+msgstr "Sprint fuldført"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr "Sprint Igangværende"
+msgstr "Sprint behandles"
 
 #. module: project
 #. odoo-javascript
@@ -4515,7 +4512,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Start Date"
-msgstr "Start dato"
+msgstr "Startdato"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__state
@@ -4553,14 +4550,14 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Status baseret på aktiviteter\n"
-"Forfaldne: Forfaldsdato er allerede overskredet\n"
-"I dag: Aktivitetsdato er i dag\n"
-"Planlagt: Fremtidige aktiviteter."
+"Forfaldne: Aktivitetens forfaldsdato er overskredet\n"
+"I dag: Aktiviteten er planlagt til i dag\n"
+"Planlagt: Kommende aktiviteter."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__duration_tracking
 msgid "Status time"
-msgstr "Status tid"
+msgstr "Statustid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
@@ -4575,7 +4572,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Underopgaver"
+msgstr "Delopgaver"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
@@ -4609,7 +4606,7 @@ msgstr "Opsummering"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr "T-shirt printning"
+msgstr "Tryk på T-shirts"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -4646,7 +4643,7 @@ msgstr "Opgave"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr "Opgave aktiviteter"
+msgstr "Opgaveaktiviteter"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_approved
@@ -4684,7 +4681,7 @@ msgstr "Opgaveafhængigheder"
 #: model:mail.message.subtype,name:project.mt_project_task_done
 #: model:mail.message.subtype,name:project.mt_task_done
 msgid "Task Done"
-msgstr "Sag færdiggjort"
+msgstr "Sag udført"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_in_progress
@@ -4696,7 +4693,7 @@ msgstr "Opgave behandles"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr "Opgave logføringer"
+msgstr "Opgavelogføringer"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
@@ -4712,12 +4709,12 @@ msgstr "Opgaveegenskaber"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr "Bedømmelse af opgaver"
+msgstr "Opgavebedømmelse"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "Opgave Gentagelse"
+msgstr "Opgavegentagelse"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -4730,7 +4727,7 @@ msgstr "Opgavefase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Opgave fase ændret"
+msgstr "Opgavefase ændret"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -4743,13 +4740,13 @@ msgstr "Opgavefaser"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
-msgstr "Opgave overskrift"
+msgstr "Opgaveoverskrift"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr "Opgave overskrift..."
+msgstr "Opgaveoverskrift ..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4776,7 +4773,7 @@ msgstr "Opgave udført"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 msgid "Task:"
-msgstr "Sag:"
+msgstr "Opgave:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4827,7 +4824,7 @@ msgstr "Opgaver"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Opgave analyse"
+msgstr "Opgaveanalyse"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4839,7 +4836,7 @@ msgstr "Opgavehåndtering"
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Opgave faser"
+msgstr "Opgavefaser"
 
 #. module: project
 #. odoo-python
@@ -4847,7 +4844,7 @@ msgstr "Opgave faser"
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 #, python-format
 msgid "Tasks in Recurrence"
-msgstr "Gentagende Opgaver"
+msgstr "Gentagnde opgaver"
 
 #. module: project
 #. odoo-javascript
@@ -4913,9 +4910,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"Modellen (Odoo Document Kind), som dette alias svarer til. Enhver indgående "
-"e-mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af "
-"en ny rekord af denne model (fx en projektopgave)"
+"Modellen (Odoo-dokumenttype), som dette alias svarer til. Enhver indgående e-"
+"mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af en "
+"ny post af denne model (f.eks. en projektopgave)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -4923,8 +4920,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Navnet på e-mail aliaset, f.eks. 'jobs', hvis du vil fange e-mails til "
-"<jobs@example.odoo.com>"
+"Navnet på e-mailaliasset, f.eks. 'jobs', hvis du vil modtage e-mails sendt "
+"til <jobs@eksempel.odoo.com>"
 
 #. module: project
 #. odoo-python
@@ -5021,7 +5018,7 @@ msgstr "Der er i øjeblikket ingen bedømmelser for dette projekt"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr "Der er ingen opgaver"
+msgstr "Der er ingen opgaver."
 
 #. module: project
 #. odoo-python
@@ -5101,7 +5098,7 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
-"Dette vil arkivere stadierne og alle opgaverne de indeholder fra følgende "
+"Dette vil arkivere faserne og alle opgaver, de indeholder, fra følgende "
 "projekter:"
 
 #. module: project
@@ -5117,7 +5114,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr "Tidshåndtering"
+msgstr "Tidsstyring"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_1
@@ -5151,7 +5148,7 @@ msgstr "Til fakturering"
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
 msgid "To Do"
-msgstr "To Do"
+msgstr "Gøremål"
 
 #. module: project
 #. odoo-javascript
@@ -5165,7 +5162,7 @@ msgstr "Til fakturering"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr "At printe"
+msgstr "Til udskrivning"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
@@ -5174,7 +5171,7 @@ msgid ""
 "                Chat in real time or by email to collaborate efficiently."
 msgstr ""
 "Brug aktiviteter og status på opgaver, for at få ting gjort.<br>\n"
-"                      Chat i realtid eller via email for effektivt at "
+"                      Chat i realtid eller via e-mail for effektivt at "
 "arbejde sammen."
 
 #. module: project
@@ -5276,7 +5273,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
 msgid "Twice a Month"
-msgstr "To gange i måneden"
+msgstr "To gange om måneden"
 
 #. module: project
 #. odoo-python
@@ -5290,7 +5287,7 @@ msgstr "To opgaver kan ikke være afhængige af hinanden."
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type af undtagelsesaktivitet registreret "
+msgstr "Type registreret undtagelsesaktivitet."
 
 #. module: project
 #. odoo-python
@@ -5321,7 +5318,7 @@ msgstr "Ikke tildelt"
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr "Ukendt analytisk konto"
+msgstr "Ukendt omkostningssted"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -5366,7 +5363,7 @@ msgstr "Brug bedømmelse på projekt"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr "Anvend gentagende opgaver"
+msgstr "Anvend gentagnde opgaver"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
@@ -5381,14 +5378,14 @@ msgstr "Brug opgavafhængigheder"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr "Anvend Opgaver som"
+msgstr "Anvend opgaver som"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr "Brug Dette til Mit Projekt"
+msgstr "Brug til mit projekt"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5400,7 +5397,7 @@ msgstr "Anvend tags til at kategorisere dine opgaver."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr "Brug knappen"
+msgstr "Brug"
 
 #. module: project
 #. odoo-javascript
@@ -5453,7 +5450,7 @@ msgstr "Vis"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "View Task"
-msgstr "Se opgave"
+msgstr "Vis opgave"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
@@ -5506,7 +5503,7 @@ msgstr "Beskeder fra hjemmesiden"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr "Hjemmeside omdesign"
+msgstr "Omlægning af hjemmesiden"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__website_message_ids
@@ -5514,7 +5511,7 @@ msgstr "Hjemmeside omdesign"
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr "Hjemmesidens kommunikations historik"
+msgstr "Hjemmesidens kommunikationshistorik"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
@@ -5555,7 +5552,7 @@ msgstr "Arbejdsdage til tildeling"
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "Working Days to Close"
-msgstr "Arbejdsdage til lukning"
+msgstr "Arbejdsdage til afslutning"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
@@ -5567,7 +5564,7 @@ msgstr "Arbejdstimer til at tildele"
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
-msgstr "Arbejdstimer til at lukke"
+msgstr "Arbejdstimer til at afslutte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -5669,7 +5666,7 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
-"Du kan ikke slette stadier der indeholder opgaver. Du kan enten arkivere dem "
+"Du kan ikke slette faser, der indeholder opgaver. Du kan enten arkivere dem "
 "eller først slette alle deres opgaver."
 
 #. module: project
@@ -5678,7 +5675,7 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
-"Du kan ikke slette stadier der indeholder opgaver. Du bør først slette alle "
+"Du kan ikke slette faser, der indeholder opgaver. Du bør først slette alle "
 "deres opgaver."
 
 #. module: project
@@ -5784,20 +5781,20 @@ msgstr "Kommentarer"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr "f.eks. Månedlig gennemgang"
+msgstr "f.eks. Månedlig oversigt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "e.g. Office Party"
-msgstr "fx Firmafest"
+msgstr "f.eks. Firmafest"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr "f.eks. Produkt lancering"
+msgstr "f.eks. Produktlancering"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -5818,7 +5815,7 @@ msgstr "f.eks. Opgaver"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr "f.eks. To Do"
+msgstr "f.eks. Gøremål"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project

@@ -25,11 +25,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-04-15 11:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-17/mail/ru/>"
-"\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-17/mail/ru/"
+">\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -898,25 +898,28 @@ msgid "Add Users"
 msgstr "Добавить пользователей"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_button.xml:0
 #, python-format
 msgid "Add a Reaction"
 msgstr "Добавить реакцию"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "Добавьте ключ Tenor GIF API, чтобы включить поддержку GIF-изображений."
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"Добавьте ключ Tenor GIF API, чтобы включить поддержку GIF-изображений. "
-"https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -4714,6 +4717,15 @@ msgstr ""
 "Если вы хотите использовать Twilio в качестве поставщика серверов TURN/STUN"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+#, python-format
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "Игнорировать все"
@@ -5280,6 +5292,32 @@ msgstr "Ключ"
 #, python-format
 msgid "Kind Regards"
 msgstr "С наилучшими пожеланиями"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF content filter"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF limits"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
+msgid "Klipy content filter"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9281,36 +9319,6 @@ msgid "Templates"
 msgstr "Шаблоны"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Ключ API Tenor"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Ключ API Tenor GIF"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF content filter"
-msgstr "Фильтр контента Tenor GIF"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF limits"
-msgstr "Лимиты Tenor GIF"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
-msgid "Tenor Gif Limit"
-msgstr "Лимит Tenor GIF"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
-msgid "Tenor content filter"
-msgstr "Фильтр контента Tenor"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Проверить и подтвердить"
@@ -11426,8 +11434,8 @@ msgstr "только что назначил вам следующую акти�
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
-msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr "https://developers.google.com/tenor/guides/content-filtering"
+msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11757,6 +11765,38 @@ msgstr "«%(member_name)s» в «%(channel_name)s»"
 #, python-format
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr ""
+#~ "Добавьте ключ Tenor GIF API, чтобы включить поддержку GIF-изображений."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Добавьте ключ Tenor GIF API, чтобы включить поддержку GIF-изображений. "
+#~ "https://developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Ключ API Tenor"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Ключ API Tenor GIF"
+
+#~ msgid "Tenor GIF content filter"
+#~ msgstr "Фильтр контента Tenor GIF"
+
+#~ msgid "Tenor GIF limits"
+#~ msgstr "Лимиты Tenor GIF"
+
+#~ msgid "Tenor Gif Limit"
+#~ msgstr "Лимит Tenor GIF"
+
+#~ msgid "Tenor content filter"
+#~ msgstr "Фильтр контента Tenor"
+
+#~ msgid "https://developers.google.com/tenor/guides/content-filtering"
+#~ msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #, python-format
 #~ msgid ""

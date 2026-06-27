@@ -32,15 +32,15 @@
 # Martin Trigaux, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-04-09 10:41+0000\n"
-"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-22 09:51+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/mail/sv/>"
 "\n"
 "Language: sv\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #. odoo-python
@@ -908,25 +908,28 @@ msgid "Add Users"
 msgstr "Lägg till användare"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_button.xml:0
 #, python-format
 msgid "Add a Reaction"
 msgstr "Lägg till en reaktion"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "Lägg till en Tenor GIF API-nyckel för att aktivera GIF-stöd."
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"Lägg till en Tenor GIF API-nyckel för att aktivera GIF-stöd. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -4708,6 +4711,15 @@ msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "Om du vill använda twilio som leverantör av TURN/STUN-server"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+#, python-format
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Ignore all"
 msgstr "Ignorera alla"
@@ -5271,6 +5283,32 @@ msgstr "Nyckel"
 #, python-format
 msgid "Kind Regards"
 msgstr "Med vänliga hälsningar"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF content filter"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF limits"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
+msgid "Klipy content filter"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9265,36 +9303,6 @@ msgid "Templates"
 msgstr "Mallar"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "API-nyckel för Tenor"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API key"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF content filter"
-msgstr "Tenor GIF innehållsfilter"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF limits"
-msgstr "Tenor GIF-gränser"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
-msgid "Tenor Gif Limit"
-msgstr "Tenor Gif Limit"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
-msgid "Tenor content filter"
-msgstr "Tenor innehållsfilter"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Testa och bekräfta"
@@ -11407,8 +11415,8 @@ msgstr "har just gett dig följande uppgift:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
-msgid "https://developers.google.com/tenor/guides/content-filtering"
-msgstr "https://developers.google.com/tenor/guides/content-filtering"
+msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11737,7 +11745,38 @@ msgstr "\"%(member_name)s\" i \"%(channel_name)s\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 #, python-format
 msgid "“%s”"
-msgstr ""
+msgstr "“%s”"
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "Lägg till en Tenor GIF API-nyckel för att aktivera GIF-stöd."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "Lägg till en Tenor GIF API-nyckel för att aktivera GIF-stöd. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "API-nyckel för Tenor"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API key"
+
+#~ msgid "Tenor GIF content filter"
+#~ msgstr "Tenor GIF innehållsfilter"
+
+#~ msgid "Tenor GIF limits"
+#~ msgstr "Tenor GIF-gränser"
+
+#~ msgid "Tenor Gif Limit"
+#~ msgstr "Tenor Gif Limit"
+
+#~ msgid "Tenor content filter"
+#~ msgstr "Tenor innehållsfilter"
+
+#~ msgid "https://developers.google.com/tenor/guides/content-filtering"
+#~ msgstr "https://developers.google.com/tenor/guides/content-filtering"
 
 #, python-format
 #~ msgid ""

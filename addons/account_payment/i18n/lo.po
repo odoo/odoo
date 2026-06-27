@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2026-05-18 07:10+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-20 09:49+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/"
 "account_payment/lo/>\n"
 "Language: lo\n"
@@ -19,22 +20,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr ""
+msgstr "<b>ການຕິດຕໍ່ສື່ສານ: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> Pay Now</span>"
 msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> ຊຳ"
+"ລະດຽວນີ້</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> ຊຳລະດຽວນີ້"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -42,6 +45,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> ອະນຸມັດແລ້ວ</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -49,26 +54,28 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> ຊຳລະແລ້ວ</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> ຊຳລະແລ້ວ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> ຄ້າງດຳເນີນການ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-inline\"> ຄ້າງດຳເນີນການ</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ທຸລະກຳການຊຳລະເງິນ</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -76,6 +83,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>ບໍ່ພົບທາງເລືອກການຊຳລະເງິນທີ່ເໝາະສົມ.</strong><br/>\n"
+"                                ຫາກທ່ານເຊື່ອວ່ານີ້ແມ່ນຂໍ້ຜິດພາດ, ກະລຸນາຕິດຕໍ່ຜູ້ດູແລເວັບໄຊ."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -84,54 +93,59 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>ເຕືອນ!</strong> ມີການຄືນເງິນທີ່ຍັງຄ້າງສຳລັບການຊຳລະນີ້.\n"
+"                        ກະລຸນາລໍຖ້າຈັກຄາວເພື່ອໃຫ້ລະບົບດຳເນີນການ. ຖ້າການຄືນເງິນຍັງຄ້າງຢູ່\n"
+"                        ໃນອີກບໍ່ເທົ່າໃດນາທີ, ກະລຸນາກວດສອບການຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການຊຳລະເງິນຂອງທ່າ"
+"ນ."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "ມີທຸລະກຳການຊຳລະທີ່ມີເລກອ້າງອີງ %s ຢູ່ແລ້ວ."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "ຕ້ອງມີ Token ເພື່ອສ້າງທຸລະກຳການຊຳລະໃໝ່."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
 msgid "Activate Stripe"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ Stripe"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "ຈຳນວນເງິນທີ່ສາມາດຄືນໄດ້"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "ຈຳນວນທີ່ຊຳລະແລ້ວ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Are you sure you want to void the authorized transaction? This action can't be undone."
 msgstr ""
+"ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການຍົກເລີກລາຍການທີ່ໄດ້ຮັບອະນຸມັດແລ້ວ? ການດຳເນີນການນີ້ບໍ່ສາມາດຍ້ອນກັບໄດ້."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "ທຸລະກຳທີ່ໄດ້ຮັບອະນຸຍາດ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr ""
+msgstr "ຕັດເງິນຈາກລາຍການ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -178,26 +192,28 @@ msgstr "ຊື່ທີ່ສະແດງ"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "Done, your online payment has been successfully processed. Thank you for your order."
 msgstr ""
+"ສຳເລັດແລ້ວ, ການຊຳລະເງິນອອນລາຍຂອງທ່ານໄດ້ຮັບການດຳເນີນການຢ່າງສຳເລັດຜົນ. ຂອບໃຈສຳລັບການສັ່ງຊື້ຂອງ"
+"ທ່ານ."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
 msgid "Enable credit &amp; debit card payments supported by Stripe"
-msgstr ""
+msgstr "ເປີດໃຊ້ການຊຳລະຜ່ານບັດເຄຣດິດ ແລະ ເດບິດ ທີ່ຮອງຮັບໂດຍ Stripe"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "ສ້າງລິ້ງການຊຳລະເງິນຂາຍ"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "ສ້າງລິ້ງການຊຳລະເງິນ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "ມີການຄືນເງິນທີ່ຍັງຄ້າງຢູ່"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -210,6 +226,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"ໃນໂໝດທົດລອງ, ການຊຳລະເງິນຈຳລອງຈະຖືກປະມວນຜົນຜ່ານໜ້າການຊຳລະເງິນທົດລອງ.\n"
+"ແນະນຳໃຫ້ໃຊ້ໂໝດນີ້ເມື່ອຕັ້ງຄ່າຜູ້ໃຫ້ບໍລິການ."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -219,7 +237,7 @@ msgstr "ການຊຳລະໃບເກັບເງິນອອນໄລນ໌
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້"
 
 #. module: account_payment
 #. odoo-python
@@ -232,7 +250,7 @@ msgstr "ໃບເກັບເງິນ"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "ຈຳນວນໃບແຈ້ງໜີ້"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -257,47 +275,49 @@ msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "ຈຳນວນເງິນຄືນສູງສຸດທີ່ອະນຸຍາດ"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
 msgid "Note that only tokens from providers allowing to capture the amount are available."
 msgstr ""
+"ໝາຍເຫດ ຈະໃຊ້ໄດ້ສະເພາະ Token ຈາກຜູ້ໃຫ້ບໍລິການທີ່ອະນຸຍາດໃຫ້ຕັດເງິນເທົ່ານັ້ນ."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
 msgid "Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are not available."
 msgstr ""
+"ໝາຍເຫດ Token ຈາກຜູ້ໃຫ້ບໍລິການທີ່ຕັ້ງຄ່າໄວ້ພຽງແຕ່ອະນຸມັດທຸລະກຳ (ແຕ່ບໍ່ຕັດເງິນ) ຈະບໍ່ສາມາດໃຊ້ໄດ້."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
 msgid "Online Payments"
-msgstr ""
+msgstr "ການຊຳລະເງິນອອນໄລນ໌"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_onboarding_step
 msgid "Online payments enabled"
-msgstr ""
+msgstr "ເປີດໃຊ້ການຊຳລະເງິນອອນລາຍແລ້ວ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
 msgid "Pay Invoices Online"
-msgstr ""
+msgstr "ຊຳລະໃບແຈ້ງໜີ້ອອນລາຍ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
-msgstr ""
+msgstr "ຊຳລະເງິນດຽວນີ້"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay now"
-msgstr ""
+msgstr "ຊຳລະເງິນຕອນນີ້"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
-msgstr ""
+msgstr "ຊຳລະດ້ວຍ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -308,12 +328,12 @@ msgstr "ການຊຳລະເງິນ"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "ຈຳນວນເງິນທີ່ຊຳລະ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "ສະມຸດບັນຊີການຊຳລະ"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
@@ -326,34 +346,34 @@ msgstr "ວິທີການຊຳລະເງິນ"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "ຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍຄືນເງິນການຊຳລະ"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
 msgid "Payment Tokens"
-msgstr ""
+msgstr "ໂໂທເຄັນການຊຳລະເງິນ"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
 msgid "Payment Transaction"
-msgstr ""
+msgstr "ທຸລະກຳການຊຳລະເງິນ"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr ""
+msgstr "ທຸລະກຳການຊຳລະເງິນ"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment
@@ -365,7 +385,7 @@ msgstr "ການຊຳລະເງິນ"
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid "Provider"
-msgstr ""
+msgstr "ຜູ້ໃຫ້ບໍລິການ"
 
 #. module: account_payment
 #. odoo-python
@@ -379,12 +399,12 @@ msgstr "ຄືນເງິນ/ໃບຫຼຸດໜີ້"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "ຈຳນວນເງິນຄືນ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "ຈຳນວນເງິນທີ່ຄືນແລ້ວ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -394,7 +414,7 @@ msgstr "ການຄືນເງິນ"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "ຈຳນວນການຄືນເງິນ"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -404,22 +424,22 @@ msgstr "ລົງທະບຽນຊຳລະເງິນ"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "ຕັ້ງຄ່າ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Saved Payment Token"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Saved payment token"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "ການຊຳລະຕົ້ນທາງ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -430,26 +450,26 @@ msgstr "ສະພາບ"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Payment Token ທີ່ເໝາະສົມ"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "ໂທເຄັນການເຂົ້າເຖິງບໍ່ຖືກຕ້ອງ."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_refund_wizard.py:0
 #, python-format
 msgid "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "ຈຳນວນເງິນທີ່ຈະຄືນຕ້ອງເປັນຄ່າບວກ ແລະ ບໍ່ສາມາດເກີນ %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "ສະມຸດບັນຊີທີ່ໃຊ້ບັນທຶກທຸລະກຳທີ່ສຳເລັດຜົນ."
 
 #. module: account_payment
 #. odoo-python
@@ -457,61 +477,63 @@ msgstr ""
 #, python-format
 msgid "The payment related to the transaction with reference %(ref)s has been posted: %(link)s"
 msgstr ""
+"ການຊຳລະເງິນທີ່ກ່ຽວຂ້ອງກັບທຸລະກຳທີ່ມີລະຫັດອ້າງອີງ %(ref)s ໄດ້ຖືກບັນທຶກແລ້ວ: %(link)s"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "ພາລາມິເຕີທີ່ໃຫ້ມາບໍ່ຖືກຕ້ອງ."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "ການຊຳລະຕົ້ນທາງຂອງການຄືນເງິນທີ່ກ່ຽວຂ້ອງ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນການດຳເນີນການຊຳລະເງິນຂອງທ່ານ: ໃບແຈ້ງໜີ້ບໍ່ຖືກຕ້ອງ."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: issue with credit card ID validation."
 msgstr ""
+"ເກີດຂໍ້ຜິດພາດໃນການດຳເນີນການຊຳລະເງິນຂອງທ່ານ: ມີບັນຫາໃນການກວດສອບບັດເຄຣດິດ."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນການດຳເນີນການຊຳລະເງິນຂອງທ່ານ: ທຸລະກຳຫຼົ້ມເຫຼວ.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນການດຳເນີນການຊຳລະເງິນຂອງທ່ານ: ລະຫັດບັດເຄຣດິດບໍ່ຖືກຕ້ອງ."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
 msgid "Transactions"
-msgstr ""
+msgstr "ທຸລະກຳ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "ປະເພດການຄືນເງິນທີ່ຮອງຮັບ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "ໃຊ້ວິທີການຊຳລະເງິນແບບເອເລັກໂຕຣນິກ"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Void Transaction"
-msgstr ""
+msgstr "ຍົກເລີກລາຍການ"
 
 #. module: account_payment
 #. odoo-python
@@ -521,6 +543,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບວິທີການຊຳລະເງິນທີ່ເຊື່ອມຕໍ່ກັບຜູ້ໃຫ້ບໍລິການທີ່ຢູ່ໃນສະຖານະເປີດໃຊ້ ຫຼື ທົດລອງ.\n"
+"ຜູ້ໃຫ້ບໍລິການທີ່ເຊື່ອມຕໍ່: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -530,3 +554,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"ທ່ານຕ້ອງປິດການໃຊ້ງານຜູ້ໃຫ້ບໍລິການຊຳລະເງິນກ່ອນທີ່ຈະລຶບສະມຸດບັນຊີຂອງມັນ.\n"
+"ຜູ້ໃຫ້ບໍລິການທີ່ເຊື່ອມໂຍງ: %s"

@@ -33,7 +33,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-06-14 21:07+0000\n"
+"PO-Revision-Date: 2026-06-24 09:42+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "account/sl/>\n"
@@ -3104,7 +3104,7 @@ msgstr "Plačilna transakcija"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Bank Transactions Conditions"
-msgstr ""
+msgstr "Pogoji bančnih transakcij"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
@@ -4398,7 +4398,7 @@ msgstr "Ustvari račun"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Invoices upon Emails"
-msgstr ""
+msgstr "Ustvari račune na podlagi e-pošte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -6287,7 +6287,7 @@ msgstr "Napaka!"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
 msgid "European"
-msgstr ""
+msgstr "evropski"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__decimal_separator
@@ -6797,7 +6797,7 @@ msgstr "Sila"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr ""
+msgstr "Nastavite davek za upravljanje kot ceno, ki vključuje davek."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -10008,7 +10008,7 @@ msgstr "Zdaj bomo ustvarili vaš prvi račun."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
 msgid "Num Journals Without Account"
-msgstr ""
+msgstr "Število dnevnikov brez računa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -10204,7 +10204,7 @@ msgstr "Korak uvajanja"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_setup_bill
 msgid "Onboarding Step Image"
-msgstr ""
+msgstr "Slika koraka uvajanja"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_default_taxes
@@ -10702,7 +10702,7 @@ msgstr "Plačano"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_nature__both
 msgid "Paid/Received"
-msgstr ""
+msgstr "Plačano/prejeto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
@@ -10777,7 +10777,7 @@ msgstr "Partnerske pogodbe"
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_credit
 msgid "Partner Credit"
-msgstr ""
+msgstr "Partner Kredit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_credit_warning
@@ -12228,7 +12228,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr ""
+msgstr "Pravilo za ujemanje računov"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -12713,6 +12713,11 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Pošljite ločeno e-pošto za vsak račun.\n"
+"\n"
+"Sprejeta bo katera koli vrsta datoteke.\n"
+"\n"
+"Program Odoo bo interpretiral le datoteke PDF in XML."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -13011,7 +13016,7 @@ msgstr "Prikaži podrobnosti popusta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
-msgstr ""
+msgstr "Prikaži prisilno davčno vključeno"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -14644,6 +14649,10 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"Model usklajevanja se bo uporabljal le za izbrano vrsto transakcije:\n"
+"        * Prejeto plačilo: Uporablja se le ob prejemu zneska.\n"
+"        * Poravnani zneski: Uporablja se le ob plačilu zneska.\n"
+"        * Poravnani zneski/prejeta plačila: Uporablja se v obeh primerih."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -14700,6 +14709,11 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Model usklajevanja se bo uporabljal samo, če vrsta transakcije:\n"
+"        * Vsebuje: Vrsta predlagane transakcije mora vsebovati to vrstico "
+"(brez upoštevanja velikosti črk).\n"
+"        * Ne vsebuje: Negacija \"Vsebuje\".\n"
+"        * Ujemanje Regex: Določite lasten izraz za ujemanje."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -17659,7 +17673,7 @@ msgstr "npr. kratkoročna sredstva"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Customer Invoices"
-msgstr ""
+msgstr "e.g. Računi strank"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form

@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
 "PO-Revision-Date: 2026-04-18 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/"
@@ -137,6 +137,15 @@ msgstr "%(name)s (%(duration)s dan(a))"
 #, python-format
 msgid "%(name)s (%(duration)s hour(s))"
 msgstr "%(name)s (%(duration)s sat(i))"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3877,13 +3886,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, python-format
-msgid "There is no valid allocation to cover that request."
-msgstr "Nema valjanih dodjela koje bi pokrile ovaj zahtjev."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -5042,3 +5044,7 @@ msgstr "za odobriti"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "odobreno"
+
+#, python-format
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Nema valjanih dodjela koje bi pokrile ovaj zahtjev."

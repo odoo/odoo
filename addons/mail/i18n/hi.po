@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-06-14 21:07+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-22 09:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/mail/hi/>\n"
 "Language: hi\n"
@@ -836,25 +836,28 @@ msgid "Add Users"
 msgstr "उपयोगकर्ताओं को जोड़ें"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_reaction_button.xml:0
 #, python-format
 msgid "Add a Reaction"
 msgstr "रिएक्शन जोड़ें"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "GIF सपोर्ट चालू करने के लिए Tenor GIF API की जोड़ें।"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
-msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
-msgstr ""
-"GIF की सुविधा चालू करने के लिए आपको Tenor GIF API की डालनी होगी. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
 #. odoo-javascript
@@ -4378,7 +4381,7 @@ msgstr "ICE सर्वर"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "ICE:"
-msgstr ""
+msgstr "आईसीई:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__id
@@ -4607,6 +4610,15 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "अगर आप TURN या STUN सर्वर की सर्विस के लिए ट्विलियो का इस्तेमाल करना चाहते हैं"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+#, python-format
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5158,6 +5170,32 @@ msgstr "कुंजी"
 #, python-format
 msgid "Kind Regards"
 msgstr "धन्यवाद"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF content filter"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF limits"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
+msgid "Klipy content filter"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9118,36 +9156,6 @@ msgid "Templates"
 msgstr "टेंप्लेट"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor एपीआई की"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF एपीआई की"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF content filter"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF limits"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_gif_limit
-msgid "Tenor Gif Limit"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_content_filter
-msgid "Tenor content filter"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "टेस्ट करें और पुष्टि करें"
@@ -11214,7 +11222,7 @@ msgstr "ने अभी आपको यह काम असाइन किय
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_content_filter
-msgid "https://developers.google.com/tenor/guides/content-filtering"
+msgid "https://docs.klipy.com/migrate-from-tenor/content-filtering"
 msgstr ""
 
 #. module: mail
@@ -11542,6 +11550,22 @@ msgstr "“%(channel_name)s” में “%(member_name)s”"
 #, python-format
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "GIF सपोर्ट चालू करने के लिए Tenor GIF API की जोड़ें।"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "GIF की सुविधा चालू करने के लिए आपको Tenor GIF API की डालनी होगी. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor एपीआई की"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF एपीआई की"
 
 #, python-format
 #~ msgid ""

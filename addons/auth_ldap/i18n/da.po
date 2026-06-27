@@ -9,13 +9,14 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2026-03-21 17:29+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 16:51+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/auth_ldap/"
 "da/>\n"
 "Language: da\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -62,7 +63,7 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid "Automatically create local user accounts for new users authenticating via LDAP"
-msgstr "Opretter automatisk ny lokal bruger når ny bruger logger på via LDAP"
+msgstr "Opret automatisk brugerkonti for nye brugere, der logger ind via LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -77,12 +78,12 @@ msgstr "Virksomhed"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr "Virksomhed LDAP konfiguration"
+msgstr "LDAP-konfiguration for virksomheder"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
+msgstr "Konfigurationsindstillinger"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -103,13 +104,12 @@ msgstr "Oprettet den"
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
 msgid "DN of the user search scope: all descendants of this base will be searched for users."
 msgstr ""
-"DN for brugersøgningsomfanget: alle efterkommere af denne base vil blive "
-"søgt efter brugere."
+"DN for bruger-søgning: Søgningen omfatter alle objekter under denne base."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
@@ -120,48 +120,48 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr "LDAP konfiguration"
+msgstr "LDAP-konfiguration"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr "LDAP parametre"
+msgstr "LDAP-parametre"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr "LDAP Server"
+msgstr "LDAP-server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP server adresse"
+msgstr "LDAP-serveradresse"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP server port"
+msgstr "LDAP-serverport"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "LDAP-base"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP bind dn"
+msgstr "LDAP-binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr "LDAP filter"
+msgstr "LDAP-filter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr "LDAP kodeord"
+msgstr "LDAP-adgangskode"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
@@ -181,23 +181,28 @@ msgstr "Sidst opdateret den"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Login-information"
+msgstr "Loginoplysninger"
 
 #. module: auth_ldap
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "Ingen lokal bruger er fundet for LDAP login og den er ikke konfigureret til at oprette en"
+msgstr ""
+"Ingen lokal bruger fundet for LDAP-login, og automatisk oprettelse af bruger "
+"er ikke konfigureret"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "Proces parametre"
+msgstr "Procesparameter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
-msgstr "Kræv sikker TLS/SSL kryptering ved tilslutning til LDAP server. Denne option kræver server med STARTTLS aktiveret, ellers fejler godkendelse."
+msgstr ""
+"Kræv sikker TLS/SSL-kryptering ved forbindelse til LDAP-serveren. Denne "
+"indstilling kræver en server med STARTTLS aktiveret; ellers vil godkendelsen "
+"fejle."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -207,27 +212,31 @@ msgstr "Sekvens"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr "Serverinformation"
+msgstr "Serveroplysninger"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Opsætning LDAP server"
+msgstr "Opsætning af din LDAP-server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr "Skabelon bruger"
+msgstr "Brugerskabelon"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr "Brugers kodeord på LDAP server, bruges ved søgning i directory"
+msgstr ""
+"Adgangskoden til brugerkontoen på LDAP-serveren, som anvendes til opslag i "
+"telefonbogen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
-msgstr "Bruger konto på LDAP server bruges ved søgning i directory. Hvis tomt logges på anonymt."
+msgstr ""
+"LDAP-brugerkontoen anvendes til opslag i telefonbogen. Lad feltet stå tomt "
+"for at logge på anonymt."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -237,12 +246,12 @@ msgstr "Brug TLS"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr "Brugerinformation"
+msgstr "Brugeroplysninger"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr "Kopier fra bruger ved oprettelse af ny bruger"
+msgstr "Bruger, der kopieres ved oprettelse af nye brugere"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users

@@ -6,13 +6,14 @@
 # lhmflexerp <lhm@flexerp.dk>, 2023
 # Martin Trigaux, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-03-26 13:22+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 16:05+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
 "hr_recruitment_skills/da/>\n"
 "Language: da\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
@@ -41,7 +42,7 @@ msgstr "Oprettet den"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__id
@@ -71,28 +72,28 @@ msgstr "Fremdrift"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
-msgstr "Gå fra nul viden (0%) til mestret (100%)."
+msgstr "Fra begynderniveau (0 %) til ekspert (100 %)."
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_id
 msgid "Skill"
-msgstr "Evne"
+msgstr "Kompetence"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_level_id
 msgid "Skill Level"
-msgstr "Evne niveau"
+msgstr "Kompetenceniveau"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_type_id
 msgid "Skill Type"
-msgstr "Evne type"
+msgstr "Kompetencetype"
 
 #. module: hr_recruitment_skills
 #: model:ir.ui.menu,name:hr_recruitment_skills.hr_recruitment_skill_type_menu
 msgid "Skill Types"
-msgstr "Evne typer"
+msgstr "Kompetencetyper"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant_skill
@@ -105,23 +106,24 @@ msgstr "Kompetenceniveau for en ansøger"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search
 msgid "Skills"
-msgstr "Færdigheder"
+msgstr "Kompetencer"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr "Evnen %(name)s og evnetypen %(type)s stemmer ikke overens"
+msgstr "Kompetencen %(name)s og kompetencetypen %(type)s matcher ikke"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
-msgstr "Evne niveauet %(level)s er ikke gyldig for evnetype %(type)s"
+msgstr ""
+"Kompetenceniveauet %(level)s er ikke gyldig for kompetencetype: %(type)s"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill__unique_skill
 msgid "Two levels for the same skill is not allowed"
-msgstr "To niveauer for samme evne er ikke tilladt"
+msgstr "To kompetencer for samme kompetence er ikke tilladt"

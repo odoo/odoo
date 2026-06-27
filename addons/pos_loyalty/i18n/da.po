@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_loyalty
+# * pos_loyalty
 #
 # Translators:
 # Mads Søndergaard, 2023
@@ -9,20 +9,22 @@
 # Martin Trigaux, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Kira Petersen, 2025
-#
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-06-23 17:40+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
+"pos_loyalty/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
@@ -33,8 +35,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Teknisk felt bruges til at linke flere belønningslinjer fra samme belønning "
-"sammen."
+"        Teknisk felt bruges til at forbinde flere belønningslinjer, som "
+"hører til samme belønning.\n"
+"    "
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -46,19 +49,19 @@ msgstr "%s Point"
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
 msgid "15% on next order"
-msgstr "15% på næste ordre"
+msgstr "15 % på næste ordre"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
 msgid "15% on your order"
-msgstr "15% på din ordre"
+msgstr "15 % på din ordre"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "A better global discount is already applied."
-msgstr "En bedre global rabat er allerede anvendt."
+msgstr "En bedre overordnet rabat er allerede anvendt."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -73,13 +76,13 @@ msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
 msgstr ""
-"Et teknisk felt, der bruges som et alternativ til kampagnekoden. Dette "
+"Et teknisk felt, der bruges som et alternativ til kampagnekoden. Det "
 "genereres automatisk, når kampagnekoden ændres."
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "All PoS"
-msgstr "Alle PoS"
+msgstr "Alle POS-systemer"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
@@ -95,14 +98,14 @@ msgid ""
 " You will still be able to claim it through the reward button."
 msgstr ""
 "Er du sikker på, at du vil fjerne %s fra denne ordre?\n"
-"Du vil stadig være i stand til at gøre krav på den via belønningsknappen."
+" Du vil stadig være i stand til at gøre krav på den via belønningsknappen."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "Balance"
-msgstr "Balance"
+msgstr "Saldo"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -115,7 +118,7 @@ msgstr "Stregkode"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Stregkode regler"
+msgstr "Stregkoderegler"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_res_config_settings
@@ -138,7 +141,7 @@ msgstr "Kuponkoder"
 #. module: pos_loyalty
 #: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
 msgid "Coupon point(s)"
-msgstr "Kuponpunkt(er)"
+msgstr "Kuponpoint"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -159,7 +162,7 @@ msgstr "Kunde"
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Customer needed"
-msgstr "Kunde handling påkrævet"
+msgstr "Kunde påkrævet"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -178,7 +181,7 @@ msgstr "Definerer hvordan du ønsker at anvende dine gavekort."
 #: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Discount & Loyalty"
-msgstr "Rabat & Loyalitet"
+msgstr "Rabat og loyalitet"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -207,12 +210,12 @@ msgstr "Fejl"
 #: code:addons/pos_loyalty/static/src/overrides/components/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Error validating rewards"
-msgstr "Fejl ved validering af belønninger"
+msgstr "Validering af belønninger mislykkedes"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
 msgid "Free Product - Simple Pen"
-msgstr "Gratis produkt - simpel pen"
+msgstr "Gratis produkt – simpel pen"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
@@ -254,45 +257,47 @@ msgstr "Gavekort eller rabatkode"
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Gift cards & eWallet"
-msgstr "Gavekort og eWallet"
+msgstr "Gavekort og digital tegnebog"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
 msgid "How many point this reward cost on the coupon."
-msgstr "Hvor mange point koster denne belønning på kuponen."
+msgstr "Det antal point, som denne belønning på kuponen koster."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr " Ugyldig gavekorts kampagne belønning. Brug 1 valuta pr. point rabat."
+msgstr ""
+"Ugyldig belønning til gavekortkampagnen. Brug 1 valutaenhed pr. rabatpoint."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr "Ugyldig gavekorts kampagne belønning. Brug 1 point pr. brugt valuta."
+msgstr ""
+"Ugyldig regel for gavekortkampagnen. Brug 1 point pr. udstedt valutaenhed."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program. More than one reward."
-msgstr "Ugyldig gavekorts kampagne belønning. Mere end én belønning."
+msgstr "Ugyldig gavekortkampagne. Mere end én belønning."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program. More than one rule."
-msgstr "Ugyldig gavekorts kampagne belønning. Mere end én regel."
+msgstr "Ugyldig gavekortkampagne. Mere end én regel."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
-msgstr "Er belønning linje"
+msgstr "Er belønningslinje"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -302,7 +307,7 @@ msgstr "Loyalitetskommunikation"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Loyalitetskupon"
+msgstr "Medlemskupon"
 
 #. module: pos_loyalty
 #: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
@@ -318,12 +323,12 @@ msgstr "Loyalitetsprogram"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr "Loyalitet Belønning"
+msgstr "Loyalitetsbelønning"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr "Loyalitet regel"
+msgstr "Loyalitetsregel"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -344,14 +349,14 @@ msgstr "Nej"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "No reward can be claimed with this coupon."
-msgstr "Der kan ikke gøres krav på belønning med denne kupon."
+msgstr "Belønningen kan ikke indløses med denne kupon."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "No valid eWallet found"
-msgstr "Ingen gyldig eWallet fundet"
+msgstr "Ingen gyldig digital tegnebog fundet"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -370,17 +375,17 @@ msgstr "Vælg venligst en belønning"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
 msgid "PoS Order Count"
-msgstr "Pos Ordre antal"
+msgstr "Antal POS-ordrer"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr "POS ordrereference"
+msgstr "POS-ordrereference"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS order where this coupon was generated."
-msgstr "PoS ordre hvor denne kupon blev genereret."
+msgstr "POS-ordre, hvor denne kupon blev genereret."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
@@ -391,22 +396,22 @@ msgstr "POS"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "POS konfiguration"
+msgstr "POS-konfiguration"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Point of Sale linjer"
+msgstr "POS-linjer"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "POS ordrer"
+msgstr "POS-ordrer"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_session
 msgid "Point of Sale Session"
-msgstr "PoS session"
+msgstr "POS-session"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_config_ids
@@ -430,7 +435,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
 msgid "Points Cost"
-msgstr "Point omkostninger"
+msgstr "Pointomkostninger"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -464,14 +469,14 @@ msgstr "Kampagne: %(name)s, Belønningsprodukt: `%(reward_product)s`"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
-msgstr "Kampagne: %(name)s, Regel Produkt: `%(rule_product)s`"
+msgstr "Kampagne: %(name)s, Regelprodukt: `%(rule_product)s`"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "Refund with eWallet"
-msgstr "Tilbagebetaling med eWallet"
+msgstr "Tilbagebetaling med digital tegnebog"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -481,8 +486,8 @@ msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
 msgstr ""
-"Det er ikke tilladt at refundere et opfyldnings- eller belønningsprodukt for "
-"et eWallet- eller gavekort kampagne."
+"Det er ikke tilladt at refundere opfyldnings- eller belønningsprodukter, der "
+"er knyttet til en digital tegnebog eller gavekortkampagne."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -494,7 +499,7 @@ msgstr "Nulstil kampagner"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid "Restrict publishing to those shops."
-msgstr "Begræns udgivelsen til disse butikker."
+msgstr "Begræns udgivelsen i disse butikker."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -507,7 +512,7 @@ msgstr "Belønning"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr "Belønnings identifikationskode"
+msgstr "Belønningsidentifikationskode"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
@@ -534,8 +539,8 @@ msgid ""
 "Some coupons are invalid. The applied coupons have been updated. Please "
 "check the order."
 msgstr ""
-"Nogle kuponer er ugyldige. De anvendte kuponer er blevet opdateret. Tjek "
-"venligst ordren."
+"Nogle af kuponerne er ugyldige. De anvendte kuponer er blevet opdateret. "
+"Kontrollér venligst ordren."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -554,14 +559,14 @@ msgstr "Teknisk område, om alle produkter matcher"
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That coupon code has already been scanned and activated."
-msgstr "Denne kuponkode er allerede blevet scannet og aktiveret."
+msgstr "Kuponkoden er allerede blevet scannet og aktiveret."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That promo code program has already been activated."
-msgstr "Denne promo kode kampagne er allerede blevet aktiveret."
+msgstr "Kampagnekoden er allerede blevet aktiveret."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -582,12 +587,12 @@ msgstr "Kampagnekoden er endnu ikke gyldig."
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That promo code program requires a specific pricelist."
-msgstr "Denne promo kode kampagne kræver en specifik prisliste."
+msgstr "Kampagnekoden kræver en specifik prisliste."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
 msgid "The coupon used to claim that reward."
-msgstr "Kuponen bruges til at gøre krav på den belønning."
+msgstr "Kuponen brugt til at gøre krav på belønningen."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -598,7 +603,7 @@ msgid ""
 "sold?\n"
 "%s"
 msgstr ""
-"Følgende koder findes allerede i databasen, måske var de allerede solgt?\n"
+"Følgende koder findes allerede i databasen, måske de allerede er solgt?\n"
 "%s"
 
 #. module: pos_loyalty
@@ -607,8 +612,8 @@ msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
 msgstr ""
-"Rapporthandlingen, der skal udføres ved oprettelse af en kupon/gavekort/"
-"loyalitetskort i PoS."
+"Den rapporthandling, der udføres, når en kupon, et gavekort eller et "
+"medlemskort oprettes i POS."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -618,13 +623,13 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
-"Belønningen \"%s\" indeholder en fejl i sit domæne, dit domæne skal være "
-"kompatibelt med PoS-klienten"
+"Belønningen \"%s\" har et ugyldigt domæne. Det skal være kompatibelt med den "
+"kunde, der er valgt i POS"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
 msgid "The reward associated with this line."
-msgstr "Belønningen forbundet med denne linje."
+msgstr "Belønningen tilknyttet denne linje."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -638,7 +643,7 @@ msgstr "Belønningen kunne ikke anvendes."
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
 msgid "There are not enough points for the coupon: %s."
-msgstr "Der er ikke nok point til kuponen: %s."
+msgstr "Der er ikke nok point på kuponen: %s."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -652,8 +657,7 @@ msgstr "Der er ikke nok point på kuponen til at gøre krav på denne belønning
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
-"Der er ikke nok produkter i kurven til at gøre krav på denne belønning."
+msgstr "Der er ikke nok produkter i kurven til at gøre krav på denne belønning."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -663,8 +667,8 @@ msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
 msgstr ""
-"Der er ingen e-mail-skabelon på gavekort kampagnen, og din Pos er indstillet "
-"til at udskrive dem."
+"Der er ingen e-mailskabelon i gavekortkampagnen, og dit kassesystem er "
+"konfigureret til at udskrive dem."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -674,8 +678,8 @@ msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
 msgstr ""
-"Der er ingen printrapport på gavekort kampagnen, og din Pos er indstillet "
-"til at udskrive dem."
+"Der er ingen udskrivningsrapport i gavekortkampagnen, og dit kassesystem er "
+"konfigureret til at udskrive dem."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -687,28 +691,28 @@ msgstr "Dette er de produkter, der er gyldige for denne regel."
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr "Denne kupon er udløbet (%s)."
+msgstr "Kuponen er udløbet (%s)."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr "Denne kupon er ugyldig (%s)."
+msgstr "Kuponen er ugyldig (%s)."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is not available with the current pricelist."
-msgstr "Denne kupon er ikke tilgængelig med den aktuelle prisliste."
+msgstr "Kuponen er ikke tilgængelig med den nuværende prisliste."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is not yet valid (%s)."
-msgstr "Denne kupon er endnu ikke gyldig (%s)."
+msgstr "Kuponen er endnu ikke gyldig (%s)."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -725,13 +729,13 @@ msgid ""
 "This gift card is not linked to any order. Do you really want to apply its "
 "reward?"
 msgstr ""
-"Dette gavekort er ikke knyttet til nogen ordre. Vil du virkelig bruge dens "
-"belønning?"
+"Gavekortet er ikke knyttet til nogen ordre. Vil du virkelig bruge "
+"belønningen?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "This is used to print the generated gift cards from PoS."
-msgstr "Dette bruges til at printe de genererede gavekort fra PoS."
+msgstr "Dette bruges til at udskrive de genererede gavekort fra POS."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -741,7 +745,7 @@ msgid ""
 "To continue, make the following reward products available in Point of Sale."
 msgstr ""
 "For at fortsætte skal du gøre følgende belønningsprodukter tilgængelige i "
-"Point of Sale."
+"POS."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -774,12 +778,12 @@ msgstr "Ubetalt gavekort afvist."
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "Use eWallet to pay"
-msgstr "Brug eWallet til at betale"
+msgstr "Brug appen Digital tegnebog til at betale"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__valid_product_ids
 msgid "Valid Product"
-msgstr "Gyldig Produkt"
+msgstr "Gyldigt produkt"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -820,7 +824,8 @@ msgstr "Du kan ikke sælge et gavekort, der allerede er solgt."
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr ""
-"Du kan ikke angive negativ mængde eller pris til gavekort eller eWallet."
+"Det er ikke muligt at angive en negativ mængde eller pris til gavekort eller "
+"den digitale tegnebog."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -843,28 +848,28 @@ msgstr "Du skal indstille '%s' før du indstiller '%s'."
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet"
-msgstr "eWallet"
+msgstr "Digital tegnebog"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet Pay"
-msgstr "eWallet Pay"
+msgstr "Betaling med digital tegnebog"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet Refund"
-msgstr "eWallet Refusion"
+msgstr "Refundering med digital tegnebog"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "eWallet requires a customer to be selected"
-msgstr "eWallet kræver, at en kunde vælges"
+msgstr "Digital tegnebog kræver, at en kunde vælges"
 
 #. module: pos_loyalty
 #. odoo-javascript
