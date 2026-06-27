@@ -561,6 +561,17 @@ class Field[T]:
             ):
                 warnings.warn(f'Stored field {self} should not depend on context ({self._depends_context}).', stacklevel=1)
 
+            # Auto-derive compute_sql for non-stored computed fields that have
+            # no explicit search method.  Passes model for eager validation —
+            # returns None (and logs debug) when the compute body is unsupported.
+            if (self.compute and not self.store
+                    and not self.compute_sql and not self.search
+                    and isinstance(self.compute, str)):
+                from .compute_sql import _make_auto_compute_sql
+                fn = _make_auto_compute_sql(self.compute, self.name, model)
+                if fn is not None:
+                    self.compute_sql = fn
+
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)
