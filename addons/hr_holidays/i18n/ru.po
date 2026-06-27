@@ -9,13 +9,14 @@
 # Anastasiia Koroleva, 2025
 #
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2025-10-20 06:22+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-16 16:45+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
 "hr_holidays/ru/>\n"
 "Language: ru\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -130,6 +131,14 @@ msgstr "%(name)s (%(time)g осталось из %(maximum)g дней)"
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
 msgstr "%(name)s (%(time)g осталось из %(maximum)g часов)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3608,13 +3617,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr ""
-"Для удовлетворения этого запроса не существует действующих ассигнований."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "This allocation have already ran once, any modification won't be effective "
@@ -4364,13 +4366,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/report/hr_leave_report_calendar.py:0
 msgid "You are not allowed to approve this leave request."
-msgstr ""
+msgstr "У вас нет прав для одобрения этого запроса на отпуск."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/report/hr_leave_report_calendar.py:0
 msgid "You are not allowed to refuse this leave request."
-msgstr ""
+msgstr "У вас нет прав для отклонения этого запроса на отпуск."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4818,6 +4820,10 @@ msgstr "подтвердить"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
 msgstr "проверено"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr ""
+#~ "Для удовлетворения этого запроса не существует действующих ассигнований."
 
 #~ msgid "00:00"
 #~ msgstr "00:00"
