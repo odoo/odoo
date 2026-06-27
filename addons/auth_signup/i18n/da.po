@@ -9,13 +9,14 @@
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-14 08:19+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 14:16+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "auth_signup/da/>\n"
 "Language: da\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -175,8 +176,8 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <t t-set=\"invited_users\" t-"
-"value=\"ctx.get('invited_users', [])\"/>\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get"
+"('invited_users', [])\"/>\n"
 "                <td style=\"text-align : left\">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        Ventende invitationer\n"
@@ -191,22 +192,22 @@ msgstr ""
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-"
 "as=\"invited_user\">\n"
-"                                <li t-out=\"invited_user or "
-"''\">demo@eksempel.com</li>\n"
+"                                <li t-out=\"invited_user or ''\">"
+"demo@eksempel.com</li>\n"
 "                            </t>\n"
 "                        </ul>\n"
 "                        Kontakt dem, så de kan få adgang til databasen og "
 "begynde at samarbejde med dig.\n"
 "                        <br/><br/>\n"
 "                        Hav' en dejlig dag!<br/>\n"
-"                        --<br/><t t-out=\"object.company_id.name or "
-"''\">DinVirksomhed</t>-teamet\n"
+"                        --<br/><t t-out=\"object.company_id.name or ''\">"
+"DinVirksomhed</t>-teamet\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -496,8 +497,7 @@ msgstr "Har du allerede en konto?"
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Another user is already registered using this email address."
-msgstr ""
-"Der er allerede oprettet en anden bruger ved brug af denne email adresse."
+msgstr "Der findes allerede en bruger med denne e-mailadresse."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -513,7 +513,7 @@ msgstr "Browser"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
-msgstr "Kan ikke sende email: bruger %s har ikke nogen email adresse."
+msgstr "E-mail kan ikke sendes: Bruger %s har ikke nogen e-mailadresse."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -528,7 +528,7 @@ msgstr "By, Region, Land"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurer opsætning"
+msgstr "Konfigurationsindstillinger"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -559,13 +559,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Could not create a new account."
-msgstr "Kunne ikke oprette en ny konto."
+msgstr "Det var ikke muligt at oprette en ny konto."
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Could not reset your password"
-msgstr "Kunne ikke nulstille din adgangskode"
+msgstr "Det var ikke muligt at nulstille din adgangskode"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -586,23 +586,23 @@ msgstr "Standard adgangsrettigheder"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "Har ikke en konto?"
+msgstr "Har du ikke en konto?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr "Tillad nulstilling af adgangskode fra login siden."
+msgstr "Tillad nulstilling af adgangskode fra loginsiden"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Gratis oprettelse"
+msgstr "Gratis tilmelding"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-routing"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -637,7 +637,7 @@ msgstr "Ugyldigt tilmeldingstoken"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Lad dine kunder logge ind for at se deres dokumenter"
+msgstr "Giv dine kunder mulighed for at logge ind og se deres dokumenter"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -649,7 +649,7 @@ msgstr "Marc Demo"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Multiple accounts found for this login"
-msgstr "Der blev fundet flere konti til dette login"
+msgstr "Der blev fundet flere brugerkonti til dette login"
 
 #. module: auth_signup
 #. odoo-python
@@ -678,13 +678,13 @@ msgstr "Ny forbindelse til din konto"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "No account found for this login"
-msgstr "Ingen konto fundet til dette login"
+msgstr "Ingen konto blev fundet for dette login"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "No login provided."
-msgstr "Ingen login angivet."
+msgstr "Ingen loginoplysninger angivet."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -749,7 +749,7 @@ msgstr "Tilmelding gennemført."
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr "Påmindelse for ikke-registrerede brugere"
+msgstr "Påmindelse til ikke-registrerede brugere"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -762,29 +762,30 @@ msgstr "Nulstil adgangskode"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr "Send Kodeord Nulstillings Instruktioner"
+msgstr "Send instruktioner til nulstilling af adgangskode"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Send en invitations e-mail"
+msgstr "Send en invitationsmail"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
-"Sendt automatisk til admin hvis ny bruger ikke har reageret på invitationen"
+"Sendes automatisk til administrator, hvis en ny bruger ikke har reageret på "
+"invitationen"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr "Sendt til ny bruger efter du har inviteret vedkommende"
+msgstr "E-mail sendt til den nye bruger, efter du har inviteret vedkommende"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr "Sendt til portalbruger der selv har registreret sig"
+msgstr "Sendt til portalbruger efter selvregistrering"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -794,12 +795,12 @@ msgstr "Indstillinger: nye portaltilmeldinger"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New User Invite"
-msgstr "Indstillinger: Invitation til ny bruger"
+msgstr "Indstillinger: invitation til ny bruger"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr "Indstillinger: Påmindelser om manglende brugerlogin"
+msgstr "Indstillinger: påmindelse til ikke-registrerede brugere"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -810,13 +811,13 @@ msgstr "Tilmeld dig"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Type på tilmeldingstoken"
+msgstr "Type tilmeldingstoken"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Signup is not allowed for uninvited users"
-msgstr "Tilmelding er ikke tilladt for ikke inviterede brugere"
+msgstr "Tilmelding er ikke tilladt for ikke-inviterede brugere"
 
 #. module: auth_signup
 #. odoo-python
@@ -834,13 +835,14 @@ msgstr "Tilmelding: ugyldig skabelonbruger"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Signup: no login given for new user"
-msgstr "Tilmelding: Ingen login er givet til ny bruger"
+msgstr "Tilmelding: Der er ikke angivet et login til den nye bruger"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Signup: no name or partner given for new user"
-msgstr "Tilmelding: Intet navn eller partner er givet til ny bruger"
+msgstr ""
+"Tilmelding: Der er ikke angivet et navn eller en partner til den nye bruger"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -856,13 +858,13 @@ msgstr "Mistænkelig aktivitet registreret af Google reCaptcha"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "\"Skabelonbruger\" for nye brugere, som oprettes gennem tilmelding"
+msgstr "Skabelonprofil til nye brugere oprettet via tilmelding"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "The form was not properly filled in."
-msgstr "Formularen blev ikke korrekt udfyldt."
+msgstr "Formularen er ikke udfyldt korrekt."
 
 #. module: auth_signup
 #. odoo-python
@@ -881,9 +883,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"Hvis du vil sende invitationer i B2B-tilstand, skal du åbne en kontakt eller "
-"vælge flere i listevisning og klikke på 'Portal Access Management' i "
-"rullemenuen *Handling*."
+"For at sende invitationer i B2B-tilstand skal du åbne en kontaktperson eller "
+"markere flere i listevisningen og derefter vælge 'Portaladgang' under "
+"*Handling* i dropdownmenuen."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -898,7 +900,7 @@ msgstr "Brugere: Underret om ikke-registrerede brugere"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr " Velkommen til {{ object.company_id.name }}!"
+msgstr "Velkommen til {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #. odoo-python
@@ -940,12 +942,12 @@ msgstr "timer:<br/>"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "http://www.example.com"
-msgstr "http://www.example.com"
+msgstr "http://www.eksempel.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "info@yourcompany.com"
-msgstr "info@yourcompany.com"
+msgstr "info@dinvirksomhed.com"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -954,7 +956,7 @@ msgid ""
 "to connect to Odoo"
 msgstr ""
 "{{ object.create_uid.name }} fra {{ object.company_id.name }} inviterer dig "
-"til at forbinde med Odoo"
+"til at oprette forbindelse til Odoo"
 
 #~ msgid "+1 650-123-4567"
 #~ msgstr "+1 650-123-4567"

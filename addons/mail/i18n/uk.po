@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
 "PO-Revision-Date: 2026-05-19 13:06+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/mail/"
@@ -22,10 +22,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.17\n"
 
 #. module: mail
@@ -168,10 +168,11 @@ msgid ""
 "(bold_end)s to insert a canned response in your message."
 msgstr ""
 "%(new_line)s%(new_line)sВведіть %(bold_start)s@username%(bold_end)s щоб "
-"згадати когось та привернути його увагу.%(new_line)sВведіть %(bold_start)"
-"s#channel%(bold_end)s щоб згадати канал.%(new_line)sВведіть %(bold_start)s/"
-"command%(bold_end)s щоб викликати команду.%(new_line)sВведіть %(bold_start)"
-"s:shortcut%(bold_end)s щоби вставити готову відповідь у ваше повідомлення."
+"згадати когось та привернути його увагу.%(new_line)sВведіть %"
+"(bold_start)s#channel%(bold_end)s щоб згадати канал.%(new_line)sВведіть %"
+"(bold_start)s/command%(bold_end)s щоб викликати команду.%(new_line)sВведіть %"
+"(bold_start)s:shortcut%(bold_end)s щоби вставити готову відповідь у ваше "
+"повідомлення."
 
 #. module: mail
 #. odoo-javascript
@@ -2029,8 +2030,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Неможливо змінити початкове повідомлення або батьківський канал: %(channels)"
-"s."
+"Неможливо змінити початкове повідомлення або батьківський канал: %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -11455,6 +11456,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "You can safely ignore this message"
 msgstr "Ви можете спокійно ігнорувати це повідомлення"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias_domain.py:0
+msgid "You cannot assign an empty domain name."
+msgstr ""
 
 #. module: mail
 #. odoo-python
