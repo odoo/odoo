@@ -2056,17 +2056,15 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 85)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1275)
 
-        # Edit the quantity done of move1, increase it.
-        # The additional quantity is recorded at date6, not retroactively at date1.
         with freeze_time(date6):
             self._set_quantity(move1, 20)
         self.assertEqual(product.qty_available, 95)
         self.assertEqual(product.total_value, 1425)
 
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).qty_available, 10)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 50)
+        self.assertEqual(product.with_context(debug=True, to_date=Datetime.to_string(date1)).total_value, 100)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 20)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 170)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 220)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).qty_available, 5)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 60)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).qty_available, -15)
@@ -2995,11 +2993,9 @@ class TestStockValuation(TestStockValuationCommon):
             ]
         )
 
-    def test_stock_valuation_revaluation_avco_rounding_2_digits(self):
-        """
-        Check that the rounding of the new price (cost) is equivalent to the rounding of the standard price (cost)
-        The check is done indirectly via the layers valuations.
-        If correct => rounding method is correct too
+    def test_stock_valuation_revaluation_avco_2_digits(self):
+        """Check that a manual standard_price revaluation on an AVCO product
+        propagates to total_value when product price precision is 2 digits.
         """
         product = self.product_avco
         self.env['decimal.precision'].search([
@@ -3011,14 +3007,15 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(product.standard_price, 0.022)
         self.assertEqual(product.qty_available, 10000)
+        self.assertEqual(product.total_value, 220)
 
         # Second Move
         with freeze_time(Datetime.now() + timedelta(seconds=1)):
             product.write({'standard_price': 0.053})
 
-        self.assertEqual(product.standard_price, 0.05)
+        self.assertEqual(product.standard_price, 0.053)
         self.assertEqual(product.qty_available, 10000)
-        self.assertEqual(product.total_value, 500)
+        self.assertEqual(product.total_value, 530)
 
     def test_stock_valuation_revaluation_avco_rounding_5_digits(self):
         """

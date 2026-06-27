@@ -475,8 +475,8 @@ class ProductProduct(models.Model):
                     if move.is_in or move.is_dropship:
                         in_qty = move._get_valued_qty()
                         in_value = move.value
-                        if at_date or move.is_dropship:
-                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost)
+                        if move.is_dropship:
+                            in_value = move._get_value(forced_std_price=average_cost)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0
@@ -542,8 +542,6 @@ class ProductProduct(models.Model):
             move = fifo_stack.pop(0)
             last_move = move
             move_value = move.value
-            if at_date:
-                move_value = move._get_value(at_date=at_date)
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
@@ -619,7 +617,12 @@ class ProductProduct(models.Model):
         return fifo_stack, remaining_qty_on_first_stack_move
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
-        # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
+        """ Update the standard price of product in self.
+        :params extra_value dict: Additional value by product in case of in move in order to simply recompute
+        standard price base old quantity * standard price + extra_value / total quantity available
+        :params extra_quantity dict: Added quantity to the quantity available used to recompute the previous
+        quantity for the computation defined in extra_value params.
+        """
         products_by_cost_method = defaultdict(set)
         for product in self:
             if product.lot_valuated and product.cost_method != 'standard':
@@ -630,6 +633,28 @@ class ProductProduct(models.Model):
             products = self.env['product.product'].browse(product_ids)
             if cost_method == 'standard':
                 continue
+
+            if extra_value is not None and extra_quantity is not None:
+                products_with_incremental_recompute = (
+                    self.env['product.product'].concat(*extra_value.keys()) & products
+                ).with_context(
+                    allowed_company_ids=self.env.company.ids
+                )._with_valuation_context()
+                products_with_incremental_recompute.fetch(['qty_available'])
+                for product in products_with_incremental_recompute:
+                    added_value = extra_value.get(product)
+                    added_qty = extra_quantity.get(product)
+                    previous_qty = product.qty_available - added_qty
+                    if (
+                            product.uom_id.compare(previous_qty, 0) > 0
+                            and product.uom_id.compare(product.qty_available, 0) > 0
+                    ):
+                        new_avg_cost = (previous_qty * product.standard_price + added_value) / product.qty_available
+                    else:
+                        new_avg_cost = added_value / added_qty
+                    product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
+                products = products - products_with_incremental_recompute
+
             if cost_method == 'fifo':
                 for product in products:
                     qty_available = product._with_valuation_context().qty_available
@@ -638,8 +663,8 @@ class ProductProduct(models.Model):
                     elif last_in := product._get_last_in():
                         if last_in_price_unit := last_in._get_price_unit():
                             product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
-                continue
-            if cost_method == 'average':
+
+            elif cost_method == 'average':
                 new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
