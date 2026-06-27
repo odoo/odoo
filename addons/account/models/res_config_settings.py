@@ -3,12 +3,14 @@
 
 from odoo import _, api, fields, models
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
+    can_change_chart_template = fields.Boolean(compute='_compute_has_chart_of_accounts')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
@@ -36,6 +38,7 @@ class ResConfigSettings(models.TransientModel):
     expense_currency_exchange_account_active = fields.Boolean(related='expense_currency_exchange_account_id.active', string="Loss Exchange Rate Account Active")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
+    available_chart_templates = fields.Char(compute='_compute_has_chart_of_accounts')
     sale_tax_id = fields.Many2one(
         'account.tax',
         string="Default Sale Tax",
@@ -238,7 +241,14 @@ class ResConfigSettings(models.TransientModel):
         # install a chart of accounts for the given company (if required)
         if self.env.company == self.company_id and self.chart_template \
         and self.chart_template != self.company_id.chart_template:
-            self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
+            ChartTemplate = self.env['account.chart.template']
+            if (
+                self.has_accounting_entries
+                and not ChartTemplate._has_same_parent(self.company_id.chart_template, self.chart_template)
+                and not ChartTemplate._get_parent_template(self.chart_template)[1:2] == [self.company_id.chart_template]
+            ):
+                raise UserError(_("You can only change to a child template or another chart template that shares the same parent chart template."))
+            ChartTemplate.try_loading(self.chart_template, company=self.company_id)
             self.company_id._initiate_account_onboardings()
         # Install `l10n_eu_account_vies` if the user wants to use the VAT number validation with VIES.
         if not self.module_l10n_eu_account_vies and self.vat_check_vies:
@@ -249,8 +259,24 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
-        self.has_chart_of_accounts = bool(self.company_id.chart_template)
-        self.has_accounting_entries = self.company_id.root_id._existing_accounting()
+        ChartTemplate = self.env['account.chart.template']
+        for config in self:
+            config.has_chart_of_accounts = bool(config.company_id.chart_template)
+            config.has_accounting_entries = config.company_id.root_id._existing_accounting()
+
+            chart_template_selection = config.company_id._chart_template_selection()
+            template_code = config.company_id.chart_template
+            parent_template_code = ChartTemplate._get_parent_template(template_code)[1:2]
+
+            candidate_template_selection = [
+                (candidate_template_code, name)
+                for candidate_template_code, name in chart_template_selection
+                if ChartTemplate._is_parent_of(template_code, candidate_template_code)
+                    or (parent_template_code and ChartTemplate._is_parent_of(parent_template_code, candidate_template_code))
+            ]
+
+            config.can_change_chart_template = bool(candidate_template_selection)
+            config.available_chart_templates = ','.join(key for key, _name in (candidate_template_selection or chart_template_selection))
 
     @api.depends('module_account_extract')
     def _compute_module_account_invoice_extract(self):
