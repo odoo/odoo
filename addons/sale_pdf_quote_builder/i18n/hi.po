@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-23 18:01+0000\n"
+"PO-Revision-Date: 2026-06-24 08:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "sale_pdf_quote_builder/hi/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -33,16 +33,18 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('ड्राफ़्ट', 'भेजा गया') और 'कोटेशन - %s' % (object.name)) या "
+"'ऑर्डर - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span class=\"pe-2\">Templates:</span>"
-msgstr ""
+msgstr "<span class=\"pe-2\">टेम्प्लेट:</span>"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span>Document type:</span>"
-msgstr ""
+msgstr "<span>दस्तावेज़ का प्रकार:</span>"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -51,6 +53,8 @@ msgid ""
 "A form field set as used in product documents can't be linked to a quotation "
 "document."
 msgstr ""
+"प्रॉडक्ट दस्तावेज़ों में उपयोग किए जाने वाले फॉर्म फ़ील्ड सेट को कोटेशन दस्तावेज़ से लिंक नहीं "
+"किया जा सकता है।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -59,6 +63,8 @@ msgid ""
 "A form field set as used in quotation documents can't be linked to a product "
 "document."
 msgstr ""
+"कोटेशन दस्तावेज़ों में उपयोग किए जाने वाले फॉर्म फ़ील्ड सेट को प्रॉडक्ट दस्तावेज़ से लिंक नहीं "
+"किया जा सकता है।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -127,18 +133,18 @@ msgstr "अटैचमेंट का यूआरएल"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
 msgid "Available Product Documents"
-msgstr ""
+msgstr "उपलब्ध प्रॉडक्ट दस्तावेज़"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Checksum/SHA1"
 
 #. module: sale_pdf_quote_builder
 #. odoo-javascript
 #: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
 msgid "Click to write content for the PDF quote..."
-msgstr ""
+msgstr "पीडीएफ़ कोट के लिए सामग्री लिखने के लिए क्लिक करें..।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
@@ -149,12 +155,12 @@ msgstr "संस्था"
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "डाइनैमिक फ़ील्ड कॉन्फ़िगर करें"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "फ़ॉर्म फ़ील्ड भरने के लिए पाथ कॉन्फ़िगर करें।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_uid
@@ -181,7 +187,7 @@ msgstr "बदलाव करने की सुविधा"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
 msgid "Customizable PDF Form Fields"
-msgstr ""
+msgstr "बदले जा सकने वाले फ़ॉर्म फ़ील्ड"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
@@ -208,12 +214,12 @@ msgstr "डिस्प्ले नाम"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__document_type
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__document_type
 msgid "Document Type"
-msgstr ""
+msgstr "दस्तावेज़ का प्रकार"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Document type"
-msgstr ""
+msgstr "दस्तावेज़ का प्रकार"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -250,35 +256,35 @@ msgstr "फ़ाइल साइज़"
 #: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__footer
 msgid "Footer"
-msgstr ""
+msgstr "फ़ुटर"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "Form Field Name"
-msgstr ""
+msgstr "फ़ॉर्म फ़ील्ड का नाम"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Form Fields"
-msgstr ""
+msgstr "फ़ॉर्म फ़ील्ड"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
 msgid "Form Fields Included"
-msgstr ""
+msgstr "फ़ॉर्म फ़ील्ड शामिल हैं"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "दिए गए दस्तावेज़ प्रकार के लिए फ़ॉर्म फ़ील्ड का नाम यूनीक होना चाहिए।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
 msgid "Form fields of inside quotation documents."
-msgstr ""
+msgstr "अंदरूनी कोटेशन दस्तावेज़ों के फ़ॉर्म फ़ील्ड।"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
@@ -295,12 +301,12 @@ msgstr "हेडर"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__quotation_document
 msgid "Header/Footer"
-msgstr ""
+msgstr "हेडर/फ़ुटर"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
 msgid "Headers and footers"
-msgstr ""
+msgstr "हेडर और फ़ुटर"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
@@ -308,7 +314,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "Headers/Footers"
-msgstr ""
+msgstr "हेडर/फ़ुटर"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
@@ -327,6 +333,8 @@ msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
 msgstr ""
+"अगर इसे अनचेक नहीं किया गया है, तो यह आपको हेडर या फ़ुटर को हटाए बिना छिपाने की "
+"अनुमति देगा।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -351,7 +359,7 @@ msgstr "इंडेक्स किया गया कॉन्टेंट"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on_sale__inside
 msgid "Inside quote pdf"
-msgstr ""
+msgstr "अंदरूनी कोटेशन पीडीएफ़"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -360,6 +368,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"अमान्य फ़ॉर्म फ़ील्ड नाम %(field_name)s . हेडर या फ़ुटर में फ़ॉर्म फ़ील्ड का नाम "
+"\"sol_id_\" से शुरू नहीं हो सकता।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -368,6 +378,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"अमान्य फ़ॉर्म फ़ील्ड नाम %(field_name)s . इसमें सिर्फ़ अक्षर या अंक, हाइफ़न या अंडरस्कोर "
+"होने चाहिए।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -376,11 +388,13 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"अमान्य पाथ %(path)s . इसमें सिर्फ़ अक्षर या अंक, हाइफ़न, अंडरस्कोर या पूर्ण विराम शामिल "
+"होने चाहिए।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
 msgid "Is Pdf Quote Builder Available"
-msgstr ""
+msgstr "पीडीएफ़ कोट बिल्डर उपलब्ध है"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__public
@@ -394,6 +408,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"ऐसा लगता है कि हम इस कोटेशन के अंदर इस पीडीएफ़ को प्रोसेस नहीं कर पा रहे हैं. यह या तो "
+"एन्क्रिप्टेड है या किसी ऐसे फ़ॉर्मैट में एन्कोडेड है जिसे हम सपोर्ट नहीं करते हैं।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
@@ -415,7 +431,7 @@ msgstr "आखिरी बार अपडेट हुआ"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Mark fields as safe to fill in the quote."
-msgstr ""
+msgstr "कोटेशन में भरने के लिए फ़ील्ड को सुरक्षित के रूप में मार्क करें।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
@@ -437,13 +453,14 @@ msgstr "नही"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 msgid "Only PDF documents can be attached inside a quote."
-msgstr ""
+msgstr "कोटेशन के अंदर सिर्फ़ पीडीएफ़ दस्तावेज़ अटैच किए जा सकते हैं।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Only PDF documents can be used as header or footer."
 msgstr ""
+"सिर्फ़ पीडीएफ़ दस्तावेज़ों का ही हेडर या फ़ुटर के रूप में उपयोग किया जा सकता है।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
@@ -462,12 +479,15 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"अपनी सेल्स बढ़ाने के लिए आकर्षक हेडर और फ़ुटर पेजों के साथ\n"
+"                <br>\n"
+"                 अपने कोटेशन को अपने हिसाब से बनाएं।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "Please use only relational fields until the last value of your path."
-msgstr ""
+msgstr "कृपया अपने पाथ के आखिरी वैल्यू तक सिर्फ़ रिलेशनल फ़ील्ड का उपयोग करें।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -485,7 +505,7 @@ msgstr "प्रॉडक्ट डॉक्यूमेंट"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
 msgid "Product Documents"
-msgstr ""
+msgstr "प्रॉडक्ट के दस्तावेज़"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -512,17 +532,17 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
 msgid "Quotation / Order"
-msgstr ""
+msgstr "कोटेशन / ऑर्डर"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Document"
-msgstr ""
+msgstr "कोटेशन दस्तावेज़"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
 msgid "Quotation Documents"
-msgstr ""
+msgstr "कोटेशन के दस्तावेज़"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
@@ -538,7 +558,7 @@ msgstr "कोटेशन टेम्प्लेट"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
 msgid "Quotation's Headers & Footers"
-msgstr ""
+msgstr "कोटेशन के हेडर और फ़ुटर"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
@@ -579,12 +599,13 @@ msgstr "रिसोर्स का नाम"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "सेल : दिखाई देता है"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
+"सेल पीडीएफ़ कोट बिल्डर: अपग्रेड के बाद दस्तावेज़ों में फ़ॉर्म फ़ील्ड असाइन करें"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -610,12 +631,12 @@ msgstr "स्टोर की गई फ़ाइलनेम"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "मॉडल %(model_name)s पर फ़ील्ड %(field_name)s मौजूद नहीं है"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "The form field name as written in the PDF."
-msgstr ""
+msgstr "पीडीएफ़ में लिखे गए अनुसार फ़ॉर्म फ़ील्ड का नाम।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
@@ -623,6 +644,8 @@ msgid ""
 "The path to follow to dynamically fill the form field. \n"
 "Leave empty to be able to customized it in the quotation form."
 msgstr ""
+"फॉर्म फ़ील्ड को डाइनैमिक रूप से भरने के लिए इस्तेमाल किया जाने वाला पाथ. \n"
+"कोटेशन फॉर्म में इसे कस्टमाइज़ करने के लिए खाली छोड़ दें।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
@@ -630,16 +653,17 @@ msgid ""
 "The product documents for this order line that will be merged in the PDF "
 "quote."
 msgstr ""
+"यह प्रॉडक्ट दस्तावेज़ इस ऑर्डर लाइन के लिए है जिसे पीडीएफ़ कोट में मर्ज किया जाएगा।"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id
 msgid "Theme Template"
-msgstr ""
+msgstr "थीम टेम्पलेट"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "This document"
-msgstr ""
+msgstr "यह दस्तावेज़"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
@@ -649,7 +673,7 @@ msgstr "प्रकार"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
 msgid "Upload quotation headers and footers"
-msgstr ""
+msgstr "कोटेशन के हेडर और फ़ुटर अपलोड करें"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
@@ -676,6 +700,7 @@ msgstr "वेबसाइट"
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""
+"कोटेशन के अंदर अटैच होने पर, दस्तावेज़ एक फ़ाइल होनी चाहिए, यूआरएल नहीं।"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python

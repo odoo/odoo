@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-06-08 07:44+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-26 05:36+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/lo/>\n"
@@ -47,14 +47,19 @@ msgid "(Un)Group lines by tax"
 msgstr "(ຍົກເລີກ) ການຈັດກຸ່ມລາຍການຕາມອາກອນ"
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">FROM</span>"
-msgstr "<span class=\"text-muted\">ຈາກ</span>"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "<span class=\"text-muted\">TO</span>"
-msgstr "<span class=\"text-muted\">ເຖິງ</span>"
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Preview\n"
+"                    </span>"
+msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Preview\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -65,7 +70,7 @@ msgstr "A"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
-msgstr ""
+msgstr "ຕ້ອງລະບຸຂໍ້ມູນອ້າງອີງຜູ້ຊື້ ຫຼື ຂໍ້ມູນອ້າງອີງໃບສັ່ງຊື້."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -516,7 +521,7 @@ msgstr "ສ່ວນຫຼຸດທົ່ວໄປ"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General upsell"
-msgstr ""
+msgstr "ການຂາຍເພີ່ມທົ່ວໄປ"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -931,6 +936,7 @@ msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
 msgstr "ອາກອນ '%(tax_name)s' ບໍ່ຖືກຕ້ອງ: %(error_message)s"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
 msgstr "ເລກປະຈຳຕົວຜູ້ເສຍອາກອນ"
@@ -976,6 +982,19 @@ msgstr "Peppol endpoint ບໍ່ຖືກຕ້ອງ. ຮູບແບບທີ
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
 msgstr "Peppol endpoint ບໍ່ຖືກຕ້ອງ. ຮູບແບບທີ່ຄາດໄວ້ແມ່ນ: 73282932000074"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid ""
+"The Unit of Measure '%(uom)s' (from unit code '%(code)s', category %"
+"(xml_category)s) was ignored on the line for product '%(product)s' because "
+"it does not match the product's UoM category (%(product_category)s). The UoM "
+"was left empty."
+msgstr ""
+"ຫົວໜ່ວຍວັດແທກ '%(uom)s' (ຈາກລະຫັດຫົວໜ່ວຍ '%(code)s', ໝວດ %(xml_category)s) ຖືກລະເລີຍໃ"
+"ນແຖວຂອງສິນຄ້າ '%(product)s' ເພາະວ່າມັນບໍ່ກົງກັບໝວດຫົວໜ່ວຍວັດແທກຂອງສິນຄ້າ (%"
+"(product_category)s). ຫົວໜ່ວຍວັດແທກຖືກປະໄວ້ໃຫ້ຫວ່າງ."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1048,6 +1067,17 @@ msgid "The prepaid amount of %s corresponds to the withholding tax applied."
 msgstr "ຈຳນວນເງິນຈ່າຍລ່ວງໜ້າ %s ກົງກັບອາກອນຫັກໄວ້ທີ່ນຳໃຊ້."
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
+msgid ""
+"This is a visual representation of the xml content.<br/>\n"
+"                    <strong style=\"color: #495057;\">It is not an official "
+"document.</strong>"
+msgstr ""
+"ນີ້ແມ່ນການສະແດງຜົນຂອງເນື້ອໃນ XML.<br/>\n"
+"                    <strong style=\"color: #495057;\">ມັນບໍ່ແມ່ນເອກະສານທາງການ.</"
+"strong>"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
 msgid "Turkey VAT"
 msgstr "ອາກອນມູນຄ່າເພີ່ມ ຕວກກີ"
@@ -1075,17 +1105,17 @@ msgstr "UBL BIS Billing 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "UBL PINT-EU Layer"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193
@@ -1145,11 +1175,6 @@ msgstr "ບໍ່ມີອາກອນ"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT"
 msgstr "ອາກອນມູນຄ່າເພີ່ມ ວາຕິກັນ"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
-msgid "Vendor Bill"
-msgstr "ໃບເກັບເງິນຈາກຜູ້ສະໜອງ"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1221,6 +1246,15 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "<span class=\"text-muted\">FROM</span>"
+#~ msgstr "<span class=\"text-muted\">ຈາກ</span>"
+
+#~ msgid "<span class=\"text-muted\">TO</span>"
+#~ msgstr "<span class=\"text-muted\">ເຖິງ</span>"
+
+#~ msgid "Vendor Bill"
+#~ msgstr "ໃບເກັບເງິນຈາກຜູ້ສະໜອງ"
 
 #~ msgid "Discount lines must have a negative amount."
 #~ msgstr "ລາຍການສ່ວນຫຼຸດຕ້ອງມີຈຳນວນເງິນເປັນຄ່າລົບ."

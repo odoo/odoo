@@ -9,12 +9,13 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Martin Trigaux, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 17:00+0000\n"
+"PO-Revision-Date: 2026-06-25 21:55+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "base_automation/da/>\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -92,13 +93,14 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
-"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
-"<code>timezone</code>: nyttige Python biblioteker"
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>"
+"timezone</code>: nyttige Python-biblioteker"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
+msgstr ""
+"<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Handlinger\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -106,9 +108,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\"/> Standardforespørgselsmetoden for "
-"måldatasættet virker straks for alle webhooks, der kommer fra en anden Odoo-"
-"instans."
+"<i class=\"fa fa-info-circle\"/> Standardforespørgselsmetoden for målposten "
+"virker straks for alle webhooks, der kommer fra en anden Odoo-instans."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -147,22 +148,22 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by adding</span>"
-msgstr ""
+msgstr "<span>ved at tilføje</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by clearing it</span>"
-msgstr ""
+msgstr "<span>ved at rydde</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by removing</span>"
-msgstr ""
+msgstr "<span>ved at fjerne</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span>by setting it to</span>"
-msgstr ""
+msgstr "<span>ved at indstille til</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -206,7 +207,7 @@ msgstr "Tilføj følgere"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Add followers: %(partner_names)s"
-msgstr ""
+msgstr "Tilføj følgere: %(partner_names)s"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
@@ -275,7 +276,7 @@ msgstr "Baseret på datofelt"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "Før opdater domæne"
+msgstr "Domæne før opdatering"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -294,7 +295,7 @@ msgstr "Beregn"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create %(model_name)s with name %(value)s"
-msgstr ""
+msgstr "Opret %(model_name)s med navnet %(value)s"
 
 #. module: base_automation
 #. odoo-javascript
@@ -306,7 +307,7 @@ msgstr "Opret en ny postering"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Create activity: %(activity_name)s"
-msgstr ""
+msgstr "Opret aktivitet: %(activity_name)s"
 
 #. module: base_automation
 #. odoo-javascript
@@ -402,7 +403,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: base_automation
 #. odoo-javascript
@@ -459,7 +460,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr "Felter der udløser onchange funktionen."
+msgstr "Felter, der udløser onchange-funktionen."
 
 #. module: base_automation
 #. odoo-javascript
@@ -609,7 +610,7 @@ msgstr "Notater"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "On Change Fields Trigger"
+msgstr "Udløser for OnChange-felter"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
@@ -649,7 +650,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr "Ved arkivering"
+msgstr "Ved ophævet arkivering"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
@@ -681,7 +682,7 @@ msgstr "Prioriteten er indstillet til"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr "Metode til forespørgsel på datasæt"
+msgstr "Metode til forespørgsel på post"
 
 #. module: base_automation
 #. odoo-javascript
@@ -693,7 +694,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Remove followers: %(partner_names)s"
-msgstr ""
+msgstr "Fjern følgere: %(partner_names)s"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -741,7 +742,7 @@ msgid ""
 "on\n"
 "                tasks when a specific tag is added."
 msgstr ""
-"Send en e-mail, når et objekt ændrer status, arkivér datasæt\n"
+"Send en e-mail, når et objekt ændrer status, arkivér post\n"
 "                efter en måneds inaktivitet, eller mind dig selv om at følge "
 "op på\n"
 "                opgaver, når et bestemt tag tilføjes."
@@ -768,12 +769,12 @@ msgstr "Send e-mail"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid "Send email: %(template_name)s"
-msgstr ""
+msgstr "Send e-mail: %(template_name)s"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Server handling"
+msgstr "Serverhandling"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
@@ -823,7 +824,7 @@ msgstr "Tag er tilføjet"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr "Måldatasæt"
+msgstr "Målpost"
 
 #. module: base_automation
 #. odoo-python
@@ -839,8 +840,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
 "(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s Kan kun bruges sammen med \"%"
-"(state_value)s\" handlingstypen"
+"\"%(trigger_value)s\" %(trigger_label)s kan kun bruges sammen med \"%"
+"(state_value)s\"-handlingstypen"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -867,8 +868,8 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
-"Denne kode udføres for at bestemme, hvilket datasæt automatiseringsreglen "
-"skal anvendes på."
+"Denne kode udføres for at bestemme, hvilken post automatiseringsreglen skal "
+"anvendes på."
 
 #. module: base_automation
 #. odoo-javascript
@@ -885,12 +886,12 @@ msgstr "Tip: Automatisér alt med automatiseringsregler"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr "Trigger"
+msgstr "Udløser"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "Trigger dato"
+msgstr "Udløserdato"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
@@ -905,7 +906,7 @@ msgstr "Udløserfeltets model"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
 msgid "Trigger Fields"
-msgstr "Afvikle Felter"
+msgstr "Udløserfelter"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
@@ -942,7 +943,7 @@ msgstr "Opdatér posten"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__url
 msgid "Url"
-msgstr "Adresse"
+msgstr "URL"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
@@ -1016,7 +1017,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr "Sat til falsk, reglen vil blive skjult og bliver ikke udført."
+msgstr "Hvis denne indstilling er deaktiveret, skjules reglen og udføres ikke."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -1030,7 +1031,7 @@ msgid ""
 "                <em>any</em> workflow."
 msgstr ""
 "Med automatiseringsregler kan du automatisere\n"
-"                <em>alle</em> workflow."
+"                <em>alle</em> workflows."
 
 #. module: base_automation
 #. odoo-javascript
@@ -1052,8 +1053,8 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
-"Du kan ikke sende en email; tilføj følgere eller opret en aktivitet for et "
-"slettet datasæt. Det virker simpelthen ikke."
+"Det er ikke muligt at sende e-mails, tilføje følgere eller oprette "
+"aktiviteter på en post, der er slettet. Det fungerer simpelthen ikke."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form

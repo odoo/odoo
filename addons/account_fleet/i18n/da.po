@@ -8,13 +8,14 @@
 # Sammi Iversen <sammi@vkdata.dk>, 2025
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 02:23+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 18:14+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "account_fleet/da/>\n"
 "Language: da\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -34,15 +35,15 @@ msgid ""
 "Bill\">Service's Bill</span>"
 msgstr ""
 "<span class=\"o_stat_text text-success\" invisible=\"account_move_state != "
-"'posted'\" title=\"Service's Bill\">Servicefaktura\n"
+"'posted'\" title=\"Service's Bill\">Faktura for tjenesteydelse</span>\n"
 "                            <span class=\"o_stat_text text-warning\" "
-"invisible=\"account_move_state == 'posted'\" title=\"Service's "
-"Bill\">Servicefaktura</span>"
+"invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">"
+"Faktura for tjenesteydels</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
-msgstr "Kontobevægelse"
+msgstr "Postering"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
@@ -53,27 +54,27 @@ msgstr "Bogføringslinje"
 #. odoo-python
 #: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
 msgid "Bill"
-msgstr "Faktura"
+msgstr "Regning"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "Bills"
-msgstr "Fakturaer"
+msgstr "Regninger"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
 msgid "Bills Count"
-msgstr "Antal fakturaer"
+msgstr "Antal regninger"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
 msgid "Cost"
-msgstr "Kostpris"
+msgstr "Omkostning"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Opret Automatiske Posteringer"
+msgstr "Opret automatiske posteringer"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
@@ -83,7 +84,7 @@ msgstr "Oprettelsesdato"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move
 msgid "Journal Entry"
-msgstr "Journalbilag"
+msgstr "Journalpostering"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move_line
@@ -93,18 +94,18 @@ msgstr "Journalpost"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
-msgstr "Behov for Køretøj"
+msgstr "Køretøj påkrævet"
 
 #. module: account_fleet
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "Service Vendor Bill: %s"
-msgstr "Serviceleverandørfaktura: %s"
+msgstr "Faktura fra serviceudbyder: %s"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "Service på køretøjer"
+msgstr "Køretøjsservice"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
@@ -131,7 +132,7 @@ msgid ""
 "created."
 msgstr ""
 "Du kan ikke slette logtjenesteposter, fordi en eller flere af dem blev "
-"oprettet med en faktura."
+"oprettet med en regning."
 
 #. module: account_fleet
 #. odoo-python
@@ -141,9 +142,9 @@ msgid ""
 "on the related accounting entry instead."
 msgstr ""
 "Du kan ikke ændre antallet af tjenester, der er knyttet til en "
-"kontoflytningslinje. Gør det i stedet på den tilhørende regnskabspost."
+"bogføringslinje. Gør det i stedet på den tilhørende bogføringer."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr "vis leverandørregninger for dette køretøj"
+msgstr "vis leverandørfakturaer for dette køretøj"

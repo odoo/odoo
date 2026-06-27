@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* snailmail
+# * snailmail
 #
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024, 2026.
 # Wil Odoo, 2024
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"PO-Revision-Date: 2026-06-23 09:05+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
+"snailmail/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
@@ -47,6 +48,8 @@ msgstr "Адреса"
 msgid ""
 "An error occurred when sending a letter with Snailmail on “%(record_name)s”"
 msgstr ""
+"Сталася помилка під час надсилання листа з увімкненим Snailmail “%"
+"(record_name)s”"
 
 #. module: snailmail
 #. odoo-javascript
@@ -283,7 +286,7 @@ msgstr "Інформація"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Invalid recipient name."
-msgstr "Недійсне ім'я одержувача"
+msgstr "Недійсне ім'я одержувача."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -434,6 +437,8 @@ msgstr "Надіслати зараз"
 #: model:iap.service,description:snailmail.iap_service_snailmail
 msgid "Send your customer invoices and follow-up reports by post, worldwide."
 msgstr ""
+"Надсилайте рахунки-фактури та звіти про подальшу роботу своїм клієнтам "
+"поштою по всьому світу."
 
 #. module: snailmail
 #. odoo-javascript
@@ -467,7 +472,7 @@ msgstr "Колір Snailmail"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
 msgid "Snailmail Cover Readonly"
-msgstr ""
+msgstr "Snailmail покриває лише режим читання"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -478,7 +483,7 @@ msgstr "Помилка кредитів Snailmail"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "Snailmail Failure: %(modelName)s"
-msgstr ""
+msgstr "Невдале зʼєднання Snailmail: %(modelName)s"
 
 #. module: snailmail
 #. odoo-javascript
@@ -619,14 +624,15 @@ msgstr ""
 msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
-msgstr ""
-"Адреса клієнта не заповнена. Оновіть адресу та повторно відправте лист."
+msgstr "Адреса клієнта не заповнена. Оновіть адресу та повторно відправте лист."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
 msgstr ""
+"Документ, який потрібно надіслати, перевищує максимально дозволений ліміт у "
+"8 сторінок."
 
 #. module: snailmail
 #. odoo-python
@@ -711,8 +717,8 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
-"У вас немає облікового запису IAP, зареєстрованого для цієї послуги."
-"<br>Перейдіть до<a href=%s target=\"new\">iap.odoo.com</a> щоби вимагати "
+"У вас немає облікового запису IAP, зареєстрованого для цієї послуги.<br>"
+"Перейдіть до<a href=%s target=\"new\">iap.odoo.com</a> щоби вимагати "
 "безкоштовні кредити."
 
 #. module: snailmail
@@ -729,8 +735,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "You need credits on your IAP account to send a letter."
-msgstr ""
-"Вам потрібно поповнити кредити на ваш рахунок IAP, щоби надіслати лист."
+msgstr "Вам потрібно поповнити кредити на ваш рахунок IAP, щоби надіслати лист."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields

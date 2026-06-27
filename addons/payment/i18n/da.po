@@ -11,13 +11,14 @@
 # Martin Trigaux, 2025
 # Kira Petersen, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2026-05-17 05:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-23 17:39+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/payment/"
 "da/>\n"
 "Language: da\n"
@@ -25,12 +26,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr "Data Hentet"
+msgstr " Data hentet"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -50,9 +51,9 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
 "ul>"
 msgstr ""
-"<h3>Venligst overfør betalingen til: </h3><ul><li>Bank: %(bank)s</"
-"li><li>Kontounmmer: %(account_number)s</li><li>Reference: %"
-"(account_holder)s</li></ul>"
+"<h3>Overfør venligst betalingen til: </h3><ul><li>Bank: %(bank)s</li><li>"
+"Kontonummer: %(account_number)s</li><li>Kontohaver: %(account_holder)s</li></"
+"ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -78,7 +79,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 msgstr ""
-"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+"<i class=\"fa fa-home\" role=\"img\" title=\"Hjem\" aria-label=\"Hjem\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -88,10 +89,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
-"transactions you intend to capture can only be captured in full. Handle the "
-"transactions individually to capture a partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Nogle af de transaktioner, du ønsker at registrere, "
+"kan kun registreres i deres helhed. Behandl transaktionerne enkeltvis, hvis "
+"du vil registrere et delbeløb.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -99,14 +100,13 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
-"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
+"<i class=\"fa fa-trash\" title=\"Slet betalingsform\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr ""
-"<i class=\"oi oi-arrow-right me-1\"></i> Konfigurer en betalingsudbyder"
+msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Konfigurér en betalingsudbyder"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -115,7 +115,7 @@ msgid ""
 "                                            Enable Payment Methods"
 msgstr ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                                            Aktiver Betalingsmetoder"
+"                                            Aktivér betalingsformer"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -135,7 +135,7 @@ msgstr "<span class=\"o_stat_text text-success\">Offentliggjort</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">Gemte betalingsmetoder</span>"
+msgstr "<span class=\"o_stat_text\">Gemte betalingsformer</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -317,7 +317,7 @@ msgstr "Aktivér"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_activate_stripe
 msgid "Activate Stripe"
-msgstr "Aktiver Stripe"
+msgstr "Aktivér Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -423,7 +423,7 @@ msgstr "Beløb"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
-msgstr "Mængde maks"
+msgstr "Maksimale beløb"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -468,8 +468,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Er du sikker på du vil annullere and autoriserede transaktion? Denne "
-"handling kan ikke omstødes."
+"Er du sikker på, at du vil annullere den autoriserede transaktion? Denne "
+"handling kan ikke fortrydes."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_argencard
@@ -494,7 +494,7 @@ msgstr "Atome"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
 msgid "Authorize Message"
-msgstr "Autoriserings besked"
+msgstr "Autoriseret besked"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_authorize
@@ -514,7 +514,7 @@ msgstr "Autoriseret beløb"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Availability"
-msgstr "Til rådighed"
+msgstr "Tilgængelig"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -696,7 +696,7 @@ msgstr "Boost"
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Brands"
-msgstr "Mærker"
+msgstr "Brands"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
@@ -760,12 +760,12 @@ msgstr "Opkræv"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Indfang mængde manuelt"
+msgstr "Opkræv beløb manuelt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr "Hæv transaktion"
+msgstr "Registrér transaktion"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -827,7 +827,7 @@ msgstr "Underordnede transaktioner"
 #: model_terms:ir.ui.view,arch_db:payment.form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr "Vælg betalingsmetode"
+msgstr "Vælg en betalingsform"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -986,7 +986,7 @@ msgstr "Kortoplysninger"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
 #: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr "Kredit & Debetkort (via Stripe)"
+msgstr "Kredit- og debetkort (via Stripe)"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_credit
@@ -1011,7 +1011,7 @@ msgstr "Valuta"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
 #: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr "Betalingsinstruktioner til kunden"
+msgstr "Tilpassede betalingsinstruktioner"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -1068,7 +1068,7 @@ msgstr "Opdag"
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dolfin
@@ -1083,12 +1083,12 @@ msgstr "Du er velkommen til at kontakte os, hvis du ikke modtager den."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
 msgid "Done Message"
-msgstr "Besked sendt"
+msgstr "Besked, når udført"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
 msgid "Draft"
-msgstr "Udkast"
+msgstr "Kladde"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_duitnow
@@ -1143,7 +1143,7 @@ msgstr "Fejl: %s"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout"
-msgstr "Ekspresbetaling"
+msgstr "Hurtig betaling"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
@@ -1212,17 +1212,17 @@ msgstr "GCash"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr "Generer betalings link"
+msgstr "Generér betalingslink"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Generer salg betalingslink"
+msgstr "Generér betalingslink til salg"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr "Generer og kopier betalingslink"
+msgstr "Generér og kopiér betalingslink"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_giropay
@@ -1264,7 +1264,7 @@ msgstr "HD Bank"
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP Routing"
+msgstr "HTTP-routing"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
@@ -1349,12 +1349,12 @@ msgstr "Inline-formularskabelon"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Install"
-msgstr "Installer"
+msgstr "Installér"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
 msgid "Installation State"
-msgstr "Installationsstadie"
+msgstr "Installationsstatus"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1379,7 +1379,7 @@ msgstr "Er primære betalingsform"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr "Er Stripe Understøttet Land"
+msgstr "Er et land, der understøttes af Stripe"
 
 #. module: payment
 #. odoo-javascript
@@ -1562,7 +1562,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Manage your payment methods"
-msgstr "Administrer dine betalingsmetoder"
+msgstr "Administrér dine betalingsformer"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mandiri
@@ -1633,7 +1633,7 @@ msgstr "Beskeder"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_name
 msgid "Method"
-msgstr "Metode"
+msgstr "Betalingsform"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
@@ -1763,7 +1763,7 @@ msgstr "Octopus"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
 msgid "Odoo Enterprise Module"
-msgstr "Odoo Enterprise Modul"
+msgstr "Odoo Enterprise-modul"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
@@ -1778,7 +1778,7 @@ msgstr "OmanNet"
 #. module: payment
 #: model:ir.model,name:payment.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr "Onboarding Trin"
+msgstr "Onboardingtrin"
 
 #. module: payment
 #: model:onboarding.onboarding.step,step_image_alt:payment.onboarding_onboarding_step_payment_provider
@@ -1808,7 +1808,7 @@ msgstr "Netbank til Thailand"
 #. module: payment
 #: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr "Online betalinger"
+msgstr "Onlinebetalinger"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1829,7 +1829,7 @@ msgstr "Onlinebetaling med omdirigering"
 #. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid "Only administrators can access this data."
-msgstr "Kun administratorer kan tilgå dette data."
+msgstr "Kun administratorer kan tilgå disse data."
 
 #. module: payment
 #. odoo-python
@@ -1910,12 +1910,12 @@ msgstr "Delvis"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr "Kontakt"
+msgstr "Partner"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
-msgstr "Partner navn"
+msgstr "Partnernavn"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1988,17 +1988,17 @@ msgstr "Assistent til betalingsopkrævning"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr "Betalingsdetaljer"
+msgstr "Betalingsoplysninger"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Followup"
-msgstr "Betaling opfølgning"
+msgstr "Betalingsopfølgning"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Form"
-msgstr "Betaling formular"
+msgstr "Betalingsformular"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2013,7 +2013,7 @@ msgstr "Betalingsinstruktioner"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr "Betaling link"
+msgstr "Betalingslink"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -2023,7 +2023,7 @@ msgstr "Betaling link"
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Payment Method"
-msgstr "Betalingsmetode"
+msgstr "Betalingsform"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
@@ -2037,7 +2037,7 @@ msgstr "Betalingsforms kode"
 #: model:ir.actions.act_window,name:payment.action_payment_method
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
-msgstr "Betalingsmetoder"
+msgstr "Betalingsformer"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
@@ -2070,7 +2070,7 @@ msgstr "Antal betalingstokener"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr "Betalingstokens"
+msgstr "Betalingstokener"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -2099,7 +2099,7 @@ msgstr "Betalingsoplysninger gemt den %(date)s"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_unknown
 msgid "Payment method"
-msgstr "Betalingsmetode"
+msgstr "Betalingsform"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -2111,7 +2111,7 @@ msgstr "Betalingsformer"
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form.js:0
 msgid "Payment processing failed"
-msgstr "Behandlingen af betaling mislykkedes"
+msgstr "Betalingen kunne ikke gennemføres"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -2199,7 +2199,7 @@ msgstr "Skift venligst til virksomhed"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Please wait..."
-msgstr "Vent venligst..."
+msgstr "Vent venligst ..."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
@@ -2262,7 +2262,7 @@ msgstr "Udbydere"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Published"
-msgstr "Udgivet"
+msgstr "Offentliggjort"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_qris
@@ -2340,22 +2340,22 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr "Krediteringer"
+msgstr "Kreditnotaer"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr "Antal refusioner"
+msgstr "Antal kreditnotaer"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
 msgid "Related Document ID"
-msgstr "Relateret dokument ID"
+msgstr "Tilknyttet dokument-ID"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_model
 msgid "Related Document Model"
-msgstr "Relateret dokument model"
+msgstr "Tilknyttet dokumentmodel"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_revolut_pay
@@ -2371,7 +2371,7 @@ msgstr "RuPay"
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "SEPA direkte debit"
+msgstr "SEPA Direct Debit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_spei
@@ -2416,7 +2416,7 @@ msgstr "Vælg valutaer. Lad feltet være tomt for at tillade alle."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr "Valgt onboarding betalingsmetode"
+msgstr "Valgt betalingsform ved tilmelding"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__sequence
@@ -2492,7 +2492,7 @@ msgstr "Trin gennemført!"
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
 #: model:payment.provider,name:payment.payment_provider_stripe
 msgid "Stripe"
-msgstr "Stribe"
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
@@ -2553,7 +2553,7 @@ msgstr "TendoPay"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
-msgstr "Test tilstand"
+msgstr "Testtilstand"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -2564,7 +2564,7 @@ msgstr "Mange tak!"
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "The access token is invalid."
-msgstr "Adgangs tokenen er ugyldig."
+msgstr "Adgangstokenet er ugyldigt."
 
 #. module: payment
 #. odoo-python
@@ -2773,7 +2773,7 @@ msgstr "Den tekniske kode for betalingsformen."
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr "Den tekniske kode for denne betalingsudbyder."
+msgstr "Betalingsudbyderens tekniske kode."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -2851,7 +2851,7 @@ msgstr "Der er ikke noget at betale."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr "Der er intet at betale."
+msgstr "Der er ikke noget at betale."
 
 #. module: payment
 #. odoo-python
@@ -3029,7 +3029,7 @@ msgstr "Universal Air Travel Plan"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Unpublished"
-msgstr "Ikke udgivet"
+msgstr "Ikke offentliggjort"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__none
@@ -3041,7 +3041,7 @@ msgstr "Ikke understøttet"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Upgrade"
-msgstr "Opgrader"
+msgstr "Opgradér"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vpay
@@ -3366,7 +3366,7 @@ msgstr "Dine betalingsformer"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
-msgstr "Post nr."
+msgstr "Postnummer"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_zalopay
@@ -3445,7 +3445,7 @@ msgstr "ingen understøttet udbyder tilgængelig"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "payment method"
-msgstr "betalingsmetode"
+msgstr "betalingsform"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban

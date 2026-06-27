@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* iap
+# * iap
 #
 # Translators:
 # Robin Calvin, 2024
@@ -11,20 +11,22 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2024
 # Lasse L, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-#
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2026-06-24 16:03+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/iap/sv/>"
+"\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -33,7 +35,7 @@ msgid ""
 "                                    Buy Credit"
 msgstr ""
 "<i class=\"oi oi-arrow-right\"/>\n"
-"                                    Köpa kredit"
+"                                    Köp kreditpoäng"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -43,15 +45,15 @@ msgstr "Kontoinformation"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 msgid "Account Token"
-msgstr "Pollett för konto"
+msgstr "Kontotoken"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
-"Kontopolletten är din autentiseringsnyckel för den här tjänsten. Dela det "
-"inte."
+"Din konto-token utgör din autentiseringsnyckel för den här tjänsten. Dela "
+"inte den med någon."
 
 #. module: iap
 #. odoo-python
@@ -60,8 +62,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
-"Ett fel inträffade när du nådde %s. Vänligen kontakta Odoo support om detta "
-"fel kvarstår."
+"Ett fel inträffade när %s skulle nås. Vänligen kontakta Odoos kundtjänst om "
+"felet kvarstår."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -88,7 +90,7 @@ msgstr "Avbryt"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
@@ -105,7 +107,7 @@ msgstr "Skapad den"
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
 msgid "Credits"
-msgstr "Krediter"
+msgstr "Kreditpoäng"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
@@ -127,7 +129,7 @@ msgstr "Mottagare av e-postvarningar"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr "Tröskelvärde för e-postvarningar"
+msgstr "Gränsvärde för e-postvarningar"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -136,9 +138,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data "
 "of your opportunities."
 msgstr ""
-"Få leads och möjligheter av hög kvalitet: konvertera dina webbplatsbesökare "
-"till leads, generera leads baserat på en uppsättning kriterier och berika "
-"företagsuppgifterna för dina möjligheter."
+"Få leads och möjligheter av hög kvalitet: konvertera besökare på hemsidan "
+"till leads, skapa leads baserat på en uppsättning kriterier eller berika "
+"leads med företagsinformation."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -161,7 +163,7 @@ msgstr "IAP-konton"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr "IAP Ledarberikning API"
+msgstr "Gränssnitt för IAP-leadberikning"
 
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
@@ -183,7 +185,7 @@ msgstr "Otillräcklig kredit för att utföra denna tjänst."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr "Heltal Balans"
+msgstr "Saldo i heltal"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -201,7 +203,7 @@ msgstr "Senast uppdaterad den"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr "Hantera tjänster och köp krediter"
+msgstr "Hantera tjänster och köp kreditpoäng"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -221,19 +223,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
-"En av mottagarna av e-postvarningen har inte någon e-postadress inställd. "
+"En av mottagarna av e-postvarningar har inte någon angiven e-postadress. "
 "Användare: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr "Det kan bara finnas en tjänst med ett specifikt technical_name"
+msgstr "Det kan bara finnas en tjänst med ett visst technical_name"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr "Vänligen ställ in en positiv tröskel för e-postvarning."
+msgstr "Vänligen ange ett positivt gränsvärde för e-postvarningar."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -243,12 +245,12 @@ msgstr "Registrerad"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
 msgid "Service"
-msgstr "Service"
+msgstr "Tjänst"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr "Service låst"
+msgstr "Tjänst låst"
 
 #. module: iap
 #. odoo-javascript
@@ -259,7 +261,7 @@ msgstr "Starta en provperiod på Odoo"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
-msgstr "Stat"
+msgstr "Status"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -274,6 +276,8 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
+"Förfrågan till tjänsten tog för lång tid. Vänligen kontakta appens "
+"författare. Länken som den försökte ta kontakt med var %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name
@@ -295,4 +299,4 @@ msgstr "Visa mina tjänster"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
-msgstr "Visa era IAP-tjänster och fyll på era krediter"
+msgstr "Visa dina IAP-tjänster och fyll på kreditpoäng"
