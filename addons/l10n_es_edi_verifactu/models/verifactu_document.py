@@ -25,6 +25,7 @@ EUSKADI_CIPHERS = "DEFAULT:!DH"
 VERIFACTU_VERSION = "1.0"
 
 BATCH_LIMIT = 1000
+UI_BATCH_LIMIT = 10
 
 
 def _sha256(string):
@@ -890,6 +891,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
         1. Send all waiting documents that we can send
         2. Trigger the cron again at a later date to send the documents we could not send
         """
+        cron = self.env.ref('l10n_es_edi_verifactu.cron_verifactu_batch', raise_if_not_found=False)
+
         unsent_domain = [
             ('json_attachment_id', '!=', False),
             ('state', '=', False),
@@ -901,6 +904,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
         )
 
         if not documents_per_company:
+            return
+
+        defer_large_batches = self.env.context.get('l10n_es_edi_verifactu_defer_large_batches')
+        if cron and defer_large_batches and any(len(documents) >= UI_BATCH_LIMIT for _company, documents in documents_per_company):
+            cron._trigger()
             return
 
         next_trigger_time = None
@@ -949,10 +957,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 # Set `next_trigger_time` to the minimum of all the already encountered trigger times
                 next_trigger_time = min(next_trigger_time or datetime.max, company_next_trigger_time)
 
-        if next_trigger_time:
-            cron = self.env.ref('l10n_es_edi_verifactu.cron_verifactu_batch', raise_if_not_found=False)
-            if cron:
-                cron._trigger(at=next_trigger_time)
+        if next_trigger_time and cron:
+            cron._trigger(at=next_trigger_time)
 
     @api.model
     def _send_batch(self, batch_dict):

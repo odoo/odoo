@@ -341,5 +341,7 @@ class AccountMove(models.Model):
 
     def _l10n_es_edi_verifactu_mark_for_next_batch(self, cancellation=False):
         document_map = self._l10n_es_edi_verifactu_create_documents(cancellation=cancellation)
-        self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
+        self.env['l10n_es_edi_verifactu.document'].with_context(
+            l10n_es_edi_verifactu_defer_large_batches=True,
+        ).trigger_next_batch()
         return document_map
