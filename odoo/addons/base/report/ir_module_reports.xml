@@ -10,6 +10,7 @@
             <field name="report_file">base.report_irmodulereference</field>
             <field name="binding_model_id" ref="model_ir_module_module"/>
             <field name="binding_type">report</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
         </record>
 
     </data>
