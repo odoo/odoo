@@ -12,7 +12,7 @@ class StockWarehouseOrderpoint(models.Model):
     show_bom = fields.Boolean('Show BoM column', compute='_compute_show_bom')
     bom_id = fields.Many2one(
         'mrp.bom', string='Bill of Materials', check_company=True,
-        domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
+        domain="[('type', '=', 'normal'), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
         inverse='_inverse_bom_id',
     )
     bom_id_placeholder = fields.Char(compute='_compute_bom_id_placeholder')

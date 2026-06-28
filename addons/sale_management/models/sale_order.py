@@ -20,9 +20,6 @@ class SaleOrder(models.Model):
         index="btree_not_null",
         domain="""[
             ('template_type', '=', 'quotation'),
-            '|',
-            ('company_id', '=', False),
-            ('company_id', '=', company_id),
         ]""",
     )
 

@@ -30,6 +30,20 @@ if typing.TYPE_CHECKING:
 _schema = logging.getLogger('odoo.schema')
 
 
+def _domain_has_company_filter(domain):
+    """Return True if the domain contains a condition on company_id/company_ids."""
+    if isinstance(domain, str):
+        return 'company_id' in domain
+    if isinstance(domain, Domain):
+        return any('company_id' in c.field_expr for c in domain.iter_conditions())
+    if isinstance(domain, (list, tuple)):
+        return any(
+            isinstance(item, (list, tuple)) and item and isinstance(item[0], str) and 'company_id' in item[0]
+            for item in domain
+        )
+    return False
+
+
 class _Relational(Field[BaseModel]):
     """ Abstract class for relational fields. """
     relational: typing.Literal[True] = True
@@ -91,6 +105,27 @@ class _Relational(Field[BaseModel]):
         the record format, for the sake of optimization.
         """
         raise NotImplementedError
+
+    def setup(self, model):
+        super().setup(model)
+        if (
+                self.check_company
+                and not model._abstract
+                and 'company_id' not in model._fields
+                and 'company_ids' not in model._fields
+                and model._name != 'res.company'
+                and not self.company_dependent
+        ):
+            _logger.warning("%s: check_company attribute will be ignored because the model doesn't have a company_id/s field", self)
+        elif (
+                self.check_company
+                and not model._abstract
+                and 'company_id' not in model._fields
+                and 'company_ids' not in model._fields
+                and model._name != 'res.company'
+                and _domain_has_company_filter(self.domain)
+        ):
+            _logger.warning("%s: redundant company_id/s filter in domain, already handled by check_company attribute", self)
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
